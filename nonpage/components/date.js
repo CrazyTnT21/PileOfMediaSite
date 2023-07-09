@@ -64,7 +64,7 @@ export class Date extends HTMLElement
       <label class="col-12">
         ${this.titleText(this.title)}
         <input class="mar-right">
-        <img src="/MyCollectionSite/nonpage/images/Calender_Placeholder.png" alt="Date chooser">
+        <img src="/MyCollectionSite/nonpage/images/Comments_Placeholder.png" alt="Date chooser" width="25px">
       </label>
       <div id="error" style="visibility: hidden">
         <div class="error-arrow"></div>
