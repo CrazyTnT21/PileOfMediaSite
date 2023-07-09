@@ -1,0 +1,186 @@
+html {
+    font: 1rem "Fira Sans", sans-serif;
+}
+
+button {
+    min-width: 4rem;
+    min-height: 2rem;
+    border: 0;
+}
+
+li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.right{
+    position: absolute;
+    right:1rem;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    max-height: 100%;
+    max-width: 100%;
+}
+.content{
+    flex:1;
+}
+
+.align-center {
+    display: flex;
+    justify-content: center;
+}
+
+.header {
+    display: flex;
+    background: lightgray;
+    box-shadow: 0 5px gray;
+}
+
+.footer {
+    display: flex;
+    flex: 1;
+    align-content: space-evenly;
+    margin: 10px;
+    padding: 0.25rem;
+    background: lightgray;
+    border-radius: 5px;
+    justify-content: center;
+    width: 96%;
+    bottom: 0;
+}
+
+
+.align-right {
+    margin-left: auto;
+}
+
+.pad {
+    padding: 0.33rem;
+}
+
+.pad-left {
+    padding-left: 0.33rem;
+}
+
+.pad-right {
+    padding-right: 0.33rem;
+}
+
+.pad-top {
+    padding-top: 0.33rem;
+}
+
+.pad-bottom {
+    padding-bottom: 0.33rem;
+}
+
+.mar {
+    margin: 0.33rem;
+}
+
+.mar-left {
+    margin-left: 0.33rem;
+}
+
+.mar-right {
+    margin-right: 0.33rem;
+}
+
+.mar-top {
+    margin-top: 0.33rem;
+}
+
+.mar-bottom {
+    margin-bottom: 0.33rem;
+}
+.user-icon{
+  padding-left: 25px;
+}
+.user-icon::before{
+  background-image: url("/nonpage/images/User_Placeholder.png");
+  background-size: cover;
+  position: absolute;
+  width:25px;
+  height:25px;
+  content: '';
+  margin-left:-25px;
+}
+
+.friends-icon{
+  padding-left: 25px;
+}
+.friends-icon::before{
+  background-image: url("/nonpage/images/Friends_Placeholder.png");
+  background-size: cover;
+  position: absolute;
+  width:25px;
+  height:25px;
+  content: '';
+  margin-left:-25px;
+}
+
+
+.comments-icon{
+  padding-left: 25px;
+}
+.comments-icon::before{
+  background-image: url("/nonpage/images/Comments_Placeholder.png");
+  background-size: cover;
+  position: absolute;
+  width:25px;
+  height:25px;
+  content: '';
+  margin-left:-25px;
+}
+
+
+.settings-icon{
+  padding-left: 25px;
+}
+.settings-icon::before{
+  background-image: url("/nonpage/images/Gear_Placeholder.png");
+  background-size: cover;
+  position: absolute;
+  width:25px;
+  height:25px;
+  content: '';
+  margin-left:-25px;
+}
+
+.logout-icon{
+  padding-left: 25px;
+}
+.logout-icon::before{
+  background-image: url("/nonpage/images/Logout_Placeholder.png");
+  background-size: cover;
+  position: absolute;
+  width:25px;
+  height:25px;
+  content: '';
+  margin-left:-25px;
+}
+.error{
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  position:absolute;
+  font-size: 12px;
+  user-select: none;
+}
+.small-text{
+  font-size: 10px;
+}
+.error-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+
+  border-bottom: 5px solid rgba(0, 0, 0, 0.1);
+}

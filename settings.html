@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <link rel="stylesheet" href="nonpage/styles/styles.css">
+  <link rel="stylesheet" href="nonpage/styles/columns.css">
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+</head>
+<body>
+<app-header></app-header>
+Welcome to Settings!
+<!--<app-footer></app-footer>-->
+
+T
+<div>
+  Date display
+  <app-select items="T, A">
+    <option value="ISO">ISO 8601: YYYY-MM-DD (2014-12-25)</option>
+    <option value="EU">EU DD-MM-YYYY (25-12-2014)</option>
+    <option value="US">US MM-DD-YYYY (12-25-2014)</option>
+  </app-select>
+<!--  <app-genre-select></app-genre-select>-->
+</div>
+Note: Dates can use "/","-","." as separator
+<script src="/MyCollectionSite/nonpage/components/header.js" type="module"></script>
+<script src="/MyCollectionSite/nonpage/components/select.js" type="module"></script>
+<script src="/MyCollectionSite/nonpage/components/selects/genre-select.js" type="module"></script>
+</body>
+</html>
