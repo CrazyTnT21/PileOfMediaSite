@@ -59,12 +59,12 @@ export class Date extends HTMLElement
 
     //language=HTML
     select.innerHTML = `
-      <link rel="stylesheet" href="/MyCollectionSite/nonpage/styles/columns.css">
-      <link rel="stylesheet" href="/MyCollectionSite/nonpage/styles/styles.css">
+      <link rel="stylesheet" href="/MyCollectionSite/assets/styles/columns.css">
+      <link rel="stylesheet" href="/MyCollectionSite/assets/styles/styles.css">
       <label class="col-12">
         ${this.titleText(this.title)}
         <input class="mar-right">
-        <img src="/MyCollectionSite/nonpage/images/Comments_Placeholder.png" alt="Date chooser" width="25px">
+        <img src="/MyCollectionSite/assets/images/Comments_Placeholder.png" alt="Date chooser" width="25px">
       </label>
       <div id="error" style="visibility: hidden">
         <div class="error-arrow"></div>

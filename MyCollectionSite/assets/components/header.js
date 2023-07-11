@@ -20,17 +20,6 @@ class Header extends HTMLElement
   {
     const header = this.shadowRoot.querySelector("#profile");
     header.addEventListener("click", (e) => this.showDropdown(e));
-
-
-    this.debugModifyUrls(JSON.parse(localStorage.getItem("debug")));
-
-    this.shadowRoot.querySelector("#debug").addEventListener("click", () =>
-      {
-        const current = JSON.parse(localStorage.getItem("debug"));
-        localStorage.setItem("debug", JSON.stringify(!current));
-        this.debugModifyUrls(!current);
-      },
-    );
   }
 
   disconnectedCallback()
@@ -47,11 +36,11 @@ class Header extends HTMLElement
     header.classList.add("header", "col-l-12", "pad", "mar-bottom");
     // language=HTML
     header.innerHTML = `
-      <link rel="stylesheet" href="/MyCollectionSite/nonpage/styles/columns.css">
-      <link rel="stylesheet" href="/MyCollectionSite/nonpage/styles/styles.css">
+      <link rel="stylesheet" href="/MyCollectionSite/assets/styles/columns.css">
+      <link rel="stylesheet" href="/MyCollectionSite/assets/styles/styles.css">
       <li class="col-s-12">
-        <a class="col-s-12" href="/MyCollectionSite/index">
-          <img class="fix-1" src="/MyCollectionSite/nonpage/images/Logo_Placeholder.png" alt="Logo"/>
+        <a class="col-s-12" href="/MyCollectionSite">
+          <img class="fix-1" src="/MyCollectionSite/assets/images/Logo_Placeholder.png" alt="Logo"/>
           <div class="col pad">MyCollection</div>
         </a>
       </li>
@@ -79,59 +68,37 @@ class Header extends HTMLElement
           <div class="col pad">
             <div class="col-l-12" style="font-weight: bold">TestUsername</div>
           </div>
-          <img src="/MyCollectionSite/nonpage/images/User_Placeholder.png" class="fix-1 col-s-2"
+          <img src="/MyCollectionSite/assets/images/User_Placeholder.png" class="fix-1 col-s-2"
                alt="User profile"/>
         </div>
         <div class="fix-7 col-s-12" id="settings" style="position: fixed; display: none; margin-top: 2.5rem">
           <div class="col-12">
             <div class="pad col-12" style="background: lightgray">
-              <a href="profile" class="user-icon" style="background: gray"> Profile</a>
+              <a href="/MyCollectionSite/user/profile" class="user-icon" style="background: gray"> Profile</a>
             </div>
             <div class="pad col-12" style="background: lightgray">
-              <a href="friends" class="friends-icon" style="background: darkgray"> Friends</a>
+              <a href="/MyCollectionSite/user/friends" class="friends-icon" style="background: darkgray"> Friends</a>
             </div>
             <div class="pad col-12" style="background: lightgray;">
-              <a href="comments" class="comments-icon" style="background: gray"> Comments</a>
+              <a href="/MyCollectionSite/user/comments" class="comments-icon" style="background: gray"> Comments</a>
             </div>
             <div class="pad col-12" style="background: lightgray">
-              <a href="reviews" class="comments-icon" style="background: darkgray"> Reviews</a>
+              <a href="/MyCollectionSite/user/reviews" class="comments-icon" style="background: darkgray"> Reviews</a>
             </div>
             <div class="pad col-12" style="background: lightgray">
-              <a href="settings" class="settings-icon" style="background: gray"> Account settings</a>
+              <a href="/MyCollectionSite/user/settings" class="settings-icon" style="background: gray"> Account settings</a>
             </div>
             <div class="pad col-12" style="background: lightgray">
-              <a href="preferences" class="settings-icon" style="background: darkgray"> Preferences</a>
+              <a href="/MyCollectionSite/user/preferences" class="settings-icon" style="background: darkgray"> Preferences</a>
             </div>
             <div class="pad col-12" style="background: lightgray">
               <a href="test" class="logout-icon" style="background: gray"> Logout</a>
-            </div>
-            <div class="pad col-12" style="background: lightgray">
-              <button id="debug" class="logout-icon">Debug</button>
             </div>
           </div>
         </div>
       </li>`;
 
     this.shadowRoot.append(header);
-  }
-
-  debugModifyUrls(keep)
-  {
-    this.shadowRoot.querySelector("#debug").innerHTML = `Debug ${keep}`;
-    const anchors = this.shadowRoot.querySelectorAll("a");
-    if (keep)
-      for (let i = 0; i < anchors.length; i++)
-      {
-        const query = document.URL.split("?");
-        if (query.length > 1)
-          anchors[i].href += ".html?" + query[1];
-      }
-    else
-      for (let i = 0; i < anchors.length; i++)
-      {
-        anchors[i].href = anchors[i].href.replace("MyCollectionWebSite/MyCollectionSite", "MyCollectionSite");
-        anchors[i].href = anchors[i].href.split(".html?")[0];
-      }
   }
 }
 
