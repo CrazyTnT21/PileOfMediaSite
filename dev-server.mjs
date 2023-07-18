@@ -1,6 +1,3 @@
-// Require in some of the native stuff that comes with Node
-
-// Port number to use
 import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
@@ -9,113 +6,94 @@ const port = 4000;
 // Colors for CLI output
 const gray = "\x1b[37m";
 
-// Create the server
+const contentTypeExtensions = {
+  ".html": "text/html",
+  ".css": "text/css",
+  ".js": "text/javascript",
+  ".json": "text/json",
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".ico": "image/x-icon",
+};
 http.createServer(async (request, response) =>
 {
   let filename = path.join(process.cwd(), request.url);
+  let file = null;
+  const filepath = path.basename(filename).toLowerCase();
 
-  const contentTypesByExtension = {
-    ".html": "text/html",
-    ".css": "text/css",
-    ".js": "text/javascript",
-    ".json": "text/json",
-    ".svg": "image/svg+xml",
-    ".png": "image/png",
-    ".jpg": "image/jpeg",
-    ".jpeg": "image/jpeg",
-    ".ico": "image/x-icon",
-  };
+  if (filepath === 'mycollectionsite')
+  {
+    const data = await fs.promises.readFile(path.join("MyCollectionSite", "index.html"), "binary");
+    const headers = {"Content-Type": contentTypeExtensions[".html"]};
+
+    file = {statusCode: 200, data: data, headers: headers};
+  }
   const exists = fs.existsSync(filename);
-  if (!exists)
-  {
-    const htmlFilename = filename + ".html";
 
-    const existsHtmlFile = fs.existsSync(htmlFilename);
-    if (!existsHtmlFile)
+  if (!file && exists)
+  {
+    if (fs.statSync(filename).isDirectory())
     {
-      writeNotFound(response);
-      return;
+      const directoryIndex = path.join(filename, path.basename(filename) + ".html");
+
+      const existsIndex = fs.existsSync(directoryIndex);
+      if (existsIndex)
+      {
+        const data = await fs.promises.readFile(directoryIndex, "binary");
+        const contentType = contentTypeExtensions[path.extname(directoryIndex)];
+        const headers = {};
+        if (contentType)
+          headers["Content-Type"] = contentType;
+
+        file = {statusCode: 200, data: data, headers: headers};
+      }
     }
-
-    const file = await fs.promises.readFile(htmlFilename, "binary")
-      .catch(x => writeError(response, x));
-
-    const contentType = contentTypesByExtension[path.extname(filename)];
-    const headers = {};
-    if (contentType)
-      headers["Content-Type"] = contentType;
-
-    writeOK(response, file, headers);
-    return;
-  }
-  if (path.basename(filename).toLowerCase() === "mycollectionsite")
-  {
-    const file = await fs.promises.readFile(path.join("MyCollectionSite", "index.html"), "binary")
-      .catch(x => writeError(response, x));
-
-    const contentType = contentTypesByExtension[path.extname(filename)];
-    const headers = {};
-    if (contentType)
-      headers["Content-Type"] = contentType;
-
-    writeOK(response, file, headers);
-    return;
-  }
-  if (fs.statSync(filename).isDirectory())
-  {
-    //Having multiple index.html files sucks, so a file with the same name as the directory is considered the index
-    const directoryIndex = path.join(filename, path.basename(filename) + ".html");
-
-    const existsIndex = fs.existsSync(directoryIndex);
-    if (!existsIndex)
+    else
     {
-      writeNotFound(response);
-      return;
+      const data = await fs.promises.readFile(filename, "binary");
+      const contentType = contentTypeExtensions[path.extname(filename)];
+      const headers = {};
+      if (contentType)
+        headers["Content-Type"] = contentType;
+
+      file = {statusCode: 200, data: data, headers: headers};
     }
-
-    const file = await fs.promises.readFile(directoryIndex, "binary")
-      .catch(x => writeError(response, x));
-
-    const contentType = contentTypesByExtension[path.extname(filename)];
-    const headers = {};
-    if (contentType)
-      headers["Content-Type"] = contentType;
-
-    writeOK(response, file, headers);
-    return;
   }
-  const file = await fs.promises.readFile(filename, "binary")
-    .catch(x => writeError(response, x));
+  if (!file)
+  {
+    const htmlFileName = filename + ".html";
+    const existsHtml = fs.existsSync(htmlFileName);
+    if (existsHtml)
+    {
+      const data = await fs.promises.readFile(htmlFileName, "binary");
+      const contentType = contentTypeExtensions[path.extname(htmlFileName)];
+      const headers = {};
+      if (contentType)
+        headers["Content-Type"] = contentType;
 
-  const contentType = contentTypesByExtension[path.extname(filename)];
-  const headers = {};
-  if (contentType)
-    headers["Content-Type"] = contentType;
+      file = {statusCode: 200, data: data, headers: headers};
+    }
+  }
+  if (!file)
+  {
+    const data = await fs.promises.readFile(path.join(process.cwd(), "MyCollectionSite", "404.html"), "binary");
+    const contentType = contentTypeExtensions[".html"];
+    const headers = {"Content-Type": contentType};
 
-  writeOK(response, file, headers);
+    file = {statusCode: 404, data: data, headers: headers};
+  }
+
+  writeResponse(response, file);
 
 }).listen(port);
 
 console.log(gray + `Server running at http://localhost:${port}\nCTRL + C to shutdown`);
 
-function writeNotFound(response)
+function writeResponse(response, file)
 {
-  response.writeHead(404, {"Content-Type": "text/plain"});
-  response.write("Not Found" + "\n");
-  response.end();
-}
-
-function writeOK(response, file, headers)
-{
-  response.writeHead(200, headers);
-  response.write(file, "binary");
-  response.end();
-}
-
-function writeError(response, error)
-{
-  console.error(error);
-  response.writeHead(500, {"Content-Type": "text/plain"});
-  response.write(error + "\n");
+  response.writeHead(file.statusCode, file.headers);
+  response.write(file.data, "binary");
   response.end();
 }

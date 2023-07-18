@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/MyCollectionSite/assets/styles/styles.css">
+  <link rel="stylesheet" href="/MyCollectionSite/assets/styles/columns.css">
+  <link rel="icon" href="/MyCollectionSite/favicon.ico" type="image/x-icon"/>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page not found</title>
+</head>
+<body>
+<app-header></app-header>
+<h1>Page not found</h1>
+<div class="col-12">
+  Sorry, the requested page could not be found.
+</div>
+<div class="col-12">
+  <a id="referer">Return</a>&nbsp;or go to the&nbsp;<a href="/">home page</a>.
+</div>
+<div class="col-12 mar-top">
+  If you believe this to be a mistake&nbsp;<a href="/">contact us</a>.
+</div>
+<script>
+  document.querySelector("#referer").href = document.referrer;
+</script>
+<script src="/MyCollectionSite/assets/components/header.js" type="module"></script>
+</body>
+</html>
