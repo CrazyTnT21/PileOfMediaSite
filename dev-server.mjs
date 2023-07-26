@@ -2,9 +2,46 @@ import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
 
+const routes = [
+  {
+    route: "/",
+    file: "index.html",
+  },
+  {
+    route: "/user/{id/username}",
+    file: "/user/user.html",
+  },
+  {
+    route: "/user/profile",
+    file: "/user/profile.html",
+  },
+  {
+    route: "/user/comments",
+    file: "/user/comments.html",
+  },
+  {
+    route: "/user/friends",
+    file: "/user/friends.html",
+  },
+  {
+    route: "/user/reviews",
+    file: "/user/reviews.html",
+  },
+  {
+    route: "/user/preferences",
+    file: "/user/preferences.html",
+  },
+  {
+    route: "/comics",
+    file: "/comics/comics.html",
+  },
+  {
+    route: "/comics/{id}",
+    file: "/comics/comics-single.html",
+  },
+];
+validateRoutes();
 const port = 4000;
-// Colors for CLI output
-const gray = "\x1b[37m";
 
 const contentTypeExtensions = {
   ".html": "text/html",
@@ -19,38 +56,20 @@ const contentTypeExtensions = {
 };
 http.createServer(async (request, response) =>
 {
-  let filename = path.join(process.cwd(), request.url);
   let file = null;
-  const filepath = path.basename(filename).toLowerCase();
-
-  if (filepath === 'mycollectionsite')
+  const index = routes.findIndex(x => x.route === request.url);
+  if (index >= 0)
   {
-    const data = await fs.promises.readFile(path.join("MyCollectionSite", "index.html"), "binary");
-    const headers = {"Content-Type": contentTypeExtensions[".html"]};
+    const data = await fs.promises.readFile(path.join(process.cwd(), routes[index].file), "binary");
+    const headers = {"Content-Type": "text/html"};
 
     file = {statusCode: 200, data: data, headers: headers};
   }
-  const exists = fs.existsSync(filename);
-
-  if (!file && exists)
+  if (!file)
   {
-    if (fs.statSync(filename).isDirectory())
-    {
-      const directoryIndex = path.join(filename, path.basename(filename) + ".html");
-
-      const existsIndex = fs.existsSync(directoryIndex);
-      if (existsIndex)
-      {
-        const data = await fs.promises.readFile(directoryIndex, "binary");
-        const contentType = contentTypeExtensions[path.extname(directoryIndex)];
-        const headers = {};
-        if (contentType)
-          headers["Content-Type"] = contentType;
-
-        file = {statusCode: 200, data: data, headers: headers};
-      }
-    }
-    else
+    let filename = path.join(process.cwd(), request.url);
+    const exists = fs.existsSync(filename);
+    if (exists)
     {
       const data = await fs.promises.readFile(filename, "binary");
       const contentType = contentTypeExtensions[path.extname(filename)];
@@ -63,24 +82,8 @@ http.createServer(async (request, response) =>
   }
   if (!file)
   {
-    const htmlFileName = filename + ".html";
-    const existsHtml = fs.existsSync(htmlFileName);
-    if (existsHtml)
-    {
-      const data = await fs.promises.readFile(htmlFileName, "binary");
-      const contentType = contentTypeExtensions[path.extname(htmlFileName)];
-      const headers = {};
-      if (contentType)
-        headers["Content-Type"] = contentType;
-
-      file = {statusCode: 200, data: data, headers: headers};
-    }
-  }
-  if (!file)
-  {
-    const data = await fs.promises.readFile(path.join(process.cwd(), "MyCollectionSite", "404.html"), "binary");
-    const contentType = contentTypeExtensions[".html"];
-    const headers = {"Content-Type": contentType};
+    const data = await fs.promises.readFile(path.join(process.cwd(), "404.html"), "binary");
+    const headers = {"Content-Type": "text/html"};
 
     file = {statusCode: 404, data: data, headers: headers};
   }
@@ -89,11 +92,20 @@ http.createServer(async (request, response) =>
 
 }).listen(port);
 
-console.log(gray + `Server running at http://localhost:${port}\nCTRL + C to shutdown`);
+console.log(`Server running at http://localhost:${port}\nCTRL + C to shutdown\n`);
+console.log("Configured routes:");
+routes.forEach(x => console.log(x.route + " => \x1b[33m" + x.file + "\x1b[0m"));
 
 function writeResponse(response, file)
 {
   response.writeHead(file.statusCode, file.headers);
   response.write(file.data, "binary");
   response.end();
+}
+
+function validateRoutes()
+{
+  for (let i = 0; i < routes.length; i++)
+    if (!fs.existsSync(path.join(process.cwd(), routes[i].file)))
+      throw new Error(routes[i].file + " does not exist!");
 }
