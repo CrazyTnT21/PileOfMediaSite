@@ -2,8 +2,8 @@ import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
 
-const routes =
-    {
+const Routes =
+    [{
         route: "",
         file: "index.html",
         routes: [
@@ -66,8 +66,8 @@ const routes =
                 ],
             },
         ],
-    };
-validateRoutes(routes);
+    }];
+validateRoutes(Routes);
 const port = 4000;
 
 const contentTypeExtensions = {
@@ -84,14 +84,14 @@ const contentTypeExtensions = {
 
 /**
  * Sort the routes, so that wildcard routes ({id}) appear last and don't invalidate working routes that appear later
- * @param route
+ * @param routes
  */
-function sortRoutes(route)
+function sortRoutes(routes)
 {
-    if (!route.routes)
+    if (!routes)
         return;
 
-    route.routes.sort((x, y) =>
+    routes.sort((x, y) =>
         {
             const pattern = new RegExp(/\{.*\}/);
             if (pattern.test(x.route))
@@ -99,40 +99,47 @@ function sortRoutes(route)
             return -1;
         },
     );
-    for (let i = 0; i < route.routes.length; i++)
+    for (let i = 0; i < routes.length; i++)
     {
-        sortRoutes(route.routes[i]);
+        sortRoutes(routes[i].routes);
     }
 }
 
-function getRoute(route, currentRoute)
+function getRoute(route, routes)
 {
     const pattern = /\{.*\}/;
 
-    for (let i = 0; i < currentRoute.routes.length; i++)
+    for (let i = 0; i < routes.length; i++)
     {
-        if (route[0] === currentRoute.routes[i].route ||
-            pattern.test(currentRoute.routes[i].route))
+        if (route[0] === routes[i].route ||
+            pattern.test(routes[i].route))
         {
             if (route.length === 1)
-                return currentRoute.routes[i];
+                return routes[i];
 
             route.splice(0, 1);
-            return getRoute(route, currentRoute.routes[i]);
+            return getRoute(route, routes[i].routes);
         }
     }
     return null;
 }
 
-sortRoutes(routes);
+sortRoutes(Routes);
 http.createServer(async (request, response) =>
 {
     let file = null;
     if (request.headers.accept.split(",").includes("text/html"))
     {
-        const route = request.url.split("/");
-        route.splice(0, 1);
-        let currentRoute = getRoute(route, routes);
+        let currentRoute;
+        if (request.url === "/")
+        {
+            currentRoute = Routes[0];
+        }
+        else
+        {
+            const route = request.url.split("/");
+            currentRoute = getRoute(route, Routes);
+        }
         if (currentRoute && currentRoute.file)
         {
             const data = await fs.promises.readFile(path.join(process.cwd(), currentRoute.file), "binary");
@@ -177,15 +184,15 @@ function writeResponse(response, file)
     response.end();
 }
 
-function validateRoutes(route)
+function validateRoutes(routes)
 {
-    if (!route.routes)
+    if (!routes)
         return;
 
-    for (let i = 0; i < route.routes.length; i++)
+    for (let i = 0; i < routes.length; i++)
     {
-        validateRoutes(route.routes[i]);
-        if (route.routes[i].file && !fs.existsSync(path.join(process.cwd(), route.routes[i].file)))
-            throw new Error(route.routes[i].file + " does not exist!");
+        validateRoutes(routes[i].routes);
+        if (routes[i].file && !fs.existsSync(path.join(process.cwd(), routes[i].file)))
+            throw new Error(routes[i].file + " does not exist!");
     }
 }
