@@ -35,13 +35,6 @@ img {
     display: flex;
     justify-content: center;
 }
-
-.header {
-    display: flex;
-    background: lightgray;
-    box-shadow: 0 5px gray;
-}
-
 .footer {
     display: flex;
     flex: 1;
@@ -98,72 +91,6 @@ img {
 
 .mar-bottom {
     margin-bottom: 0.33rem;
-}
-.user-icon{
-  padding-left: 25px;
-}
-.user-icon::before{
-  background-image: url("/assets/img/User_Placeholder.png");
-  background-size: cover;
-  position: absolute;
-  width:25px;
-  height:25px;
-  content: '';
-  margin-left:-25px;
-}
-
-.friends-icon{
-  padding-left: 25px;
-}
-.friends-icon::before{
-  background-image: url("/assets/img/Friends_Placeholder.png");
-  background-size: cover;
-  position: absolute;
-  width:25px;
-  height:25px;
-  content: '';
-  margin-left:-25px;
-}
-
-
-.comments-icon{
-  padding-left: 25px;
-}
-.comments-icon::before{
-  background-image: url("/assets/img/Comments_Placeholder.png");
-  background-size: cover;
-  position: absolute;
-  width:25px;
-  height:25px;
-  content: '';
-  margin-left:-25px;
-}
-
-
-.settings-icon{
-  padding-left: 25px;
-}
-.settings-icon::before{
-  background-image: url("/assets/img/Gear_Placeholder.png");
-  background-size: cover;
-  position: absolute;
-  width:25px;
-  height:25px;
-  content: '';
-  margin-left:-25px;
-}
-
-.logout-icon{
-  padding-left: 25px;
-}
-.logout-icon::before{
-  background-image: url("/assets/img/Logout_Placeholder.png");
-  background-size: cover;
-  position: absolute;
-  width:25px;
-  height:25px;
-  content: '';
-  margin-left:-25px;
 }
 .error{
   padding: 5px;
