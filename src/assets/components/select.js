@@ -56,7 +56,7 @@ export class Select extends HTMLElement
     const input = document.createElement("input");
     const datalist = document.createElement("datalist");
     label.innerHTML = this.titleText(this.title);
-    select.innerHTML = `<link rel="stylesheet" href="/assets/styles/columns.css"><link rel="stylesheet" href="/assets/styles/styles.css">`;
+    select.innerHTML = `<link rel="stylesheet" href="/assets/css/columns.css"><link rel="stylesheet" href="/assets/css/main.css">`;
 
     input.setAttribute("list", "items");
     datalist.id = "items";

@@ -103,7 +103,7 @@ img {
   padding-left: 25px;
 }
 .user-icon::before{
-  background-image: url("/assets/images/User_Placeholder.png");
+  background-image: url("/assets/img/User_Placeholder.png");
   background-size: cover;
   position: absolute;
   width:25px;
@@ -116,7 +116,7 @@ img {
   padding-left: 25px;
 }
 .friends-icon::before{
-  background-image: url("/assets/images/Friends_Placeholder.png");
+  background-image: url("/assets/img/Friends_Placeholder.png");
   background-size: cover;
   position: absolute;
   width:25px;
@@ -130,7 +130,7 @@ img {
   padding-left: 25px;
 }
 .comments-icon::before{
-  background-image: url("/assets/images/Comments_Placeholder.png");
+  background-image: url("/assets/img/Comments_Placeholder.png");
   background-size: cover;
   position: absolute;
   width:25px;
@@ -144,7 +144,7 @@ img {
   padding-left: 25px;
 }
 .settings-icon::before{
-  background-image: url("/assets/images/Gear_Placeholder.png");
+  background-image: url("/assets/img/Gear_Placeholder.png");
   background-size: cover;
   position: absolute;
   width:25px;
@@ -157,7 +157,7 @@ img {
   padding-left: 25px;
 }
 .logout-icon::before{
-  background-image: url("/assets/images/Logout_Placeholder.png");
+  background-image: url("/assets/img/Logout_Placeholder.png");
   background-size: cover;
   position: absolute;
   width:25px;

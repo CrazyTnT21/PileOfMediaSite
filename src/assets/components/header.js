@@ -36,31 +36,35 @@ class Header extends HTMLElement
     header.classList.add("header", "col-l-12", "pad", "mar-bottom");
     // language=HTML
     header.innerHTML = `
-      <link rel="stylesheet" href="/assets/styles/columns.css">
-      <link rel="stylesheet" href="/assets/styles/styles.css">
+      ${this.styleHTML()}
+      <link rel="stylesheet" href="/assets/css/columns.css">
+      <link rel="stylesheet" href="/assets/css/main.css">
       <li class="col-s-12">
         <a class="col-s-12" href="/">
-          <img class="fix-1" src="/assets/images/Logo_Placeholder.png" alt="Logo"/>
+          <img class="fix-1" src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
           <div class="col pad">MyCollection</div>
         </a>
       </li>
-      <li class="col-s-12 col  align-center pad">
-        <a href="/comics">Comics</a>
+
+      <li class="col-s-12 col align-center pad">
+        <a class="graphic-novel-icon" href="/graphicnovels">
+          Graphic novels
+        </a>
       </li>
-      <li class="col col-s-12 align-center pad">
-        <a href="/manga">Manga</a>
+      <li class="col-s-12 col align-center pad">
+        <a class="book-icon" href="/books">
+          Books
+        </a>
       </li>
-      <li class="col col-s-12 align-center pad">
-        <a href="/shows">Shows</a>
+      <li class="col-s-12 col align-center pad">
+        <a class="show-icon" href="/Shows">
+          Shows
+        </a>
       </li>
-      <li class="col col-s-12 align-center pad">
-        <a href="/anime">Anime</a>
-      </li>
-      <li class="col col-s-12 align-center pad">
-        <a href="/games">Games</a>
-      </li>
-      <li class="col col-s-12 align-center pad">
-        <a href="/music">Music</a>
+      <li class="col-s-12 col align-center pad">
+        <a class="game-icon" href="/Games">
+          Games
+        </a>
       </li>
       <div class="fix-7"></div>
       <li class="fix-7 col-s-12 right" id="profile">
@@ -68,7 +72,7 @@ class Header extends HTMLElement
           <div class="col pad">
             <div class="col-l-12" style="font-weight: bold">TestUsername</div>
           </div>
-          <img src="/assets/images/User_Placeholder.png" class="fix-1 col-s-2"
+          <img src="/assets/img/User_Placeholder.png" class="fix-1 col-s-2"
                alt="User profile"/>
         </div>
         <div class="fix-7 col-s-12" id="settings" style="position: fixed; display: none; margin-top: 2.5rem">
@@ -99,6 +103,69 @@ class Header extends HTMLElement
       </li>`;
 
     this.shadowRoot.append(header);
+  }
+
+  styleHTML(){
+    //language=HTML
+    return `
+      <style>
+        .graphic-novel-icon {
+          padding-left: 25px;
+        }
+
+        .graphic-novel-icon:before {
+          content: '';
+          background: url('/assets/img/Graphic_novel_Placeholder.svg');
+          background-size: cover;
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          margin-left: -24px;
+        }
+
+        .book-icon {
+          padding-left: 25px;
+        }
+
+        .book-icon:before {
+          content: '';
+          background: url('/assets/img/Book_Placeholder.svg');
+          background-size: cover;
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          margin-left: -24px;
+        }
+
+        .show-icon {
+          padding-left: 25px;
+        }
+
+        .show-icon:before {
+          content: '';
+          background: url('/assets/img/Show_Placeholder.svg');
+          background-size: cover;
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          margin-left: -24px;
+        }
+
+        .game-icon {
+          padding-left: 25px;
+        }
+
+        .game-icon:before {
+          content: '';
+          background: url('/assets/img/Game_Placeholder.svg');
+          background-size: cover;
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          margin-left: -24px;
+        }
+      </style>
+    `
   }
 }
 
