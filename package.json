@@ -1,0 +1,24 @@
+{
+  "name": "mycollectionsite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx webpack serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CrazyTnT21/MyCollectionSite.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CrazyTnT21/MyCollectionSite/issues"
+  },
+  "homepage": "https://github.com/CrazyTnT21/MyCollectionSite#readme",
+  "devDependencies": {
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

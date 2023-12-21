@@ -1,4 +1,2 @@
-/.idea/.gitignore
-/.idea/modules.xml
-/.idea/MyCollectionSite.iml
-/.idea/vcs.xml
+
+/node_modules
