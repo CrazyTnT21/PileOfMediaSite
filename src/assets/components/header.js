@@ -1,331 +1,350 @@
-
 class Header extends HTMLElement
 {
-  user = {
-    name: "TestUsername",
-    mail: "TestUsername@Email.com",
-  };
+    user;
 
+    showDropdown()
+    {
+        const settings = this.shadowRoot.querySelector("#settings");
+        if (settings.style.display === "none")
+        {
+            settings.parentElement.style.display = "flex";
+            settings.style.display = "flex";
+        }
+        else
+        {
+            settings.parentElement.style.display = "none";
+            settings.style.display = "none";
+        }
+    }
 
-  showDropdown(e)
-  {
-    const item = this.shadowRoot.querySelector("#settings");
-    if (item.style.display === "none")
-      item.style.display = "flex";
-    else
-      item.style.display = "none";
-  }
+    connectedCallback()
+    {
+        const header = this.shadowRoot.querySelector("#profile");
+        header.addEventListener("click", () => this.showDropdown());
+    }
 
-  connectedCallback()
-  {
-    const header = this.shadowRoot.querySelector("#profile");
-    header.addEventListener("click", (e) => this.showDropdown(e));
-  }
+    disconnectedCallback()
+    {
+        const header = document.querySelector("#profile");
+        header.removeEventListener("click", () => this.showDropdown());
+    }
 
-  disconnectedCallback()
-  {
-    const header = document.querySelector("#profile");
-    header.removeEventListener("click", (e) => this.showDropdown(e));
-  }
+    constructor()
+    {
+        super();
+        this.attachShadow({mode: "open"});
 
-  constructor()
-  {
-    super();
-    this.attachShadow({mode: "open"});
-    const ulElement = document.createElement("ul");
-    ulElement.classList.add("col-l-12", "pad","mar-bottom");
-    // language=HTML
-    ulElement.innerHTML = `
-        ${this.styleHTML()}
-        <li>
-            <a class="col-12" href="/">
-                <img class="fix-1" src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
-                <div class="col pad">MyCollection</div>
-            </a>
-        </li>
+        // language=HTML
+        this.shadowRoot.innerHTML = `
+            ${this.styleHTML()}
+            <nav>
+                <ul>
+                    <li>
+                        <a class="col-12" href="/">
+                            <img class="fix-1" src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
+                            <div style="padding-left: 5px" class="">MyCollection</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/graphicnovels">
+                            <div class="graphic-novel-icon">Graphic novels</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/books">
+                            <div class="book-icon">Books</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/shows">
+                            <div class="show-icon">Shows</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/movies">
+                            <div class="movie-icon">Movies</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/games">
+                            <div class="game-icon">Games</div>
+                        </a>
+                    </li>
+                    <li id="profile" >
+                        <div id="user">
+                            <div id="username" style="display: none">
+                                Test
+                            </div>
+                            <img src="/assets/img/User_Placeholder.png" alt="User profile"/>
+                        </div>
+                        <div style="display: none; flex-wrap: wrap; width: 100%" class="pad">
+                            <ul id="settings" style="display: none;">
+                                <li>
+                                    <a href="/user/profile" class="user-icon">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="/user/friends" class="friends-icon">
+                                        Friends</a>
+                                </li>
+                                <li>
+                                    <a href="/user/comments" class="comments-icon">
+                                        Comments</a>
+                                </li>
+                                <li>
+                                    <a href="/user/reviews" class="comments-icon">
+                                        Reviews</a>
+                                </li>
+                                <li>
+                                    <a href="/user/settings" class="settings-icon"> Account
+                                        settings</a>
+                                </li>
+                                <li>
+                                    <a href="/user/preferences" class="settings-icon">
+                                        Preferences</a>
+                                </li>
+                                <li>
+                                    <a href="/" class="logout-icon"> Logout</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        `;
+    }
 
-        <li class="col align-center pad">
-            <a class="graphic-novel-icon" href="/graphicnovels">
-                Graphic novels
-            </a>
-        </li>
-        <li class="col align-center pad">
-            <a class="book-icon" href="/books">
-                Books
-            </a>
-        </li>
-        <li class="col align-center pad">
-            <a class="show-icon" href="/Shows">
-                Shows
-            </a>
-        </li>
-        <li class="col align-center pad">
-            <a class="game-icon" href="/Games">
-                Games
-            </a>
-        </li>
-        <div class="fix-7"></div>
-        <li class="fix-7" id="profile">
-            <div class="col-l-12 align-right">
-                <div class="col pad">
-                    <div class="col-l-12" style="font-weight: bold">TestUsername</div>
-                </div>
-                <img src="/assets/img/User_Placeholder.png" class="fix-1 col-s-2"
-                     alt="User profile"/>
-            </div>
-            <div class="fix-7" id="settings" style="position: fixed; display: none; margin-top: 2.5rem">
-                <div class="col-12">
-                    <div class="pad col-12" style="background: lightgray">
-                        <a href="/user/profile" class="user-icon" style="background: gray"> Profile</a>
-                    </div>
-                    <div class="pad col-12" style="background: lightgray">
-                        <a href="/user/friends" class="friends-icon" style="background: darkgray"> Friends</a>
-                    </div>
-                    <div class="pad col-12" style="background: lightgray;">
-                        <a href="/user/comments" class="comments-icon" style="background: gray"> Comments</a>
-                    </div>
-                    <div class="pad col-12" style="background: lightgray">
-                        <a href="/user/reviews" class="comments-icon" style="background: darkgray"> Reviews</a>
-                    </div>
-                    <div class="pad col-12" style="background: lightgray">
-                        <a href="/user/settings" class="settings-icon" style="background: gray"> Account
-                            settings</a>
-                    </div>
-                    <div class="pad col-12" style="background: lightgray">
-                        <a href="/user/preferences" class="settings-icon" style="background: darkgray">
-                            Preferences</a>
-                    </div>
-                    <div class="pad col-12" style="background: lightgray">
-                        <a href="test" class="logout-icon" style="background: gray"> Logout</a>
-                    </div>
-                </div>
-            </div>
-        </li>
-    `;
+    styleHTML()
+    {
+        //language=HTML
+        return `
+            <style>
+                .graphic-novel-icon {
+                    padding-left: 25px;
+                }
 
-    this.shadowRoot.append(ulElement);
-  }
+                .graphic-novel-icon:before {
+                    content: '';
+                    background: url('/assets/img/Graphic_novel_Placeholder.svg');
+                    background-size: cover;
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    margin-left: -24px;
+                }
 
-  styleHTML(){
-    //language=HTML
-    return `
-        <style>
-            .graphic-novel-icon {
-                padding-left: 25px;
-            }
+                .book-icon {
+                    padding-left: 25px;
+                }
 
-            .graphic-novel-icon:before {
-                content: '';
-                background: url('/assets/img/Graphic_novel_Placeholder.svg');
-                background-size: cover;
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                margin-left: -24px;
-            }
+                .book-icon:before {
+                    content: '';
+                    background: url('/assets/img/Book_Placeholder.svg');
+                    background-size: cover;
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    margin-left: -24px;
+                }
 
-            .book-icon {
-                padding-left: 25px;
-            }
+                .show-icon {
+                    padding-left: 25px;
+                }
 
-            .book-icon:before {
-                content: '';
-                background: url('/assets/img/Book_Placeholder.svg');
-                background-size: cover;
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                margin-left: -24px;
-            }
+                .show-icon:before {
+                    content: '';
+                    background: url('/assets/img/Show_Placeholder.svg');
+                    background-size: cover;
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    margin-left: -24px;
+                }
 
-            .show-icon {
-                padding-left: 25px;
-            }
+                .game-icon {
+                    padding-left: 25px;
+                }
 
-            .show-icon:before {
-                content: '';
-                background: url('/assets/img/Show_Placeholder.svg');
-                background-size: cover;
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                margin-left: -24px;
-            }
+                .game-icon:before {
+                    content: '';
+                    background: url('/assets/img/Game_Placeholder.svg');
+                    background-size: cover;
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    margin-left: -24px;
+                }
 
-            .game-icon {
-                padding-left: 25px;
-            }
+                .movie-icon {
+                    padding-left: 25px;
+                }
 
-            .game-icon:before {
-                content: '';
-                background: url('/assets/img/Game_Placeholder.svg');
-                background-size: cover;
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                margin-left: -24px;
-            }
+                .movie-icon:before {
+                    content: '';
+                    background: url('/assets/img/Movie_Placeholder.svg');
+                    background-size: cover;
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    margin-left: -24px;
+                }
 
+                .user-icon {
+                    padding-left: 25px;
+                }
 
-            .user-icon{
-              padding-left: 25px;
-            }
-            .user-icon::before{
-              background-image: url("/assets/img/User_Placeholder.png");
-              background-size: cover;
-              position: absolute;
-              width:25px;
-              height:25px;
-              content: '';
-              margin-left:-25px;
-            }
+                .user-icon::before {
+                    background-image: url("/assets/img/User_Placeholder.png");
+                    background-size: cover;
+                    position: absolute;
+                    width: 25px;
+                    height: 25px;
+                    content: '';
+                    margin-left: -25px;
+                }
 
-            .friends-icon{
-              padding-left: 25px;
-            }
-            .friends-icon::before{
-              background-image: url("/assets/img/Friends_Placeholder.png");
-              background-size: cover;
-              position: absolute;
-              width:25px;
-              height:25px;
-              content: '';
-              margin-left:-25px;
-            }
-            
-            .comments-icon{
-              padding-left: 25px;
-            }
-            .comments-icon::before{
-              background-image: url("/assets/img/Comments_Placeholder.png");
-              background-size: cover;
-              position: absolute;
-              width:25px;
-              height:25px;
-              content: '';
-              margin-left:-25px;
-            }
-            
-            .settings-icon{
-              padding-left: 25px;
-            }
-            .settings-icon::before{
-              background-image: url("/assets/img/Gear_Placeholder.png");
-              background-size: cover;
-              position: absolute;
-              width:25px;
-              height:25px;
-              content: '';
-              margin-left:-25px;
-            }
+                .friends-icon {
+                    padding-left: 25px;
+                }
 
-            .logout-icon{
-              padding-left: 25px;
-            }
-            .logout-icon::before{
-              background-image: url("/assets/img/Logout_Placeholder.png");
-              background-size: cover;
-              position: absolute;
-              width:25px;
-              height:25px;
-              content: '';
-              margin-left:-25px;
-            }
-            
-            ul, li {
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-            }
+                .friends-icon::before {
+                    background-image: url("/assets/img/Friends_Placeholder.png");
+                    background-size: cover;
+                    position: absolute;
+                    width: 25px;
+                    height: 25px;
+                    content: '';
+                    margin-left: -25px;
+                }
 
-            ul {
-                display: flex;
-                background: lightgray;
-                box-shadow: 0 5px rgb(128, 128, 128);
-            }
+                .comments-icon {
+                    padding-left: 25px;
+                }
 
-            .pad {
-                padding: .33em;
-            }
+                .comments-icon::before {
+                    background-image: url("/assets/img/Comments_Placeholder.png");
+                    background-size: cover;
+                    position: absolute;
+                    width: 25px;
+                    height: 25px;
+                    content: '';
+                    margin-left: -25px;
+                }
 
-            .align-center {
-                display: flex;
-                justify-content: center;
-            }
-            
-            .align-right {
-                margin-left: auto;
-            }
+                .settings-icon {
+                    padding-left: 25px;
+                }
 
-            #profile {
-                position: absolute;
-                right: 1rem;
-            }
+                .settings-icon::before {
+                    background-image: url("/assets/img/Gear_Placeholder.png");
+                    background-size: cover;
+                    position: absolute;
+                    width: 25px;
+                    height: 25px;
+                    content: '';
+                    margin-left: -25px;
+                }
 
-            .mar-bottom {
-              margin-bottom: 0.33rem;
-            }
-            .col-12,
-            .col-l-12,
-            .col-s-2,
-            li {
-                display: flex;
-                flex-wrap: wrap;
-                flex: 0 0 auto;
-                align-self: flex-start;
-                align-items: flex-start;
-                box-sizing: border-box;
+                .logout-icon {
+                    padding-left: 25px;
+                }
 
-                flex-grow: 0;
-            }
+                .logout-icon::before {
+                    background-image: url("/assets/img/Logout_Placeholder.png");
+                    background-size: cover;
+                    position: absolute;
+                    width: 25px;
+                    height: 25px;
+                    content: '';
+                    margin-left: -25px;
+                }
 
-            .col {
-                display: flex;
-                box-sizing: border-box;
-                flex-wrap: wrap;
-                align-self: flex-start;
-                flex-grow: 1;
-            }
+                .align-right {
+                    margin-left: auto;
+                }
 
-            .fix-1,
-            .fix-7 {
-                display: flex;
-                flex-wrap: wrap;
-                flex: 0 0 auto;
-                align-self: flex-start;
-                align-items: flex-start;
-                box-sizing: border-box;
-            }
-            
-            .fix-7 {
-                width: 14rem;
-            }
-            
-            .fix-1 {
-                width: 2rem;
-            }
+                #profile {
+                    position: absolute;
+                    right: 1rem;
+                }
 
-            .col-12 {
-                width: 100%;
-            }
+                a {
+                    color: black;
+                    text-decoration: none;
+                }
 
-            @media screen and (min-width: 700px) {
-                .col-l-12 {
+                ul {
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                nav,
+                ul,
+                ul > li,
+                ul > li > * {
+                    display: flex;
+                }
+
+                img {
+                    padding-top: 5px;
+                    padding-bottom: 5px;
+                    height: 40px;
+                    width: 40px;
+                }
+
+                nav {
+                    font: 1rem "Fira Sans", sans-serif;
+                    display: flex;
+                    min-height: 50px;
+                    background: var(--primary-background);
+                }
+
+                nav > ul > li > * {
+                    align-items: center;
+                    text-align: center;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+
+                ul > li:hover {
+                    background-color: var(--hover);
+                }
+
+                ul > li:last-child:hover {
+                    background-color: var(--primary-background);
+                }
+
+                #user:hover {
+                    background-color: var(--hover);
+                }
+
+                #settings {
+                    flex-wrap: wrap;
+                    padding: 5px;
+                    background: var(--primary-background);
+                }
+
+                #profile {
+                    flex-wrap: wrap;
+                    max-width: 200px;
+                }
+
+                #settings > *,
+                #settings > * > * {
                     width: 100%;
                 }
-            }
-            @media screen and (max-width: 500px) {
-                li {
-                    width: 100%;
+
+                #settings > * > * {
+                    padding-bottom: 5px;
                 }
-              
-                .col-s-2 {
-                    width: 16.6667%;
+
+                .pad {
+                    padding: 5px;
                 }
-            }
-        </style>
-    `
-  }
+
+            </style>
+        `
+    }
 }
 
 // let the browser know about the custom element
