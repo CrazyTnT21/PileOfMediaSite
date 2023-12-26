@@ -1,16 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="../assets/css/main.css">
-    <link rel="stylesheet" href="../assets/css/columns.css">
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preferences - User - MyCollection</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/columns.css">
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preferences - User - MyCollection</title>
 </head>
 <body>
-<noscript>This Website <strong>requires</strong> javascript to function. </noscript>
+<noscript>This Website <strong>requires</strong> javascript to function.</noscript>
 <app-header></app-header>
 Welcome to Preferences!
+<div class="pad">
+  <h2>Color scheme</h2>
+  <ul>
+    <li>
+      <label for="default-color">
+        Default
+      </label>
+      <input id="default-color" name="color" type="radio" checked>
+    </li>
+    <li>
+      <label for="dark-color">
+        Dark
+      </label>
+      <input id="dark-color" name="color" data-color="dark" type="radio">
+    </li>
+  </ul>
+</div>
 <!--<app-footer></app-footer>-->
+<script src="/user/preferences.js" type="module"></script>
 <script src="/assets/scripts/main.js" type="module"></script>
 <script src="/assets/components/header.js" type="module"></script>
 </body>

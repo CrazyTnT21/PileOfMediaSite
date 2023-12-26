@@ -268,7 +268,7 @@ class Header extends HTMLElement
                 }
 
                 a {
-                    color: black;
+                    color: var(--primary-text);
                     text-decoration: none;
                 }
 
