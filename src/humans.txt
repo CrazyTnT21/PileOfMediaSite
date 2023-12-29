@@ -1,0 +1,9 @@
+/* TEAM */
+  Web developer: Daniel Rosenfeld
+  Github: https://github.com/CrazyTnT21
+
+/* SITE */
+  Last update: 2023-12-29
+  Standards: HTML5, CSS3
+  Components: Web Components, Webpack, Chart.js
+  Software: RustRover, Inkscape

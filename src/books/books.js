@@ -1,5 +1,7 @@
-import {get, server_Url} from "../../assets/scripts/http.js";
-import {Alignment} from "../../assets/classes/alignment.js";
+/*
+import {get, server_Url} from "/assets/scripts/http.js";
+
+import {Alignment} from "/assets/classes/alignment.js";
 
 function columns()
 {
@@ -48,3 +50,4 @@ if (items.length > 0)
     table.total = items.length;
     table.items = items;
 }
+*/
