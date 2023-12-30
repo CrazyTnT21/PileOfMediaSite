@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    html {
+      font: 1rem "Fira Sans", sans-serif;
+    }
+
+    body {
+      margin: 0;
+    }
+  </style>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error while processing - MyCollection</title>
+</head>
+<body>
+<app-header></app-header>
+<h1>500 Internal Server Error</h1>
+<div data-translate="errorProcessing">
+  Something went wrong while processing your request
+</div>
+<div>
+  <a href="/" id="referer">Return</a>&nbsp;or go to the&nbsp;<a href="/">home page</a>.
+</div>
+<script>
+  document.querySelector("#referer").href = document.referrer;
+</script>
+<script src="/assets/scripts/main.js" type="module" async></script>
+<script src="/assets/components/header.js" type="module" async></script>
+</body>
+</html>
