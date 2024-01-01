@@ -5,7 +5,7 @@ html {
 
 a,
 html {
-  color: var(--primary-text);
+  color: var(--primary_text);
 }
 
 button:hover {
@@ -13,14 +13,14 @@ button:hover {
 }
 
 app-footer {
-  background: var(--primary-background);
+  background: var(--primary_background);
 }
 
 markdown-editor > textarea,
 textarea,
 input {
-  background-color: var(--input-background);
-  color: var(--primary-text);
+  background-color: var(--input_background);
+  color: var(--primary_text);
   border-color: var(--border);
 }
 
@@ -49,15 +49,15 @@ body {
 }
 
 :root {
-  --primary-text: #000000;
-  --secondary-text: #888888;
+  --primary_text: #000000;
+  --secondary_text: #888888;
 
-  --inverted-primary-text: white;
-  --inverted-secondary-text: white;
+  --inverted_primary_text: white;
+  --inverted_secondary_text: white;
   --background: #ffffff;
-  --primary-background: #f0f0f0;
-  --secondary-background: #bdbdbd;
-  --input-background: #ffffff;
+  --primary_background: #f0f0f0;
+  --secondary_background: #bdbdbd;
+  --input_background: #ffffff;
   --border: #b6b6b6;
 
   --hover: #d2d2d2;

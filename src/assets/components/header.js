@@ -268,7 +268,7 @@ class Header extends HTMLElement
                 }
 
                 a {
-                    color: var(--primary-text);
+                    color: var(--primary_text);
                     text-decoration: none;
                 }
 
@@ -296,7 +296,7 @@ class Header extends HTMLElement
                     font: 1rem "Fira Sans", sans-serif;
                     display: flex;
                     min-height: 50px;
-                    background: var(--primary-background);
+                    background: var(--primary_background);
                 }
 
                 nav > ul > li > * {
@@ -311,7 +311,7 @@ class Header extends HTMLElement
                 }
 
                 ul > li:last-child:hover {
-                    background-color: var(--primary-background);
+                    background-color: var(--primary_background);
                 }
 
                 #user:hover {
@@ -321,7 +321,7 @@ class Header extends HTMLElement
                 #settings {
                     flex-wrap: wrap;
                     padding: 5px;
-                    background: var(--primary-background);
+                    background: var(--primary_background);
                 }
 
                 #profile {

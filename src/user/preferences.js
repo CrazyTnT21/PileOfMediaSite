@@ -1,4 +1,4 @@
-import {ColorScheme, loadColorScheme, removeColorScheme, saveColorScheme} from "/assets/scripts/color-scheme.js";
+import {ColorScheme, loadColorScheme, removeColorScheme, saveColorScheme} from "/assets/classes/color-scheme.js";
 
 const currentColorScheme = localStorage.getItem("color-scheme");
 
@@ -7,9 +7,8 @@ setColorSchemeChoice();
 function setColorSchemeChoice()
 {
   if (!currentColorScheme || currentColorScheme === "{}")
-  {
     return;
-  }
+
   const parsed = JSON.parse(currentColorScheme);
   const element = document.querySelector(`[data-color=${parsed["name"]}]`);
   if (!element)
