@@ -1,5 +1,5 @@
-import validator from "../scripts/validator.js";
-import {Config, DateStyle} from "../scripts/config.js";
+import validator from "/assets/scripts/validator.js";
+import {Config, DateStyle} from "/assets/scripts/config.js";
 
 export class Date extends HTMLElement
 {
@@ -103,15 +103,16 @@ export class Date extends HTMLElement
       errorElement.style.visibility = "";
       errorElement.children[0].style.marginLeft = input.offsetWidth / 2 + "px";
 
-      let values = {date: "YYYY-MM-DD",example: "2019-04-12"}
-      switch (Config.dateStyle){
+      let values = {date: "YYYY-MM-DD", example: "2019-04-12"};
+      switch (Config.dateStyle)
+      {
         case DateStyle.eu:
-          values.date = "DD-MM-YYYY"
-          values.example = "12-04-2019"
+          values.date = "DD-MM-YYYY";
+          values.example = "12-04-2019";
           break;
         case DateStyle.us:
-          values.date = "MM-DD-YYYY"
-          values.example = "04-12-2019"
+          values.date = "MM-DD-YYYY";
+          values.example = "04-12-2019";
           break;
       }
 

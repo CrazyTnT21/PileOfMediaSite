@@ -77,4 +77,4 @@ export function saveColorScheme(value)
   localStorage.setItem("color-scheme", JSON.stringify(value));
 }
 
-
+loadColorScheme();

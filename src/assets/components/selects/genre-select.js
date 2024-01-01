@@ -1,4 +1,4 @@
-import {Select} from "../select.js";
+import {Select} from "/assets/components/select.js";
 
 class GenreSelect extends Select
 {
@@ -12,7 +12,7 @@ class GenreSelect extends Select
     return GenreSelect._items;
   }
 
-  static _items = [{value:"Horror"}, {value:"Mystery"}, {value:"Fantasy"}, {value:"Adventure"}];
+  static _items = [{value: "Horror"}, {value: "Mystery"}, {value: "Fantasy"}, {value: "Adventure"}];
   static loading = false;
 
   async connectedCallback()
