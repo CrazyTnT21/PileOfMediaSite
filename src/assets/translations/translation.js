@@ -1,0 +1,25 @@
+export class Translation
+{
+  themes;
+  creator;
+  creators;
+  genre;
+  genres;
+  demography;
+  publisher;
+  start;
+  end;
+  chapter;
+  chapters;
+  score;
+  rank;
+  popularity;
+  favorites;
+  members;
+  cover;
+  image;
+  title;
+  status;
+  books;
+  booksTitle;
+}

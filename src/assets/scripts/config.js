@@ -1,3 +1,5 @@
+import {Language} from "/assets/classes/language.js";
+
 export const DateStyle = Object.freeze({
   iso: 0,
   eu: 1,
@@ -6,9 +8,26 @@ export const DateStyle = Object.freeze({
 
 export class Config
 {
-  static dateStyle = this.defaultDateStyle();
+  dateStyle = this.defaultDateStyle();
 
-  static defaultDateStyle()
+  /**
+   *
+   * @type {Config | {}}
+   */
+  static #config = localStorage.getItem("config") ?? new Config();
+
+  static getConfig()
+  {
+    return this.#config;
+  }
+
+  static setConfig(value)
+  {
+    this.#config = value;
+    localStorage.setItem("config", value);
+  }
+
+  defaultDateStyle()
   {
     const dateStyle = localStorage.getItem("dateStyle");
 
@@ -16,4 +35,6 @@ export class Config
       return Number(dateStyle);
     return DateStyle.iso;
   }
+
+  language = Language.EN;
 }
