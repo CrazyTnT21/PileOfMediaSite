@@ -1,8 +1,16 @@
-export async function get(url)
+export async function get(url, ...parameters)
 {
+  if (parameters.length > 0)
+    url += "?";
+  for (let i = 0; i < parameters.length; i++)
+  {
+    url += parameters[i][0] + "=" + parameters[i][1];
+  }
   const result = await fetch(url);
   return result.json();
 }
+
+export const server_Url = "https://localhost:8000/";
 
 export async function post(url, value)
 {

@@ -1,16 +1,9 @@
-import validator from "/assets/scripts/validator.js";
-import {Config, DateStyle} from "/assets/scripts/config.js";
-
 export class Date extends HTMLElement
 {
 
   get isValid()
   {
-    const value = this.shadowRoot.querySelector("input").value;
-
-    if (!value || value.trim().length === 0 || validator.date(value.trim()))
-      return true;
-    return validator.date(value.trim());
+    return true;
   }
 
   get value()
@@ -84,7 +77,7 @@ export class Date extends HTMLElement
   {
     const value = e.target.value;
 
-    if (!value || value.trim().length === 0 || validator.date(value))
+    if (!value || value.trim().length === 0)
     {
       this.showErrorMessage(e.target, false);
     }
@@ -98,31 +91,16 @@ export class Date extends HTMLElement
     const errorElement = this.shadowRoot.querySelector("#error");
     if (show)
     {
-      console.log("not reset");
       input.style.borderColor = "red";
       errorElement.style.visibility = "";
       errorElement.children[0].style.marginLeft = input.offsetWidth / 2 + "px";
 
-      let values = {date: "YYYY-MM-DD", example: "2019-04-12"};
-      switch (Config.dateStyle)
-      {
-        case DateStyle.eu:
-          values.date = "DD-MM-YYYY";
-          values.example = "12-04-2019";
-          break;
-        case DateStyle.us:
-          values.date = "MM-DD-YYYY";
-          values.example = "04-12-2019";
-          break;
-      }
-
-      errorElement.children[1].innerHTML = `<div>The value '<i>${input.value}</i>' does not match the valid date pattern: <div class="col-12">${values.date}</div>ex. ${values.example}</div><div class="small-text">The pattern can be changed in the settings</div>`;
+      //TODO: Change behaviour
+      errorElement.children[1].innerHTML = `Invalid Value`;
 
     }
     else
     {
-
-      console.log("reset");
       input.style.borderColor = "";
       errorElement.style.visibility = "hidden";
       errorElement.children[1].innerHTML = "";

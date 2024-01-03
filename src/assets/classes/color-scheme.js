@@ -18,6 +18,7 @@ export class ColorScheme
     colorStyle.primary_text = "#e3e3e3";
     colorStyle.hover = "#464646";
     colorStyle.clickable = "#505050";
+    colorStyle.feedback = "#3d3d3d";
     return colorScheme;
   }
 }
@@ -35,6 +36,7 @@ export class ColorStyle
   border;
   hover;
   clickable;
+  feedback;
 }
 
 export function removeColorScheme()

@@ -18,7 +18,8 @@ app-footer {
 
 markdown-editor > textarea,
 textarea,
-input {
+input,
+button {
   background-color: var(--input_background);
   color: var(--primary_text);
   border-color: var(--border);
@@ -56,18 +57,27 @@ body {
   --inverted_secondary_text: white;
   --background: #ffffff;
   --primary_background: #f0f0f0;
-  --secondary_background: #bdbdbd;
+  --secondary_background: #dadada;
   --input_background: #ffffff;
   --border: #b6b6b6;
 
   --hover: #d2d2d2;
   --clickable: #e7e7e7;
+  --feedback: #c5c5c5;
 }
 
 button {
   min-width: 4rem;
   min-height: 2rem;
   border: 0;
+}
+
+button:hover {
+  background-color: var(--hover);
+}
+
+button:active {
+  background-color: var(--feedback);
 }
 
 .right {

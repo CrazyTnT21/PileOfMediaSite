@@ -1,17 +1,14 @@
 import {Language} from "/assets/classes/language.js";
 
-export const DateStyle = Object.freeze({
-  iso: 0,
-  eu: 1,
-  us: 2,
-});
 
 export class Config
 {
-  dateStyle = this.defaultDateStyle();
+  /**
+   * @type {Intl.DateTimeFormat}
+   */
+  dateFormatter = this.#dateFormatter();
 
   /**
-   *
    * @type {Config | {}}
    */
   static #config = localStorage.getItem("config") ?? new Config();
@@ -27,14 +24,15 @@ export class Config
     localStorage.setItem("config", value);
   }
 
-  defaultDateStyle()
-  {
-    const dateStyle = localStorage.getItem("dateStyle");
-
-    if (dateStyle)
-      return Number(dateStyle);
-    return DateStyle.iso;
-  }
-
   language = Language.EN;
+
+  #dateFormatter()
+  {
+    const dateFormat = localStorage.getItem("date-format");
+    if (dateFormat)
+    {
+      return Intl.DateTimeFormat(JSON.parse(dateFormat));
+    }
+    return new Intl.DateTimeFormat();
+  }
 }
