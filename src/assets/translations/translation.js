@@ -22,4 +22,6 @@ export class Translation
   status;
   books;
   booksTitle;
+  addBook;
+  addBookTitle;
 }

@@ -21,5 +21,7 @@
   "status": "Status",
   "errorProcessing": "Etwas ist schief gelaufen beim verarbeiten der Anfrage",
   "books": "Bücher",
-  "booksTitle": "Bücher - MyCollection"
+  "booksTitle": "Bücher - MyCollection",
+  "addBook": "Buch hinzufügen",
+  "addBookTitle": "Buch hinzufügen - MyCollection"
 }

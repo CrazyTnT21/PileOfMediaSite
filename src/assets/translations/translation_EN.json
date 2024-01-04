@@ -21,5 +21,7 @@
   "status": "Status",
   "errorProcessing": "Something went wrong while processing your request",
   "books": "Books",
-  "booksTitle": "Books - MyCollection"
+  "booksTitle": "Books - MyCollection",
+  "addBook": "Add Book",
+  "addBookTitle": "Add Book - MyCollection"
 }

@@ -2,7 +2,6 @@ import {get, server_Url} from "/assets/scripts/http.js";
 import {ColumnType} from "../assets/components/table.js";
 import {Config} from "../assets/scripts/config.js";
 
-
 function columns()
 {
   return [
@@ -10,7 +9,7 @@ function columns()
       key: "cover.uri",
       display: "Cover",
       type: ColumnType.Image,
-      width: "100px",
+      width: "80px",
     },
     {
       key: "title",

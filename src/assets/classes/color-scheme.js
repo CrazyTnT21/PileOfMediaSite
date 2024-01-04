@@ -60,7 +60,7 @@ export function loadColorScheme()
 
   const colorScheme = JSON.parse(jsonScheme);
   const colorStyle = colorScheme.style;
-  const keys = Object.keys(colorScheme.style);
+  const keys = Object.keys(new ColorStyle());
   for (const key of keys)
     document.documentElement.style.setProperty("--" + key, colorStyle[key] ? colorStyle[key] : null);
 }

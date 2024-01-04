@@ -1,4 +1,4 @@
-class Table extends HTMLTableElement
+export class Table extends HTMLTableElement
 {
   set caption(value)
   {
@@ -196,17 +196,30 @@ class Table extends HTMLTableElement
         }
 
         table {
+          border-radius: 5px;
           background-color: var(--primary_background);
           width: 100%;
+          border-collapse: collapse;
         }
 
         tbody {
           background-color: var(--secondary_background);
         }
 
-        th {
-          margin-right: auto;
-          margin-left: 0;
+        thead > tr > th:first-child {
+          border-radius: 5px 0 0 0;
+        }
+
+        thead > tr > th:last-child {
+          border-radius: 0 5px 0 0;
+        }
+
+        tfoot > tr > th:first-child {
+          border-radius: 0 0 0 5px;
+        }
+
+        tr:nth-of-type(even) {
+          background-color: var(--primary_background);
         }
 
         button {

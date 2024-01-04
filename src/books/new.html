@@ -6,29 +6,27 @@
   <link href="/favicon.ico" rel="icon" type="image/x-icon"/>
   <link rel="author" href="/humans.txt"/>
   <meta charset="UTF-8" content="width=device-width, initial-scale=1.0" name="viewport">
-  <title data-translate="booksTitle">Books - MyCollection</title>
+  <title data-translate="addBookTitle">Add Book - MyCollection</title>
   <script src="/assets/scripts/load-color-scheme.js"></script>
 </head>
 <body>
 <noscript>This Website <strong>requires</strong> javascript to function.</noscript>
 <app-header></app-header>
 <main class="pad">
-  <h1 data-translate="books">Books</h1>
-  <a href="/books/new" class="pad" data-translate="addBook">Add Book</a>
-  <ul class="col-12 pad">
-    <li class="pad mar-right"><a href="popular">Popular</a></li>
-    <li class="pad mar-right"><a href="newest">Newest</a></li>
-    <li class="pad mar-right"><a href="rating">Highest Rating</a></li>
-    <li class="pad"><a href="favorited">Highest Favorited</a></li>
-  </ul>
-  <app-table class="col-12 pad"></app-table>
+  <h1 data-translate="addBook">Add Book</h1>
+  <div class="mar-bottom">
+    <app-input label="Title"></app-input>
+  </div>
+  <div>
+    <app-button>Send</app-button>
+  </div>
 </main>
-<!--<app-footer></app-footer>-->
+<script src="/assets/components/button.js" type="module" async></script>
+<script src="/assets/components/inputs/input.js" type="module" async></script>
 <script src="/assets/scripts/main.js" type="module" async></script>
 <script src="/assets/scripts/translate.js" type="module" async></script>
 <script src="/assets/components/table.js" type="module" async></script>
 <script src="/assets/components/header.js" type="module" async></script>
-<!--<script src="/assets/components/inputs/selects/status-select.js" type="module" async></script>-->
-<script src="/books/books.js" type="module" async></script>
+<script src="/books/new.js" type="module" async></script>
 </body>
 </html>
