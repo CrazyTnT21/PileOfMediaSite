@@ -1,4 +1,4 @@
-export class Input extends HTMLInputElement
+export class Input extends HTMLElement
 {
   get label()
   {
@@ -76,4 +76,4 @@ export class Input extends HTMLInputElement
   }
 }
 
-customElements.define("app-input", Input, {extends: "input"});
+customElements.define("app-input", Input);

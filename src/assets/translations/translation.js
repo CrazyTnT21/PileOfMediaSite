@@ -24,4 +24,9 @@ export class Translation
   booksTitle;
   addBook;
   addBookTitle;
+  addMovie;
+  addMovieTitle;
+  movie;
+  movies;
+  moviesTitle;
 }

@@ -1,4 +1,4 @@
-export class Button extends HTMLButtonElement
+export class Button extends HTMLElement
 {
   get value()
   {
@@ -43,6 +43,8 @@ export class Button extends HTMLButtonElement
           min-width: 4rem;
           min-height: 2rem;
           border: 0;
+          background-color: var(--clickable);
+          color: var(--primary_text);
         }
 
         button:hover {
@@ -57,4 +59,4 @@ export class Button extends HTMLButtonElement
   }
 }
 
-customElements.define("app-button", Button, {extends: "button"});
+customElements.define("app-button", Button);

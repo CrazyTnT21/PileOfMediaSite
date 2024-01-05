@@ -23,5 +23,10 @@
   "books": "Bücher",
   "booksTitle": "Bücher - MyCollection",
   "addBook": "Buch hinzufügen",
-  "addBookTitle": "Buch hinzufügen - MyCollection"
+  "addBookTitle": "Buch hinzufügen - MyCollection",
+  "addMovie": "Film Hinzufügen",
+  "addMovieTitle": "Film Hinzufügen - MyCollection",
+  "movie": "Film",
+  "movies": "Filme",
+  "moviesTitle": "Filme - MyCollection"
 }

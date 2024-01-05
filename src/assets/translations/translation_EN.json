@@ -23,5 +23,10 @@
   "books": "Books",
   "booksTitle": "Books - MyCollection",
   "addBook": "Add Book",
-  "addBookTitle": "Add Book - MyCollection"
+  "addBookTitle": "Add Book - MyCollection",
+  "addMovie": "Add Movie",
+  "addMovieTitle": "Add Movie - MyCollection",
+  "movie": "Movie",
+  "movies": "Movies",
+  "moviesTitle": "Movies - MyCollection"
 }
