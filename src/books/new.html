@@ -14,13 +14,36 @@
 <app-header></app-header>
 <main class="pad">
   <h1 data-translate="addBook">Add Book</h1>
-  <div class="mar-bottom">
-    <app-input label="Title"></app-input>
-  </div>
-  <div>
-    <app-button>Send</app-button>
-  </div>
+  <form>
+    <div class="col-12">
+      <div class="fix-6">
+        <app-image-input data-alt="Cover" data-title="Upload Cover" data-label="Cover"></app-image-input>
+      </div>
+      <div class="col">
+        <div class="col-12">
+          <app-input required data-label="Title"></app-input>
+        </div>
+        <div class="col-12">
+          <app-textarea data-label="Description"></app-textarea>
+        </div>
+        <div class="col-12">
+          <app-input type="number" data-label="Chapters"></app-input>
+          <app-input type="number" data-label="Pages"></app-input>
+          <app-input type="number" data-label="Words"></app-input>
+        </div>
+        <app-input type="number" data-label="Score"></app-input>
+        <app-date type="number" data-label="Published"></app-date>
+      </div>
+    </div>
+    <app-language-select></app-language-select>
+    <div>
+      <app-button>Send</app-button>
+    </div>
+  </form>
 </main>
+<script src="/assets/components/inputs/textarea.js" type="module" async></script>
+<script src="/assets/components/image-input.js" type="module" async></script>
+<script src="/assets/components/selects/language-select.js" type="module" async></script>
 <script src="/assets/components/button.js" type="module" async></script>
 <script src="/assets/components/inputs/input.js" type="module" async></script>
 <script src="/assets/scripts/main.js" type="module" async></script>

@@ -1,13 +1,19 @@
 export class Select extends HTMLElement
 {
-  get title()
+  get label()
   {
-    return this.getAttribute("title") ?? "";
+    return this.getAttribute("data-label");
   }
 
-  set title(value)
+  set label(value)
   {
-    this.shadowRoot.querySelector("label").innerHTML = this.titleText(value);
+    if (!value)
+    {
+      console.error(`No value was given for the label in Input '${this.outerHTML}'. Inputs should always be associated with a label.`);
+      value = "";
+    }
+    this.setAttribute("label", value);
+    this.shadowRoot.querySelector("label").innerHTML = value;
   }
 
   get items()
@@ -51,28 +57,21 @@ export class Select extends HTMLElement
     super();
     this.attachShadow({mode: "open"});
 
-    const select = document.createElement("div");
-    const label = document.createElement("label");
-    const input = document.createElement("input");
-    const datalist = document.createElement("datalist");
-    label.innerHTML = this.titleText(this.title);
-    select.innerHTML = `<link rel="stylesheet" href="/assets/css/columns.css"><link rel="stylesheet" href="/assets/css/main.css">`;
-
-    input.setAttribute("list", "items");
-    datalist.id = "items";
-
-    label.append(input);
-    select.append(label);
-    select.append(datalist);
-
-    this.shadowRoot.append(select);
+    this.render();
 
     this.createOptions();
   }
 
-  titleText(value)
+  render()
   {
-    return `<div>${value}</div>`;
+    //language=HTML
+    this.shadowRoot.innerHTML += `
+      <div>
+        <label for="input">${this.label}</label>
+      </div>
+      <input id="input" list="items"/>
+      <datalist id="items"></datalist>
+    `;
   }
 
   createOptions()

@@ -1,6 +1,5 @@
 export class Date extends HTMLElement
 {
-
   get isValid()
   {
     return true;
@@ -11,14 +10,20 @@ export class Date extends HTMLElement
     return this.shadowRoot.querySelector("input").value.trim();
   }
 
-  get title()
+  get label()
   {
-    return this.getAttribute("title") ?? "Date";
+    return this.getAttribute("data-label");
   }
 
-  set title(value)
+  set label(value)
   {
-    this.shadowRoot.querySelector("label").innerHTML = this.titleText(value);
+    if (!value)
+    {
+      console.error(`No value was given for the label in Input '${this.outerHTML}'. Inputs should always be associated with a label.`);
+      value = "";
+    }
+    this.setAttribute("label", value);
+    this.shadowRoot.querySelector("label").innerHTML = value;
   }
 
   get items()
@@ -52,25 +57,11 @@ export class Date extends HTMLElement
 
     //language=HTML
     select.innerHTML = `
-      <link rel="stylesheet" href="/assets/css/columns.css">
-      <link rel="stylesheet" href="/assets/css/main.css">
-      <label class="col-12">
-        ${this.titleText(this.title)}
-        <input class="mar-right">
-        <img src="/assets/img/Comments_Placeholder.png" alt="Date chooser" width="25px">
-      </label>
-      <div id="error" style="visibility: hidden">
-        <div class="error-arrow"></div>
-        <div class="error fix-7"></div>
-      </div>
+      <label for="input">${this.titleText(this.label)}</label>
+      <input id="input" type="date">
     `;
 
     this.shadowRoot.append(select);
-  }
-
-  titleText(value)
-  {
-    return `<div class="col-12">${value}</div>`;
   }
 
   validate(e)
