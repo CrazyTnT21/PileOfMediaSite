@@ -1,3 +1,5 @@
+import {logNoValueError} from "./input.js";
+
 export class TextArea extends HTMLElement
 {
   get label()
@@ -9,7 +11,7 @@ export class TextArea extends HTMLElement
   {
     if (!value)
     {
-      console.error(`No value was given for the label in Input '${this.outerHTML}'. Inputs should always be associated with a label.`);
+      logNoValueError("label", this.outerHTML);
       value = "";
     }
     this.setAttribute("data-label", value);
@@ -40,13 +42,18 @@ export class TextArea extends HTMLElement
     super();
     this.attachShadow({mode: "open"});
 
-    const label = this.label ?? "";
+    this.render();
+  }
+
+  render()
+  {
+    const label = this.label;
     if (!label)
-      console.error(`Input '${this.outerHTML}' has no label. Inputs should always be associated with a label.`);
+      logNoValueError("label", this.outerHTML);
 
     //language=HTML
     this.shadowRoot.innerHTML = `
-      ${this.styleHTML()}
+      <style>${this.styleCSS()}</style>
       <div>
         <label for="input">${label}</label>
       </div>
@@ -54,24 +61,24 @@ export class TextArea extends HTMLElement
     `;
   }
 
-  styleHTML()
+  styleCSS()
   {
-    //language=HTML
+    //language=CSS
     return `
-      <style>
-        textarea {
-          border-width: 1px;
-          border-style: solid;
-          border-color: var(--border);
-          background-color: var(--input_background);
-          color: var(--primary_text);
-        }
+      textarea {
+        border-width: 1px;
+        border-style: solid;
+        border-color: var(--border);
+        background-color: var(--input_background);
+        color: var(--primary_text);
+        padding: 5px;
+        font-family: "Fira Sans", sans-serif;
+      }
 
-        textarea:hover {
-          border-color: var(--hover);
-          transition: border-color ease 50ms;
-        }
-      </style>
+      textarea:hover {
+        border-color: var(--hover);
+        transition: border-color ease 50ms;
+      }
     `;
   }
 }

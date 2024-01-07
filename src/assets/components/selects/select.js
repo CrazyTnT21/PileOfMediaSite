@@ -1,21 +1,7 @@
-export class Select extends HTMLElement
+import {Input, logNoValueError} from "../inputs/input.js";
+
+export class Select extends Input
 {
-  get label()
-  {
-    return this.getAttribute("data-label");
-  }
-
-  set label(value)
-  {
-    if (!value)
-    {
-      console.error(`No value was given for the label in Input '${this.outerHTML}'. Inputs should always be associated with a label.`);
-      value = "";
-    }
-    this.setAttribute("label", value);
-    this.shadowRoot.querySelector("label").innerHTML = value;
-  }
-
   get items()
   {
     return [];
@@ -28,22 +14,16 @@ export class Select extends HTMLElement
 
   connectedCallback()
   {
-    if (this.children)
-    {
-      const items = [...this.children];
-
-      for (let i = this.children.length - 1; i >= 0; i--)
-      {
-        this.children[i].remove();
-      }
-
-      const datalist = this.shadowRoot.querySelector("#items");
-      for (let i = 0; i < items.length; i++)
-        datalist.appendChild(items[i]);
-    }
-
     const input = this.shadowRoot.querySelector("input");
     input.addEventListener("input", (e) => this.validate(e));
+
+    this.createOptions();
+
+    const datalist = this.shadowRoot.querySelector("#items");
+    for (let i = 0; i < this.children.length; i++)
+    {
+      datalist.appendChild(this.children[i]);
+    }
   }
 
   disconnectedCallback()
@@ -52,22 +32,17 @@ export class Select extends HTMLElement
     input.removeEventListener("input", (e) => this.validate(e));
   }
 
-  constructor()
-  {
-    super();
-    this.attachShadow({mode: "open"});
-
-    this.render();
-
-    this.createOptions();
-  }
-
   render()
   {
+    const label = this.label ?? "";
+    if (!label)
+      logNoValueError("label", this.outerHTML);
+
     //language=HTML
-    this.shadowRoot.innerHTML += `
+    this.shadowRoot.innerHTML = `
+      <style>${this.styleCSS()}</style>
       <div>
-        <label for="input">${this.label}</label>
+        <label for="input">${label}</label>
       </div>
       <input id="input" list="items"/>
       <datalist id="items"></datalist>

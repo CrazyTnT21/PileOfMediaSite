@@ -1,3 +1,5 @@
+import {logNoValueError} from "./inputs/input.js";
+
 export class ImageInput extends HTMLElement
 {
   get alt()
@@ -9,7 +11,7 @@ export class ImageInput extends HTMLElement
   {
     if (!value)
     {
-      console.error(`No value was given for the alt in image-input '${this.outerHTML}'. Images should always have an alt.`);
+      logNoValueError("alt", this.outerHTML);
       value = "";
     }
     this.setAttribute("data-alt", value);
@@ -37,7 +39,7 @@ export class ImageInput extends HTMLElement
   {
     if (!value)
     {
-      console.error(`No value was given for the src in image-input '${this.outerHTML}'.`);
+      logNoValueError("src", this.outerHTML);
       value = this.#defaultSrc;
     }
     else
@@ -67,35 +69,37 @@ export class ImageInput extends HTMLElement
   {
     super();
     this.attachShadow({mode: "open"});
+    this.render();
+  }
 
-    const alt = this.alt;
+  render()
+  {
+    const alt = this.alt ?? "";
     const title = this.title;
     if (!alt)
       console.error(`image-input '${this.outerHTML}' has no alt. Images should always have an alt.`);
 
     //language=HTML
     this.shadowRoot.innerHTML = `
-      ${this.styleHTML()}
-      <img src="${this.#defaultSrc}" alt="${alt}" ${title ? "title=\"" + title + "\"" : ""}>
+      <style>${this.styleCSS()}</style>
+      <img src="${this.#defaultSrc}" alt="${alt}" ${title ? `title="${title}"` : ""}>
       <input id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
     `;
   }
 
-  styleHTML()
+  styleCSS()
   {
-    //language=HTML
+    //language=CSS
     return `
-      <style>
-        img {
-          aspect-ratio: 1 / 1.41421;
-          width: 100%;
-          object-fit: contain;
-        }
+      img {
+        aspect-ratio: 1 / 1.41421;
+        width: 100%;
+        object-fit: contain;
+      }
 
-        img:hover {
-          filter: opacity(50%);
-        }
-      </style>
+      img:hover {
+        filter: opacity(50%);
+      }
     `;
   }
 

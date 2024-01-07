@@ -9,10 +9,10 @@ export class Input extends HTMLElement
   {
     if (!value)
     {
-      console.error(`No value was given for the label in Input '${this.outerHTML}'. Inputs should always be associated with a label.`);
+      logNoValueError("data-label", this.outerHTML);
       value = "";
     }
-    this.setAttribute("label", value);
+    this.setAttribute("data-label", value);
     this.shadowRoot.querySelector("label").innerHTML = value;
   }
 
@@ -24,6 +24,17 @@ export class Input extends HTMLElement
   set value(value)
   {
     this.shadowRoot.querySelector("input").value = value;
+  }
+
+  get placeholder()
+  {
+    return this.getAttribute("data-placeholder");
+  }
+
+  set placeholder(value)
+  {
+    this.setAttribute("data-placeholder", value);
+    this.shadowRoot.querySelector("input").placeholder = value;
   }
 
   connectedCallback()
@@ -40,40 +51,54 @@ export class Input extends HTMLElement
     super();
     this.attachShadow({mode: "open"});
 
+    this.render();
+  }
+
+  render()
+  {
     const label = this.label ?? "";
     if (!label)
-      console.error(`Input '${this.outerHTML}' has no label. Inputs should always be associated with a label.`);
+      logNoValueError("label", this.outerHTML);
+
+    const placeholder = this.placeholder;
 
     //language=HTML
     this.shadowRoot.innerHTML = `
-      ${this.styleHTML()}
+      <style>
+        ${this.styleCSS()}
+      </style>
       <div>
         <label for="input">${label}</label>
       </div>
-      <input id="input"/>
+      <input id="input" ${placeholder ? `placeholder="${placeholder}"` : ""}/>
     `;
   }
 
-  styleHTML()
+  styleCSS()
   {
-    //language=HTML
+    //language=CSS
     return `
-      <style>
-        input {
-          border-width: 1px;
-          border-style: solid;
-          border-color: var(--border);
-          background-color: var(--input_background);
-          color: var(--primary_text);
-        }
+      input {
+        border-width: 1px;
+        border-style: solid;
+        border-color: var(--border);
+        background-color: var(--input_background);
+        color: var(--primary_text);
+        padding: 5px;
+        font-family: "Fira Sans", sans-serif;
+      }
 
-        input:hover {
-          border-color: var(--hover);
-          transition: border-color ease 50ms;
-        }
-      </style>
+      input:hover {
+        border-color: var(--hover);
+        transition: border-color ease 50ms;
+      }
     `;
   }
+}
+
+export function logNoValueError(property, outerHtml)
+{
+  console.error(`No value was given for '${property}' in '${outerHtml}'.`);
 }
 
 customElements.define("app-input", Input);

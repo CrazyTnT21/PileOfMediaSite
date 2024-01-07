@@ -2,59 +2,52 @@ export class Button extends HTMLElement
 {
   get value()
   {
-    return this.getAttribute("value");
+    return this.getAttribute("data-value");
   }
 
   set value(value)
   {
-    this.setAttribute("value", value);
+    this.setAttribute("data-value", value);
     this.shadowRoot.querySelector("button").innerText = this.value;
   }
-
-  connectedCallback()
-  {
-  }
-
-  disconnectedCallback()
-  {
-  }
-
 
   constructor()
   {
     super();
     this.attachShadow({mode: "open"});
+    this.render();
+  }
 
+  render()
+  {
     const content = this.innerHTML;
     this.innerHTML = "";
     //language=HTML
     this.shadowRoot.innerHTML = `
-      ${this.styleHTML()}
-      <button>${this.getAttribute("value") ?? content}</button>
+      <style>${this.styleCSS()}</style>
+      <button>${this.value ?? content}</button>
     `;
   }
 
-  styleHTML()
+  styleCSS()
   {
-    //language=HTML
+    //language=CSS
     return `
-      <style>
         button {
-          min-width: 4rem;
-          min-height: 2rem;
-          border: 0;
-          background-color: var(--clickable);
-          color: var(--primary_text);
+            min-width: 4rem;
+            min-height: 2rem;
+            border: 0;
+            background-color: var(--clickable);
+            color: var(--primary_text);
         }
 
         button:hover {
-          background-color: var(--hover);
+            background-color: var(--hover);
         }
 
         button:active {
-          background-color: var(--feedback);
+            background-color: var(--feedback);
         }
-      </style>
     `;
   }
 }

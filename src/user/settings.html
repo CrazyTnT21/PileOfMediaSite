@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/columns.css">
@@ -13,8 +13,7 @@
 <noscript>This Website <strong>requires</strong> javascript to function.</noscript>
 <app-header></app-header>
 <div>
-  Date display
-  <app-select items="T, A">
+  <app-select data-label="Date display" items="T, A">
     <option value="ISO">ISO 8601: YYYY-MM-DD (2014-12-25)</option>
     <option value="EU">EU DD-MM-YYYY (25-12-2014)</option>
     <option value="US">US MM-DD-YYYY (12-25-2014)</option>
@@ -25,7 +24,7 @@ Note: Dates can use "/","-","." as separator
 <script src="/assets/scripts/main.js" type="module" async></script>
 <script src="/assets/scripts/translate.js" type="module" async></script>
 <script src="/assets/components/header.js" type="module" async></script>
-<script src="/assets/components/select.js" type="module" async></script>
+<script src="/assets/components/selects/select.js" type="module" async></script>
 <script src="/assets/components/selects/genre-select.js" type="module" async></script>
 </body>
 </html>

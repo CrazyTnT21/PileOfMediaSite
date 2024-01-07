@@ -18,8 +18,9 @@
     <div class="col-12">
       <div class="fix-6">
         <app-image-input data-alt="Cover" data-title="Upload Cover" data-label="Cover"></app-image-input>
+        <app-language-select></app-language-select>
       </div>
-      <div class="col">
+      <div class="col-4">
         <div class="col-12">
           <app-input required data-label="Title"></app-input>
         </div>
@@ -27,20 +28,24 @@
           <app-textarea data-label="Description"></app-textarea>
         </div>
         <div class="col-12">
-          <app-input type="number" data-label="Chapters"></app-input>
-          <app-input type="number" data-label="Pages"></app-input>
-          <app-input type="number" data-label="Words"></app-input>
+          <app-number-input data-label="Chapters"></app-number-input>
+          <app-number-input data-label="Pages"></app-number-input>
+          <app-number-input data-label="Words"></app-number-input>
         </div>
         <app-input type="number" data-label="Score"></app-input>
-        <app-date type="number" data-label="Published"></app-date>
+        <div class="col-12">
+          <app-date-input type="number" data-label="Published"></app-date-input>
+        </div>
+
       </div>
     </div>
-    <app-language-select></app-language-select>
     <div>
       <app-button>Send</app-button>
     </div>
   </form>
 </main>
+<script src="/assets/components/inputs/number-input.js" type="module" async></script>
+<script src="/assets/components/inputs/date-input.js" type="module" async></script>
 <script src="/assets/components/inputs/textarea.js" type="module" async></script>
 <script src="/assets/components/image-input.js" type="module" async></script>
 <script src="/assets/components/selects/language-select.js" type="module" async></script>

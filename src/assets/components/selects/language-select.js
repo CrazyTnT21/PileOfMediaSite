@@ -3,24 +3,21 @@ import {Language} from "../../classes/language.js";
 
 class LanguageSelect extends Select
 {
-  constructor()
-  {
-    super();
-  }
-
   get label()
   {
-    return this.getAttribute("data-label") ?? "Language";
+    return super.label ?? "Language";
   }
+
+  _items = [
+    {value: Language.EN, required: true},
+    {value: Language.DE},
+    {value: Language.ES},
+    {value: Language.JA},
+  ];
 
   get items()
   {
-    return [
-      {value: Language.EN, required: true},
-      {value: Language.DE},
-      {value: Language.ES},
-      {value: Language.JA},
-    ];
+    return this._items;
   }
 }
 

@@ -14,18 +14,20 @@
 <app-header></app-header>
 <!--<div class="right pad mar-top" style="background: lightgray">Notification</div>-->
 <app-genre-select></app-genre-select>
-<app-select title="Normal Select"></app-select>
-<app-date></app-date>
+<app-select data-label="Normal Select">
+  <option>Test</option>
+</app-select>
+<app-date-input data-label="Test">
+</app-date-input>
 <!--<app-select title="Genres">-->
 <!--</app-select>-->
 <!--<app-footer></app-footer>-->
 <script src="/assets/scripts/main.js" type="module" async></script>
 <script src="/assets/scripts/translate.js" type="module" async></script>
-<script src="/assets/components/list.js" type="module" async></script>
 <script src="/assets/components/header.js" type="module" async></script>
 <script src="/assets/components/footer.js" type="module" async></script>
 <script src="/assets/components/selects/genre-select.js" type="module" async></script>
-<script src="/assets/components/select.js" type="module" async></script>
-<script src="/assets/components/date.js" type="module" async></script>
+<script src="/assets/components/selects/select.js" type="module" async></script>
+<script src="/assets/components/inputs/date-input.js" type="module" async></script>
 </body>
 </html>

@@ -1,38 +1,34 @@
-import {Select} from "/assets/components/select.js";
+import {Select} from "./select.js";
 
 class GenreSelect extends Select
 {
-  get title()
+  get label()
   {
-    return "Genres";
+    return super.label ?? "Genres";
   }
 
   get items()
   {
-    return GenreSelect._items;
+    return this._items;
   }
 
-  static _items = [{value: "Horror"}, {value: "Mystery"}, {value: "Fantasy"}, {value: "Adventure"}];
-  static loading = false;
+  _items = [
+    {value: "Horror"},
+    {value: "Mystery"},
+    {value: "Fantasy"},
+    {value: "Adventure"},
+  ];
 
   async connectedCallback()
   {
     super.connectedCallback();
-    if (!GenreSelect._items.length > 0 && !GenreSelect.loading)
-      await this.loadItems();
-  }
-
-  constructor()
-  {
-    super();
+    await this.loadItems();
   }
 
   async loadItems()
   {
-    GenreSelect.loading = true;
     // GenreSelect._items =   await get(Config.serverUrl + "/Genres");
     //  this.createOptions(GenreSelect._items);
-    GenreSelect.loading = false;
   }
 }
 

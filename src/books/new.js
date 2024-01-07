@@ -2,7 +2,13 @@ document.querySelector("app-button").addEventListener("click", (i) => console.lo
 
 document.querySelector("app-image-input").addEventListener("upload", (value) => console.log(value.detail));
 
-setTimeout(() => {
+setTimeout(() =>
+{
 
   console.log(document.querySelector("app-image-input").src);
-},5000)
+}, 5000);
+
+document.querySelector("form").addEventListener("submit", event =>
+{
+  event.preventDefault();
+});
