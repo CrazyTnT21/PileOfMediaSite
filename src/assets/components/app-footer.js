@@ -1,4 +1,4 @@
-class Footer extends HTMLElement {
+class AppFooter extends HTMLElement {
     constructor() {
         super();
         this.classList.add("footer");
@@ -22,6 +22,5 @@ class Footer extends HTMLElement {
     }
 }
 
-// let the browser know about the custom element
-customElements.define('app-footer', Footer);
+customElements.define('app-footer', AppFooter);
 'use strict';

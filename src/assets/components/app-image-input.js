@@ -1,6 +1,6 @@
-import {logNoValueError} from "./inputs/input.js";
+import {logNoValueError} from "./inputs/app-Input.js";
 
-export class ImageInput extends HTMLElement
+export class AppImageInput extends HTMLElement
 {
   get alt()
   {
@@ -112,5 +112,5 @@ export class ImageInput extends HTMLElement
   }
 }
 
-customElements.define("app-image-input", ImageInput);
+customElements.define("app-image-input", AppImageInput);
 

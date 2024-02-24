@@ -1,6 +1,6 @@
-import {Select} from "./select.js";
+import {AppSelect} from "./app-select.js";
 
-class GenreSelect extends Select
+class AppGenreSelect extends AppSelect
 {
   get label()
   {
@@ -27,9 +27,9 @@ class GenreSelect extends Select
 
   async loadItems()
   {
-    // GenreSelect._items =   await get(Config.serverUrl + "/Genres");
-    //  this.createOptions(GenreSelect._items);
+    // AppGenreSelect._items =   await get(Config.serverUrl + "/Genres");
+    //  this.createOptions(AppGenreSelect._items);
   }
 }
 
-customElements.define("app-genre-select", GenreSelect);
+customElements.define("app-genre-select", AppGenreSelect);

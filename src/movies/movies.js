@@ -1,5 +1,5 @@
 import {get, server_Url} from "/assets/scripts/http.js";
-import {ColumnType} from "../assets/components/table.js";
+import {ColumnType} from "../assets/components/app-table.js";
 import {Config} from "../assets/scripts/config.js";
 
 function columns()

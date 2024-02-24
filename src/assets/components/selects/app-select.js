@@ -1,6 +1,6 @@
-import {Input, logNoValueError} from "../inputs/input.js";
+import {AppInput, logNoValueError} from "../inputs/app-Input.js";
 
-export class Select extends Input
+export class AppSelect extends AppInput
 {
   get items()
   {
@@ -84,4 +84,4 @@ export class Select extends Input
   }
 }
 
-customElements.define("app-select", Select);
+customElements.define("app-select", AppSelect);

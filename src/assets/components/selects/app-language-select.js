@@ -1,7 +1,7 @@
-import {Select} from "./select.js";
+import {AppSelect} from "./app-select.js";
 import {Language} from "../../classes/language.js";
 
-class LanguageSelect extends Select
+class AppLanguageSelect extends AppSelect
 {
   get label()
   {
@@ -21,4 +21,4 @@ class LanguageSelect extends Select
   }
 }
 
-customElements.define("app-language-select", LanguageSelect);
+customElements.define("app-language-select", AppLanguageSelect);

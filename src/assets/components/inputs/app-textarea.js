@@ -1,4 +1,6 @@
-export class Input extends HTMLElement
+import {logNoValueError} from "./app-Input.js";
+
+export class AppTextArea extends HTMLElement
 {
   get label()
   {
@@ -9,7 +11,7 @@ export class Input extends HTMLElement
   {
     if (!value)
     {
-      logNoValueError("data-label", this.outerHTML);
+      logNoValueError("label", this.outerHTML);
       value = "";
     }
     this.setAttribute("data-label", value);
@@ -18,23 +20,12 @@ export class Input extends HTMLElement
 
   get value()
   {
-    this.shadowRoot.querySelector("input").value;
+    this.shadowRoot.querySelector("textarea").innerText;
   }
 
   set value(value)
   {
-    this.shadowRoot.querySelector("input").value = value;
-  }
-
-  get placeholder()
-  {
-    return this.getAttribute("data-placeholder");
-  }
-
-  set placeholder(value)
-  {
-    this.setAttribute("data-placeholder", value);
-    this.shadowRoot.querySelector("input").placeholder = value;
+    this.shadowRoot.querySelector("textarea").innerText = value;
   }
 
   connectedCallback()
@@ -56,21 +47,17 @@ export class Input extends HTMLElement
 
   render()
   {
-    const label = this.label ?? "";
+    const label = this.label;
     if (!label)
       logNoValueError("label", this.outerHTML);
 
-    const placeholder = this.placeholder;
-
     //language=HTML
     this.shadowRoot.innerHTML = `
-      <style>
-        ${this.styleCSS()}
-      </style>
+      <style>${this.styleCSS()}</style>
       <div>
         <label for="input">${label}</label>
       </div>
-      <input id="input" ${placeholder ? `placeholder="${placeholder}"` : ""}/>
+      <textarea id="input"></textarea>
     `;
   }
 
@@ -78,7 +65,7 @@ export class Input extends HTMLElement
   {
     //language=CSS
     return `
-      input {
+      textarea {
         border-width: 1px;
         border-style: solid;
         border-color: var(--border);
@@ -88,7 +75,7 @@ export class Input extends HTMLElement
         font-family: "Fira Sans", sans-serif;
       }
 
-      input:hover {
+      textarea:hover {
         border-color: var(--hover);
         transition: border-color ease 50ms;
       }
@@ -96,9 +83,4 @@ export class Input extends HTMLElement
   }
 }
 
-export function logNoValueError(property, outerHtml)
-{
-  console.error(`No value was given for '${property}' in '${outerHtml}'.`);
-}
-
-customElements.define("app-input", Input);
+customElements.define("app-textarea", AppTextArea);

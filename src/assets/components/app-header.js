@@ -1,4 +1,4 @@
-class Header extends HTMLElement
+class AppHeader extends HTMLElement
 {
   user;
 
@@ -325,5 +325,5 @@ class Header extends HTMLElement
 }
 
 // let the browser know about the custom element
-customElements.define("app-header", Header);
+customElements.define("app-header", AppHeader);
 "use strict";
