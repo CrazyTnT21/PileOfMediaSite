@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 export default {
   entry: path.join(__dirname, "src", "modules.js"),
   devServer: {
+    liveReload: false,
     static: {
       directory: path.join(__dirname, "src"),
       staticOptions: {

@@ -46,12 +46,14 @@ function columns()
 
 const table = document.querySelector("app-table");
 
-const items = await get(server_Url + "books");
-
-if (items.length > 0)
+try
 {
+  const items = await get(server_Url + "books");
   table.classList.add("test");
   table.columns = columns();
   table.items = items;
+} catch (e)
+{
+  console.error(e);
 }
 
