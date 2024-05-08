@@ -1,6 +1,7 @@
-import {get, server_Url} from "/assets/scripts/http.js";
+import {get} from "/assets/scripts/http.js";
 import {ColumnType} from "../assets/components/app-table.js";
 import {Config} from "../assets/scripts/config.js";
+import {SERVER_URL} from "../modules.js";
 
 function columns()
 {
@@ -52,7 +53,7 @@ function columns()
 
 const table = document.querySelector("app-table");
 
-const items = await get(server_Url + "movies");
+const items = await get(SERVER_URL + "movies");
 if (items.length > 0)
 {
   table.columns = columns();

@@ -2,10 +2,12 @@ import path from "path";
 import fs from "fs";
 import {fileURLToPath} from "url";
 
+import webpack from "webpack";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default {
+export default (env) => ({
   entry: path.join(__dirname, "src", "modules.js"),
   devServer: {
     liveReload: false,
@@ -41,7 +43,16 @@ export default {
 
   mode: "development",
   target: "web",
-};
+
+  plugins: [
+    new webpack.DefinePlugin({
+      "env.SERVER_URL": JSON.stringify(env.SERVER_URL ?? (() =>
+      {
+        throw new Error("SERVER_URL missing!");
+      })()),
+    }),
+  ],
+});
 
 function customDirectoryIndex(context)
 {

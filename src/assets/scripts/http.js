@@ -10,8 +10,6 @@ export async function get(url, ...parameters)
   return result.json();
 }
 
-export const server_Url = "http://localhost:3000/";
-
 export async function post(url, value)
 {
   const result = await fetch(url, {
