@@ -46,13 +46,13 @@ function columns()
 }
 
 const table = document.querySelector("app-table");
-
 try
 {
-  const items = await get(SERVER_URL + "books");
+  const result = await get(SERVER_URL + "books");
   table.classList.add("test");
   table.columns = columns();
-  table.items = items;
+  table.items = result.items;
+  table.total = result.total;
 } catch (e)
 {
   console.error(e);

@@ -1,4 +1,4 @@
-export class AppTable extends HTMLTableElement
+export class AppTable extends HTMLElement
 {
   set caption(value)
   {
@@ -253,4 +253,4 @@ export const ColumnType = {
   Image: 1,
 };
 
-customElements.define("app-table", AppTable, {extends: "table"});
+customElements.define("app-table", AppTable);

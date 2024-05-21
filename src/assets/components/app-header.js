@@ -4,26 +4,35 @@ class AppHeader extends HTMLElement
 
   connectedCallback()
   {
-    const details = [...this.shadowRoot.querySelectorAll("details")];
+    const details = [...this.shadowRoot.querySelectorAll(".items > li > details")];
     for (const detailElement of details)
     {
-      detailElement.addEventListener("click", () => this.closeOtherDetails(detailElement));
+      detailElement.addEventListener("click", () => this.closeOtherDetails(detailElement, details));
     }
+    this.#copyToHamburger(details);
   }
 
   disconnectedCallback()
   {
-    const details = [...this.shadowRoot.querySelectorAll("details")];
-    for (const detailElement of details)
-    {
-      detailElement.removeEventListener("click", () => this.closeOtherDetails(detailElement));
-    }
   }
 
-  closeOtherDetails(value)
+  #copyToHamburger(items)
   {
-    const details = [...this.shadowRoot.querySelectorAll("details")];
-    for (const detailElement of details)
+    items = items.map(x => x.cloneNode(true));
+    const ul = document.createElement("ul");
+    for (const details of items)
+    {
+      details.addEventListener("click", () => this.closeOtherDetails(details, items));
+      const li = document.createElement("li");
+      li.append(details);
+      ul.append(li);
+    }
+    this.shadowRoot.querySelector("#burger").appendChild(ul);
+  }
+
+  closeOtherDetails(value, others)
+  {
+    for (const detailElement of others)
     {
       if (!value.isSameNode(detailElement))
         detailElement.open = false;
@@ -37,18 +46,17 @@ class AppHeader extends HTMLElement
 
     // language=HTML
     this.shadowRoot.innerHTML = `
-      <style>
-        ${this.styleCSS()}
-      </style>
-
+      <style>${this.styleCSS()}</style>
       <nav>
         <ul>
-          <li style="padding: 5px;">
-            <a class="col-12" href="/">
+          <li>
+            <a href="/">
               <img class="fix-1" src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
-              <div class="">MyCollection</div>
+              <div class="pad">MyCollection</div>
             </a>
           </li>
+        </ul>
+        <ul class="items">
           <li>
             <details>
               <summary>
@@ -108,10 +116,7 @@ class AppHeader extends HTMLElement
           <li>
             <details>
               <summary>
-                <div id="user">
-                  <span id="username" style="display:none;"></span>
-                  <img src="/assets/img/User_Placeholder.png" alt="User profile"/>
-                </div>
+                <img src="/assets/img/User_Placeholder.png" alt="User profile"/>
               </summary>
               <ul>
                 <li><a href="/user/profile" class="user-icon">Profile</a></li>
@@ -125,6 +130,10 @@ class AppHeader extends HTMLElement
             </details>
           </li>
         </ul>
+        <details id="burger">
+          <summary>
+          </summary>
+        </details>
       </nav>
     `;
   }
@@ -140,20 +149,12 @@ class AppHeader extends HTMLElement
         padding: 0;
       }
 
-      summary {
-        padding-left: 5px;
-        padding-right: 5px;
-        height: 100%;
-      }
-
-      details, details > ul, a {
+      a {
         padding: 5px;
       }
 
       details > ul {
         background-color: var(--primary_background);
-        margin-top: 10px;
-        position: absolute;
       }
 
       details > ul,
@@ -164,6 +165,11 @@ class AppHeader extends HTMLElement
         border-radius: 5px;
       }
 
+
+      a {
+        width: 100%;
+      }
+
       summary {
         display: flex;
         align-items: center;
@@ -171,7 +177,7 @@ class AppHeader extends HTMLElement
       }
 
       nav,
-      details[open] summary {
+      details[open] > summary {
         border-bottom: 1px solid var(--border);
       }
 
@@ -180,6 +186,126 @@ class AppHeader extends HTMLElement
         flex-direction: column
       }
 
+      a {
+        color: var(--primary_text);
+        text-decoration: none;
+      }
+
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      nav,
+      ul,
+      ul > li,
+      ul > li > * {
+        display: flex;
+      }
+
+      img {
+        height: 35px;
+        width: 35px;
+      }
+
+      nav {
+        font: 1rem "Fira Sans", sans-serif;
+        display: flex;
+        background: var(--primary_background);
+      }
+
+      summary:hover, summary:focus, a:focus, a:hover {
+        background-color: var(--hover);
+      }
+
+      ul > li > * {
+        align-items: center;
+        text-align: center;
+      }
+
+      .pad {
+        padding: 5px;
+      }
+
+      #burger > summary {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-image: url('/assets/img/Hamburger_Placeholder.svg');
+      }
+
+      #burger[open] > summary {
+        background-position: center right 15px;
+        background-image: url('/assets/img/Close_Placeholder.svg');
+      }
+
+      @media (min-width: 701px) {
+        summary {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+
+        summary {
+          height: 100%;
+        }
+
+        #burger {
+          display: none;
+        }
+
+
+        details > ul {
+          margin-top: 5px;
+          position: absolute;
+        }
+      }
+
+      details {
+        -webkit-tap-highlight-color: transparent; /* Prevent blue highlight on chrome */
+      }
+
+      #burger > summary {
+        width: 45px;
+        height: 45px;
+      }
+
+      @media (max-width: 700px) {
+        nav > ul {
+          flex-direction: column;
+        }
+
+        nav:has(#burger[open]) > ul,
+        .items {
+          display: none;
+        }
+
+        #burger[open],
+        #burger[open] > summary,
+        nav > .items,
+        nav > .items > *,
+        ul > * > * {
+          width: 100%;
+        }
+
+        #burger,
+        #burger[open] > summary > * {
+          margin-left: auto;
+          margin-right: 0;
+        }
+
+        summary > * {
+          padding: 10px
+        }
+      }
+
+      ${this.iconsCSS()}
+    `;
+  }
+
+  iconsCSS()
+  {
+    //language=CSS
+    return `
       .graphic-novel-icon {
         padding-left: 25px;
       }
@@ -323,78 +449,6 @@ class AppHeader extends HTMLElement
         height: 25px;
         content: '';
         margin-left: -25px;
-      }
-
-      a {
-        color: var(--primary_text);
-        text-decoration: none;
-      }
-
-      ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      nav {
-        height: 50px;
-      }
-
-      nav,
-      ul,
-      ul > li,
-      ul > li > * {
-        display: flex;
-      }
-
-      img {
-        height: 35px;
-        width: 35px;
-      }
-
-      nav {
-        font: 1rem "Fira Sans", sans-serif;
-        display: flex;
-        background: var(--primary_background);
-      }
-
-      summary:hover, summary:focus, a:focus, a:hover {
-
-        background-color: var(--hover);
-      }
-
-      ul > li > * {
-        align-items: center;
-        text-align: center;
-      }
-
-
-      .pad {
-        padding: 5px;
-      }
-
-      @media (max-width: 700px) {
-        nav > ul {
-          flex-direction: column;
-        }
-
-        nav > ul,
-        nav > ul > *,
-        ul > * > * {
-          width: 100%;
-        }
-
-        #settings > * > * {
-          width: 100%;
-        }
-      }
-
-      a {
-        width: 100%;
-      }
-
-      summary > * {
-        width: 100%;
       }
     `;
   }
