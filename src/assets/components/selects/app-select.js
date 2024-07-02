@@ -1,4 +1,4 @@
-import {AppInput, logNoValueError} from "../inputs/app-Input.js";
+import {AppInput, logNoValueError} from "../inputs/app-input.js";
 
 export class AppSelect extends AppInput
 {

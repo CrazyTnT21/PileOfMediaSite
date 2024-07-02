@@ -7,7 +7,7 @@ function columns()
 {
   return [
     {
-      key: "cover.uri",
+      key: "uri",
       display: "Cover",
       type: ColumnType.Image,
       width: "80px",
@@ -51,7 +51,9 @@ try
   const result = await get(SERVER_URL + "books");
   table.classList.add("test");
   table.columns = columns();
-  table.items = result.items;
+  let items = result.items;
+  items.forEach(x => x.uri = x.cover.versions[0].uri);
+  table.items = items;
   table.total = result.total;
 } catch (e)
 {

@@ -27,7 +27,7 @@ export default (env) => ({
     },
 
     compress: true,
-    port: 80,
+    port: 5000,
   },
   output: {
     filename: "modules.js",

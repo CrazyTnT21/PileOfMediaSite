@@ -1,36 +1,63 @@
-export class AppButton extends HTMLElement
-{
-  get value()
-  {
+export class AppButton extends HTMLElement {
+  static formAssociated = true;
+  static observedAttributes = ["type"];
+
+  #interals;
+
+  attributeChangedCallback(name, value, oldValue) {
+    if (name === "type")
+      this.typeValue = value;
+  }
+  get type() {
+    return this.getAttribute("type");
+  }
+
+  set type(value) {
+    this.setAttribute("type", value);
+    this.typeValue = value;
+  }
+  set typeValue(value) {
+    this.shadowRoot.querySelector("button").type = value;
+  }
+
+  get value() {
     return this.getAttribute("data-value");
   }
 
-  set value(value)
-  {
+  set value(value) {
     this.setAttribute("data-value", value);
     this.shadowRoot.querySelector("button").innerText = this.value;
   }
+  connectedCallback() { }
 
-  constructor()
-  {
+  constructor() {
     super();
-    this.attachShadow({mode: "open"});
+    this.#interals = this.attachInternals();
+    this.#interals.ariaRole = "button";
+    this.attachShadow({ mode: "open", delegatesFocus: true });
     this.render();
   }
 
-  render()
-  {
+  render() {
     const content = this.innerHTML;
     this.innerHTML = "";
+    let type = this.type ? `type="${this.type}"` : "";
+
     //language=HTML
     this.shadowRoot.innerHTML = `
       <style>${this.styleCSS()}</style>
-      <button>${this.value ?? content}</button>
+      <button ${type}>${this.value ?? content}</button>
     `;
+
+    this.shadowRoot.querySelector("button").addEventListener("click", e => {
+      if (e.target.type === "submit" && this.#interals.form) {
+        if (this.#interals.form.reportValidity())
+          this.#interals.form.submit()
+      }
+    })
   }
 
-  styleCSS()
-  {
+  styleCSS() {
     //language=CSS
     return `
         button {

@@ -1,4 +1,4 @@
-import {AppInput} from "./app-Input.js";
+import {AppInput} from "./app-input.js";
 
 export class AppDateInput extends AppInput
 {
