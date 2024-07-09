@@ -1,68 +1,98 @@
-export class AppButton extends HTMLElement {
+export class AppButton extends HTMLElement
+{
   static formAssociated = true;
   static observedAttributes = ["type"];
 
-  #interals;
+  #internals;
 
-  attributeChangedCallback(name, value, oldValue) {
+  attributeChangedCallback(name, value, oldValue)
+  {
     if (name === "type")
-      this.typeValue = value;
+      this.innerType = value;
+
+    this.validateInternals();
   }
-  get type() {
+
+  get type()
+  {
     return this.getAttribute("type");
   }
 
-  set type(value) {
-    this.setAttribute("type", value);
-    this.typeValue = value;
-  }
-  set typeValue(value) {
-    this.shadowRoot.querySelector("button").type = value;
+  set type(value)
+  {
+    if (!value)
+      this.removeAttribute("type");
+    else
+      this.setAttribute("type", value);
+    this.innerType = value;
   }
 
-  get value() {
+  set innerType(value)
+  {
+    const button = this.shadowRoot.querySelector("button");
+    if (!value)
+      button.removeAttribute("type");
+    else
+      button.setAttribute("type", value);
+  }
+
+  get value()
+  {
     return this.getAttribute("data-value");
   }
 
-  set value(value) {
+  set value(value)
+  {
     this.setAttribute("data-value", value);
     this.shadowRoot.querySelector("button").innerText = this.value;
   }
-  connectedCallback() { }
 
-  constructor() {
+  connectedCallback()
+  {
+    const button = this.shadowRoot.querySelector("button");
+    if (this.value)
+      button.innerText = this.value;
+    else
+      button.innerHTML = this.innerHTML;
+    this.innerHTML = "";
+
+    if (this.type)
+      button.type = this.type;
+
+    button.addEventListener("click", e =>
+    {
+      if (e.target.type === "submit" && this.#internals.form)
+      {
+        if (this.#internals.form.reportValidity())
+          this.#internals.form.requestSubmit();
+      }
+    });
+  }
+
+  constructor()
+  {
     super();
-    this.#interals = this.attachInternals();
-    this.#interals.ariaRole = "button";
-    this.attachShadow({ mode: "open", delegatesFocus: true });
+    this.#internals = this.attachInternals();
+    this.#internals.ariaRole = "button";
+    this.attachShadow({mode: "open", delegatesFocus: true});
     this.render();
   }
 
-  render() {
-    const content = this.innerHTML;
-    this.innerHTML = "";
-    let type = this.type ? `type="${this.type}"` : "";
-
+  render()
+  {
     //language=HTML
     this.shadowRoot.innerHTML = `
-      <style>${this.styleCSS()}</style>
-      <button ${type}>${this.value ?? content}</button>
+        <style>${this.styleCSS()}</style>
+        <button></button>
     `;
-
-    this.shadowRoot.querySelector("button").addEventListener("click", e => {
-      if (e.target.type === "submit" && this.#interals.form) {
-        if (this.#interals.form.reportValidity())
-          this.#interals.form.submit()
-      }
-    })
   }
 
-  styleCSS() {
+  styleCSS()
+  {
     //language=CSS
     return `
         button {
-            min-width: 4rem;
-            min-height: 2rem;
+            padding: 10px;
             border: 0;
             background-color: var(--clickable);
             color: var(--primary_text);

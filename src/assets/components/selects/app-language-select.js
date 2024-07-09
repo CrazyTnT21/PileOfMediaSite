@@ -1,7 +1,7 @@
 import {AppSelect} from "./app-select.js";
 import {Language} from "../../classes/language.js";
 
-class AppLanguageSelect extends AppSelect
+export class AppLanguageSelect extends AppSelect
 {
   get label()
   {

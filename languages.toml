@@ -1,8 +1,0 @@
-[[language]]
-name = "javascript"
-auto-format = true
-language-servers =  ["typescript-language-server","vscode-eslint-language-server"]
-[[language]]
-name = "html"
-auto-format = true
-langauge-servers = ["vscode-html-language-server","vscode-css-language-server","vscode-json-language-server","vscode-eslint-language-server"]

@@ -14,9 +14,19 @@ export class AppSelect extends AppInput
 
   connectedCallback()
   {
+    super.connectedCallback();
     const input = this.shadowRoot.querySelector("input");
-    input.addEventListener("input", (e) => this.validate(e));
-
+    input.addEventListener("input", (e) =>
+    {
+      this.validate(e);
+      if (this.valid(e.target))
+        this.shadowRoot.dispatchEvent(new CustomEvent("change", {composed: true, detail: e.target.value}));
+    });
+    const value = this.dataset.value;
+    if (value !== undefined)
+    {
+      input.value = value;
+    }
     this.createOptions();
 
     const datalist = this.shadowRoot.querySelector("#items");
@@ -24,6 +34,11 @@ export class AppSelect extends AppInput
     {
       datalist.appendChild(this.children[i]);
     }
+    const label = this.label ?? "";
+    if (!label)
+      logNoValueError("label", this.outerHTML);
+    this.shadowRoot.querySelector("label").innerText = label;
+
   }
 
   disconnectedCallback()
@@ -34,18 +49,12 @@ export class AppSelect extends AppInput
 
   render()
   {
-    const label = this.label ?? "";
-    if (!label)
-      logNoValueError("label", this.outerHTML);
-
     //language=HTML
     this.shadowRoot.innerHTML = `
-      <style>${this.styleCSS()}</style>
-      <div>
-        <label for="input">${label}</label>
-      </div>
-      <input id="input" list="items"/>
-      <datalist id="items"></datalist>
+        <style>${this.styleCSS()}</style>
+        <label for="input"></label>
+        <input id="input" list="items"/>
+        <datalist id="items"></datalist>
     `;
   }
 
@@ -67,11 +76,14 @@ export class AppSelect extends AppInput
   validate(e)
   {
     const input = e.target;
+    input.style.borderColor = this.valid(input) ? "" : "red";
+  }
 
-    input.style.borderColor = "";
-
+  valid(input)
+  {
     if (!input.value || !this.items || this.items.length < 1)
       return true;
+
     const value = input.value.toLowerCase().trim();
     for (let i = 0; i < this.items.length; i++)
     {
@@ -79,7 +91,6 @@ export class AppSelect extends AppInput
       if (itemValue === value)
         return true;
     }
-    input.style.borderColor = "red";
     return false;
   }
 }
