@@ -3,21 +3,20 @@ import {Language} from "../../classes/language.js";
 
 export class AppLanguageSelect extends AppSelect
 {
-  get label()
+  connectedCallback()
   {
-    return super.label ?? "Language";
+    this.label = this.label ?? "Language";
+    super.connectedCallback();
   }
 
-  _items = [
-    {value: Language.EN, required: true},
-    {value: Language.DE},
-    {value: Language.ES},
-    {value: Language.JA},
-  ];
-
-  get items()
+  async* loadItems()
   {
-    return this._items;
+    return [
+      {value: Language.EN},
+      {value: Language.DE},
+      {value: Language.ES},
+      {value: Language.JA},
+    ];
   }
 }
 
