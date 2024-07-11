@@ -110,6 +110,7 @@ export class AppImageInput extends HTMLElement
     this.#internals = this.attachInternals();
     this.attach();
     this.render();
+    this.applyStyleSheet();
   }
 
   attach()
@@ -169,11 +170,17 @@ export class AppImageInput extends HTMLElement
     //language=HTML
     // noinspection HtmlRequiredAltAttribute
     this.shadowRoot.innerHTML = `
-        <style>${this.styleCSS()}</style>
         <div title="Required"></div>
         <img tabindex=0 src="${this.#defaultSrc}">
         <input id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
     `;
+  }
+
+  applyStyleSheet()
+  {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(this.styleCSS());
+    this.shadowRoot.adoptedStyleSheets = [styleSheet];
   }
 
   styleCSS()

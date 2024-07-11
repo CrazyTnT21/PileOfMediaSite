@@ -54,8 +54,8 @@ export class AppTable extends HTMLElement
   createRowElement(column, item)
   {
     const element = column.type === ColumnType.Image
-      ? document.createElement("img")
-      : document.createElement("div");
+        ? document.createElement("img")
+        : document.createElement("div");
 
     this.setInnerHTML(column, element, item);
 
@@ -129,10 +129,10 @@ export class AppTable extends HTMLElement
   connectedCallback()
   {
     this.shadowRoot.querySelector("#next").addEventListener("click", () =>
-      this.shadowRoot.dispatchEvent(this.#nextEvent));
+        this.shadowRoot.dispatchEvent(this.#nextEvent));
 
     this.shadowRoot.querySelector("#back").addEventListener("click", () =>
-      this.shadowRoot.dispatchEvent(this.#backEvent));
+        this.shadowRoot.dispatchEvent(this.#backEvent));
 
     const caption = this.getAttribute("caption");
     if (caption)
@@ -142,103 +142,119 @@ export class AppTable extends HTMLElement
   disconnectedCallback()
   {
     this.shadowRoot.querySelector("#next").removeEventListener("click", () =>
-      this.shadowRoot.dispatchEvent(this.#nextEvent));
+        this.shadowRoot.dispatchEvent(this.#nextEvent));
 
     this.shadowRoot.querySelector("#back").removeEventListener("click", () =>
-      this.shadowRoot.dispatchEvent(this.#backEvent));
+        this.shadowRoot.dispatchEvent(this.#backEvent));
   }
 
 
   constructor()
   {
     super();
-    this.attachShadow({mode: "open"});
+    this.attach();
+    this.render();
+    this.applyStyleSheet();
+  }
+
+  render()
+  {
     //language=HTML
     this.shadowRoot.innerHTML = `
-      ${this.styleHTML()}
-      <table>
-        <caption></caption>
-        <thead>
-        <tr>
+        <table>
+            <caption></caption>
+            <thead>
+            <tr>
 
-        </tr>
-        </thead>
-        <tbody>
+            </tr>
+            </thead>
+            <tbody>
 
-        </tbody>
-        <tfoot>
-        <tr hidden>
-          <th scope="row" colspan="2">Total</th>
-          <td colspan="2"></td>
-          <td>
-            <button id="back">Back</button>
-          </td>
-          <td>
-            <button id="next">Next</button>
-          </td>
-        </tr>
-        </tfoot>
-      </table>
+            </tbody>
+            <tfoot>
+            <tr hidden>
+                <th scope="row" colspan="2">Total</th>
+                <td colspan="2"></td>
+                <td>
+                    <button id="back">Back</button>
+                </td>
+                <td>
+                    <button id="next">Next</button>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
     `;
   }
 
-  styleHTML()
+  attach()
   {
-    //language=HTML
+    this.attachShadow({
+      mode: "open",
+    });
+  }
+
+  applyStyleSheet()
+  {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(this.styleCSS());
+    this.shadowRoot.adoptedStyleSheets = [styleSheet];
+  }
+
+  styleCSS()
+  {
+    //language=CSS
     return `
-      <style>
         img {
-          width: 100%;
+            width: 100%;
         }
 
         .pad {
-          padding: 5px;
+            padding: 5px;
         }
 
         table {
-          border-radius: 5px;
-          background-color: var(--primary_background);
-          width: 100%;
-          border-collapse: collapse;
+            border-radius: 5px;
+            background-color: var(--primary_background);
+            width: 100%;
+            border-collapse: collapse;
         }
 
         tbody {
-          background-color: var(--secondary_background);
+            background-color: var(--secondary_background);
         }
 
         thead > tr > th:first-child {
-          border-radius: 5px 0 0 0;
+            border-radius: 5px 0 0 0;
         }
 
         thead > tr > th:last-child {
-          border-radius: 0 5px 0 0;
+            border-radius: 0 5px 0 0;
         }
 
         tfoot > tr > th:first-child {
-          border-radius: 0 0 0 5px;
+            border-radius: 0 0 0 5px;
         }
 
         tr:nth-of-type(even) {
-          background-color: var(--primary_background);
+            background-color: var(--primary_background);
         }
 
         button {
-          min-width: 4rem;
-          min-height: 2rem;
-          border: 0;
-          background-color: var(--clickable);
-          color: var(--primary_text);
+            min-width: 4rem;
+            min-height: 2rem;
+            border: 0;
+            background-color: var(--clickable);
+            color: var(--primary_text);
         }
 
         button:hover {
-          background-color: var(--hover);
+            background-color: var(--hover);
         }
 
         button:active {
-          background-color: var(--feedback);
+            background-color: var(--feedback);
         }
-
-      </style>
     `;
   }
 }

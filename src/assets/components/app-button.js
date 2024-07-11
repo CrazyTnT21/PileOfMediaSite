@@ -74,17 +74,32 @@ export class AppButton extends HTMLElement
     super();
     this.#internals = this.attachInternals();
     this.#internals.ariaRole = "button";
-    this.attachShadow({mode: "open", delegatesFocus: true});
+    this.attach();
     this.render();
+    this.applyStyleSheet();
   }
 
   render()
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <style>${this.styleCSS()}</style>
         <button></button>
     `;
+  }
+
+  attach()
+  {
+    this.attachShadow({
+      mode: "open",
+      delegatesFocus: true,
+    });
+  }
+
+  applyStyleSheet()
+  {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(this.styleCSS());
+    this.shadowRoot.adoptedStyleSheets = [styleSheet];
   }
 
   styleCSS()

@@ -73,6 +73,14 @@ export class AppInput extends HTMLElement
     this.#internals.ariaRole = "textbox";
     this.attach();
     this.render();
+    this.applyStyleSheet();
+  }
+
+  applyStyleSheet()
+  {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(this.styleCSS());
+    this.shadowRoot.adoptedStyleSheets = [styleSheet];
   }
 
   attach()
@@ -164,7 +172,6 @@ export class AppInput extends HTMLElement
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <style>${this.styleCSS()}</style>
         <label for="input"></label>
         <input id="input"/>
     `;

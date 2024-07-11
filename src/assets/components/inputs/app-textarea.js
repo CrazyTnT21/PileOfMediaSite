@@ -61,6 +61,7 @@ export class AppTextArea extends HTMLElement
     this.#internals.ariaRole = "textarea";
     this.attach();
     this.render();
+    this.applyStyleSheet();
   }
 
   attach()
@@ -151,10 +152,16 @@ export class AppTextArea extends HTMLElement
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <style>${this.styleCSS()}</style>
         <label for="input"></label>
         <textarea rows="5" id="input"></textarea>
     `;
+  }
+
+  applyStyleSheet()
+  {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(this.styleCSS());
+    this.shadowRoot.adoptedStyleSheets = [styleSheet];
   }
 
   styleCSS()

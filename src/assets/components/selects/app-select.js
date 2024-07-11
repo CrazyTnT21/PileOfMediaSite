@@ -84,7 +84,6 @@ export class AppSelect extends AppInput
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <style>${this.styleCSS()}</style>
         <label for="input"></label>
         <input id="input" list="items"/>
         <datalist id="items"></datalist>
