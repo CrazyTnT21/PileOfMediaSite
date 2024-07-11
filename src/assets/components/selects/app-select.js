@@ -4,7 +4,8 @@ export class AppSelect extends AppInput
 {
   #cachedSearch = new Map();
   #items = [];
-
+  #search = [];
+  #selected = [];
   #itemsGenerator;
 
   get items()
@@ -18,15 +19,41 @@ export class AppSelect extends AppInput
     this.createOptions(this.#items);
   }
 
+  get selected()
+  {
+    return this.#selected;
+  }
+
   async onInputChange(event)
   {
     const input = event.target;
-
+    const value = input.value.toLowerCase().trim();
+    const item = this.#search.find(x => x.value.toLowerCase() === value) ?? this.#items.find(x => x.value.toLowerCase() === value);
     this.validate(input);
     if (!this.valid(input))
       return;
 
-    this.shadowRoot.dispatchEvent(new CustomEvent("valueChange", {composed: true, detail: input.value}));
+    if (this.dataset.multi === "" && item)
+    {
+      const selected = this.shadowRoot.querySelector("#selected");
+      const li = document.createElement("li");
+      const button = document.createElement("button");
+      li.append(button);
+      button.innerText = item.label ?? item.value;
+      button.addEventListener("click", () =>
+      {
+        const index = this.#selected.findIndex(x => x.value === item.value);
+        selected.removeChild(li);
+        this.#selected.splice(index, 1);
+        this.search(input.value);
+      });
+      this.#selected.push(item);
+      input.value = "";
+      await this.search(input.value);
+      selected.append(li);
+    }
+
+    this.shadowRoot.dispatchEvent(new CustomEvent("valueChange", {composed: true, detail: item}));
   }
 
   async onInputInput(event)
@@ -39,7 +66,6 @@ export class AppSelect extends AppInput
   {
     await this.firstOpen();
   }
-
 
   connectedCallback()
   {
@@ -62,6 +88,7 @@ export class AppSelect extends AppInput
         <label for="input"></label>
         <input id="input" list="items"/>
         <datalist id="items"></datalist>
+        <ul id="selected"></ul>
     `;
   }
 
@@ -85,7 +112,7 @@ export class AppSelect extends AppInput
     for (const item of items)
     {
       const option = document.createElement("option");
-      option.innerText = item.text ?? item.value;
+      option.innerText = item.label ?? item.value;
       option.value = item.value;
       datalist.append(option);
     }
@@ -98,14 +125,31 @@ export class AppSelect extends AppInput
 
   valid(input)
   {
-    if (!input.value || !this.items || this.items.length < 1)
+    if (!input.value)
       return true;
 
     const value = input.value.toLowerCase().trim();
-    for (let i = 0; i < this.items.length; i++)
+
+    if (this.dataset.multi === "" && this.#selected.find(x => x.value.toLowerCase() === value))
+      return false;
+
+    for (const item of this.items)
     {
-      const itemValue = (this.items[i].text ?? this.items[i].value).toString().toLowerCase();
-      if (itemValue === value)
+      if (this.hasValue(value, this.items) || this.hasValue(value, this.#search))
+        return true;
+    }
+
+    return false;
+  }
+
+  hasValue(value, items)
+  {
+    for (const item of items)
+    {
+      const itemValue = item.value.toString().toLowerCase();
+      const itemLabel = item.label?.toString().toLowerCase();
+
+      if (itemValue === value || itemLabel === value)
         return true;
     }
     return false;
@@ -120,30 +164,66 @@ export class AppSelect extends AppInput
 
   async search(value)
   {
+    const filterSelected = (x) => !this.#selected.find(y => y.value === x.value);
     if (value === "")
     {
-      this.createOptions(this.items);
+      this.createOptions(this.items.filter(filterSelected));
       return;
     }
     if (this.#cachedSearch.has(value))
     {
-      this.createOptions(this.#cachedSearch.get(value));
+      this.createOptions(this.#cachedSearch.get(value).filter(filterSelected));
       return;
     }
 
     const search = (await this.searchItems(value).next()).value;
+    this.#search = search;
     this.#cachedSearch.set(value, search);
-    this.createOptions(search);
+    this.createOptions(search.filter(filterSelected));
   }
 
   async* loadItems()
   {
-    return [...this.children].map(x => ({value: x.value}));
+    return [...this.children].map(x => ({value: x.value, label: x.label}));
   }
 
   async* searchItems(value)
   {
     return this.items;
+  }
+
+  styleCSS()
+  {
+    //language=CSS
+    return super.styleCSS() + `
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        #selected {
+            display: flex;
+            flex: 1;
+            flex-wrap: wrap;
+            padding-top: 5px;
+        }
+
+        li > button {
+            font-size: .75em;
+            border-radius: 10px;
+            border: var(--border) 1px solid;
+            background-color: var(--primary_background);
+            color: var(--primary_text);
+        }
+
+        li > button::after {
+            content: " x"
+        }
+    `;
   }
 }
 

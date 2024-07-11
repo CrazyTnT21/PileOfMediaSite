@@ -20,7 +20,8 @@ class AppGenreSelect extends AppSelect
       const response = await get(join(SERVER_URL, "genres", "name", value), [["page", page], ["count", count]]);
       page++;
       total = response.total;
-      yield  response.items.map(x => ({value: x.name}));
+      response.items.forEach(x => x.value = x.name);
+      yield response.items;
     }
   }
 
@@ -34,7 +35,8 @@ class AppGenreSelect extends AppSelect
       const response = await get(join(SERVER_URL, "genres"), [["page", page], ["count", count]]);
       page++;
       total = response.total;
-      yield  response.items.map(x => ({value: x.name}));
+      response.items.forEach(x => x.value = x.name);
+      yield response.items;
     }
   }
 }
