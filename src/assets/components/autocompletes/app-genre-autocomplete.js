@@ -1,8 +1,8 @@
-import {AppSelect} from "./app-select.js";
+import {AppAutocomplete} from "./app-autocomplete.js";
 import {get, join} from "../../scripts/http.js";
 import {SERVER_URL} from "../../../modules.js";
 
-class AppGenreSelect extends AppSelect
+class AppGenreAutocomplete extends AppAutocomplete
 {
   connectedCallback()
   {
@@ -41,4 +41,4 @@ class AppGenreSelect extends AppSelect
   }
 }
 
-customElements.define("app-genre-select", AppGenreSelect);
+customElements.define("app-genre-autocomplete", AppGenreAutocomplete);

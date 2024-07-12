@@ -1,7 +1,7 @@
-import {AppSelect} from "./app-select.js";
+import {AppAutocomplete} from "./app-autocomplete.js";
 import {Language} from "../../classes/language.js";
 
-export class AppLanguageSelect extends AppSelect
+export class AppLanguageAutocomplete extends AppAutocomplete
 {
   connectedCallback()
   {
@@ -20,4 +20,4 @@ export class AppLanguageSelect extends AppSelect
   }
 }
 
-customElements.define("app-language-select", AppLanguageSelect);
+customElements.define("app-language-autocomplete", AppLanguageAutocomplete);

@@ -1,4 +1,4 @@
-import {logNoValueError} from "./inputs/app-input.js";
+import {logNoValueError} from "./app-input.js";
 
 export class AppImageInput extends HTMLElement
 {

@@ -1,6 +1,6 @@
 import {AppInput} from "../inputs/app-input.js";
 
-export class AppSelect extends AppInput
+export class AppAutocomplete extends AppInput
 {
   #cachedSearch = new Map();
   #items = [];
@@ -226,7 +226,7 @@ export class AppSelect extends AppInput
   }
 }
 
-customElements.define("app-select", AppSelect);
+customElements.define("app-autocomplete", AppAutocomplete);
 
 function triggerOnce(element, type, listener)
 {
