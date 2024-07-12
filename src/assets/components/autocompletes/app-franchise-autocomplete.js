@@ -2,11 +2,11 @@ import {AppAutocomplete} from "./app-autocomplete.js";
 import {get, join} from "../../scripts/http.js";
 import {SERVER_URL} from "../../../modules.js";
 
-class AppGenreAutocomplete extends AppAutocomplete
+class AppFranchiseAutocomplete extends AppAutocomplete
 {
   connectedCallback()
   {
-    this.label = this.label ?? "Genre";
+    this.label = this.label ?? "Franchise";
     super.connectedCallback();
   }
 
@@ -17,7 +17,7 @@ class AppGenreAutocomplete extends AppAutocomplete
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(SERVER_URL, "genres", "name", value), [["page", page], ["count", count]]);
+      const response = await get(join(SERVER_URL, "franchises", "name", value), [["page", page], ["count", count]]);
       page++;
       total = response.total;
       response.items.forEach(x => x.value = x.name);
@@ -32,7 +32,7 @@ class AppGenreAutocomplete extends AppAutocomplete
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(SERVER_URL, "genres"), [["page", page], ["count", count]]);
+      const response = await get(join(SERVER_URL, "franchises"), [["page", page], ["count", count]]);
       page++;
       total = response.total;
       response.items.forEach(x => x.value = x.name);
@@ -41,4 +41,4 @@ class AppGenreAutocomplete extends AppAutocomplete
   }
 }
 
-customElements.define("app-genre-autocomplete", AppGenreAutocomplete);
+customElements.define("app-franchise-autocomplete", AppFranchiseAutocomplete);
