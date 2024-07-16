@@ -26,12 +26,13 @@ export class AppAutocomplete extends AppInput
 
   async onInputChange(event)
   {
+    await super.onInputChange(event);
+    if (!await this.valid())
+      return;
+
     const input = event.target;
     const value = input.value.toLowerCase().trim();
     const item = this.#search.find(x => x.value.toLowerCase() === value) ?? this.#items.find(x => x.value.toLowerCase() === value);
-    this.validate(input);
-    if (!this.valid(input))
-      return;
 
     if (this.dataset.multi === "" && item)
     {
@@ -117,28 +118,53 @@ export class AppAutocomplete extends AppInput
     }
   }
 
-  validate(input)
+  async validate(report)
   {
-    input.style.borderColor = this.valid(input) ? "" : "red";
+    await super.validate();
+
+    const input = this.shadowRoot.querySelector("input");
+    input.style.borderColor = await this.valid() ? "" : "red";
   }
 
-  valid(input)
+  async setValidity(input)
   {
+    await super.setValidity(input);
+    this.errors.delete("customError");
+
     if (!input.value)
-      return true;
+      return;
 
     const value = input.value.toLowerCase().trim();
 
-    if (this.dataset.multi === "" && this.#selected.find(x => x.value.toLowerCase() === value))
-      return false;
+    if (this.isMulti())
+    {
+      const found = this.#selected.find(x => x.value.toLowerCase() === value);
+      if (found)
+      {
+        this.errors.set("customError", () => `Item '${value}' has already been selected`);
+        return;
+      }
+    }
 
+    if (!this.#itemsGenerator)
+      await this.firstOpen();
+
+    let valueFound = false;
     for (const item of this.items)
     {
       if (this.hasValue(value, this.items) || this.hasValue(value, this.#search))
-        return true;
+      {
+        valueFound = true;
+        break;
+      }
     }
+    if (!valueFound)
+      this.errors.set("customError", () => `Item '${value}' was not found`);
+  }
 
-    return false;
+  isMulti()
+  {
+    return this.dataset.multi === "";
   }
 
   hasValue(value, items)
@@ -156,7 +182,8 @@ export class AppAutocomplete extends AppInput
 
   async firstOpen()
   {
-    this.#itemsGenerator = await this.loadItems();
+    if (!this.#itemsGenerator)
+      this.#itemsGenerator = await this.loadItems();
     this.items = (await this.#itemsGenerator.next()).value;
     this.createOptions(this.items);
   }

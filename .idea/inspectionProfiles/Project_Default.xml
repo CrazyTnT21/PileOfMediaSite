@@ -4,7 +4,7 @@
     <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="26">
+          <list size="27">
             <item index="0" class="java.lang.String" itemvalue="nobr" />
             <item index="1" class="java.lang.String" itemvalue="noembed" />
             <item index="2" class="java.lang.String" itemvalue="comment" />
@@ -12,19 +12,18 @@
             <item index="4" class="java.lang.String" itemvalue="embed" />
             <item index="5" class="java.lang.String" itemvalue="script" />
             <item index="6" class="java.lang.String" itemvalue="app-date-input" />
-            <item index="7" class="java.lang.String" itemvalue="app-select" />
-            <item index="8" class="java.lang.String" itemvalue="app-genre-select" />
+            <item index="7" class="java.lang.String" itemvalue="app-autocomplete" />
+            <item index="8" class="java.lang.String" itemvalue="app-genre-autocomplete" />
             <item index="9" class="java.lang.String" itemvalue="app-header" />
             <item index="10" class="java.lang.String" itemvalue="app-table" />
             <item index="11" class="java.lang.String" itemvalue="app-footer" />
             <item index="12" class="java.lang.String" itemvalue="markdown-editor" />
             <item index="13" class="java.lang.String" itemvalue="app-input" />
             <item index="14" class="java.lang.String" itemvalue="app-button" />
-            <item index="15" class="java.lang.String" itemvalue="app-language-select" />
+            <item index="15" class="java.lang.String" itemvalue="app-language-autocomplete" />
             <item index="16" class="java.lang.String" itemvalue="app-image-input" />
             <item index="17" class="java.lang.String" itemvalue="app-textarea" />
             <item index="18" class="java.lang.String" itemvalue="app-number-input" />
-            <item index="19" class="java.lang.String" itemvalue="app-genre-autocomplete" />
             <item index="20" class="java.lang.String" itemvalue="app-autocomplete" />
             <item index="21" class="java.lang.String" itemvalue="app-theme-autocomplete" />
             <item index="22" class="java.lang.String" itemvalue="app-role-autocomplete" />

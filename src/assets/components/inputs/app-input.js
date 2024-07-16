@@ -2,10 +2,11 @@ export class AppInput extends HTMLElement
 {
   static formAssociated = true;
   static observedAttributes = ["required", "minlength", "maxlength"];
+  errors = new Map();
 
-  attributeChangedCallback(name, oldValue, newValue)
+  async attributeChangedCallback(name, oldValue, newValue)
   {
-    this.validateInternals();
+    await this.validate(false);
   }
 
   #internals;
@@ -33,8 +34,11 @@ export class AppInput extends HTMLElement
 
   set value(value)
   {
-    this.#internals.setFormValue(value);
+    if (value === undefined)
+      value = null;
+
     this.shadowRoot.querySelector("input").value = value;
+    this.dispatchEvent(new CustomEvent("valueSet", {detail: value}));
   }
 
   get placeholder()
@@ -48,7 +52,7 @@ export class AppInput extends HTMLElement
     this.shadowRoot.querySelector("input").placeholder = value;
   }
 
-  connectedCallback()
+  async connectedCallback()
   {
     const label = this.label ?? "";
     if (!label)
@@ -59,21 +63,38 @@ export class AppInput extends HTMLElement
     if (this.placeholder)
       this.shadowRoot.querySelector("input").placeholder = this.placeholder;
 
-    this.setupValidateInternals();
+    this.shadowRoot.querySelector("input").addEventListener("change", (e) => this.onInputChange(e));
+    this.addEventListener("valueSet", (e) => this.onValueSet(e));
+    await this.setupValidation();
   }
 
   disconnectedCallback()
   {
   }
 
+  async onValueSet(event)
+  {
+    await this.validate(false);
+  }
+
+  async onInputChange(event)
+  {
+    await this.validate(true);
+  }
+
   constructor()
   {
     super();
-    this.#internals = this.attachInternals();
-    this.#internals.ariaRole = "textbox";
+    this.setupInternals();
     this.attach();
     this.render();
     this.applyStyleSheet();
+  }
+
+  setupInternals()
+  {
+    this.#internals = this.attachInternals();
+    this.#internals.ariaRole = "textbox";
   }
 
   applyStyleSheet()
@@ -91,81 +112,80 @@ export class AppInput extends HTMLElement
     });
   }
 
-  setupValidateInternals()
+  async setupValidation()
   {
     const input = this.shadowRoot.querySelector("input");
-    input.addEventListener("change", () => this.validateInternals());
-    this.validateInternals();
+    input.addEventListener("change", () => this.validate(true));
+    await this.validate(false);
   }
 
-  validateInternals()
+  async validate(report)
   {
     const input = this.shadowRoot.querySelector("input");
-    this.reportValidity(this.#internals, input);
+    await this.setValidity(input);
+    this.#internals.setValidity({}, input);
+    console.log(this.errors);
+    for (const [x, y] of this.errors)
+    {
+      this.#internals.setValidity({[x]: true}, y(), input);
+    }
+    if (report)
+      this.#internals.reportValidity();
   }
 
-  reportValidity(internals, input)
-  {
-    this.setValidity(input);
-    internals.reportValidity();
-  }
-
-  setValidity(input)
+  async setValidity(input)
   {
     this.#internals.setFormValue(input.value);
-    if (
-        !this.setValueMissing(input) &&
-        !this.setMinLength(input) &&
-        !this.setMaxLength(input))
-    {
-      this.#internals.setValidity({});
-    }
+    this.setValueMissing(input);
+    this.setMinLength(input);
+    this.setMaxLength(input);
+  }
+
+  async valid()
+  {
+    const input = this.shadowRoot.querySelector("input");
+    await this.setValidity(input);
+    return this.errors.size === 0;
   }
 
   setValueMissing(input)
   {
-    if (this.getAttribute("required") !== "")
+    if (this.isRequired() && valueMissing(input))
     {
-      return false;
+      this.errors.set("valueMissing", () => "No value given");
+      return;
     }
-    if (input.value === "")
-    { //TODO: Translation
-      this.#internals.setValidity({valueMissing: true}, "No value given", input);
-      return true;
-    }
+    this.errors.delete("valueMissing");
+  }
 
-    return false;
+  isRequired()
+  {
+    return this.getAttribute("required") === "";
   }
 
   setMinLength(input)
   {
-    const min = this.getAttribute("minlength");
-    if (!min)
-    {
-      return false;
-    }
-    if (!input.value || input.value.length < min)
-    {
-      this.#internals.setValidity({tooShort: true}, `Input requires at least ${min} characters`);
-      return true;
-    }
+    const min = Number(this.getAttribute("minlength"));
 
-    return false;
+    if (tooShort(input, min))
+    {
+      this.errors.set("tooShort", () => `Input requires at least ${min} characters`);
+      return;
+    }
+    this.errors.delete("tooShort");
   }
 
   setMaxLength(input)
   {
     const max = this.getAttribute("maxlength");
-    if (!max)
-      return false;
 
-    if (input.value && input.value.length > max)
+    if (tooLong(input, max))
     {
-      this.#internals.setValidity({tooLong: true}, `Input allows a maximum of ${max} characters`);
-      return true;
+      this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters`);
+      return;
     }
 
-    return false;
+    this.errors.delete("tooLong");
   }
 
   render()
@@ -216,5 +236,23 @@ export function logNoValueError(property, outerHtml)
   console.error(`No value was given for '${property}' in '${outerHtml}'.`);
 }
 
+function tooShort(input, min)
+{
+  if (!min)
+    return false;
+  return !input.value || input.value.length < Number(min);
+}
+
+function valueMissing(input)
+{
+  return input.value === null || input.value.undefined || input.value === "";
+}
+
+function tooLong(input, max)
+{
+  if (!max)
+    return false;
+  return input.value && input.value.length > Number(max);
+}
 
 customElements.define("app-input", AppInput);
