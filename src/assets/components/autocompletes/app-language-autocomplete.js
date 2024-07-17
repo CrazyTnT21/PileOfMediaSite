@@ -3,19 +3,19 @@ import {Language} from "../../classes/language.js";
 
 export class AppLanguageAutocomplete extends AppAutocomplete
 {
-  connectedCallback()
+  async connectedCallback()
   {
     this.label = this.label ?? "Language";
-    super.connectedCallback();
+    await super.connectedCallback();
   }
 
   async* loadItems()
   {
     return [
-      {value: Language.EN},
-      {value: Language.DE},
-      {value: Language.ES},
-      {value: Language.JA},
+      {id: 1, value: Language.EN},
+      {id: 2, value: Language.DE},
+      {id: 3, value: Language.ES},
+      {id: 4, value: Language.JA},
     ];
   }
 }

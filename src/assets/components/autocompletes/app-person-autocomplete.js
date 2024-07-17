@@ -4,10 +4,10 @@ import {SERVER_URL} from "../../../modules.js";
 
 class AppPersonAutocomplete extends AppAutocomplete
 {
-  connectedCallback()
+  async connectedCallback()
   {
     this.label = this.label ?? "Person";
-    super.connectedCallback();
+    await super.connectedCallback();
   }
 
   async* searchItems(value)
@@ -20,7 +20,6 @@ class AppPersonAutocomplete extends AppAutocomplete
       const response = await get(join(SERVER_URL, "people", "name", value), [["page", page], ["count", count]]);
       page++;
       total = response.total;
-      response.items.forEach(x => x.value = x.name);
       yield response.items;
     }
   }
@@ -35,9 +34,18 @@ class AppPersonAutocomplete extends AppAutocomplete
       const response = await get(join(SERVER_URL, "people"), [["page", page], ["count", count]]);
       page++;
       total = response.total;
-      response.items.forEach(x => x.value = x.name);
       yield response.items;
     }
+  }
+
+  itemValue(item)
+  {
+    return item.name;
+  }
+
+  itemId(item)
+  {
+    return item.id;
   }
 }
 

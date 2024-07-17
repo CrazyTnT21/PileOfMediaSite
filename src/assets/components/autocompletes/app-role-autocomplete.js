@@ -4,10 +4,10 @@ import {SERVER_URL} from "../../../modules.js";
 
 class AppRoleAutocomplete extends AppAutocomplete
 {
-  connectedCallback()
+  async connectedCallback()
   {
     this.label = this.label ?? "Role";
-    super.connectedCallback();
+    await super.connectedCallback();
   }
 
   async* searchItems(value)
@@ -20,7 +20,6 @@ class AppRoleAutocomplete extends AppAutocomplete
       const response = await get(join(SERVER_URL, "roles", "name", value), [["page", page], ["count", count]]);
       page++;
       total = response.total;
-      response.items.forEach(x => x.value = x.name);
       yield response.items;
     }
   }
@@ -35,9 +34,18 @@ class AppRoleAutocomplete extends AppAutocomplete
       const response = await get(join(SERVER_URL, "roles"), [["page", page], ["count", count]]);
       page++;
       total = response.total;
-      response.items.forEach(x => x.value = x.name);
       yield response.items;
     }
+  }
+
+  itemValue(item)
+  {
+    return item.name;
+  }
+
+  itemId(item)
+  {
+    return item.id;
   }
 }
 

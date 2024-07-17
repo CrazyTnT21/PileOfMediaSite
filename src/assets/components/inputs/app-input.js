@@ -60,10 +60,14 @@ export class AppInput extends HTMLElement
 
     this.shadowRoot.querySelector("label").innerText = label;
 
-    if (this.placeholder)
-      this.shadowRoot.querySelector("input").placeholder = this.placeholder;
+    const input = this.shadowRoot.querySelector("input");
 
-    this.shadowRoot.querySelector("input").addEventListener("change", (e) => this.onInputChange(e));
+    if (this.placeholder)
+      input.placeholder = this.placeholder;
+
+    this.shadowRoot
+        .querySelector("input")
+        .addEventListener("change", (e) => this.onInputChange(e));
     this.addEventListener("valueSet", (e) => this.onValueSet(e));
     await this.setupValidation();
   }
@@ -124,7 +128,6 @@ export class AppInput extends HTMLElement
     const input = this.shadowRoot.querySelector("input");
     await this.setValidity(input);
     this.#internals.setValidity({}, input);
-    console.log(this.errors);
     for (const [x, y] of this.errors)
     {
       this.#internals.setValidity({[x]: true}, y(), input);
