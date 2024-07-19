@@ -6,7 +6,7 @@ export class AppInput extends HTMLElement
 
   async attributeChangedCallback(name, oldValue, newValue)
   {
-    await this.validate(false);
+    await this.validate();
   }
 
   #internals;
@@ -68,7 +68,6 @@ export class AppInput extends HTMLElement
     this.shadowRoot
         .querySelector("input")
         .addEventListener("change", (e) => this.onInputChange(e));
-    this.addEventListener("valueSet", (e) => this.onValueSet(e));
     await this.setupValidation();
   }
 
@@ -78,12 +77,12 @@ export class AppInput extends HTMLElement
 
   async onValueSet(event)
   {
-    await this.validate(false);
+    await this.validate();
   }
 
   async onInputChange(event)
   {
-    await this.validate(true);
+    await this.validateAndReport();
   }
 
   constructor()
@@ -93,6 +92,7 @@ export class AppInput extends HTMLElement
     this.attach();
     this.render();
     this.applyStyleSheet();
+    this.addEventListener("valueSet", (e) => this.onValueSet(e));
   }
 
   setupInternals()
@@ -119,26 +119,35 @@ export class AppInput extends HTMLElement
   async setupValidation()
   {
     const input = this.shadowRoot.querySelector("input");
-    input.addEventListener("change", () => this.validate(true));
-    await this.validate(false);
+    input.addEventListener("change", () => this.validateAndReport());
+    await this.validate();
   }
 
-  async validate(report)
+  async validate()
   {
     const input = this.shadowRoot.querySelector("input");
     await this.setValidity(input);
     this.#internals.setValidity({}, input);
-    for (const [x, y] of this.errors)
-    {
-      this.#internals.setValidity({[x]: true}, y(), input);
-    }
-    if (report)
-      this.#internals.reportValidity();
+    input.setCustomValidity("");
+    const error = this.errors.entries().next().value;
+    if (error)
+      this.#internals.setValidity({[error[0]]: true}, error[1](), input);
+  }
+
+  async validateAndReport()
+  {
+    await this.validate();
+    const input = this.shadowRoot.querySelector("input");
+    const error = this.errors.entries().next().value;
+    if (error)
+      input.setCustomValidity(error[1]());
+    this.#internals.reportValidity();
   }
 
   async setValidity(input)
   {
     this.#internals.setFormValue(input.value);
+    this.errors = new Map();
     this.setValueMissing(input);
     this.setMinLength(input);
     this.setMaxLength(input);
@@ -156,9 +165,7 @@ export class AppInput extends HTMLElement
     if (this.isRequired() && valueMissing(input))
     {
       this.errors.set("valueMissing", () => "No value given");
-      return;
     }
-    this.errors.delete("valueMissing");
   }
 
   isRequired()
@@ -173,9 +180,7 @@ export class AppInput extends HTMLElement
     if (tooShort(input, min))
     {
       this.errors.set("tooShort", () => `Input requires at least ${min} characters`);
-      return;
     }
-    this.errors.delete("tooShort");
   }
 
   setMaxLength(input)
@@ -185,10 +190,7 @@ export class AppInput extends HTMLElement
     if (tooLong(input, max))
     {
       this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters`);
-      return;
     }
-
-    this.errors.delete("tooLong");
   }
 
   render()
@@ -222,13 +224,17 @@ export class AppInput extends HTMLElement
             transition: border-color ease 50ms;
         }
 
+        :host {
+            flex-direction: column;
+        }
+
+        input:invalid {
+            border-color: red;
+        }
+
         :host([required]) > label::after {
             content: "*";
             color: red;
-        }
-
-        :host:invalid {
-            background-color: red;
         }
     `;
   }
@@ -248,7 +254,7 @@ function tooShort(input, min)
 
 function valueMissing(input)
 {
-  return input.value === null || input.value.undefined || input.value === "";
+  return input.value === null || input.value === undefined || input.value === "";
 }
 
 function tooLong(input, max)

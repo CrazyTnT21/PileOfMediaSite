@@ -4,10 +4,11 @@ export class AppImageInput extends HTMLElement
 {
   static formAssociated = true;
   static observedAttributes = ["required", "minlength", "maxlength"];
+  errors = new Map();
 
-  attributeChangedCallback(name, oldValue, newValue)
+  async attributeChangedCallback(name, oldValue, newValue)
   {
-    this.validateInternals();
+    await this.validate();
   }
 
   #internals;
@@ -26,6 +27,28 @@ export class AppImageInput extends HTMLElement
     }
     this.setAttribute("data-alt", value);
     this.shadowRoot.querySelector("img").alt = value;
+  }
+
+  get maxFileSize()
+  {
+    const value = this.dataset.maxfilesize;
+    return value ? Number(value) : null;
+  }
+
+  set maxFileSize(value)
+  {
+    this.dataset.maxfilesize = value;
+  }
+
+  get minFileSize()
+  {
+    const value = this.dataset.minfilesize;
+    return value ? Number(value) : null;
+  }
+
+  set minFileSize(value)
+  {
+    this.dataset.minfilesize = value;
   }
 
   get disabled()
@@ -72,10 +95,11 @@ export class AppImageInput extends HTMLElement
     this.shadowRoot.querySelector("img").src = value;
   }
 
-  connectedCallback()
+  async connectedCallback()
   {
     const input = this.shadowRoot.querySelector("input");
     input.addEventListener("change", event => this.setImage(event));
+
     let image = this.shadowRoot.querySelector("img");
     let alt = this.alt ?? "";
     if (!alt)
@@ -95,7 +119,7 @@ export class AppImageInput extends HTMLElement
       if (e.key === "Enter")
         input.click();
     });
-    this.setupValidateInternals();
+    await this.setupValidation();
   }
 
   disconnectedCallback()
@@ -121,58 +145,96 @@ export class AppImageInput extends HTMLElement
     });
   }
 
-  setupValidateInternals()
+  async setupValidation()
   {
-    this.validateInternals();
+    const input = this.shadowRoot.querySelector("input");
+    input.addEventListener("change", () => this.validateAndReport());
+    await this.validate();
   }
 
-  validateInternals()
+  async validate()
   {
-    const input = this.shadowRoot.querySelector("img");
-    this.reportValidity(input);
+    const input = this.shadowRoot.querySelector("input");
+    await this.setValidity(input);
+    this.#internals.setValidity({}, input);
+    input.setCustomValidity("");
+    const error = this.errors.entries().next().value;
+    if (error)
+    {
+      const img = this.shadowRoot.querySelector("img");
+      this.#internals.setValidity({[error[0]]: true}, error[1](), img);
+    }
   }
 
-  reportValidity(input)
+  async validateAndReport()
   {
-    this.setValidity(input);
+    await this.validate();
+    const input = this.shadowRoot.querySelector("input");
+    const error = this.errors.entries().next().value;
+    if (error)
+      input.setCustomValidity(error[1]());
     this.#internals.reportValidity();
   }
 
-  setValidity(input)
+  async setValidity(input)
   {
     this.#internals.setFormValue(input.value);
-    //TODO:
-    // Image too big
-    // Image too small
-    // File size too big
+    this.errors = new Map();
+    this.setMaxFileSize(input);
+    this.setMinFileSize(input);
+    this.setValueMissing(input);
+    this.setUnsupportedType(input);
+  }
 
-    if (!this.setValueMissing(input))
-    {
-      this.#internals.setValidity({});
-    }
+  setUnsupportedType(input)
+  {
+    if (!unsupportedImageType(input))
+      return;
+
+    this.errors.set("customError", () => `Unsupported image type`);
+  }
+
+  setMaxFileSize(input)
+  {
+    const max = this.maxFileSize;
+    if (!fileTooBig(input, max))
+      return;
+
+    this.errors.set("customError", () => `Input only allows a maximum of ${max} characters`);
+  }
+
+  setMinFileSize(input)
+  {
+    const min = this.minFileSize;
+
+    if (!fileTooSmall(input, min))
+      return;
+
+    this.errors.set("customError", () => `Input requires at least ${min} characters`);
   }
 
   setValueMissing(input)
   {
-    if (this.getAttribute("required") === "")
-    {
-      if (!this.#src)
-      { //TODO: Translation
-        this.#internals.setValidity({valueMissing: true}, "No value given", input);
-        return true;
-      }
-    }
-    return false;
+    if (!this.isRequired() || !valueMissing(input))
+      return;
+
+    this.errors.set("valueMissing", () => "No value given");
+  }
+
+  isRequired()
+  {
+    return this.getAttribute("required") === "";
   }
 
   render()
   {
+    //TODO: Clear image button
     //language=HTML
     // noinspection HtmlRequiredAltAttribute
     this.shadowRoot.innerHTML = `
         <div title="Required"></div>
-        <img tabindex=0 src="${this.#defaultSrc}">
         <input id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
+        <img tabindex=0 src="${this.#defaultSrc}">
     `;
   }
 
@@ -195,6 +257,10 @@ export class AppImageInput extends HTMLElement
             border-color: var(--border);
         }
 
+        input:invalid + img {
+            border-color: red
+        }
+
         img:hover {
             filter: opacity(50%);
         }
@@ -214,15 +280,68 @@ export class AppImageInput extends HTMLElement
     `;
   }
 
-  setImage(event)
+  async valid()
   {
-    const url = URL.createObjectURL(event.target.files[0]);
-    this.#src = url;
-    this.shadowRoot.querySelector("img").src = url;
-    this.shadowRoot.dispatchEvent(new CustomEvent("upload", {composed: true, detail: url}));
-    this.validateInternals();
+    const input = this.shadowRoot.querySelector("input");
+    await this.setValidity(input);
+    return this.errors.size === 0;
+  }
+
+  async setImage(event)
+  {
+    const urls = [...event.target.files].map(x => URL.createObjectURL(x));
+    if (event.target.files.length === 1)
+    {
+      if (!event.target.files[0].type.includes("image"))
+        this.shadowRoot.querySelector("img").src = this.#defaultSrc;
+      else
+        this.shadowRoot.querySelector("img").src = urls[0];
+      this.#src = urls[0];
+    }
+    if (await this.valid())
+      this.shadowRoot.dispatchEvent(new CustomEvent("upload", {composed: true, detail: urls}));
   }
 }
 
 customElements.define("app-image-input", AppImageInput);
 
+function unsupportedImageType(input)
+{
+  for (const file of input.files)
+  {
+    if (!file.type.includes("image"))
+      return true;
+  }
+  return false;
+}
+
+function fileTooBig(input, max)
+{
+  if (!max)
+    return false;
+
+  for (const file of input.files)
+  {
+    if (file.size > max * 1024)
+      return true;
+  }
+  return false;
+}
+
+function fileTooSmall(input, min)
+{
+  if (!min)
+    return false;
+
+  for (const file of input.files)
+  {
+    if (file.size < min * 1024)
+      return true;
+  }
+  return false;
+}
+
+function valueMissing(input)
+{
+  return input.files.length === 0;
+}

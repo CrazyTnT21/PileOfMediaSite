@@ -4,10 +4,11 @@ export class AppTextArea extends HTMLElement
 {
   static formAssociated = true;
   static observedAttributes = ["required", "minlength", "maxlength"];
+  errors = new Map();
 
-  attributeChangedCallback(name, oldValue, newValue)
+  async attributeChangedCallback(name, oldValue, newValue)
   {
-    this.validateInternals();
+    await this.validate();
   }
 
   #internals;
@@ -38,7 +39,7 @@ export class AppTextArea extends HTMLElement
     this.shadowRoot.querySelector("textarea").value = value;
   }
 
-  connectedCallback()
+  async connectedCallback()
   {
     const label = this.label ?? "";
     if (!label)
@@ -46,7 +47,7 @@ export class AppTextArea extends HTMLElement
 
     this.shadowRoot.querySelector("label").innerText = label;
 
-    this.setupValidateInternals();
+    await this.setupValidation();
   }
 
   disconnectedCallback()
@@ -72,80 +73,76 @@ export class AppTextArea extends HTMLElement
     });
   }
 
-  setValidity(textarea)
-  {
-    this.#internals.setFormValue(textarea.value);
-    if (
-        !this.setValueMissing(textarea) &&
-        !this.setMinLength(textarea) &&
-        !this.setMaxLength(textarea))
-    {
-      this.#internals.setValidity({});
-    }
-  }
 
-
-  setupValidateInternals()
+  async setupValidation()
   {
     const textarea = this.shadowRoot.querySelector("textarea");
-    textarea.addEventListener("change", () => this.validateInternals());
-    this.validateInternals();
+    textarea.addEventListener("change", () => this.validateAndReport());
+    await this.validate();
   }
 
-  validateInternals()
+  async validate()
   {
     const textarea = this.shadowRoot.querySelector("textarea");
-    this.reportValidity(textarea);
+    await this.setValidity(textarea);
+    this.#internals.setValidity({}, textarea);
+    textarea.setCustomValidity("");
+    const error = this.errors.entries().next().value;
+    if (error)
+      this.#internals.setValidity({[error[0]]: true}, error[1](), textarea);
   }
 
-  reportValidity(textarea)
+  async validateAndReport()
   {
-    this.setValidity(textarea);
+    await this.validate();
+    const textarea = this.shadowRoot.querySelector("textarea");
+    const error = this.errors.entries().next().value;
+
+    if (error)
+      textarea.setCustomValidity(error[1]());
     this.#internals.reportValidity();
   }
 
-  setValueMissing(textarea)
+  async setValidity(input)
   {
-    if (this.getAttribute("required") !== "")
-      return false;
-
-    if (textarea.value === "")
-    {
-      this.#internals.setValidity({valueMissing: true}, "No value given", textarea); //TODO: Translation
-      return true;
-    }
-
-    return false;
+    this.#internals.setFormValue(input.value);
+    this.errors = new Map();
+    this.setMinLength(input);
+    this.setMaxLength(input);
+    this.setValueMissing(input);
   }
 
-  setMinLength(textarea)
+  setMinLength(input)
   {
-    const min = this.getAttribute("minlength");
-    if (!min)
-      return false;
+    const min = Number(this.getAttribute("minlength"));
 
-    if (!textarea.value || textarea.value.length < min)
+    if (tooShort(input, min))
     {
-      this.#internals.setValidity({tooShort: true}, `Textarea requires at least ${min} characters`);
-      return true;
+      this.errors.set("tooShort", () => `Input requires at least ${min} characters`);
     }
-
-    return false;
   }
 
-  setMaxLength(textarea)
+  setMaxLength(input)
   {
     const max = this.getAttribute("maxlength");
-    if (!max)
-      return false;
 
-    if (textarea.value && textarea.value.length > max)
+    if (tooLong(input, max))
     {
-      this.#internals.setValidity({tooLong: true}, `Textarea allows a maximum of ${max} characters`);
-      return true;
+      this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters`);
     }
+  }
 
-    return false;
+  setValueMissing(input)
+  {
+    if (this.isRequired() && valueMissing(input))
+    {
+      this.errors.set("valueMissing", () => "No value given");
+    }
+  }
+
+  isRequired()
+  {
+    return this.getAttribute("required") === "";
   }
 
   render()
@@ -186,12 +183,44 @@ export class AppTextArea extends HTMLElement
             resize: none;
         }
 
+        :host {
+            flex-direction: column;
+        }
+
+        :host([required]) > label::after {
+            content: "*";
+            color: red;
+        }
+
         textarea:hover {
             border-color: var(--hover);
             transition: border-color ease 50ms;
+        }
+
+        textarea:invalid {
+            border-color: red;
         }
     `;
   }
 }
 
 customElements.define("app-textarea", AppTextArea);
+
+function tooShort(input, min)
+{
+  if (!min)
+    return false;
+  return !input.value || input.value.length < Number(min);
+}
+
+function valueMissing(input)
+{
+  return input.value === null || input.value === undefined || input.value === "";
+}
+
+function tooLong(input, max)
+{
+  if (!max)
+    return false;
+  return input.value && input.value.length > Number(max);
+}

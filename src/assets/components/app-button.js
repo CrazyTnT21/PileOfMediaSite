@@ -9,8 +9,6 @@ export class AppButton extends HTMLElement
   {
     if (name === "type")
       this.innerType = value;
-
-    this.validateInternals();
   }
 
   get type()

@@ -157,7 +157,7 @@ export class AppAutocomplete extends AppInput
       if (!label)
         return false;
 
-      return trimAndLowercase(x) === value;
+      return trimAndLowercase(label) === value;
     });
   }
 
@@ -185,10 +185,11 @@ export class AppAutocomplete extends AppInput
     if (!value)
     {
       this.shadowRoot.dispatchEvent(new CustomEvent("valueChange", {composed: true, detail: null}));
+      this.#item = null;
       return;
     }
-
     const item = this.findValue(value) ?? this.findSearchValue(value);
+    this.#item = item;
 
     if (this.isMulti() && item)
     {
@@ -264,18 +265,9 @@ export class AppAutocomplete extends AppInput
     }
   }
 
-  async validate(report)
-  {
-    await super.validate();
-
-    const input = this.shadowRoot.querySelector("input");
-    input.style.borderColor = await this.valid() ? "" : "red";
-  }
-
   async setValidity(input)
   {
     await super.setValidity(input);
-    this.errors.delete("customError");
     if (!input.value)
       return;
 

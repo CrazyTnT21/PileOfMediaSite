@@ -2,7 +2,7 @@ import {AppAutocomplete} from "./app-autocomplete.js";
 import {get, join} from "../../scripts/http.js";
 import {SERVER_URL} from "../../../modules.js";
 
-class AppThemeAutocomplete extends AppAutocomplete
+export class AppThemeAutocomplete extends AppAutocomplete
 {
   async connectedCallback()
   {
