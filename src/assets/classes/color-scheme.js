@@ -42,14 +42,21 @@ export class ColorStyle
 export function removeColorScheme()
 {
   for (const key of Object.keys(new ColorStyle()))
-    document.documentElement.style.setProperty("--" + key, null);
+    document.documentElement.style.setProperty("--" + key.replace("_", "-"), null);
 
   localStorage.removeItem("color-scheme");
 }
 
 export function saveColorScheme(value)
 {
-  localStorage.setItem("color-scheme", JSON.stringify(value));
+  const style = {};
+  const keys = Object.keys(value.style);
+
+  for (const key of keys)
+    style[key.replace("_", "-")] = value.style[key];
+
+  const result = {name: value.name, style};
+  localStorage.setItem("color-scheme", JSON.stringify(result));
 }
 
 export function loadColorScheme()
@@ -60,7 +67,7 @@ export function loadColorScheme()
 
   const colorScheme = JSON.parse(jsonScheme);
   const colorStyle = colorScheme.style;
-  const keys = Object.keys(new ColorStyle());
+  const keys = Object.keys(new ColorStyle()).map(x => x.replace("_", "-"));
   for (const key of keys)
     document.documentElement.style.setProperty("--" + key, colorStyle[key] ? colorStyle[key] : null);
 }

@@ -215,13 +215,13 @@ export class AppTable extends HTMLElement
 
         table {
             border-radius: 5px;
-            background-color: var(--primary_background);
+            background-color: var(--primary-background);
             width: 100%;
             border-collapse: collapse;
         }
 
         tbody {
-            background-color: var(--secondary_background);
+            background-color: var(--secondary-background);
         }
 
         thead > tr > th:first-child {
@@ -237,7 +237,7 @@ export class AppTable extends HTMLElement
         }
 
         tr:nth-of-type(even) {
-            background-color: var(--primary_background);
+            background-color: var(--primary-background);
         }
 
         button {
@@ -245,7 +245,7 @@ export class AppTable extends HTMLElement
             min-height: 2rem;
             border: 0;
             background-color: var(--clickable);
-            color: var(--primary_text);
+            color: var(--primary-text);
         }
 
         button:hover {

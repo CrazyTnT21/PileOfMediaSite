@@ -4,12 +4,8 @@ class AppHeader extends HTMLElement
 
   connectedCallback()
   {
-    const details = [...this.shadowRoot.querySelectorAll(".items > li > details")];
-    for (const detailElement of details)
-    {
-      detailElement.addEventListener("click", () => this.closeOtherDetails(detailElement, details));
-    }
-    this.#copyToHamburger(details);
+    const items = [...this.shadowRoot.querySelectorAll(".items > li")];
+    this.#copyToHamburger(items);
   }
 
   disconnectedCallback()
@@ -20,23 +16,12 @@ class AppHeader extends HTMLElement
   {
     items = items.map(x => x.cloneNode(true));
     const ul = document.createElement("ul");
-    for (const details of items)
+    ul.classList.add("burger-items")
+    for (const item of items)
     {
-      details.addEventListener("click", () => this.closeOtherDetails(details, items));
-      const li = document.createElement("li");
-      li.append(details);
-      ul.append(li);
+      ul.append(item);
     }
     this.shadowRoot.querySelector("#burger").appendChild(ul);
-  }
-
-  closeOtherDetails(value, others)
-  {
-    for (const detailElement of others)
-    {
-      if (!value.isSameNode(detailElement))
-        detailElement.open = false;
-    }
   }
 
   constructor()
@@ -65,94 +50,37 @@ class AppHeader extends HTMLElement
   {
     // language=HTML
     this.shadowRoot.innerHTML = `
+        <details id="burger">
+            <summary>
+            </summary>
+        </details>
+        <a class="logo" href="/">
+            <img src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
+        </a>
+
         <nav>
-            <ul>
-                <li>
-                    <a href="/">
-                        <img class="fix-1" src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
-                        <div class="pad">MyCollection</div>
-                    </a>
-                </li>
-            </ul>
             <ul class="items">
-                <li>
-                    <details>
-                        <summary>
-                            <span class="graphic-novel-icon">Graphic novels</span>
-                        </summary>
-                        <ul>
-                            <li><a href="/graphicnovels">Browse</a></li>
-                            <li><a href="/graphicnovels">Popular</a></li>
-                            <li><a href="/graphicnovels">Newest</a></li>
-                            <li><a href="/graphicnovels">Highest rated</a></li>
-                            <li><a href="/graphicnovels">Most favorited</a></li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details>
-                        <summary>
-                            <span class="book-icon">Books</span>
-                        </summary>
-                        <ul>
-                            <li><a href="/books">Browse</a></li>
-                            <li><a href="/books">Popular</a></li>
-                            <li><a href="/books">Newest</a></li>
-                            <li><a href="/books">Highest rated</a></li>
-                            <li><a href="/books">Most favorited</a></li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details>
-                        <summary>
-                            <span class="movie-icon">movies</span>
-                        </summary>
-                        <ul>
-                            <li><a href="/movies">Browse</a></li>
-                            <li><a href="/movies">Popular</a></li>
-                            <li><a href="/movies">Newest</a></li>
-                            <li><a href="/movies">Highest rated</a></li>
-                            <li><a href="/movies">Most favorited</a></li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details>
-                        <summary>
-                            <span class="game-icon">games</span>
-                        </summary>
-                        <ul>
-                            <li><a href="/games">Browse</a></li>
-                            <li><a href="/games">Popular</a></li>
-                            <li><a href="/games">Newest</a></li>
-                            <li><a href="/games">Highest rated</a></li>
-                            <li><a href="/games">Most favorited</a></li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details>
-                        <summary>
-                            <img src="/assets/img/User_Placeholder.png" alt="User profile"/>
-                        </summary>
-                        <ul>
-                            <li><a href="/user/profile" class="user-icon">Profile</a></li>
-                            <li><a href="/user/friends" class="friends-icon">Friends</a></li>
-                            <li><a href="/user/comments" class="comments-icon">Comments</a></li>
-                            <li><a href="/user/reviews" class="comments-icon">Reviews</a></li>
-                            <li><a href="/user/settings" class="settings-icon">Account settings</a></li>
-                            <li><a href="/user/preferences" class="settings-icon">Preferences</a></li>
-                            <li><a href="/" class="logout-icon"> Logout</a></li>
-                        </ul>
-                    </details>
-                </li>
+                <li><a class="graphic-novel-icon" href="/graphicnovels">Graphic novels</a></li>
+                <li><a class="book-icon" href="/books">Books</a></li>
+                <li><a class="movie-icon" href="/movies">Movies</a></li>
+                <li><a class="show-icon" href="/shows">Shows</a></li>
+                <li><a class="game-icon" href="/games">games</a></li>
             </ul>
-            <details id="burger">
-                <summary>
-                </summary>
-            </details>
         </nav>
+        <details id="user">
+            <summary>
+                <img src="/assets/img/User_Placeholder.png" alt="User profile"/>
+            </summary>
+            <ul>
+                <li><a href="/user/profile" class="user-icon">Profile</a></li>
+                <li><a href="/user/friends" class="friends-icon">Friends</a></li>
+                <li><a href="/user/comments" class="comments-icon">Comments</a></li>
+                <li><a href="/user/reviews" class="comments-icon">Reviews</a></li>
+                <li><a href="/user/settings" class="settings-icon">Settings</a></li>
+                <li><a href="/user/preferences" class="settings-icon">Preferences</a></li>
+                <li><a href="/" class="logout-icon"> Logout</a></li>
+            </ul>
+        </details>
     `;
   }
 
@@ -160,90 +88,110 @@ class AppHeader extends HTMLElement
   {
     //language=CSS
     return `
-        details {
-            cursor: pointer;
-            background: var(--primary_background);
-            user-select: none;
-            padding: 0;
-        }
-
-        a {
-            padding: 5px;
-        }
-
-        details > ul {
-            background-color: var(--primary_background);
-        }
-
-        details > ul,
-        ul > li,
-        nav > *, a,
-        img,
-        summary {
-            border-radius: 5px;
-        }
-
-
-        a {
-            width: 100%;
-        }
-
-        summary {
-            display: flex;
-            align-items: center;
-            text-align: center;
-        }
-
-        nav,
-        details[open] > summary {
-            border-bottom: 1px solid var(--border);
-        }
-
-
-        details > ul {
-            flex-direction: column
-        }
-
-        a {
-            color: var(--primary_text);
-            text-decoration: none;
-        }
-
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav,
-        ul,
-        ul > li,
-        ul > li > * {
-            display: flex;
-        }
-
         img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        :host {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            width: 35px;
+            height: 35px;
+            /*margin-right: auto;*/
+        }
+
+        #user {
+            /*margin-left: auto;*/
             height: 35px;
             width: 35px;
         }
 
-        nav {
-            font: 1rem "Fira Sans", sans-serif;
-            display: flex;
-            background: var(--primary_background);
+        #user > ul {
+            margin-top: 5px;
+            position: absolute;
+            background-color: var(--primary-background);
+            border-radius: 5px;
+            padding: 5px;
         }
 
-        summary:hover, summary:focus, a:focus, a:hover {
+        #user > ul {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            overflow: hidden;
+        }
+
+        #user > ul > li {
+            white-space: nowrap;
+        }
+
+        #user > ul > li {
+            border-radius: 10px;
+        }
+
+        #user > ul > li:focus,
+        #user > ul > li:hover {
             background-color: var(--hover);
         }
 
-        ul > li > * {
-            align-items: center;
-            text-align: center;
+        .burger-items {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            justify-items: stretch;
         }
 
-        .pad {
+        .items {
+            display: flex;
+        }
+
+        .items > li > * {
             padding: 5px;
+            border-radius: 15px;
+        }
+
+        .burger-items > li, .burger-items > li > * {
+            display: flex;
+            width: 100%;
+        }
+
+        .items > li > *:focus,
+        .items > li > *:hover,
+        .burger-items > li:has(*:focus),
+        .burger-items > li:hover {
+            background-color: var(--hover);
+        }
+
+        .items {
+            align-items: center;
+            justify-content: center;
+        }
+
+        .items > * {
+            display: flex;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        summary {
+            list-style: none;
+        }
+
+        a {
+            color: var(--primary-text);
+            text-decoration: none;
         }
 
         #burger > summary {
@@ -257,63 +205,55 @@ class AppHeader extends HTMLElement
             background-image: url('/assets/img/Close_Placeholder.svg');
         }
 
-        @media (min-width: 701px) {
-            summary {
-                padding-left: 5px;
-                padding-right: 5px;
-            }
-
-            summary {
-                height: 100%;
-            }
-
-            #burger {
-                display: none;
-            }
-
-
-            details > ul {
-                margin-top: 5px;
-                position: absolute;
-            }
-        }
-
-        details {
-            -webkit-tap-highlight-color: transparent; /* Prevent blue highlight on chrome */
-        }
-
         #burger > summary {
             width: 45px;
             height: 45px;
         }
 
-        @media (max-width: 700px) {
-            nav > ul {
-                flex-direction: column;
-            }
+        details > ul {
+            margin-top: 5px;
+        }
 
-            nav:has(#burger[open]) > ul,
-            .items {
+        details > ul > li {
+            padding: 5px;
+        }
+
+        details {
+            cursor: pointer;
+            background: var(--background);
+            user-select: none;
+            padding: 0;
+        }
+
+
+        @media (min-width: 601px) {
+            #burger {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav {
                 display: none;
             }
 
-            #burger[open],
-            #burger[open] > summary,
-            nav > .items,
-            nav > .items > *,
-            ul > * > * {
-                width: 100%;
+            :host {
+                justify-content: space-between;
             }
 
-            #burger,
-            #burger[open] > summary > * {
-                margin-left: auto;
-                margin-right: 0;
+            #user {
+                /*    margin-left: auto;*/
+                margin-right: 5px;
             }
 
-            summary > * {
-                padding: 10px
+            #user > ul {
+                transform: translateX(calc(-100% + 35px));
             }
+        }
+
+        #burger > ul {
+            position: absolute;
+            background-color: var(--primary-background);
         }
 
         ${this.iconsCSS()}
@@ -324,149 +264,109 @@ class AppHeader extends HTMLElement
   {
     //language=CSS
     return `
-        .graphic-novel-icon {
-            padding-left: 25px;
-        }
-
         .graphic-novel-icon:before {
-            content: '';
             background: url('/assets/img/Graphic_novel_Placeholder.svg');
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 20px;
             height: 20px;
-            margin-left: -24px;
-        }
-
-        .book-icon {
-            padding-left: 25px;
+            content: '';
         }
 
         .book-icon:before {
-            content: '';
             background: url('/assets/img/Book_Placeholder.svg');
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 20px;
             height: 20px;
-            margin-left: -24px;
-        }
-
-        .show-icon {
-            padding-left: 25px;
+            content: '';
         }
 
         .show-icon:before {
-            content: '';
             background: url('/assets/img/Show_Placeholder.svg');
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 20px;
             height: 20px;
-            margin-left: -24px;
-        }
-
-        .game-icon {
-            padding-left: 25px;
-        }
-
-        .game-icon:before {
             content: '';
+        }
+        
+        .game-icon:before {
             background: url('/assets/img/Game_Placeholder.svg');
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 20px;
             height: 20px;
-            margin-left: -24px;
-        }
-
-        .movie-icon {
-            padding-left: 25px;
-        }
-
-        .movie-icon:before {
             content: '';
-            background: url('/assets/img/Movie_Placeholder.svg');
+        }
+        
+        .movie-icon:before {
+            background: url('/assets/img/Movie_Placeholder.svg');      
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 20px;
             height: 20px;
-            margin-left: -24px;
-        }
-
-        .user-icon {
-            padding-left: 27px;
+            content: '';
         }
 
         .user-icon:before {
-            background-image: url("/assets/img/User_Placeholder.png");
+            background: transparent url("/assets/img/User_Placeholder.png") center bottom;
+            border-radius: 2px;
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 25px;
             height: 25px;
             content: '';
-            margin-left: -25px;
-            border-radius: 5px;
-        }
-
-        .friends-icon {
-            padding-left: 27px;
         }
 
         .friends-icon:before {
-            border-radius: 5px;
             background-image: url("/assets/img/Friends_Placeholder.png");
+            border-radius: 2px;
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 25px;
             height: 25px;
             content: '';
-            margin-left: -25px;
-        }
-
-        .comments-icon {
-            padding-left: 27px;
         }
 
         .comments-icon:before {
-            border-radius: 5px;
             background-image: url("/assets/img/Comments_Placeholder.png");
+            border-radius: 2px;
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 25px;
             height: 25px;
             content: '';
-            margin-left: -25px;
-        }
-
-        .settings-icon {
-            padding-left: 27px;
         }
 
         .settings-icon:before {
-            border-radius: 5px;
             background-image: url("/assets/img/Gear_Placeholder.png");
+            border-radius: 2px;
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 25px;
             height: 25px;
             content: '';
-            margin-left: -25px;
-        }
-
-        .logout-icon {
-            padding-left: 27px;
         }
 
         .logout-icon:before {
-            border-radius: 5px;
             background-image: url("/assets/img/Logout_Placeholder.png");
+            border-radius: 2px;
             background-size: cover;
-            position: absolute;
+            margin-bottom: -5px;
+            display: inline-block;
             width: 25px;
             height: 25px;
             content: '';
-            margin-left: -25px;
         }
     `;
   }

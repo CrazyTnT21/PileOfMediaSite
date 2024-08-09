@@ -173,8 +173,8 @@ export class AppTextArea extends HTMLElement
             border-style: solid;
             border-color: var(--border);
 
-            background-color: var(--input_background);
-            color: var(--primary_text);
+            background-color: var(--input-background);
+            color: var(--primary-text);
 
             padding: 5px;
             font-family: "Fira Sans", sans-serif;

@@ -352,8 +352,8 @@ export class AppAutocomplete extends AppInput
             font-size: .75em;
             border-radius: 10px;
             border: var(--border) 1px solid;
-            background-color: var(--primary_background);
-            color: var(--primary_text);
+            background-color: var(--primary-background);
+            color: var(--primary-text);
         }
 
         button::after {

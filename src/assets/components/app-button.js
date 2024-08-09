@@ -108,7 +108,7 @@ export class AppButton extends HTMLElement
             padding: 10px;
             border: 0;
             background-color: var(--clickable);
-            color: var(--primary_text);
+            color: var(--primary-text);
         }
 
         button:hover {
