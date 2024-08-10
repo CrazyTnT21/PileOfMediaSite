@@ -5,8 +5,9 @@
   "main": "",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "start": "npx webpack serve --env SERVER_URL=http://localhost:3000/",
-    "start-remote": "npx webpack serve --env SERVER_URL=http://192.168.178.118:3000/"
+    "start": "npx webpack serve --config webpack.dev.js --env API_URL=http://localhost:3000/",
+    "start-remote": "npx webpack serve --config webpack.dev.js --env API_URL=http://192.168.178.118:3000/",
+    "build": "webpack --config webpack.prod.js"
   },
   "repository": {
     "type": "git",

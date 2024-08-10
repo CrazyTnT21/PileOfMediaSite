@@ -1,6 +1,6 @@
 import {AppAutocomplete} from "./app-autocomplete.js";
 import {get, join} from "../../scripts/http.js";
-import {SERVER_URL} from "../../../modules.js";
+import {API_URL} from "../../../modules.js";
 
 export class AppFranchiseAutocomplete extends AppAutocomplete
 {
@@ -17,7 +17,7 @@ export class AppFranchiseAutocomplete extends AppAutocomplete
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(SERVER_URL, "franchises", "name", value), [["page", page], ["count", count]]);
+      const response = await get(join(API_URL, "franchises", "name", value), [["page", page], ["count", count]]);
       page++;
       total = response.total;
       yield response.items;
@@ -31,7 +31,7 @@ export class AppFranchiseAutocomplete extends AppAutocomplete
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(SERVER_URL, "franchises"), [["page", page], ["count", count]]);
+      const response = await get(join(API_URL, "franchises"), [["page", page], ["count", count]]);
       page++;
       total = response.total;
       yield response.items;

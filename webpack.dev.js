@@ -2,14 +2,22 @@ import path from "path";
 import fs from "fs";
 import {fileURLToPath} from "url";
 
-import webpack from "webpack";
+import {default as common} from "./webpack.common.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default (env) => ({
-  entry: path.join(__dirname, "src", "modules.js"),
+  ...common(env),
   devServer: {
+    proxy: [
+      {
+        context: ['/api'],
+        target: env.API_URL ?? "http://localhost:3000",
+        secure: false,
+        pathRewrite: { '^/api': '' },
+      },
+    ],
     liveReload: false,
     static: {
       directory: path.join(__dirname, "src"),
@@ -29,29 +37,8 @@ export default (env) => ({
     compress: true,
     port: 5000,
   },
-  output: {
-    filename: "modules.js",
-    path: path.resolve(__dirname, "dist"),
-    library: {
-      type: "module",
-    },
-  },
-
-  experiments: {
-    outputModule: true,
-  },
 
   mode: "development",
-  target: "web",
-
-  plugins: [
-    new webpack.DefinePlugin({
-      "env.SERVER_URL": JSON.stringify(env.SERVER_URL ?? (() =>
-      {
-        throw new Error("SERVER_URL missing!");
-      })()),
-    }),
-  ],
 });
 
 function customDirectoryIndex(context)

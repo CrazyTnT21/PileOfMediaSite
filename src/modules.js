@@ -2,4 +2,4 @@
 
 // export * as d3 from "d3";
 
-export const SERVER_URL = env.SERVER_URL;
+export const API_URL = env.API_URL ?? `https://${location.hostname}/api/`;

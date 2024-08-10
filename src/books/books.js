@@ -1,7 +1,7 @@
 import {get} from "/assets/scripts/http.js";
 import {ColumnType} from "../assets/components/app-table.js";
 import {Config} from "../assets/scripts/config.js";
-import {SERVER_URL} from "../modules.js";
+import {API_URL} from "../modules.js";
 
 function columns()
 {
@@ -48,7 +48,7 @@ function columns()
 const table = document.querySelector("app-table");
 try
 {
-  const result = await get(SERVER_URL + "books");
+  const result = await get(API_URL + "books");
   table.classList.add("test");
   table.columns = columns();
   let items = result.items;
