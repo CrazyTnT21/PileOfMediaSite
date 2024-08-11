@@ -1,0 +1,12 @@
+/target
+/.github
+/.git
+/Dockerfile
+/.dockerignore
+/.editorconfig
+/tests
+/.gitmodules
+/.gitignore
+/.idea
+/node_modules
+README.md

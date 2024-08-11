@@ -13,7 +13,7 @@ export default (env) => ({
     proxy: [
       {
         context: ['/api'],
-        target: env.API_URL ?? "http://localhost:3000",
+        target: env.API_URL ?? "http://localhost:3000/",
         secure: false,
         pathRewrite: { '^/api': '' },
       },
