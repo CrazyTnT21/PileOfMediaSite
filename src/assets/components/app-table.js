@@ -1,3 +1,5 @@
+import {attach,applyStyleSheet} from "./defaults.js";
+
 export class AppTable extends HTMLElement
 {
   set caption(value)
@@ -139,16 +141,6 @@ export class AppTable extends HTMLElement
       this.shadowRoot.querySelector("caption").innerHTML = caption;
   }
 
-  disconnectedCallback()
-  {
-    this.shadowRoot.querySelector("#next").removeEventListener("click", () =>
-        this.shadowRoot.dispatchEvent(this.#nextEvent));
-
-    this.shadowRoot.querySelector("#back").removeEventListener("click", () =>
-        this.shadowRoot.dispatchEvent(this.#backEvent));
-  }
-
-
   constructor()
   {
     super();
@@ -156,6 +148,9 @@ export class AppTable extends HTMLElement
     this.render();
     this.applyStyleSheet();
   }
+
+  attach = attach;
+  applyStyleSheet = applyStyleSheet;
 
   render()
   {
@@ -185,20 +180,6 @@ export class AppTable extends HTMLElement
             </tfoot>
         </table>
     `;
-  }
-
-  attach()
-  {
-    this.attachShadow({
-      mode: "open",
-    });
-  }
-
-  applyStyleSheet()
-  {
-    const styleSheet = new CSSStyleSheet();
-    styleSheet.replaceSync(this.styleCSS());
-    this.shadowRoot.adoptedStyleSheets = [styleSheet];
   }
 
   styleCSS()

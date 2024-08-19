@@ -1,3 +1,5 @@
+import {applyStyleSheet, attach_delegates} from "./defaults.js";
+
 export class AppButton extends HTMLElement
 {
   static formAssociated = true;
@@ -77,27 +79,15 @@ export class AppButton extends HTMLElement
     this.applyStyleSheet();
   }
 
+  attach = attach_delegates;
+  applyStyleSheet = applyStyleSheet;
+
   render()
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
         <button></button>
     `;
-  }
-
-  attach()
-  {
-    this.attachShadow({
-      mode: "open",
-      delegatesFocus: true,
-    });
-  }
-
-  applyStyleSheet()
-  {
-    const styleSheet = new CSSStyleSheet();
-    styleSheet.replaceSync(this.styleCSS());
-    this.shadowRoot.adoptedStyleSheets = [styleSheet];
   }
 
   styleCSS()

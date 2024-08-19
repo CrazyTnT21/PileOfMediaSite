@@ -1,3 +1,6 @@
+import {attach_delegates, applyStyleSheet} from "../defaults.js";
+import {logNoValueError, tooLong, tooShort, valueMissing} from "./validation/validation.js";
+
 export class AppInput extends HTMLElement
 {
   static formAssociated = true;
@@ -71,10 +74,6 @@ export class AppInput extends HTMLElement
     await this.setupValidation();
   }
 
-  disconnectedCallback()
-  {
-  }
-
   async onValueSet(event)
   {
     await this.validate();
@@ -95,25 +94,13 @@ export class AppInput extends HTMLElement
     this.addEventListener("valueSet", (e) => this.onValueSet(e));
   }
 
+  attach = attach_delegates;
+  applyStyleSheet = applyStyleSheet;
+
   setupInternals()
   {
     this.#internals = this.attachInternals();
     this.#internals.ariaRole = "textbox";
-  }
-
-  applyStyleSheet()
-  {
-    const styleSheet = new CSSStyleSheet();
-    styleSheet.replaceSync(this.styleCSS());
-    this.shadowRoot.adoptedStyleSheets = [styleSheet];
-  }
-
-  attach()
-  {
-    this.attachShadow({
-      mode: "open",
-      delegatesFocus: true,
-    });
   }
 
   async setupValidation()
@@ -238,30 +225,6 @@ export class AppInput extends HTMLElement
         }
     `;
   }
-}
-
-export function logNoValueError(property, outerHtml)
-{
-  console.error(`No value was given for '${property}' in '${outerHtml}'.`);
-}
-
-function tooShort(input, min)
-{
-  if (!min)
-    return false;
-  return !input.value || input.value.length < Number(min);
-}
-
-function valueMissing(input)
-{
-  return input.value === null || input.value === undefined || input.value === "";
-}
-
-function tooLong(input, max)
-{
-  if (!max)
-    return false;
-  return input.value && input.value.length > Number(max);
 }
 
 customElements.define("app-input", AppInput);

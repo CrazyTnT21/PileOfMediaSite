@@ -1,4 +1,5 @@
-import {logNoValueError} from "./app-input.js";
+import {logNoValueError} from "./validation/validation.js";
+import {applyStyleSheet, attach} from "../defaults.js";
 
 export class AppImageInput extends HTMLElement
 {
@@ -122,10 +123,6 @@ export class AppImageInput extends HTMLElement
     await this.setupValidation();
   }
 
-  disconnectedCallback()
-  {
-  }
-
   #defaultSrc = "/assets/img/Image_Input_Placeholder.svg";
 
   constructor()
@@ -137,13 +134,8 @@ export class AppImageInput extends HTMLElement
     this.applyStyleSheet();
   }
 
-  attach()
-  {
-    this.attachShadow({
-      mode: "open",
-      delegatesFocus: true,
-    });
-  }
+  attach = attach;
+  applyStyleSheet = applyStyleSheet;
 
   async setupValidation()
   {
@@ -236,13 +228,6 @@ export class AppImageInput extends HTMLElement
         <input id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
         <img tabindex=0 src="${this.#defaultSrc}">
     `;
-  }
-
-  applyStyleSheet()
-  {
-    const styleSheet = new CSSStyleSheet();
-    styleSheet.replaceSync(this.styleCSS());
-    this.shadowRoot.adoptedStyleSheets = [styleSheet];
   }
 
   styleCSS()

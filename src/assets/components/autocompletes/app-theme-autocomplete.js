@@ -17,7 +17,7 @@ export class AppThemeAutocomplete extends AppAutocomplete
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(API_URL, "themes", "name", value), [["page", page], ["count", count]]);
+      const response = await get(join(API_URL, "themes", "name", value), ["page", page], ["count", count]);
       page++;
       total = response.total;
       yield response.items;
@@ -31,7 +31,7 @@ export class AppThemeAutocomplete extends AppAutocomplete
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(API_URL, "themes"), [["page", page], ["count", count]]);
+      const response = await get(join(API_URL, "themes"), ["page", page], ["count", count]);
       page++;
       total = response.total;
       yield response.items;

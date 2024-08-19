@@ -1,3 +1,5 @@
+import {applyStyleSheet, attach} from "./defaults.js";
+
 class AppHeader extends HTMLElement
 {
   user;
@@ -8,15 +10,11 @@ class AppHeader extends HTMLElement
     this.#copyToHamburger(items);
   }
 
-  disconnectedCallback()
-  {
-  }
-
   #copyToHamburger(items)
   {
     items = items.map(x => x.cloneNode(true));
     const ul = document.createElement("ul");
-    ul.classList.add("burger-items")
+    ul.classList.add("burger-items");
     for (const item of items)
     {
       ul.append(item);
@@ -32,19 +30,8 @@ class AppHeader extends HTMLElement
     this.applyStyleSheet();
   }
 
-  attach()
-  {
-    this.attachShadow({
-      mode: "open",
-    });
-  }
-
-  applyStyleSheet()
-  {
-    const styleSheet = new CSSStyleSheet();
-    styleSheet.replaceSync(this.styleCSS());
-    this.shadowRoot.adoptedStyleSheets = [styleSheet];
-  }
+  attach = attach;
+  applyStyleSheet = applyStyleSheet;
 
   render()
   {
@@ -293,7 +280,7 @@ class AppHeader extends HTMLElement
             height: 20px;
             content: '';
         }
-        
+
         .game-icon:before {
             background: url('/assets/img/Game_Placeholder.svg');
             background-size: cover;
@@ -303,9 +290,9 @@ class AppHeader extends HTMLElement
             height: 20px;
             content: '';
         }
-        
+
         .movie-icon:before {
-            background: url('/assets/img/Movie_Placeholder.svg');      
+            background: url('/assets/img/Movie_Placeholder.svg');
             background-size: cover;
             margin-bottom: -5px;
             display: inline-block;
@@ -372,6 +359,4 @@ class AppHeader extends HTMLElement
   }
 }
 
-// let the browser know about the custom element
 customElements.define("app-header", AppHeader);
-"use strict";

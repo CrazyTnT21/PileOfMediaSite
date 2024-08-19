@@ -1,4 +1,5 @@
-import {logNoValueError} from "./app-input.js";
+import {logNoValueError, tooLong, tooShort, valueMissing} from "./validation/validation.js";
+import {applyStyleSheet, attach_delegates} from "../defaults.js";
 
 export class AppTextArea extends HTMLElement
 {
@@ -50,11 +51,6 @@ export class AppTextArea extends HTMLElement
     await this.setupValidation();
   }
 
-  disconnectedCallback()
-  {
-  }
-
-
   constructor()
   {
     super();
@@ -65,14 +61,8 @@ export class AppTextArea extends HTMLElement
     this.applyStyleSheet();
   }
 
-  attach()
-  {
-    this.attachShadow({
-      mode: "open",
-      delegatesFocus: true,
-    });
-  }
-
+  attach = attach_delegates;
+  applyStyleSheet = applyStyleSheet;
 
   async setupValidation()
   {
@@ -154,13 +144,6 @@ export class AppTextArea extends HTMLElement
     `;
   }
 
-  applyStyleSheet()
-  {
-    const styleSheet = new CSSStyleSheet();
-    styleSheet.replaceSync(this.styleCSS());
-    this.shadowRoot.adoptedStyleSheets = [styleSheet];
-  }
-
   styleCSS()
   {
     //language=CSS
@@ -205,22 +188,3 @@ export class AppTextArea extends HTMLElement
 }
 
 customElements.define("app-textarea", AppTextArea);
-
-function tooShort(input, min)
-{
-  if (!min)
-    return false;
-  return !input.value || input.value.length < Number(min);
-}
-
-function valueMissing(input)
-{
-  return input.value === null || input.value === undefined || input.value === "";
-}
-
-function tooLong(input, max)
-{
-  if (!max)
-    return false;
-  return input.value && input.value.length > Number(max);
-}

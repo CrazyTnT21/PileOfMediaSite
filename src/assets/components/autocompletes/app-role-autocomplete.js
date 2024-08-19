@@ -17,7 +17,7 @@ export class AppRoleAutocomplete extends AppAutocomplete
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(API_URL, "roles", "name", value), [["page", page], ["count", count]]);
+      const response = await get(join(API_URL, "roles", "name", value), ["page", page], ["count", count]);
       page++;
       total = response.total;
       yield response.items;
@@ -31,7 +31,7 @@ export class AppRoleAutocomplete extends AppAutocomplete
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(API_URL, "roles"), [["page", page], ["count", count]]);
+      const response = await get(join(API_URL, "roles"), ["page", page], ["count", count]);
       page++;
       total = response.total;
       yield response.items;

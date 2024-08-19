@@ -2,10 +2,12 @@ export async function get(url, ...parameters)
 {
   if (parameters.length > 0)
     url += "?";
+  const parts = [];
   for (let i = 0; i < parameters.length; i++)
   {
-    url += parameters[i][0] + "=" + parameters[i][1];
+    parts.push(parameters[i][0] + "=" + parameters[i][1]);
   }
+  url += parts.join("&");
   const result = await fetch(url);
   return result.json();
 }

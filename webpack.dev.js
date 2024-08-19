@@ -7,6 +7,7 @@ import {default as common} from "./webpack.common.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// noinspection JSUnresolvedReference
 export default (env) => ({
   ...common(env),
   devServer: {
