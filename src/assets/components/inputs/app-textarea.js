@@ -151,6 +151,7 @@ export class AppTextArea extends HTMLElement
         textarea {
             display: flex;
             flex: 1 1 100%;
+            font-size: 1.25em;
 
             border-width: 1px;
             border-style: solid;

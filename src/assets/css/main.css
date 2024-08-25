@@ -8,41 +8,8 @@ html {
     color: var(--primary-text);
 }
 
-button:hover {
-    background-color: var(--hover);
-}
-
 app-footer {
     background: var(--primary-background);
-}
-
-markdown-editor > textarea,
-textarea,
-input,
-button {
-    background-color: var(--input-background);
-    color: var(--primary-text);
-    border-color: var(--border);
-}
-
-textarea,
-input {
-    border-width: 1px;
-    border-style: solid;
-    border-color: var(--border);
-}
-
-input:focus,
-textarea:focus,
-textarea:hover,
-input:hover {
-    border-color: var(--hover);
-    transition: border-color ease 50ms;
-}
-
-select,
-button {
-    background-color: var(--clickable);
 }
 
 body {
@@ -64,20 +31,6 @@ body {
     --hover: #e6e6e6;
     --clickable: #e7e7e7;
     --feedback: #c5c5c5;
-}
-
-button {
-    min-width: 4rem;
-    min-height: 2rem;
-    border: 0;
-}
-
-button:hover {
-    background-color: var(--hover);
-}
-
-button:active {
-    background-color: var(--feedback);
 }
 
 .right {
@@ -151,26 +104,8 @@ img {
     margin-bottom: 0.33rem;
 }
 
-.error {
-    padding: 5px;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    position: absolute;
-    font-size: 12px;
-    user-select: none;
-}
-
 .small-text {
     font-size: 10px;
-}
-
-.error-arrow {
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-
-    border-bottom: 5px solid rgba(0, 0, 0, 0.1);
 }
 
 h1, h2, h3, h4, h5, h6 {

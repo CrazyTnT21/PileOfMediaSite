@@ -195,7 +195,8 @@ export class AppInput extends HTMLElement
     return `
         input {
             min-width: 0;
-            display: flex;
+            font-size: 1.25em;
+            display: inline-flex;
             flex: 1 1 100%;
             border-width: 1px;
             border-style: solid;
@@ -212,6 +213,7 @@ export class AppInput extends HTMLElement
         }
 
         :host {
+            display: inline-flex;
             flex-direction: column;
         }
 
