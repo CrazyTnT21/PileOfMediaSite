@@ -205,6 +205,8 @@ export class AppInput extends HTMLElement
             color: var(--primary-text);
             padding: 5px;
             font-family: "Fira Sans", sans-serif;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         input:hover {
@@ -215,6 +217,8 @@ export class AppInput extends HTMLElement
         :host {
             display: inline-flex;
             flex-direction: column;
+            flex: 1 1 100%;
+            max-width: 100%;
         }
 
         input:invalid {

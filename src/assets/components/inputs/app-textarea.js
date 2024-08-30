@@ -153,6 +153,9 @@ export class AppTextArea extends HTMLElement
             flex: 1 1 100%;
             font-size: 1.25em;
 
+            max-width: 100%;
+            box-sizing: border-box;
+            
             border-width: 1px;
             border-style: solid;
             border-color: var(--border);
@@ -168,7 +171,10 @@ export class AppTextArea extends HTMLElement
         }
 
         :host {
+            display: inline-flex;
             flex-direction: column;
+            flex: 1 1 100%;
+            max-width: 100%;
         }
 
         :host([required]) > label::after {

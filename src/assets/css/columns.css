@@ -46,22 +46,18 @@
 .col-s-10,
 .col-s-11,
 .col-s-12 {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
     flex: 0 0 auto;
-    align-self: flex-start;
-    align-items: flex-start;
-    box-sizing: border-box;
 
+    box-sizing: border-box;
     flex-grow: 0;
 }
 
 .col {
-    display: flex;
+    display: inline-flex;
     box-sizing: border-box;
     flex-wrap: wrap;
-    align-self: flex-start;
-    flex-grow: 1;
 }
 
 .fix-1,
@@ -80,7 +76,6 @@
     flex-wrap: wrap;
     flex: 0 0 auto;
     align-self: flex-start;
-    align-items: flex-start;
     box-sizing: border-box;
 }
 

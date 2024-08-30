@@ -50,6 +50,7 @@ export class AppButton extends HTMLElement
   connectedCallback()
   {
     const button = this.shadowRoot.querySelector("button");
+
     if (this.value)
       button.innerText = this.value;
     else
@@ -95,7 +96,10 @@ export class AppButton extends HTMLElement
     //language=CSS
     return `
         button {
+            display: flex;
+            flex: 1 1 100%;
             padding: 10px;
+            justify-content: center;
             border: 0;
             background-color: var(--clickable);
             color: var(--primary-text);

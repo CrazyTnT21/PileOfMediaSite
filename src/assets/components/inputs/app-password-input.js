@@ -46,18 +46,25 @@ export class AppPasswordInput extends AppInput
     //language=CSS
     return super.styleCSS() + `
         #outline {
+            min-width: 0;
+            display: inline-flex;
+            flex: 1 1 100%;
             border: 1px var(--border) solid;
             background-color: var(--input-background);
         }
 
+        #outline:hover {
+            border-color: var(--hover);
+            transition: border-color ease 50ms;
+        }
+
         #outline:has(input:focus) {
-            accent-color: auto;
-            outline: solid 2px black;
+            outline: solid 2px;
         }
 
         @supports (-moz-orient: inherit) {
             #outline:has(input:focus) {
-                outline-color: deepskyblue;
+                outline-color: Highlight;
             }
         }
 
@@ -68,9 +75,9 @@ export class AppPasswordInput extends AppInput
         }
 
         button {
+            align-self: center;
             border: none;
             background-color: var(--input-background);
-            align-self: end;
         }
 
         .password-icon-open:before {

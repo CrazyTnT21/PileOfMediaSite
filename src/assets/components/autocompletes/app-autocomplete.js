@@ -340,14 +340,11 @@ export class AppAutocomplete extends AppInput
         li {
             list-style: none;
         }
-
         #selected {
             display: flex;
-            flex: 1;
             flex-wrap: wrap;
             padding-top: 5px;
         }
-
         button {
             font-size: .75em;
             border-radius: 10px;
