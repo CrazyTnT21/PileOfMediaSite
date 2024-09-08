@@ -1,4 +1,6 @@
 import {AppInput} from "./app-input.js";
+// noinspection ES6UnusedImports
+import {AppButton} from "../app-button.js";
 
 export class AppPasswordInput extends AppInput
 {
@@ -6,10 +8,10 @@ export class AppPasswordInput extends AppInput
   {
     this.label = this.label ?? "Password";
     await super.connectedCallback();
-    this.shadowRoot.querySelector("button").addEventListener("click", (e) =>
+    this.shadowRoot.querySelector("app-button").addEventListener("click", (e) =>
     {
       const input = this.shadowRoot.querySelector("input");
-      const button = this.shadowRoot.querySelector("button");
+      const button = this.shadowRoot.querySelector("app-button");
       if (input.type === "password")
       {
         input.type = "text";
@@ -33,10 +35,10 @@ export class AppPasswordInput extends AppInput
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <label for="input"></label>
-        <span id="outline">
-            <input id="input"/>
-            <button class="password-icon-closed"></button>
+        <label part="label" for="input"></label>
+        <span part="outline" id="outline">
+            <input part="input" id="input"/>
+            <app-button exportparts="button: eye-button" class="password-icon-closed"></app-button>
         </span>
     `;
   }
@@ -49,12 +51,11 @@ export class AppPasswordInput extends AppInput
             min-width: 0;
             display: inline-flex;
             flex: 1 1 100%;
-            border: 1px var(--border) solid;
-            background-color: var(--input-background);
+            border: 1px #B6B6B6FF solid;
         }
 
         #outline:hover {
-            border-color: var(--hover);
+            border-color: #E6E6E6FF;
             transition: border-color ease 50ms;
         }
 
@@ -74,26 +75,30 @@ export class AppPasswordInput extends AppInput
             border: none
         }
 
-        button {
+        app-button {
+            display: inline-flex;
             align-self: center;
-            border: none;
-            background-color: var(--input-background);
+            align-items: center;
         }
 
-        .password-icon-open:before {
+        ::part(button) {
+            display: inline-flex;
+            padding: 4px;
+            border: none;
+        }
+
+        .password-icon-open::part(button):before {
             background: url('/assets/img/Eye_Placeholder.svg');
             background-size: cover;
-            margin-bottom: -5px;
             display: inline-block;
             width: 24px;
             height: 24px;
             content: '';
         }
 
-        .password-icon-closed:before {
+        .password-icon-closed::part(button):before {
             background: url('/assets/img/Eye_Closed_Placeholder.svg');
             background-size: cover;
-            margin-bottom: -5px;
             display: inline-block;
             width: 24px;
             height: 24px;

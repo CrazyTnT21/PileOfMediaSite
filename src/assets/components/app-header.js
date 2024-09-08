@@ -1,5 +1,5 @@
 import {applyStyleSheet, attach} from "./defaults.js";
-
+//TODO: color-scheme part
 class AppHeader extends HTMLElement
 {
   user;
@@ -44,7 +44,6 @@ class AppHeader extends HTMLElement
         <a class="logo" href="/">
             <img src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
         </a>
-
         <nav>
             <ul class="items">
                 <li><a class="graphic-novel-icon" href="/graphicnovels">Graphic novels</a></li>
@@ -83,7 +82,7 @@ class AppHeader extends HTMLElement
 
         :host {
             display: flex;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid gray;
             gap: 5px;
             align-items: center;
             justify-content: center;

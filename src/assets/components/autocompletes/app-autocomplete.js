@@ -88,11 +88,18 @@ export class AppAutocomplete extends AppInput
     const index = this.#selected.findIndex(x => this.itemId(x) === id);
     this.#selected.splice(index, 1);
     const selected = this.shadowRoot.querySelector("#selected");
-    for (const x of selected.children)
+    const children = selected.children;
+    for (let i = children.length - 1; i >= 0; i--)
     {
-      if (Number(x.children[0].value) === id)
+      let item = children[i];
+      if (Number(item.children[0].value) === id)
       {
-        selected.removeChild(x);
+        selected.removeChild(item);
+        if (i < selected.children.length)
+          children[i].children[0].children[0].focus();
+        else if (i > 0)
+          children[i - 1].children[0].children[0].focus();
+
         return;
       }
     }
@@ -110,6 +117,7 @@ export class AppAutocomplete extends AppInput
       data.value = this.itemId(item);
       selected.append(li);
       const button = document.createElement("button");
+      button.part.add("selected-button");
       data.append(button);
 
       button.innerText = this.itemLabel(item) ?? this.itemValue(item);
@@ -229,10 +237,10 @@ export class AppAutocomplete extends AppInput
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <label for="input"></label>
-        <input id="input" list="items"/>
-        <datalist id="items"></datalist>
-        <ul id="selected"></ul>
+        <label part="label" for="input"></label>
+        <input part="input" id="input" list="items"/>
+        <datalist part="datalist" id="items"></datalist>
+        <ul part="selected" id="selected"></ul>
     `;
   }
 
@@ -340,17 +348,17 @@ export class AppAutocomplete extends AppInput
         li {
             list-style: none;
         }
+
         #selected {
             display: flex;
             flex-wrap: wrap;
             padding-top: 5px;
         }
+
         button {
             font-size: .75em;
             border-radius: 10px;
-            border: var(--border) 1px solid;
-            background-color: var(--primary-background);
-            color: var(--primary-text);
+            border: gray 1px solid;
         }
 
         button::after {

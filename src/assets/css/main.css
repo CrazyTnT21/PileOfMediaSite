@@ -29,8 +29,79 @@ body {
     --border: #b6b6b6;
 
     --hover: #e6e6e6;
-    --clickable: #e7e7e7;
+    --clickable: #d6d6d6;
     --feedback: #c5c5c5;
+}
+
+app-header {
+    border-color: var(--border);
+}
+
+::part(button) {
+    background-color: var(--clickable);
+    color: var(--primary-text);
+}
+
+::part(button):hover, ::part(button):focus {
+    background-color: var(--hover);
+}
+
+::part(button):active {
+    background-color: var(--feedback);
+}
+
+::part(selected-button) {
+    border-color: var(--border);
+    background-color: var(--primary-background);
+    color: var(--primary-text);
+}
+
+app-password-input::part(outline) {
+    background-color: var(--input-background);
+}
+
+app-password-input::part(outline):hover {
+    border-color: var(--hover);
+}
+
+app-password-input::part(eye-button) {
+    background-color: var(--input-background);
+}
+
+::part(table) {
+    background-color: var(--primary-background);
+}
+
+::part(tbody) {
+    background-color: var(--secondary-background);
+}
+
+::part(tr-even) {
+    background-color: var(--primary-background);
+}
+
+::part(textarea) {
+    border-color: var(--border);
+    background-color: var(--input-background);
+    color: var(--primary-text);
+}
+
+::part(textarea):hover {
+    border-color: var(--hover);
+}
+
+::part(input) {
+    border-color: var(--border);
+    background-color: var(--input-background);
+    color: var(--primary-text);
+}
+
+::part(input):hover {
+    border-color: var(--hover);
+}
+
+app-image-input::part(img) {
+    border-color: var(--border);
 }
 
 .right {

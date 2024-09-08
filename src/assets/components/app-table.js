@@ -1,4 +1,7 @@
-import {attach,applyStyleSheet} from "./defaults.js";
+// noinspection ES6UnusedImports
+
+import {attach, applyStyleSheet} from "./defaults.js";
+import {AppButton} from "./app-button.js";
 
 export class AppTable extends HTMLElement
 {
@@ -22,18 +25,27 @@ export class AppTable extends HTMLElement
     this._items = items;
     this.total = this._items.length;
     const rows = this.shadowRoot.querySelector("tbody");
-
     rows.innerHTML = ``;
     for (let i = 0; i < items.length; i++)
     {
       const row = this.createRow(items[i]);
+      row.part.add("tbody-tr");
+      for (const x of row.children)
+      {
+        x.part.add("tbody-td");
+      }
       rows.append(row);
+    }
+    for (let i = 1; i < rows.children.length; i += 2)
+    {
+      rows.children[i].part.add("tr-even");
     }
   }
 
   createRow(item)
   {
     const row = document.createElement("tr");
+    row.part.add("tr");
     for (let j = 0; j < this._columns.length; j++)
     {
       const data = this.createRowElement(this._columns[j], item);
@@ -62,6 +74,7 @@ export class AppTable extends HTMLElement
     this.setInnerHTML(column, element, item);
 
     const data = document.createElement("td");
+    data.part.add("td");
     data.classList.add("pad");
 
     if (column.width)
@@ -113,6 +126,7 @@ export class AppTable extends HTMLElement
     for (let i = 0; i < columns.length; i++)
     {
       const column = document.createElement("th");
+      column.part.add("th", "thead-th");
       column.classList.add("pad");
       column.scope = "col";
       column.innerHTML = columns[i].display;
@@ -156,25 +170,25 @@ export class AppTable extends HTMLElement
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <table>
-            <caption></caption>
-            <thead>
-            <tr>
+        <table part="table">
+            <caption part="caption"></caption>
+            <thead part="thead">
+            <tr part="thead-tr tr">
 
             </tr>
             </thead>
-            <tbody>
+            <tbody part="tbody">
 
             </tbody>
-            <tfoot>
-            <tr hidden>
-                <th scope="row" colspan="2">Total</th>
-                <td colspan="2"></td>
-                <td>
-                    <button id="back">Back</button>
+            <tfoot part="tfoot">
+            <tr part="tfoot-tr tr" hidden>
+                <th part="tfoot-th th" scope="row" colspan="2">Total</th>
+                <td part="tfoot-td td" colspan="2"></td>
+                <td part="tfoot-td td">
+                    <app-button exportparts="button, button: back-button" id="back">Back</app-button>
                 </td>
-                <td>
-                    <button id="next">Next</button>
+                <td part="tfoot-td td">
+                    <app-button exportparts="button, button: next-button" id="next">Next</app-button>
                 </td>
             </tr>
             </tfoot>
@@ -196,13 +210,13 @@ export class AppTable extends HTMLElement
 
         table {
             border-radius: 5px;
-            background-color: var(--primary-background);
+            background-color: #f0f0f0;
             width: 100%;
             border-collapse: collapse;
         }
 
         tbody {
-            background-color: var(--secondary-background);
+            background-color: #DADADAFF;
         }
 
         thead > tr > th:first-child {
@@ -218,23 +232,13 @@ export class AppTable extends HTMLElement
         }
 
         tr:nth-of-type(even) {
-            background-color: var(--primary-background);
+            background-color: #f0f0f0;
         }
 
-        button {
+        ::part(button) {
             min-width: 4rem;
             min-height: 2rem;
             border: 0;
-            background-color: var(--clickable);
-            color: var(--primary-text);
-        }
-
-        button:hover {
-            background-color: var(--hover);
-        }
-
-        button:active {
-            background-color: var(--feedback);
         }
     `;
   }

@@ -184,8 +184,8 @@ export class AppInput extends HTMLElement
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <label for="input"></label>
-        <input id="input"/>
+        <label part="label" for="input"></label>
+        <input part="input" id="input"/>
     `;
   }
 
@@ -195,14 +195,12 @@ export class AppInput extends HTMLElement
     return `
         input {
             min-width: 0;
-            font-size: 1.25em;
+            font-size: 1.10em;
             display: inline-flex;
             flex: 1 1 100%;
             border-width: 1px;
             border-style: solid;
-            border-color: var(--border);
-            background-color: var(--input-background);
-            color: var(--primary-text);
+            border-color: lightgray;
             padding: 5px;
             font-family: "Fira Sans", sans-serif;
             max-width: 100%;
@@ -210,7 +208,7 @@ export class AppInput extends HTMLElement
         }
 
         input:hover {
-            border-color: var(--hover);
+            border-color: #E6E6E6FF;
             transition: border-color ease 50ms;
         }
 

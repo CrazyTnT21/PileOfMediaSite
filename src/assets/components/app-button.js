@@ -87,7 +87,7 @@ export class AppButton extends HTMLElement
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <button></button>
+        <button part="button"></button>
     `;
   }
 
@@ -101,16 +101,15 @@ export class AppButton extends HTMLElement
             padding: 10px;
             justify-content: center;
             border: 0;
-            background-color: var(--clickable);
-            color: var(--primary-text);
+            background-color: #d6d6d6;
         }
 
-        button:hover {
-            background-color: var(--hover);
+        button:hover, button:focus {
+            background-color: #c1bfbf;
         }
 
         button:active {
-            background-color: var(--feedback);
+            background-color: #c5c5c5;
         }
     `;
   }

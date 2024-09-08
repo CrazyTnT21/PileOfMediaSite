@@ -139,8 +139,8 @@ export class AppTextArea extends HTMLElement
   {
     //language=HTML
     this.shadowRoot.innerHTML = `
-        <label for="input"></label>
-        <textarea rows="5" id="input"></textarea>
+        <label part="label" for="input"></label>
+        <textarea part="textarea" rows="5" id="input"></textarea>
     `;
   }
 
@@ -151,17 +151,14 @@ export class AppTextArea extends HTMLElement
         textarea {
             display: flex;
             flex: 1 1 100%;
-            font-size: 1.25em;
+            font-size: 1.10em;
 
             max-width: 100%;
             box-sizing: border-box;
             
             border-width: 1px;
             border-style: solid;
-            border-color: var(--border);
-
-            background-color: var(--input-background);
-            color: var(--primary-text);
+            border-color: lightgray;
 
             padding: 5px;
             font-family: "Fira Sans", sans-serif;
@@ -183,7 +180,7 @@ export class AppTextArea extends HTMLElement
         }
 
         textarea:hover {
-            border-color: var(--hover);
+            border-color: #E6E6E6FF;
             transition: border-color ease 50ms;
         }
 

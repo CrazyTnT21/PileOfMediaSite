@@ -224,9 +224,9 @@ export class AppImageInput extends HTMLElement
     //language=HTML
     // noinspection HtmlRequiredAltAttribute
     this.shadowRoot.innerHTML = `
-        <div title="Required"></div>
-        <input id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
-        <img tabindex=0 src="${this.#defaultSrc}">
+        <div part="required" title="Required"></div>
+        <input part="input" id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
+        <img part="img" tabindex=0 src="${this.#defaultSrc}">
     `;
   }
 
@@ -238,8 +238,7 @@ export class AppImageInput extends HTMLElement
             aspect-ratio: 1 / 1.41421;
             width: 100%;
             object-fit: contain;
-            border: 1px solid;
-            border-color: var(--border);
+            border: 1px solid lightgray;
         }
 
         input:invalid + img {
