@@ -2,12 +2,10 @@
   "name": "mycollectionsite",
   "version": "1.0.0",
   "description": "",
-  "main": "",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "start": "npx webpack serve --config webpack.dev.js --env API_URL=http://localhost:3000/",
-    "start-remote": "npx webpack serve --config webpack.dev.js --env API_URL=http://192.168.178.118:3000/",
-    "build": "webpack --config webpack.prod.js"
+    "test": "npx jest",
+    "start": "node build/serve",
+    "build": "node build/build"
   },
   "repository": {
     "type": "git",
@@ -21,12 +19,24 @@
   "homepage": "https://github.com/CrazyTnT21/MyCollectionSite#readme",
   "devDependencies": {
     "@eslint/js": "^9.6.0",
+    "@types/jest": "^29.5.13",
+    "esbuild": "^0.23.1",
+    "esbuild-plugin-tsc": "^0.4.0",
     "eslint": "^9.6.0",
+    "glob": "^11.0.0",
+    "ts-node": "^10.9.2",
     "globals": "^15.8.0",
+    "http-proxy": "^1.18.1",
     "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "jest-environment-jsdom": "^29.7.0",
+    "typescript": "^5.6.2",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "mycollection-openapi": "file:../openapi/mycollection-openapi"
   },
   "type": "module"
 }

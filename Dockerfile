@@ -9,7 +9,7 @@ RUN openssl req -x509 -newkey rsa:4096 -keyout nginx.key -out nginx.pem -passout
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build && mv /app/dist/modules.js /app/src
+RUN npm run build && cp -R /app/dist/* /app/src && find /app/src -name "*.ts" -type f -delete
 
 FROM nginx:alpine
 RUN mkdir -p /usr/share/nginx/mycollection/html && mkdir /usr/share/nginx/mycollection/content
