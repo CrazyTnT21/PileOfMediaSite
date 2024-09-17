@@ -1,6 +1,7 @@
 import {applyStyleSheet, attach_delegates} from "./defaults.js";
 import {StyleCSS} from "./style-css.js";
 import {ApplyStyleSheet} from "./apply-style-sheet.js";
+import {handleFieldset} from "./inputs/common.js";
 
 export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -35,6 +36,25 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.shadowRoot!.querySelector("button")!.innerText = this.value ?? "";
   }
 
+  disabledValue: boolean = false;
+  hasDisabledFieldset: boolean = false;
+
+  get disabled(): boolean
+  {
+    return this.getAttribute("disabled") == "";
+  }
+
+  set disabled(value: boolean)
+  {
+    this.disabledValue = value;
+    value = this.disabledValue || this.hasDisabledFieldset;
+    if (value)
+      this.setAttribute("disabled", "");
+    else
+      this.removeAttribute("disabled");
+    this.shadowRoot!.querySelector("button")!.disabled = value;
+  }
+
   connectedCallback()
   {
     const button = this.shadowRoot!.querySelector("button")!;
@@ -55,6 +75,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
           this.internals.form.requestSubmit();
       }
     });
+    handleFieldset(this);
   }
 
   constructor()
@@ -83,12 +104,17 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
     //language=CSS
     return `
       button {
-        display: flex;
+        border-radius: 5px;
+        display: inline-flex;
         flex: 1 1 100%;
         padding: 10px;
         justify-content: center;
         border: 0;
         background-color: #d6d6d6;
+      }
+
+      :host {
+        display: inline-flex;
       }
 
       button:hover, button:focus {

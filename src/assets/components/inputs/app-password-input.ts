@@ -38,7 +38,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     this.shadowRoot!.innerHTML = `
       <label part="label" for="input"></label>
       <span part="outline" id="outline">
-            <input part="input" id="input"/>
+            <input part="inner-input" id="input"/>
             <app-button exportparts="button: eye-button" class="password-icon-closed"></app-button>
       </span>
     `;
@@ -49,6 +49,8 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     //language=CSS
     return super.styleCSS() + `
       #outline {
+        max-width: 100%;
+        border-radius: 5px;
         min-width: 0;
         display: inline-flex;
         flex: 1 1 100%;
@@ -64,10 +66,8 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         outline: solid 2px;
       }
 
-      @supports (-moz-orient: inherit) {
-        #outline:has(input:focus) {
-          outline-color: Highlight;
-        }
+      #outline {
+        outline-color: Highlight;
       }
 
       input {
@@ -86,6 +86,10 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         display: inline-flex;
         padding: 4px;
         border: none;
+      }
+
+      #outline:has(input:invalid) {
+        border-color: red;
       }
 
       .password-icon-open::part(button):before {

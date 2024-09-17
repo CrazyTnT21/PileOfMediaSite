@@ -2,12 +2,13 @@ import {logNoValueError, tooLong, tooShort, valueMissing} from "./validation/val
 import {applyStyleSheet, attach_delegates} from "../defaults.js";
 import {ApplyStyleSheet} from "../apply-style-sheet.js";
 import {StyleCSS} from "../style-css.js";
+import {handleFieldset} from "./common.js";
 
 export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   static formAssociated = true;
   static observedAttributes = ["required", "minlength", "maxlength"];
-  errors = new Map();
+  errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
   async attributeChangedCallback(name: string, oldValue: any, newValue: any)
   {
@@ -47,6 +48,8 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     }
     this.shadowRoot!.querySelector("label")!.innerText = label;
 
+    handleFieldset(this);
+
     await this.setupValidation();
   }
 
@@ -79,6 +82,13 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     const error = this.errors.entries().next().value;
     if (error)
       this.#internals.setValidity({[error[0]]: true}, error[1](), textarea);
+    this.setCustomError = () =>
+    {
+    };
+  }
+
+  setCustomError(input: HTMLTextAreaElement)
+  {
   }
 
   async validateAndReport()
@@ -99,6 +109,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     this.setMinLength(input);
     this.setMaxLength(input);
     this.setValueMissing(input);
+    this.setCustomError(input);
   }
 
   setMinLength(input: HTMLTextAreaElement)
@@ -111,13 +122,32 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     }
   }
 
+  disabledValue: boolean = false;
+  hasDisabledFieldset: boolean = false;
+
+  get disabled(): boolean
+  {
+    return this.getAttribute("disabled") == "";
+  }
+
+  set disabled(value: boolean)
+  {
+    this.disabledValue = value;
+    value = this.disabledValue || this.hasDisabledFieldset;
+    if (value)
+      this.setAttribute("disabled", "");
+    else
+      this.removeAttribute("disabled");
+    this.shadowRoot!.querySelector("textarea")!.disabled = value;
+  }
+
   setMaxLength(input: HTMLTextAreaElement)
   {
     const max = this.getAttribute("maxlength");
 
     if (tooLong(input, max ? Number(max) : null))
     {
-      this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters`);
+      this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters. Current length: ${input.value.length}`);
     }
   }
 
@@ -148,6 +178,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     //language=CSS
     return `
       textarea {
+        border-radius: 5px;
         display: flex;
         flex: 1 1 100%;
         font-size: 1.10em;
@@ -166,11 +197,16 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
         resize: none;
       }
 
+      label {
+        padding: 2px;
+      }
+
       :host {
         display: inline-flex;
         flex-direction: column;
         flex: 1 1 100%;
         max-width: 100%;
+        box-sizing: border-box;
       }
 
       :host([required]) > label::after {

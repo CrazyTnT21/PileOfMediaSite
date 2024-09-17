@@ -62,12 +62,12 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     return row;
   }
 
-  getValue(item: any, keys: string[])
+  getValue(item: any, keys: string[]): string | null
   {
     for (const key of keys)
     {
-      if (item[key] == undefined)
-        return item;
+      if (item[key] == null)
+        return null;
       item = item[key];
     }
     return item;
@@ -94,8 +94,13 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   setInnerHTML(column: Column<T>, element: HTMLImageElement | HTMLDivElement, item: T)
   {
+    if (column.formatFn)
+    {
+      element.innerText = column.formatFn(item);
+      return;
+    }
     const value = this.getValue(item, column.key.split("."));
-    if (value === undefined)
+    if (value == null)
     {
       element.innerText = "";
       return;
@@ -103,11 +108,6 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     if (column.type == ColumnType.Image)
     {
       (<HTMLImageElement>element).src = value;
-      return;
-    }
-    if (column.formatFn)
-    {
-      element.innerText = column.formatFn(item);
       return;
     }
     element.innerText = value;

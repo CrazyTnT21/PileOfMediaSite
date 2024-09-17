@@ -30,13 +30,11 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "jest-environment-jsdom": "^29.7.0",
-    "typescript": "^5.6.2",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "typescript": "^5.6.2"
   },
   "dependencies": {
-    "mycollection-openapi": "file:../openapi/mycollection-openapi"
+    "mycollection-openapi": "^0.1.1",
+    "openapi-fetch": "^0.12.0"
   },
   "type": "module"
 }

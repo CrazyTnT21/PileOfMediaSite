@@ -21,6 +21,7 @@ export class ColorScheme
     colorStyle.hover = "#464646";
     colorStyle.clickable = "#505050";
     colorStyle.feedback = "#3d3d3d";
+    colorStyle.visited = "#c76fff"
     return new ColorScheme("dark", colorStyle);
   }
 }
@@ -39,6 +40,13 @@ export class ColorStyle
   hover: string | undefined;
   clickable: string | undefined;
   feedback: string | undefined;
+  positive: string | undefined;
+  positive_hover: string | undefined;
+  negative: string | undefined;
+  negative_hover: string | undefined;
+  highlight: string | undefined;
+  highlight_hover: string | undefined;
+  visited: string | undefined;
 }
 
 export function removeColorScheme()

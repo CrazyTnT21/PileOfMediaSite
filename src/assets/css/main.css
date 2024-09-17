@@ -1,201 +1,316 @@
 html {
-    font: 1rem "Fira Sans", sans-serif;
-    background-color: var(--background);
+  font: 1rem "Fira Sans", sans-serif;
+  background-color: var(--background);
 }
 
-a,
 html {
-    color: var(--primary-text);
+  color: var(--primary-text);
 }
 
 app-footer {
-    background: var(--primary-background);
+  background: var(--primary-background);
 }
 
 body {
-    margin: 0;
+  margin: 0;
 }
 
 :root {
-    --primary-text: #000000;
-    --secondary-text: #888888;
+  --primary-text: #000000;
+  --secondary-text: #888888;
 
-    --inverted-primary-text: white;
-    --inverted-secondary-text: white;
-    --background: #ffffff;
-    --primary-background: #f0f0f0;
-    --secondary-background: #dadada;
-    --input-background: #ffffff;
-    --border: #b6b6b6;
+  --inverted-primary-text: white;
+  --inverted-secondary-text: white;
+  --background: #ffffff;
+  --primary-background: #f0f0f0;
+  --secondary-background: #dadada;
+  --input-background: #ffffff;
+  --border: #b6b6b6;
 
-    --hover: #e6e6e6;
-    --clickable: #d6d6d6;
-    --feedback: #c5c5c5;
+  --hover: #e6e6e6;
+  --clickable: #d6d6d6;
+  --feedback: #c5c5c5;
+  --positive: #16aa15;
+  --positive-hover: rgba(22, 170, 21, 0.60);
+  --negative: #df1c1c;
+  --negative-hover: rgba(223, 28, 28, 0.60);
+  --highlight: #0078d7;
+  --highlight-hover: rgba(0, 120, 215, 0.60);
+  --visited: #551a8b;
 }
 
 app-header {
-    border-color: var(--border);
+  border-color: var(--border);
 }
 
 ::part(button) {
-    background-color: var(--clickable);
-    color: var(--primary-text);
+  background-color: var(--clickable);
+  color: var(--primary-text);
 }
 
 ::part(button):hover, ::part(button):focus {
-    background-color: var(--hover);
+  background-color: var(--hover);
 }
 
 ::part(button):active {
-    background-color: var(--feedback);
+  background-color: var(--feedback);
 }
 
 ::part(selected-button) {
-    border-color: var(--border);
-    background-color: var(--primary-background);
-    color: var(--primary-text);
+  border-color: var(--border);
+  background-color: var(--primary-background);
+  color: var(--primary-text);
 }
 
 app-password-input::part(outline) {
-    background-color: var(--input-background);
+  background-color: var(--input-background);
 }
 
+@supports (-moz-orient: inherit) {
+  app-password-input::part(outline) {
+    outline-color: Highlight;
+  }
+}
+
+/*
+TODO: Outline invalid color
+ */
+/*app-password-input::part(outline)::part(input) {*/
+/*  border-color: var(--negative)*/
+/*}*/
+
 app-password-input::part(outline):hover {
-    border-color: var(--hover);
+  border-color: var(--hover);
 }
 
 app-password-input::part(eye-button) {
-    background-color: var(--input-background);
+  background-color: var(--input-background);
+}
+
+app-password-input::part(inner-input) {
+  color: var(--primary-text);
+  background-color: var(--input-background);
 }
 
 ::part(table) {
-    background-color: var(--primary-background);
+  background-color: var(--primary-background);
 }
 
 ::part(tbody) {
-    background-color: var(--secondary-background);
+  background-color: var(--secondary-background);
 }
 
 ::part(tr-even) {
-    background-color: var(--primary-background);
+  background-color: var(--primary-background);
 }
 
 ::part(textarea) {
-    border-color: var(--border);
-    background-color: var(--input-background);
-    color: var(--primary-text);
+  background-color: var(--input-background);
+  color: var(--primary-text);
+}
+
+::part(textarea):not(:invalid) {
+  border-color: var(--border);
 }
 
 ::part(textarea):hover {
-    border-color: var(--hover);
+  border-color: var(--hover);
 }
 
 ::part(input) {
-    border-color: var(--border);
-    background-color: var(--input-background);
-    color: var(--primary-text);
+  background-color: var(--input-background);
+  color: var(--primary-text);
+}
+
+[required]::part(label):after {
+  color: var(--negative)
+}
+
+::part(input) {
+  border-color: var(--border);
+}
+
+::part(input):invalid {
+  border-color: var(--negative)
 }
 
 ::part(input):hover {
-    border-color: var(--hover);
+  border-color: var(--hover);
 }
 
-app-image-input::part(img) {
-    border-color: var(--border);
+app-image-input:not(:invalid)::part(img) {
+  border-color: var(--border);
 }
 
 .right {
-    position: absolute;
-    right: 1rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 
 li,
 ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 img {
-    max-height: 100%;
-    max-width: 100%;
+  max-height: 100%;
+  max-width: 100%;
 }
 
 .footer {
-    display: flex;
-    flex: 1;
-    align-content: space-evenly;
-    margin: 10px;
-    padding: 0.25rem;
-    background: lightgray;
-    border-radius: 5px;
-    justify-content: center;
-    width: 96%;
-    bottom: 0;
+  display: flex;
+  flex: 1;
+  align-content: space-evenly;
+  margin: 10px;
+  padding: 0.25rem;
+  background: lightgray;
+  border-radius: 5px;
+  justify-content: center;
+  width: 96%;
+  bottom: 0;
 }
 
 
 .pad {
-    padding: 0.33rem;
+  padding: 0.33rem;
 }
 
 .pad-left {
-    padding-left: 0.33rem;
+  padding-left: 0.33rem;
 }
 
 .pad-right {
-    padding-right: 0.33rem;
+  padding-right: 0.33rem;
 }
 
 .pad-top {
-    padding-top: 0.33rem;
+  padding-top: 0.33rem;
 }
 
 .pad-bottom {
-    padding-bottom: 0.33rem;
+  padding-bottom: 0.33rem;
 }
 
 .mar {
-    margin: 0.33rem;
+  margin: 0.33rem;
 }
 
 .mar-left {
-    margin-left: 0.33rem;
+  margin-left: 0.33rem;
 }
 
 .mar-right {
-    margin-right: 0.33rem;
+  margin-right: 0.33rem;
 }
 
 .mar-top {
-    margin-top: 0.33rem;
+  margin-top: 0.33rem;
 }
 
 .mar-bottom {
-    margin-bottom: 0.33rem;
+  margin-bottom: 0.33rem;
 }
 
 .small-text {
-    font-size: 10px;
+  font-size: 10px;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    margin: 0;
+  margin: 0;
 }
 
 app-header {
-    min-height: 50px;
+  min-height: 50px;
 }
 
 .placeholder {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .placeholder > * {
-    display: flex;
-    padding: 5px;
-    border: 1px solid;
-    border-radius: 5px;
-    vertical-align: middle;
+  display: flex;
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  vertical-align: middle;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login {
+  margin: 5px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px var(--secondary-background);
+}
+
+.login-box {
+  max-width: 500px;
+}
+
+.login-border {
+  border: none;
+  margin: 0;
+  padding: 5px;
+}
+
+a, ::part(a) {
+  text-decoration: none;
+  color: var(--highlight);
+}
+
+a:visited {
+  color: var(--visited);
+}
+
+.login-button::part(button) {
+  background-color: var(--positive);
+  color: var(--inverted-primary-text)
+}
+
+.login-button::part(button):hover {
+  background-color: var(--positive-hover);
+}
+
+app-wizard::part(button) {
+  background-color: var(--highlight)
+}
+
+app-wizard::part(button):focus, app-wizard::part(button):hover {
+  background-color: var(--highlight-hover)
+}
+
+.square::part(img) {
+  aspect-ratio: 1;
+}
+
+[hidden] {
+  visibility: collapse;
+}
+
+fieldset {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+::part(logout-button) {
+  color: var(--inverted-primary-text);
+  background-color: var(--negative);
+
+}
+
+::part(logout-button):focus, ::part(logout-button):hover {
+  background-color: var(--negative-hover);
+}
+
+.column {
+  flex-direction: column
 }

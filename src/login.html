@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/columns.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+  <link rel="author" href="humans.txt"/>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in - MyCollection</title>
+  <script src="/assets/scripts/load-color-scheme.ts"></script>
+</head>
+<body>
+<noscript>This Website <strong>requires</strong> javascript to function.</noscript>
+<app-header></app-header>
+<main class="column center pad">
+  <form class="pad login login-box">
+    <h1 class="col-12 center">Log in</h1>
+    <fieldset id="input-fieldset" class="login-border">
+      <div class="col-12 center pad">
+        <app-input required id="email" data-label="Email"></app-input>
+      </div>
+      <div class="col-12 center pad">
+        <app-password-input required id="password" class="col-12" data-type="password"
+                            data-label="Password"></app-password-input>
+      </div>
+      <div class="col-12 pad">
+        <app-button class="login-button col-12">Submit</app-button>
+      </div>
+    </fieldset>
+  </form>
+  <div class="col-12 pad login-box">
+    <!--TODO: Forgot password-->
+    <div class="col-6">
+      <a href="/signup">Forgot password?</a>
+    </div>
+    <div class="col-6">
+      Don't have an account?
+      <a class="col-12" href="/signup">Sign up</a>
+    </div>
+  </div>
+</main>
+<script src="/modules.ts" type="module" async></script>
+<script src="/assets/scripts/translate.ts" type="module" async></script>
+<script src="/login.ts" type="module" async></script>
+<script src="/assets/scripts/translate.ts" type="module" async></script>
+<script src="/assets/components/app-header.ts" type="module" async></script>
+<script src="/assets/components/app-button.ts" type="module" async></script>
+<script src="/assets/components/app-footer.ts" type="module" async></script>
+<script src="/assets/components/autocompletes/app-genre-autocomplete.ts" type="module" async></script>
+<script src="/assets/components/autocompletes/app-autocomplete.ts" type="module" async></script>
+<script src="/assets/components/inputs/app-date-input.ts" type="module" async></script>
+<script src="/assets/components/inputs/app-password-input.ts" type="module" async></script>
+</body>
+</html>

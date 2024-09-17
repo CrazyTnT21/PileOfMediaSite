@@ -1,6 +1,7 @@
-import {applyStyleSheet, attach} from "../defaults.js";
+import {applyStyleSheet, attach, attach_delegates} from "../defaults.js";
 import {ApplyStyleSheet} from "../apply-style-sheet.js";
 import {StyleCSS} from "../style-css.js";
+import {logNoValueError} from "./validation/validation.js";
 
 export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -15,14 +16,15 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   private internals: ElementInternals;
 
-  get alt(): string
+  get label(): string
   {
-    return this.dataset["alt"]!;
+    return this.dataset["label"]!;
   }
 
-  set alt(value: string)
+  set label(value: string)
   {
-    this.dataset["alt"] = value;
+    this.dataset["label"] = value;
+    this.shadowRoot!.querySelector("label")!.innerText = value;
     this.shadowRoot!.querySelector("img")!.alt = value;
   }
 
@@ -54,17 +56,24 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       this.dataset["minFilesize"] = value.toString();
   }
 
+  disabledValue: boolean = false;
+  hasDisabledFieldset: boolean = false;
+
   get disabled(): boolean
   {
-    return this.getAttribute("disabled") === "";
+    return this.getAttribute("disabled") == "";
   }
 
   set disabled(value: boolean)
   {
+    this.disabledValue = value;
+    value = this.disabledValue || this.hasDisabledFieldset;
+
     if (value)
       this.setAttribute("disabled", "");
     else
       this.removeAttribute("disabled");
+    this.shadowRoot!.querySelector("input")!.disabled = value;
   }
 
   get imageTitle(): string | null | undefined
@@ -101,11 +110,12 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     input.addEventListener("change", event => this.setImage(<InputEvent>event));
 
     const image = this.shadowRoot!.querySelector("img")!;
-    const alt = this.alt ?? "";
-    if (!alt)
-      console.error(`image-input '${this.outerHTML}' has no alt. Images should always have an alt.`);
+    const label = this.dataset["label"] ?? "";
+    if (!label)
+      logNoValueError("label", this.outerHTML);
 
-    image.alt = alt;
+    image.alt = label;
+    this.shadowRoot!.querySelector("label")!.innerText = label;
     if (this.imageTitle)
       image.title = this.imageTitle;
 
@@ -133,7 +143,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.applyStyleSheet();
   }
 
-  attach = attach;
+  attach = attach_delegates;
   applyStyleSheet = applyStyleSheet;
 
   async setupValidation()
@@ -155,6 +165,13 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       const img = this.shadowRoot!.querySelector("img")!;
       this.internals.setValidity({[error[0]]: true}, error[1](), img);
     }
+    this.setCustomError = () =>
+    {
+    };
+  }
+
+  setCustomError(input: HTMLInputElement)
+  {
   }
 
   async validateAndReport()
@@ -175,6 +192,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.setMinFileSize(input);
     this.setValueMissing(input);
     this.setUnsupportedType(input);
+    this.setCustomError(input);
   }
 
   setUnsupportedType(input: HTMLInputElement)
@@ -191,7 +209,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     if (!fileTooBig(input, max))
       return;
 
-    this.errors.set("customError", () => `Input only allows a maximum of ${max} characters`);
+    this.errors.set("customError", () => `Input only allows a maximum of ${max} characters. Current length: ${input.value.length}`);
   }
 
   setMinFileSize(input: HTMLInputElement)
@@ -201,7 +219,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     if (!fileTooSmall(input, min))
       return;
 
-    this.errors.set("customError", () => `Input requires at least ${min} characters`);
+    this.errors.set("customError", () => `Input requires at least ${min} characters. Current length: ${input.value.length}`);
   }
 
   setValueMissing(input: HTMLInputElement)
@@ -221,11 +239,10 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   {
     //TODO: Clear image button
     //language=HTML
-    // noinspection HtmlRequiredAltAttribute
     this.shadowRoot!.innerHTML = `
-        <div part="required" title="Required"></div>
-        <input part="input" id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
-        <img part="img" tabindex=0 src="${this.defaultSrc}">
+      <label for="input"></label>
+      <input part="input" id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
+      <img alt="" part="img" tabindex=0 src="${this.defaultSrc}">
     `;
   }
 
@@ -234,10 +251,17 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     //language=CSS
     return `
       img {
+        border-radius: 5px;
+        display: inline-flex;
+        max-width: 100%;
+        max-height: 100%;
         aspect-ratio: 1 / 1.41421;
-        width: 100%;
         object-fit: contain;
         border: 1px solid lightgray;
+      }
+
+      label {
+        padding: 2px;
       }
 
       input:invalid + img {
@@ -248,15 +272,17 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
         filter: opacity(50%);
       }
 
+      :host {
+        display: inline-flex;
+        flex: 1 1 100%;
+        flex-direction: column;
+      }
+
       :host([disabled]) > img {
         filter: brightness(75%);
       }
 
-      div {
-        position: absolute;
-      }
-
-      :host([required]) > div::before {
+      :host([required]) > label::after {
         content: "*";
         color: red;
       }

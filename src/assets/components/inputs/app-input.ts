@@ -1,7 +1,8 @@
-import {attach_delegates, applyStyleSheet} from "../defaults.js";
+import {applyStyleSheet, attach_delegates} from "../defaults.js";
 import {logNoValueError, tooLong, tooShort, valueMissing} from "./validation/validation.js";
 import {ApplyStyleSheet} from "../apply-style-sheet.js";
 import {StyleCSS} from "../style-css.js";
+import {handleFieldset} from "./common.js";
 
 export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -41,6 +42,25 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.dispatchEvent(new CustomEvent("valueSet", {detail: value}));
   }
 
+  disabledValue: boolean = false;
+  hasDisabledFieldset: boolean = false;
+
+  get disabled(): boolean
+  {
+    return this.getAttribute("disabled") == "";
+  }
+
+  set disabled(value: boolean)
+  {
+    this.disabledValue = value;
+    value = this.disabledValue || this.hasDisabledFieldset;
+    if (value)
+      this.setAttribute("disabled", "");
+    else
+      this.removeAttribute("disabled");
+    this.shadowRoot!.querySelector("input")!.disabled = value;
+  }
+
   get placeholder(): string | null | undefined
   {
     return this.dataset["placeholder"]
@@ -67,8 +87,11 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
       logNoValueError("label", this.outerHTML);
     this.label = label;
     this.placeholder = this.dataset["placeholder"];
+    this.disabled = this.getAttribute("disabled") == "";
 
     this.shadowRoot!.querySelector("input")!.addEventListener("change", (e) => this.onInputChange(e));
+
+    handleFieldset(this);
     await this.setupValidation();
   }
 
@@ -117,6 +140,9 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     const error = this.errors.entries().next().value;
     if (error)
       this.internals.setValidity({[error[0]]: true}, error[1](), input);
+    this.setCustomError = () =>
+    {
+    };
   }
 
   async validateAndReport()
@@ -136,6 +162,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.setValueMissing(input);
     this.setMinLength(input);
     this.setMaxLength(input);
+    this.setCustomError(input);
   }
 
   async valid()
@@ -160,11 +187,11 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   setMinLength(input: HTMLInputElement)
   {
-    const min = Number(this.getAttribute("minlength"));
+    const min = this.getAttribute("minlength");
 
-    if (tooShort(input, min))
+    if (tooShort(input, min ? Number(min) : null))
     {
-      this.errors.set("tooShort", () => `Input requires at least ${min} characters`);
+      this.errors.set("tooShort", () => `Input requires at least ${min} characters. Current length: ${input.value.length}`);
     }
   }
 
@@ -174,9 +201,12 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
     if (tooLong(input, max ? Number(max) : null))
     {
-      this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters`);
+      this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters. Current length: ${input.value.length}`);
     }
   }
+
+  setCustomError(input: HTMLInputElement)
+  {}
 
   render()
   {
@@ -192,6 +222,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     //language=CSS
     return `
       input {
+        border-radius: 5px;
         min-width: 0;
         font-size: 1.10em;
         display: inline-flex;
@@ -211,6 +242,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       :host {
+        box-sizing: border-box;
         display: inline-flex;
         flex-direction: column;
         flex: 1 1 100%;

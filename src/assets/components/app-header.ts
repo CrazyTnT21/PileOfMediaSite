@@ -1,16 +1,68 @@
 import {applyStyleSheet, attach} from "./defaults.js";
 import {ApplyStyleSheet} from "./apply-style-sheet.js";
 import {StyleCSS} from "./style-css.js";
+import {LoginReturn} from "../types/login-return.js";
+import {ImageData} from "../types/image-data.js";
+import {AppButton} from "./app-button.js";
 
 //TODO: color-scheme part
-class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
-  user: any;
+  private loginData: LoginReturn | undefined | null;
 
-  connectedCallback()
+  async connectedCallback()
   {
     const items = <HTMLLIElement[]>[...this.shadowRoot!.querySelectorAll(".items > li")];
     this.#copyToHamburger(items);
+    const logoutButton: AppButton = this.shadowRoot!.querySelector("#logout > app-button")!;
+    logoutButton.addEventListener("click", () => this.account = null);
+    this.loadAccount();
+  }
+
+  set account(value: LoginReturn | null)
+  {
+    if (value == null)
+      localStorage.removeItem("account");
+    else
+      localStorage.setItem("account", JSON.stringify(value));
+
+    this.loginData = value;
+    this.loadAccount();
+  }
+
+  loadAccount()
+  {
+    const localAccount = localStorage.getItem("account");
+    const dropDownItems = [...this.shadowRoot!.querySelector("#user-dropdown")!.children]
+    dropDownItems.forEach(x =>
+    {
+      const element = (<HTMLElement>x);
+
+      element.hidden = element.dataset["default"] != "";
+
+      if (localAccount)
+      {
+        if (element.dataset["login"] == "")
+          element.hidden = false
+      }
+      else
+      {
+        if (element.dataset["logout"] == "")
+          element.hidden = false;
+      }
+    });
+    let profilePicture: HTMLImageElement = this.shadowRoot!.querySelector("#profile-picture")!;
+    if (localAccount)
+    {
+      const user = JSON.parse(localAccount).user;
+      if (user.profile_picture)
+      {
+        user.profile_picture.versions.sort((x: ImageData, y: ImageData) => x.width * x.height - y.width * y.height);
+        profilePicture.src = user.profile_picture.versions[0].uri;
+        return;
+      }
+    }
+    profilePicture.src = this.placeholderImageUrl;
   }
 
   #copyToHamburger(items: HTMLLIElement[])
@@ -35,6 +87,7 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   attach = attach;
   applyStyleSheet = applyStyleSheet;
+  placeholderImageUrl = "/assets/img/User_Placeholder.png";
 
   render()
   {
@@ -58,25 +111,38 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       </nav>
       <details id="user">
         <summary>
-          <img src="/assets/img/User_Placeholder.png" alt="User profile"/>
+          <img id="profile-picture" src="${this.placeholderImageUrl}" alt="Profile"/>
         </summary>
-        <ul>
-          <li><a href="/user/profile" class="user-icon">Profile</a></li>
-          <li><a href="/user/friends" class="friends-icon">Friends</a></li>
-          <li><a href="/user/comments" class="comments-icon">Comments</a></li>
-          <li><a href="/user/reviews" class="comments-icon">Reviews</a></li>
-          <li><a href="/user/settings" class="settings-icon">Settings</a></li>
-          <li><a href="/user/preferences" class="settings-icon">Preferences</a></li>
-          <li><a href="/" class="logout-icon"> Logout</a></li>
+        <ul id="user-dropdown">
+          <li data-login><a href="/user/profile" class="user-icon">Profile</a></li>
+          <li data-login><a href="/user/friends" class="friends-icon">Friends</a></li>
+          <li data-login><a href="/user/comments" class="comments-icon">Comments</a></li>
+          <li data-login><a href="/user/reviews" class="comments-icon">Reviews</a></li>
+          <li data-default><a href="/user/settings" class="settings-icon">Settings</a></li>
+          <li data-default><a href="/user/preferences" class="settings-icon">Preferences</a></li>
+          <li data-login id="logout"></li>
+          <li data-logout id="login"><a href="/login" class="logout-icon">Log in</a></li>
+          <li data-logout id="signup"><a href="/signup" class="logout-icon">Sign up</a></li>
         </ul>
       </details>
     `;
+    const appButton: AppButton = new AppButton();
+    appButton.setAttribute("exportparts", "button,button: logout-button");
+    appButton.innerText = "Logout"
+    appButton.classList.add("logout");
+    this.shadowRoot!.querySelector("#logout")!.append(appButton)
   }
 
   styleCSS()
   {
     //language=CSS
     return `
+      .logout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       img {
         max-height: 100%;
         max-width: 100%;
@@ -109,26 +175,39 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         background-color: var(--primary-background);
         border-radius: 5px;
         padding: 5px;
-      }
-
-      #user > ul {
         display: inline-flex;
         flex-direction: column;
         justify-content: flex-end;
         overflow: hidden;
-      }
 
-      #user > ul > li {
-        white-space: nowrap;
+        & li {
+          white-space: nowrap;
+          display: inline-flex;
+
+          & * {
+            align-items: center;
+            flex: 1;
+          }
+
+          & a {
+            border-radius: 5px;
+            display: inline-flex;
+            padding: 5px;
+          }
+        }
       }
 
       #user > ul > li {
         border-radius: 10px;
       }
 
-      #user > ul > li:focus,
-      #user > ul > li:hover {
+      #user > ul > li > a:focus,
+      #user > ul > li > a:hover {
         background-color: var(--hover);
+      }
+
+      #user > ul > li {
+        padding: 0;
       }
 
       .burger-items {
@@ -221,6 +300,10 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         }
       }
 
+      [hidden] {
+        visibility: collapse;
+      }
+
       @media (max-width: 600px) {
         nav {
           display: none;
@@ -307,7 +390,6 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         background: transparent url("/assets/img/User_Placeholder.png") center bottom;
         border-radius: 2px;
         background-size: cover;
-        margin-bottom: -5px;
         display: inline-block;
         width: 25px;
         height: 25px;
@@ -318,7 +400,6 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         background-image: url("/assets/img/Friends_Placeholder.png");
         border-radius: 2px;
         background-size: cover;
-        margin-bottom: -5px;
         display: inline-block;
         width: 25px;
         height: 25px;
@@ -329,7 +410,6 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         background-image: url("/assets/img/Comments_Placeholder.png");
         border-radius: 2px;
         background-size: cover;
-        margin-bottom: -5px;
         display: inline-block;
         width: 25px;
         height: 25px;
@@ -340,7 +420,6 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         background-image: url("/assets/img/Gear_Placeholder.png");
         border-radius: 2px;
         background-size: cover;
-        margin-bottom: -5px;
         display: inline-block;
         width: 25px;
         height: 25px;
@@ -351,7 +430,6 @@ class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         background-image: url("/assets/img/Logout_Placeholder.png");
         border-radius: 2px;
         background-size: cover;
-        margin-bottom: -5px;
         display: inline-block;
         width: 25px;
         height: 25px;
