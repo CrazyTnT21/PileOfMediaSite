@@ -1,94 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   width="16"
-   height="16"
-   viewBox="0 0 4.2333332 4.2333333"
-   version="1.1"
-   id="svg1"
-   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
-   sodipodi:docname="Game_Placeholder.svg"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="mm"
-     inkscape:zoom="64"
-     inkscape:cx="5.921875"
-     inkscape:cy="8.59375"
-     inkscape:window-width="2560"
-     inkscape:window-height="1368"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
-  <defs
-     id="defs1" />
-  <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1">
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:0.253583;stroke-dasharray:none"
-       id="rect1"
-       width="3.9818673"
-       height="1.7462534"
-       x="0.12679112"
-       y="1.2380415"
-       ry="0.002666818" />
-    <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.124998;stroke-dasharray:none"
-       id="rect2"
-       height="0.64285839"
-       x="0.79617637"
-       y="1.779695"
-       ry="0.0017570499"
-       width="0.14285314" />
-    <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.124998;stroke-dasharray:none"
-       id="rect2-8"
-       height="0.14285754"
-       x="0.55205733"
-       y="2.0364461"
-       ry="0.00039045588"
-       width="0.64283919" />
-    <ellipse
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.124998;stroke-dasharray:none"
-       id="path5"
-       cx="3.128145"
-       cy="2.5377188"
-       rx="0.15874554"
-       ry="0.1587503" />
-    <ellipse
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.124998;stroke-dasharray:none"
-       id="path5-1"
-       cx="3.6554363"
-       cy="2.1332707"
-       rx="0.15874554"
-       ry="0.1587503" />
-    <ellipse
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.124998;stroke-dasharray:none"
-       id="path5-1-1"
-       cx="3.1311243"
-       cy="1.726936"
-       rx="0.15874554"
-       ry="0.1587503" />
-    <ellipse
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.124998;stroke-dasharray:none"
-       id="path5-1-1-5"
-       cx="2.5589745"
-       cy="2.1234741"
-       rx="0.15874554"
-       ry="0.1587503" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg"   version="1.1" viewBox="0 0 4.2333 4.2333" xmlns="http://www.w3.org/2000/svg">
+ <g  stroke="#000" part="stroke fill"  fill="#000">
+  <rect x=".12679" y="1.238" width="3.9819" height="1.7463" ry=".0026668" fill="none" stroke-width=".25358"/>
+  <g  stroke-width=".125">
+   <rect x=".79618" y="1.7797" width=".14285" height=".64286" ry=".001757"/>
+   <rect x=".55206" y="2.0364" width=".64284" height=".14286" ry=".00039046"/>
+   <ellipse cx="3.1281" cy="2.5377" rx=".15875" ry=".15875"/>
+   <ellipse cx="3.6554" cy="2.1333" rx=".15875" ry=".15875"/>
+   <ellipse cx="3.1311" cy="1.7269" rx=".15875" ry=".15875"/>
+   <ellipse cx="2.559" cy="2.1235" rx=".15875" ry=".15875"/>
   </g>
+ </g>
 </svg>

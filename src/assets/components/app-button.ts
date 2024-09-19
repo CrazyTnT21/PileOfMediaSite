@@ -22,20 +22,6 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
     button.type = value;
   }
 
-  get value(): string | undefined
-  {
-    return this.dataset["value"]
-  }
-
-  set value(value: string | undefined)
-  {
-    if (!value)
-      delete this.dataset["value"]
-    else
-      this.dataset["value"] = value;
-    this.shadowRoot!.querySelector("button")!.innerText = this.value ?? "";
-  }
-
   disabledValue: boolean = false;
   hasDisabledFieldset: boolean = false;
 
@@ -58,11 +44,6 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   connectedCallback()
   {
     const button = this.shadowRoot!.querySelector("button")!;
-
-    if (this.value)
-      button.innerText = this.value;
-    else
-      button.innerHTML = this.innerHTML;
 
     button.type = this.type;
 
@@ -95,7 +76,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=HTML
     this.shadowRoot!.innerHTML = `
-      <button part="button"></button>
+      <button part="button"><slot></slot></button>
     `;
   }
 

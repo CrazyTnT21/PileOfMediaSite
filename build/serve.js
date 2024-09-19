@@ -19,6 +19,7 @@ for (const x of entryPointsFiles)
   files.push(...x);
 
 let buildOutput = await ctx.rebuild();
+let lastError;
 for (const file of files)
 {
   (async () =>
@@ -30,10 +31,16 @@ for (const file of files)
       try
       {
         buildOutput = await ctx.rebuild();
+        if (lastError)
+        {
+          lastError = null;
+          console.log("Rebuilt sucessfully!");
+        }
       }
       catch (e)
       {
-        console.error(e);
+        lastError = e.message;
+        console.error(e.message);
       }
     }
   })();

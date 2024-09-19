@@ -1,51 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   width="16"
-   height="16"
-   viewBox="0 0 4.2333331 4.2333332"
-   version="1.1"
-   id="svg1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1" />
-  <g
-     id="layer1"
-     style="stroke-width:0.264583;stroke-dasharray:none">
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-       d="M 0.2,2.24 C 2.1,0 4,2.1 4,2.1 3.24,3.2 1.24,3.27 0.2,2.24 Z"
-       id="path12"
-       transform="translate(8.1255513e-5,9.155316e-5)" />
-    <circle
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-       id="path13"
-       r="0.66145831"
-       cy="2.1167626"
-       cx="2.1167545" />
-    <path
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-       id="path13-2"
-       d="M 2.394394,2.6436791 A 0.60854167,0.60854167 0 0 1 1.5631106,2.4209374 0.60854167,0.60854167 0 0 1 1.7858523,1.589654 l 0.3042709,0.5270126 z" />
-    <rect
-       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.264594;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-       id="rect1-6"
-       width="0.053094026"
-       height="2.1382031"
-       x="0.87519145"
-       y="1.8883665"
-       ry="0"
-       transform="matrix(0.85269748,-0.52240502,0.51137884,0.85935539,0,0)" />
-    <rect
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-       id="rect1"
-       width="0.052920371"
-       height="2.1167169"
-       x="0.6392709"
-       y="1.8323228"
-       ry="0"
-       transform="matrix(0.85607815,-0.51684639,0.51692153,0.85603278,0,0)" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg  id="svg" width="24" height="24"  version="1.1" viewBox="0 0 4.2333 4.2333" xmlns="http://www.w3.org/2000/svg">
+ <g stroke-width=".26458">
+  <path  transform="translate(8.1256e-5 9.1553e-5)" d="M 0.2,2.24 C 2.1,0 4,2.1 4,2.1 3.24,3.2 1.24,3.27 0.2,2.24 Z" fill="none" stroke="#000" part="stroke"  stroke-width=".26458" style="paint-order:markers stroke fill" />
+  <path d="m2.3944 2.6437a0.60854 0.60854 0 0 1-0.83128-0.22274 0.60854 0.60854 0 0 1 0.22274-0.83128l0.30427 0.52701z" stroke="#000" part="stroke fill" stroke-width=".26458" style="paint-order:markers stroke fill" />
+  <g fill="none">
+   <circle cx="2.1168" cy="2.1168" r=".66146" stroke="#000" part="stroke fill" stroke-width=".26458" style="paint-order:markers stroke fill" />
+   <rect transform="matrix(.8527 -.52241 .51138 .85936 0 0)" x=".87519" y="1.8884" width=".053094" height="2.1382" ry="0" stroke="#fff" part="stroke-background fill-background" stroke-width=".26459" style="paint-order:markers stroke fill" />
+   <rect transform="matrix(.85608 -.51685 .51692 .85603 0 0)" x=".63927" y="1.8323" width=".05292" height="2.1167" ry="0" stroke="#000" part="stroke fill" stroke-width=".26458" style="paint-order:markers stroke fill" />
   </g>
+ </g>
 </svg>

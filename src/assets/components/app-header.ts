@@ -87,7 +87,18 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   attach = attach;
   applyStyleSheet = applyStyleSheet;
-  placeholderImageUrl = "/assets/img/User_Placeholder.png";
+  placeholderImageUrl = "/assets/img/User_Placeholder.svg";
+
+  iconHTML(href: string, id: string = "svg"): string
+  {
+    //language=HTML
+    return `
+      <svg class="icon">
+        <use
+          exportparts="stroke:icon-stroke, fill:icon-fill, fill-background:icon-fill-background, stroke-background: icon-stroke-background"
+          href="${href}#${id}"></use>
+      </svg>`;
+  }
 
   render()
   {
@@ -102,11 +113,12 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       </a>
       <nav>
         <ul class="items">
-          <li><a class="graphic-novel-icon" href="/graphicnovels">Graphic novels</a></li>
-          <li><a class="book-icon" href="/books">Books</a></li>
-          <li><a class="movie-icon" href="/movies">Movies</a></li>
-          <li><a class="show-icon" href="/shows">Shows</a></li>
-          <li><a class="game-icon" href="/games">games</a></li>
+          <li><a href="/graphicnovels">${this.iconHTML("/assets/img/Graphic_novel_Placeholder.svg")} Graphic novels</a>
+          </li>
+          <li><a href="/books">${this.iconHTML("/assets/img/Book_Placeholder.svg")} Books</a></li>
+          <li><a href="/movies">${this.iconHTML("/assets/img/Movie_Placeholder.svg")} Movies</a></li>
+          <li><a href="/shows"> ${this.iconHTML("/assets/img/Show_Placeholder.svg")}Shows</a></li>
+          <li><a href="/games"> ${this.iconHTML("/assets/img/Game_Placeholder.svg")}Games</a></li>
         </ul>
       </nav>
       <details id="user">
@@ -114,15 +126,23 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           <img id="profile-picture" src="${this.placeholderImageUrl}" alt="Profile"/>
         </summary>
         <ul id="user-dropdown">
-          <li data-login><a href="/user/profile" class="user-icon">Profile</a></li>
-          <li data-login><a href="/user/friends" class="friends-icon">Friends</a></li>
-          <li data-login><a href="/user/comments" class="comments-icon">Comments</a></li>
-          <li data-login><a href="/user/reviews" class="comments-icon">Reviews</a></li>
-          <li data-default><a href="/user/settings" class="settings-icon">Settings</a></li>
-          <li data-default><a href="/user/preferences" class="settings-icon">Preferences</a></li>
+          <li data-login><a href="/user/profile">${this.iconHTML("/assets/img/User_Placeholder.svg")}Profile</a></li>
+          <li data-login><a href="/user/friends">${this.iconHTML("/assets/img/Friends_Placeholder.svg")}Friends</a></li>
+          <li data-login>
+            <a href="/user/comments">${this.iconHTML("/assets/img/Bubbles_Placeholder.svg")}Comments</a>
+          </li>
+          <li data-login><a href="/user/reviews">${this.iconHTML("/assets/img/Bubbles_Placeholder.svg")}Reviews</a></li>
+          <li data-default><a href="/user/settings">${this.iconHTML("/assets/img/Gear_Placeholder.svg")}Settings</a>
+          </li>
+          <li data-default>
+            <a href="/user/preferences">${this.iconHTML("/assets/img/Gear_Placeholder.svg")} Preferences</a>
+          </li>
           <li data-login id="logout"></li>
-          <li data-logout id="login"><a href="/login" class="logout-icon">Log in</a></li>
-          <li data-logout id="signup"><a href="/signup" class="logout-icon">Sign up</a></li>
+          <li data-logout id="login"><a href="/login">${this.iconHTML("/assets/img/Logout_Placeholder.svg")}Log in</a>
+          </li>
+          <li data-logout id="signup">
+            <a href="/signup">${this.iconHTML("/assets/img/Logout_Placeholder.svg")} Sign up</a>
+          </li>
         </ul>
       </details>
     `;
@@ -184,15 +204,19 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           white-space: nowrap;
           display: inline-flex;
 
-          & * {
-            align-items: center;
+          & app-button {
             flex: 1;
           }
 
           & a {
+            flex: 1;
             border-radius: 5px;
             display: inline-flex;
             padding: 5px;
+
+            svg.icon {
+              border-radius: 2px;
+            }
           }
         }
       }
@@ -336,104 +360,15 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=CSS
     return `
-      .graphic-novel-icon:before {
-        background: url('/assets/img/Graphic_novel_Placeholder.svg');
-        background-size: cover;
-        margin-bottom: -5px;
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        content: '';
+      svg.icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 2px;
       }
 
-      .book-icon:before {
-        background: url('/assets/img/Book_Placeholder.svg');
-        background-size: cover;
-        margin-bottom: -5px;
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        content: '';
-      }
-
-      .show-icon:before {
-        background: url('/assets/img/Show_Placeholder.svg');
-        background-size: cover;
-        margin-bottom: -5px;
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        content: '';
-      }
-
-      .game-icon:before {
-        background: url('/assets/img/Game_Placeholder.svg');
-        background-size: cover;
-        margin-bottom: -5px;
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        content: '';
-      }
-
-      .movie-icon:before {
-        background: url('/assets/img/Movie_Placeholder.svg');
-        background-size: cover;
-        margin-bottom: -5px;
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        content: '';
-      }
-
-      .user-icon:before {
-        background: transparent url("/assets/img/User_Placeholder.png") center bottom;
-        border-radius: 2px;
-        background-size: cover;
-        display: inline-block;
-        width: 25px;
-        height: 25px;
-        content: '';
-      }
-
-      .friends-icon:before {
-        background-image: url("/assets/img/Friends_Placeholder.png");
-        border-radius: 2px;
-        background-size: cover;
-        display: inline-block;
-        width: 25px;
-        height: 25px;
-        content: '';
-      }
-
-      .comments-icon:before {
-        background-image: url("/assets/img/Comments_Placeholder.png");
-        border-radius: 2px;
-        background-size: cover;
-        display: inline-block;
-        width: 25px;
-        height: 25px;
-        content: '';
-      }
-
-      .settings-icon:before {
-        background-image: url("/assets/img/Gear_Placeholder.png");
-        border-radius: 2px;
-        background-size: cover;
-        display: inline-block;
-        width: 25px;
-        height: 25px;
-        content: '';
-      }
-
-      .logout-icon:before {
-        background-image: url("/assets/img/Logout_Placeholder.png");
-        border-radius: 2px;
-        background-size: cover;
-        display: inline-block;
-        width: 25px;
-        height: 25px;
-        content: '';
+      a:has(svg.icon) {
+        display: inline-flex;
+        align-items: center;
       }
     `;
   }

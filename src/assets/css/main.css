@@ -314,3 +314,27 @@ fieldset {
 .column {
   flex-direction: column
 }
+
+::part(icon-stroke) {
+  stroke: var(--primary-text);
+}
+
+::part(icon-fill) {
+  fill: var(--primary-text)
+}
+
+::part(icon-stroke-background) {
+  stroke: var(--secondary-background);
+}
+
+::part(icon-fill-background) {
+  fill: var(--secondary-background);
+}
+
+app-password-input::part(icon-stroke-background) {
+  stroke: var(--input-background);
+}
+
+app-password-input::part(icon-fill-background) {
+  fill: var(--input-background);
+}

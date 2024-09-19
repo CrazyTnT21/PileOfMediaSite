@@ -1,6 +1,4 @@
 import {AppInput} from "./app-input.js";
-// noinspection ES6UnusedImports
-import {AppButton} from "../app-button.js";
 import {StyleCSS} from "../style-css.js";
 
 export class AppPasswordInput extends AppInput implements StyleCSS
@@ -12,18 +10,29 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     this.shadowRoot!.querySelector("app-button")!.addEventListener("click", (e) =>
     {
       const input = this.shadowRoot!.querySelector("input")!;
-      const button = this.shadowRoot!.querySelector("app-button")!;
+      const eyeIcon: SVGUseElement = this.shadowRoot!.querySelector("use")!;
+
       if (input.type === "password")
       {
         input.type = "text";
-        button.className = "password-icon-open";
+        eyeIcon.href.baseVal = this.eyeHref;
       }
       else
       {
         input.type = "password";
-        button.className = "password-icon-closed";
+        eyeIcon.href.baseVal = this.eyeClosedHref;
       }
     });
+  }
+
+  private get eyeClosedHref(): string
+  {
+    return "/assets/img/Eye_Closed_Placeholder.svg#svg";
+  };
+
+  private get eyeHref(): string
+  {
+    return "/assets/img/Eye_Placeholder.svg#svg";
   }
 
   constructor()
@@ -39,7 +48,16 @@ export class AppPasswordInput extends AppInput implements StyleCSS
       <label part="label" for="input"></label>
       <span part="outline" id="outline">
             <input part="inner-input" id="input"/>
-            <app-button exportparts="button: eye-button" class="password-icon-closed"></app-button>
+            <app-button exportparts="button: eye-button">
+              <slot name="eye-button">
+                <svg class="icon">
+                  <use
+                    exportparts="stroke:icon-stroke, fill:icon-fill, fill-background:icon-fill-background, stroke-background: icon-stroke-background"
+                    href="/assets/img/Eye_Closed_Placeholder.svg#svg">
+                  </use>
+                </svg>
+              </slot>
+            </app-button>
       </span>
     `;
   }
@@ -48,6 +66,11 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   {
     //language=CSS
     return super.styleCSS() + `
+      .icon {
+        width: 24px;
+        height: 24px;
+      }
+
       #outline {
         max-width: 100%;
         border-radius: 5px;

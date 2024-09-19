@@ -1,65 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
-   version="1.1"
-   id="svg5"
-   sodipodi:docname="Image_Input_Placeholder.svg"
-   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview8"
-     pagecolor="#ffffff"
-     bordercolor="#999999"
-     borderopacity="1"
-     inkscape:showpageshadow="0"
-     inkscape:pageopacity="0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="mm"
-     showgrid="false"
-     inkscape:zoom="0.73851712"
-     inkscape:cx="425.17633"
-     inkscape:cy="376.43"
-     inkscape:window-width="1920"
-     inkscape:window-height="1009"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg5" />
-  <defs
-     id="defs2" />
-  <g
-     id="layer1"
-     transform="matrix(0.99870265,0,0,0.98805164,-1.4449546,12.393806)">
-    <rect
-       style="fill:#cccccc;stroke-width:0.264583"
-       id="rect792"
-       width="195.25331"
-       height="106.4041"
-       x="8.9565744"
-       y="92.073578"
-       ry="7.6397305" />
-    <ellipse
-       style="fill:#b2b2b2;fill-opacity:1;stroke-width:0.264583"
-       id="path952"
-       cx="57.680336"
-       cy="145.81303"
-       rx="30.810616"
-       ry="28.661037" />
-    <rect
-       style="fill:#b2b2b2;fill-opacity:1;stroke-width:0.264583"
-       id="rect1842"
-       width="32.960194"
-       height="15.405308"
-       x="153.33655"
-       y="77.026535"
-       ry="7.63973" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg" width="210mm" height="297mm" version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(.9987 0 0 .98805 -1.445 12.394)" stroke-width=".26458">
+    <rect x="8.9566" y="92.074" width="195.25" height="106.4" ry="7.6397" fill="#ccc"/>
+    <ellipse cx="57.68" cy="145.81" rx="30.811" ry="28.661" fill="#b2b2b2"/>
+    <rect x="153.34" y="77.027" width="32.96" height="15.405" ry="7.6397" fill="#b2b2b2"/>
   </g>
 </svg>
