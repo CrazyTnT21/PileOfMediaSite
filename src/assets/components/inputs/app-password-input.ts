@@ -45,9 +45,9 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   {
     //language=HTML
     this.shadowRoot!.innerHTML = `
+      <span class="input parent" part="outline" id="outline">
       <label part="label" for="input"></label>
-      <span part="outline" id="outline">
-            <input part="inner-input" id="input"/>
+        <input class="control" part="inner-input" id="input"/>
             <app-button exportparts="button: eye-button">
               <slot name="eye-button">
                 <svg class="icon">
@@ -71,13 +71,12 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         height: 24px;
       }
 
-      #outline {
-        max-width: 100%;
-        border-radius: 5px;
-        min-width: 0;
+      input {
         display: inline-flex;
         flex: 1 1 100%;
-        border: 1px #B6B6B6FF solid;
+        min-width: 0;
+        outline: none;
+        border: none
       }
 
       #outline:hover {
@@ -91,12 +90,6 @@ export class AppPasswordInput extends AppInput implements StyleCSS
 
       #outline {
         outline-color: Highlight;
-      }
-
-      input {
-        outline: none;
-        display: inline-flex;
-        border: none
       }
 
       app-button {
@@ -113,24 +106,6 @@ export class AppPasswordInput extends AppInput implements StyleCSS
 
       #outline:has(input:invalid) {
         border-color: red;
-      }
-
-      .password-icon-open::part(button):before {
-        background: url('/assets/img/Eye_Placeholder.svg');
-        background-size: cover;
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        content: '';
-      }
-
-      .password-icon-closed::part(button):before {
-        background: url('/assets/img/Eye_Closed_Placeholder.svg');
-        background-size: cover;
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        content: '';
       }
     `;
   }

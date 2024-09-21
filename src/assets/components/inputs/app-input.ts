@@ -86,7 +86,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     if (!label)
       logNoValueError("label", this.outerHTML);
     this.label = label;
-    this.placeholder = this.dataset["placeholder"];
+    this.placeholder = this.dataset["placeholder"] ?? "";
     this.disabled = this.getAttribute("disabled") == "";
 
     this.shadowRoot!.querySelector("input")!.addEventListener("change", (e) => this.onInputChange(e));
@@ -212,8 +212,10 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=HTML
     this.shadowRoot!.innerHTML = `
-      <label part="label" for="input"></label>
-      <input part="input" id="input"/>
+      <span class="parent container">
+        <label part="label" for="input"></label>
+        <input class="input control" part="input" id="input"/>
+      </span>
     `;
   }
 
@@ -221,41 +223,83 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=CSS
     return `
-      input {
-        border-radius: 5px;
-        min-width: 0;
-        font-size: 1.10em;
+      .input {
         display: inline-flex;
-        flex: 1 1 100%;
+        border-radius: 5px;
         border-width: 1px;
         border-style: solid;
         border-color: lightgray;
-        padding: 5px;
-        font-family: "Fira Sans", sans-serif;
-        max-width: 100%;
-        box-sizing: border-box;
       }
 
-      input:hover {
+      .input:hover {
         border-color: #E6E6E6FF;
         transition: border-color ease 50ms;
       }
 
-      :host {
-        box-sizing: border-box;
-        display: inline-flex;
-        flex-direction: column;
-        flex: 1 1 100%;
-        max-width: 100%;
-      }
-
-      input:invalid {
+      .input:invalid {
         border-color: red;
       }
 
-      :host([required]) > label::after {
-        content: "*";
-        color: red;
+      label {
+        position: absolute;
+        /*TODO: Part*/
+        color: var(--secondary-text, lightgray);
+        transition: transform ease 50ms;
+        margin: 6px;
+        font-size: 1.10em;
+      }
+
+      .parent:has(input:focus) > label,
+      .parent:has(input:not(input:placeholder-shown)) > label {
+        /*TODO: Part*/
+        color: var(--primary-text, black);
+        font-size: 0.8em;
+        line-height: 0.8em;
+        margin: 0 0 0 5px;
+        transform: translateY(calc(-60%));
+        /*TODO: part*/
+        background: linear-gradient(180deg, var(--background) 0% 25%, var(--input-background) 30% 100%);
+
+        transition: transform ease 50ms;
+      }
+
+      :host([required]) {
+        label::after {
+          content: "*";
+          color: red;
+        }
+
+        input:not(input:focus) ~ label::after {
+          /*TODO: Part*/
+          color: var(--negative-hover, #ff9191);
+        }
+      }
+
+      input:not(input:focus)::placeholder {
+        color: transparent;
+      }
+
+      * {
+        font-family: "Fira Sans", sans-serif;
+      }
+
+      :host, .container {
+        display: inline-flex;
+        margin-top: 8px;
+        flex-direction: column;
+        flex: 1;
+        box-sizing: border-box;
+        max-width: 100%;
+      }
+
+      .control {
+        display: inline-flex;
+        padding: 5px;
+        min-height: 0;
+        min-width: 0;
+        flex-wrap: wrap;
+        border-radius: 5px;
+        font-size: 1.10em;
       }
     `;
   }

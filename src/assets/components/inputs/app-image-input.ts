@@ -261,7 +261,43 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       }
 
       label {
-        padding: 2px;
+        position: absolute;
+        color: var(--primary-text, black);
+        margin: 0 0 0 5px;
+        transform: translateY(calc(-60%));
+        background-color: var(--background);
+
+        transition: transform ease 50ms;
+      }
+
+      :host {
+        display: inline-flex;
+        margin-top: 8px;
+        flex-direction: column;
+        flex: 1;
+        box-sizing: border-box;
+        max-width: 100%;
+      }
+
+      :host([required]) {
+        label::after {
+          content: "*";
+          color: red;
+
+          input:not(input:focus) ~ label::after {
+            /*TODO: Part*/
+            color: var(--negative-hover, #ff9191);
+          }
+        }
+      }
+
+      input:not(input:focus)::placeholder {
+        color: transparent;
+      }
+
+      input:hover {
+        border-color: #E6E6E6FF;
+        transition: border-color ease 50ms;
       }
 
       input:invalid + img {
@@ -280,11 +316,6 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
       :host([disabled]) > img {
         filter: brightness(75%);
-      }
-
-      :host([required]) > label::after {
-        content: "*";
-        color: red;
       }
     `;
   }

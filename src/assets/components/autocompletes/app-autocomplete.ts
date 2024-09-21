@@ -252,10 +252,12 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   {
     //language=HTML
     this.shadowRoot!.innerHTML = `
+      <span class="parent container">
       <label part="label" for="input"></label>
-      <input part="input" id="input" list="items"/>
+      <input class="input control" part="input" id="input" list="items"/>
       <datalist part="datalist" id="items"></datalist>
       <ul part="selected" id="selected"></ul>
+      </span>
     `;
   }
 
@@ -368,7 +370,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       }
 
       #selected {
-        display: flex;
+        display: inline-flex;
         flex-wrap: wrap;
         padding-top: 5px;
       }

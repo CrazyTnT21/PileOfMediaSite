@@ -289,11 +289,12 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       #burger > summary {
         background-position: center center;
         background-repeat: no-repeat;
+        background-size: 24px 24px;
         background-image: url('/assets/img/Hamburger_Placeholder.svg');
       }
 
       #burger[open] > summary {
-        background-position: center right 15px;
+        background-position: center right 12px;
         background-image: url('/assets/img/Close_Placeholder.svg');
       }
 
@@ -349,6 +350,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
       #burger > ul {
         position: absolute;
+        z-index: 1;
         background-color: var(--primary-background);
       }
 

@@ -64,6 +64,7 @@ app-header {
 
 app-password-input::part(outline) {
   background-color: var(--input-background);
+  border-color: var(--border);
 }
 
 @supports (-moz-orient: inherit) {
