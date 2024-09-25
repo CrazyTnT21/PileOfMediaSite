@@ -24,7 +24,7 @@ document.querySelector("form")!.addEventListener("submit", async e =>
   {
     fieldset.disabled = false;
     const oldError = emailInput.setCustomError;
-    let input;
+    let input: AppInput;
     //TODO: Replace with enum error
     if (response.error.includes("password"))
       input = passwordInput;

@@ -12,7 +12,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   get type(): "button" | "submit" | "reset"
   {
-    return this.shadowRoot!.querySelector("button")!.type;
+    return this.shadowRoot!.querySelector("button")!.type as "button" | "reset" | "submit";
   }
 
   set type(value: "button" | "submit" | "reset")

@@ -10,29 +10,19 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     this.shadowRoot!.querySelector("app-button")!.addEventListener("click", (e) =>
     {
       const input = this.shadowRoot!.querySelector("input")!;
-      const eyeIcon: SVGUseElement = this.shadowRoot!.querySelector("use")!;
+      const eyeIcon: HTMLSpanElement = this.shadowRoot!.querySelector("#eye-icon")!;
 
       if (input.type === "password")
       {
         input.type = "text";
-        eyeIcon.href.baseVal = this.eyeHref;
+        eyeIcon.className = "eye-open-icon";
       }
       else
       {
         input.type = "password";
-        eyeIcon.href.baseVal = this.eyeClosedHref;
+        eyeIcon.className = "eye-closed-icon";
       }
     });
-  }
-
-  private get eyeClosedHref(): string
-  {
-    return "/assets/img/Eye_Closed_Placeholder.svg#svg";
-  };
-
-  private get eyeHref(): string
-  {
-    return "/assets/img/Eye_Placeholder.svg#svg";
   }
 
   constructor()
@@ -50,12 +40,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         <input class="control" part="inner-input" id="input"/>
             <app-button exportparts="button: eye-button">
               <slot name="eye-button">
-                <svg class="icon">
-                  <use
-                    exportparts="stroke:icon-stroke, fill:icon-fill, fill-background:icon-fill-background, stroke-background: icon-stroke-background"
-                    href="/assets/img/Eye_Closed_Placeholder.svg#svg">
-                  </use>
-                </svg>
+                <span id="eye-icon" class="eye-closed-icon" part="icon"></span>
               </slot>
             </app-button>
       </span>
@@ -66,11 +51,16 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   {
     //language=CSS
     return super.styleCSS() + `
-      .icon {
-        width: 24px;
-        height: 24px;
+      .eye-open-icon::before {
+        content: "visibility";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
       }
-
+      .eye-closed-icon::before {
+        content: "visibility_off";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
       input {
         display: inline-flex;
         flex: 1 1 100%;

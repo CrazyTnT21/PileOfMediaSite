@@ -89,17 +89,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   applyStyleSheet = applyStyleSheet;
   placeholderImageUrl = "/assets/img/User_Placeholder.svg";
 
-  iconHTML(href: string, id: string = "svg"): string
-  {
-    //language=HTML
-    return `
-      <svg class="icon">
-        <use
-          exportparts="stroke:icon-stroke, fill:icon-fill, fill-background:icon-fill-background, stroke-background: icon-stroke-background"
-          href="${href}#${id}"></use>
-      </svg>`;
-  }
-
   render()
   {
     // language=HTML
@@ -113,12 +102,11 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       </a>
       <nav>
         <ul class="items">
-          <li><a href="/graphicnovels">${this.iconHTML("/assets/img/Graphic_novel_Placeholder.svg")} Graphic novels</a>
-          </li>
-          <li><a href="/books">${this.iconHTML("/assets/img/Book_Placeholder.svg")} Books</a></li>
-          <li><a href="/movies">${this.iconHTML("/assets/img/Movie_Placeholder.svg")} Movies</a></li>
-          <li><a href="/shows"> ${this.iconHTML("/assets/img/Show_Placeholder.svg")}Shows</a></li>
-          <li><a href="/games"> ${this.iconHTML("/assets/img/Game_Placeholder.svg")}Games</a></li>
+          <li><a href="/graphicnovels"><span class="graphic-novel-icon" part="icon"></span>Graphic novels</a></li>
+          <li><a href="/books"><span class="book-icon" part="icon"></span>Books</a></li>
+          <li><a href="/movies"><span class="movie-icon" part="icon"></span>Movies</a></li>
+          <li><a href="/shows"><span class="show-icon" part="icon"></span>Shows</a></li>
+          <li><a href="/games"><span class="game-icon" part="icon"></span>Games</a></li>
         </ul>
       </nav>
       <details id="user">
@@ -126,29 +114,29 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           <img id="profile-picture" src="${this.placeholderImageUrl}" alt="Profile"/>
         </summary>
         <ul id="user-dropdown">
-          <li data-login><a href="/user/profile">${this.iconHTML("/assets/img/User_Placeholder.svg")}Profile</a></li>
-          <li data-login><a href="/user/friends">${this.iconHTML("/assets/img/Friends_Placeholder.svg")}Friends</a></li>
+          <li data-login><a href="/user/profile"><span class="profile-icon" part="icon"></span>Profile</a></li>
+          <li data-login><a href="/user/friends"><span class="friends-icon" part="icon"></span>Friends</a></li>
           <li data-login>
-            <a href="/user/comments">${this.iconHTML("/assets/img/Bubbles_Placeholder.svg")}Comments</a>
+            <a href="/user/comments"><span class="comment-icon" part="icon"></span>Comments</a>
           </li>
-          <li data-login><a href="/user/reviews">${this.iconHTML("/assets/img/Bubbles_Placeholder.svg")}Reviews</a></li>
-          <li data-default><a href="/user/settings">${this.iconHTML("/assets/img/Gear_Placeholder.svg")}Settings</a>
+          <li data-login><a href="/user/reviews"><span class="review-icon" part="icon"></span>Reviews</a></li>
+          <li data-default><a href="/user/settings"><span class="settings-icon" part="icon"></span>Settings</a>
           </li>
           <li data-default>
-            <a href="/user/preferences">${this.iconHTML("/assets/img/Gear_Placeholder.svg")} Preferences</a>
+            <a href="/user/preferences"><span class="settings-icon" part="icon"></span>Preferences</a>
           </li>
           <li data-login id="logout"></li>
-          <li data-logout id="login"><a href="/login">${this.iconHTML("/assets/img/Logout_Placeholder.svg")}Log in</a>
+          <li data-logout id="login"><a href="/login"><span class="login-icon" part="icon"></span>Log in</a>
           </li>
           <li data-logout id="signup">
-            <a href="/signup">${this.iconHTML("/assets/img/Logout_Placeholder.svg")} Sign up</a>
+            <a href="/signup"><span class="login-icon" part="icon"></span>Sign up</a>
           </li>
         </ul>
       </details>
     `;
     const appButton: AppButton = new AppButton();
     appButton.setAttribute("exportparts", "button,button: logout-button");
-    appButton.innerText = "Logout"
+    appButton.innerHTML = `<span class="center"><span class="logout-icon" part="icon, logout-icon"></span>Logout</span>`;
     appButton.classList.add("logout");
     this.shadowRoot!.querySelector("#logout")!.append(appButton)
   }
@@ -157,6 +145,16 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=CSS
     return `
+      ::part(button) {
+        padding: 5px;
+      }
+
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .logout {
         display: flex;
         align-items: center;
@@ -189,8 +187,16 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         width: 35px;
       }
 
+      li {
+        box-sizing: border-box;
+      }
+
+      li > a {
+        align-items: center;
+      }
+
       #user > ul {
-        margin-top: 5px;
+        z-index: 1;
         position: absolute;
         background-color: var(--primary-background);
         border-radius: 5px;
@@ -213,10 +219,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
             border-radius: 5px;
             display: inline-flex;
             padding: 5px;
-
-            svg.icon {
-              border-radius: 2px;
-            }
           }
         }
       }
@@ -246,8 +248,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       .items > li > * {
+        display: flex;
         padding: 5px;
         border-radius: 15px;
+        align-items: center;
       }
 
       .burger-items > li, .burger-items > li > * {
@@ -287,15 +291,17 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       #burger > summary {
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: 24px 24px;
-        background-image: url('/assets/img/Hamburger_Placeholder.svg');
+        font-family: "Material Symbols Outlined", serif;
+        padding: 5px;
+        font-size: 40px;
       }
 
-      #burger[open] > summary {
-        background-position: center right 12px;
-        background-image: url('/assets/img/Close_Placeholder.svg');
+      #burger > summary::after {
+        content: "menu";
+      }
+
+      #burger[open] > summary::after {
+        content: "close";
       }
 
       #burger > summary {
@@ -304,7 +310,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       details > ul {
-        margin-top: 5px;
+        margin-top: 1px;
       }
 
       details > ul > li {
@@ -318,7 +324,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         padding: 0;
       }
 
-
       @media (min-width: 601px) {
         #burger {
           display: none;
@@ -327,6 +332,8 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
       [hidden] {
         visibility: collapse;
+        width: 0;
+        height: 0;
       }
 
       @media (max-width: 600px) {
@@ -362,15 +369,82 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=CSS
     return `
-      svg.icon {
-        width: 24px;
-        height: 24px;
-        margin-right: 2px;
+      .movie-icon::before {
+        content: "theaters";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
       }
 
-      a:has(svg.icon) {
-        display: inline-flex;
-        align-items: center;
+      .book-icon::before {
+        content: "book_2";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .graphic-novel-icon::before {
+        content: "menu_book";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .show-icon::before {
+        content: "tv";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .game-icon::before {
+        content: "videogame_asset";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .profile-icon::before {
+        content: "person";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .friends-icon::before {
+        content: "group";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .comment-icon::before {
+        content: "comment";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .comment-icon::before {
+        content: "comment";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .review-icon::before {
+        content: "reviews";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .settings-icon::before {
+        content: "settings";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .login-icon::before {
+        content: "login";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
+      }
+
+      .logout-icon::before {
+        content: "logout";
+        font-family: "Material Symbols Outlined", serif;
+        font-size: 24px;
       }
     `;
   }

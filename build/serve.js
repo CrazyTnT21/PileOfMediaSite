@@ -1,7 +1,6 @@
 import esbuild from "esbuild";
 import {createBuildSettings} from "./common.js";
 import * as fs from "fs";
-import * as glob from "glob";
 import * as http from "http";
 import * as path from "path";
 import httpProxy from "http-proxy";
@@ -13,38 +12,32 @@ const settings = createBuildSettings({
 settings.outdir = "src";
 
 const ctx = await esbuild.context(settings);
-const entryPointsFiles = settings.entryPoints.map(x => glob.sync(x));
-const files = [];
-for (const x of entryPointsFiles)
-  files.push(...x);
 
 let buildOutput = await ctx.rebuild();
+
 let lastError;
-for (const file of files)
+const result = fs.promises.watch(settings.outdir, {recursive: true});
+(async () =>
 {
-  (async () =>
+  // eslint-disable-next-line no-unused-vars
+  for await (const x of result)
   {
-    const result = await fs.promises.watch(file);
-    // eslint-disable-next-line no-unused-vars
-    for await (const x of result)
+    try
     {
-      try
+      buildOutput = await ctx.rebuild();
+      if (lastError)
       {
-        buildOutput = await ctx.rebuild();
-        if (lastError)
-        {
-          lastError = null;
-          console.log("Rebuilt sucessfully!");
-        }
-      }
-      catch (e)
-      {
-        lastError = e.message;
-        console.error(e.message);
+        lastError = null;
+        console.log("Rebuilt sucessfully!");
       }
     }
-  })();
-}
+    catch (e)
+    {
+      lastError = e.message;
+      console.error(e.message);
+    }
+  }
+})();
 
 export const contentTypeExtensions = {
   "html": "text/html",

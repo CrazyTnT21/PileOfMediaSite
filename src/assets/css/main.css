@@ -1,3 +1,6 @@
+/*Shadow dom*/
+@import '@material-symbols/font-400';
+
 html {
   font: 1rem "Fira Sans", sans-serif;
   background-color: var(--background);
@@ -294,6 +297,8 @@ app-wizard::part(button):focus, app-wizard::part(button):hover {
 
 [hidden] {
   visibility: collapse;
+  width: 0;
+  height: 0;
 }
 
 fieldset {
@@ -305,7 +310,10 @@ fieldset {
 ::part(logout-button) {
   color: var(--inverted-primary-text);
   background-color: var(--negative);
-
+}
+::part(logout-icon) {
+  color: var(--inverted-primary-text);
+  background-color: var(--negative);
 }
 
 ::part(logout-button):focus, ::part(logout-button):hover {
@@ -316,26 +324,6 @@ fieldset {
   flex-direction: column
 }
 
-::part(icon-stroke) {
-  stroke: var(--primary-text);
-}
-
-::part(icon-fill) {
-  fill: var(--primary-text)
-}
-
-::part(icon-stroke-background) {
-  stroke: var(--secondary-background);
-}
-
-::part(icon-fill-background) {
-  fill: var(--secondary-background);
-}
-
-app-password-input::part(icon-stroke-background) {
-  stroke: var(--input-background);
-}
-
-app-password-input::part(icon-fill-background) {
-  fill: var(--input-background);
+::part(icon) {
+  color: var(--primary-text);
 }
