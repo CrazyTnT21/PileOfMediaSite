@@ -292,7 +292,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
       #burger > summary {
         font-family: "Material Symbols Outlined", serif;
-        padding: 5px;
+        padding-left: 5px;
         font-size: 40px;
       }
 

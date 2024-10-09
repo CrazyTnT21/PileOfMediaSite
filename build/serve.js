@@ -28,7 +28,7 @@ const result = fs.promises.watch(settings.outdir, {recursive: true});
       if (lastError)
       {
         lastError = null;
-        console.log("Rebuilt sucessfully!");
+        console.info("Rebuilt sucessfully!");
       }
     }
     catch (e)

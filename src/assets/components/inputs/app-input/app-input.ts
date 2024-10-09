@@ -1,8 +1,9 @@
-import {applyStyleSheet, attach_delegates} from "../defaults.js";
-import {logNoValueError, tooLong, tooShort, valueMissing} from "./validation/validation.js";
-import {ApplyStyleSheet} from "../apply-style-sheet.js";
-import {StyleCSS} from "../style-css.js";
-import {handleFieldset} from "./common.js";
+import {applyStyleSheet, attach_delegates} from "../../defaults.js";
+import {logNoValueError, tooLong, tooShort, valueMissing} from "../validation/validation.js";
+import {ApplyStyleSheet} from "../../apply-style-sheet.js";
+import {StyleCSS} from "../../style-css.js";
+import {handleFieldset} from "../common.js";
+import {ValueSetEvent} from "./value-set-event.js";
 
 export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -39,7 +40,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
       value = "";
 
     this.shadowRoot!.querySelector("input")!.value = value;
-    this.dispatchEvent(new CustomEvent("valueSet", {detail: value}));
+    this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
   disabledValue: boolean = false;
@@ -112,7 +113,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.attach();
     this.render();
     this.applyStyleSheet();
-    this.addEventListener("valueSet", (e) => this.onValueSet(e));
+    this.addEventListener(ValueSetEvent.type, (e) => this.onValueSet(e));
   }
 
   attach = attach_delegates;
@@ -206,7 +207,8 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   }
 
   setCustomError(input: HTMLInputElement)
-  {}
+  {
+  }
 
   render()
   {
@@ -229,6 +231,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
         border-width: 1px;
         border-style: solid;
         border-color: lightgray;
+        flex: 1;
       }
 
       .input:hover {
@@ -283,10 +286,18 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
         font-family: "Fira Sans", sans-serif;
       }
 
-      :host, .container {
+      :host {
+        padding: 5px;
         display: inline-flex;
-        margin-top: 8px;
-        flex-direction: column;
+        margin-top: 2px;
+        flex: 1;
+        box-sizing: border-box;
+        max-width: 100%;
+        align-self: flex-start;
+      }
+
+      .container {
+        display: inline-flex;
         flex: 1;
         box-sizing: border-box;
         max-width: 100%;

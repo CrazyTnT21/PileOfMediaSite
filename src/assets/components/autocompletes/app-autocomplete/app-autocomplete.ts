@@ -1,4 +1,7 @@
-import {AppInput} from "../inputs/app-input.js";
+import {AppInput} from "../../inputs/app-input/app-input.js";
+import {ValueChangeEvent} from "./value-change-event.js";
+import {SelectedAddedEvent} from "./selected-added-event.js";
+import {SelectedRemovedEvent} from "./selected-removed-event.js";
 
 export class AppAutocomplete<T = { id: number, value: any, label?: string }> extends AppInput
 {
@@ -16,7 +19,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   #search: T[] = [];
 
-  override get value()
+  override get value(): T | undefined | null
   {
     return this.internalItem;
   }
@@ -84,7 +87,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   {
     const selected: HTMLUListElement = this.shadowRoot!.querySelector("#selected")!;
     this.pushSelected(selected, [value]);
-    this.shadowRoot!.dispatchEvent(new CustomEvent("selectedAdded", {composed: true, detail: value}));
+    this.shadowRoot!.dispatchEvent(new SelectedAddedEvent<T>({composed: true, detail: value}));
   }
 
   removeSelected(item: T)
@@ -140,7 +143,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
         this.removeSelected(item);
         const input = this.shadowRoot!.querySelector("input")!;
         await this.search(input.value);
-        this.shadowRoot!.dispatchEvent(new CustomEvent("selectedRemoved", {composed: true, detail: item}));
+        this.shadowRoot!.dispatchEvent(new SelectedRemovedEvent({composed: true, detail: item}));
       });
     }
   }
@@ -207,14 +210,14 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     const value = input.value;
     if (!value)
     {
-      this.shadowRoot!.dispatchEvent(new CustomEvent("valueChange", {composed: true, detail: null}));
+      this.shadowRoot!.dispatchEvent(new ValueChangeEvent<T>({composed: true}));
       this.internalItem = null;
       return;
     }
     const item = this.findValue(value) ?? this.findSearchValue(value);
     this.internalItem = item;
 
-    if (this.isMulti() && item)
+    if (this.isMultiple() && item)
     {
       if (!this.findSelected(item))
         this.addSelected(item);
@@ -222,8 +225,9 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       await this.search("");
     }
 
-    this.shadowRoot!.dispatchEvent(new CustomEvent("valueChange", {composed: true, detail: item}));
+    this.shadowRoot!.dispatchEvent(new ValueChangeEvent<T>({composed: true, detail: item}));
   }
+
 
   async onInputInput(event: InputEvent)
   {
@@ -298,7 +302,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
     const value = input.value.toLowerCase().trim();
 
-    if (this.isMulti())
+    if (this.isMultiple())
     {
       const found = this.findSelectedValue(value);
       if (found)
@@ -312,9 +316,9 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       this.errors.set("customError", () => `Item '${value}' was not found`);
   }
 
-  isMulti()
+  isMultiple()
   {
-    return this.dataset["multi"] === "";
+    return this.dataset["multiple"] === "";
   }
 
   async firstOpen()
@@ -363,6 +367,10 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       ul {
         margin: 0;
         padding: 0;
+      }
+
+      .parent {
+        flex-direction: column;
       }
 
       li {

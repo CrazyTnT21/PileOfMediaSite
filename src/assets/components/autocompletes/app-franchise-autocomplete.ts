@@ -1,4 +1,4 @@
-import {AppAutocomplete} from "./app-autocomplete.js";
+import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
 import {get, join} from "../../scripts/http.js";
 import {API_URL} from "../../../modules.js";
 import {Franchise} from "../../types/franchise.js";

@@ -1,5 +1,5 @@
 import {API_URL} from "./modules.js";
-import {AppInput} from "./assets/components/inputs/app-input.js";
+import {AppInput} from "./assets/components/inputs/app-input/app-input.js";
 import {AppPasswordInput} from "./assets/components/inputs/app-password-input.js";
 import {AppHeader} from "./assets/components/app-header.js";
 import createClient from "openapi-fetch";

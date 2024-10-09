@@ -21,7 +21,7 @@ export function applyStyleSheet(this: StyleCSS & HTMLElement)
   styleSheet.replaceSync(this.styleCSS());
   if (!this.shadowRoot)
     throw Error("No ShadowRoot defined")
-  this.shadowRoot!.adoptedStyleSheets = [styleSheet];
+  this.shadowRoot.adoptedStyleSheets = [styleSheet];
 }
 
 

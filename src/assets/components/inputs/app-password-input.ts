@@ -1,4 +1,4 @@
-import {AppInput} from "./app-input.js";
+import {AppInput} from "./app-input/app-input.js";
 import {StyleCSS} from "../style-css.js";
 
 export class AppPasswordInput extends AppInput implements StyleCSS
@@ -67,6 +67,9 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         min-width: 0;
         outline: none;
         border: none
+      }
+      .parent {
+        flex: 1;
       }
 
       #outline:hover {

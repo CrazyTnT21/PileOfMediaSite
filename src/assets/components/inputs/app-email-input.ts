@@ -1,4 +1,4 @@
-import {AppInput} from "./app-input.js";
+import {AppInput} from "./app-input/app-input.js";
 
 export class AppEmailInput extends AppInput
 {

@@ -1,7 +1,8 @@
-import {applyStyleSheet, attach, attach_delegates} from "../defaults.js";
-import {ApplyStyleSheet} from "../apply-style-sheet.js";
-import {StyleCSS} from "../style-css.js";
-import {logNoValueError} from "./validation/validation.js";
+import {applyStyleSheet, attach_delegates} from "../../defaults.js";
+import {ApplyStyleSheet} from "../../apply-style-sheet.js";
+import {StyleCSS} from "../../style-css.js";
+import {logNoValueError} from "../validation/validation.js";
+import {UploadEvent} from "./upload-event.js";
 
 export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -21,11 +22,39 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     return this.dataset["label"]!;
   }
 
+  private innerFiles: { file: File, url: string }[] = [];
+
+  get files()
+  {
+    return this.innerFiles;
+  }
+
+  set files(value)
+  {
+    this.innerFiles = value;
+  }
+
   set label(value: string)
   {
     this.dataset["label"] = value;
     this.shadowRoot!.querySelector("label")!.innerText = value;
     this.shadowRoot!.querySelector("img")!.alt = value;
+  }
+
+  get multiple(): boolean
+  {
+    const value = this.dataset["multiple"];
+    return value == ""
+  }
+
+  set multiple(value: boolean)
+  {
+    if (!value)
+      delete this.dataset["multiple"];
+    else
+      this.dataset["multiple"] = "";
+
+    this.shadowRoot!.querySelector("input")!.multiple = value;
   }
 
   get maxFileSize(): number | null
@@ -115,6 +144,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       logNoValueError("label", this.outerHTML);
 
     image.alt = label;
+    this.multiple = this.dataset["multiple"] == ""
     this.shadowRoot!.querySelector("label")!.innerText = label;
     if (this.imageTitle)
       image.title = this.imageTitle;
@@ -258,6 +288,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
         aspect-ratio: 1 / 1.41421;
         object-fit: contain;
         border: 1px solid lightgray;
+        flex: 1;
       }
 
       label {
@@ -271,9 +302,9 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       }
 
       :host {
+        padding: 5px;
+        margin-top: 2px;
         display: inline-flex;
-        margin-top: 8px;
-        flex-direction: column;
         flex: 1;
         box-sizing: border-box;
         max-width: 100%;
@@ -308,11 +339,6 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
         filter: opacity(50%);
       }
 
-      :host {
-        display: inline-flex;
-        flex: 1 1 100%;
-        flex-direction: column;
-      }
 
       :host([disabled]) > img {
         filter: brightness(75%);
@@ -330,18 +356,23 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   async setImage(event: InputEvent)
   {
     const input = (<HTMLInputElement>event.target);
-    const urls = [...input.files!].map(x => URL.createObjectURL(x));
-    if (input.files!.length == 1)
+    const files = [...input.files!].map(x => ({file: x, url: URL.createObjectURL(x)}));
+
+    this.files = [];
+    if (!this.multiple)
     {
-      if (!input!.files![0]!.type.includes("image"))
+      const file = files[files.length - 1]!;
+      if (!file.file.type.includes("image"))
         this.shadowRoot!.querySelector("img")!.src = this.defaultSrc;
       else
-        this.shadowRoot!.querySelector("img")!.src = urls[0]!;
-
-      this.#src = urls[0];
+        this.shadowRoot!.querySelector("img")!.src = file.url!;
+      this.#src = file.url;
     }
     if (await this.valid())
-      this.shadowRoot!.dispatchEvent(new CustomEvent("upload", {composed: true, detail: urls}));
+    {
+      this.shadowRoot!.dispatchEvent(new UploadEvent({composed: true, detail: files}));
+      this.files = files;
+    }
   }
 }
 

@@ -12,7 +12,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   get type(): "button" | "submit" | "reset"
   {
-    return this.shadowRoot!.querySelector("button")!.type as "button" | "reset" | "submit";
+    return this.getAttribute("type") as "button" | "reset" | "submit";
   }
 
   set type(value: "button" | "submit" | "reset")
@@ -44,7 +44,11 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   connectedCallback()
   {
     const button = this.shadowRoot!.querySelector("button")!;
-
+    const type = this.getAttribute("type");
+    if (type && ["submit", "button", "reset"].includes(type))
+      this.type = type as "submit" | "button" | "reset";
+    else
+      this.type = "submit";
     button.type = this.type;
 
     button.addEventListener("click", e =>
@@ -76,7 +80,9 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=HTML
     this.shadowRoot!.innerHTML = `
-      <button part="button"><slot></slot></button>
+      <button part="button">
+        <slot></slot>
+      </button>
     `;
   }
 
@@ -88,10 +94,11 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
         border-radius: 5px;
         display: inline-flex;
         flex: 1 1 100%;
-        padding: 10px;
+        padding: 8px;
         justify-content: center;
         border: 0;
         background-color: #d6d6d6;
+        align-items: center;
       }
 
       :host {

@@ -267,15 +267,22 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
         color: transparent;
       }
 
-      :host, .container {
+      :host {
+        padding: 5px;
+        margin-top: 2px;
         display: inline-flex;
-        margin-top: 8px;
-        flex-direction: column;
+        flex: 1;
+        box-sizing: border-box;
+        max-width: 100%;
+        align-self: flex-start;
+      }
+
+      .container {
+        display: inline-flex;
         flex: 1;
         box-sizing: border-box;
         max-width: 100%;
       }
-
 
       * {
         font-family: "Fira Sans", sans-serif;

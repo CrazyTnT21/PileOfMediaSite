@@ -1,7 +1,7 @@
-import {AppAutocomplete} from "./app-autocomplete.js";
-import {getLanguageCode, Language} from "../../classes/language.js";
+import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
+import {getLanguageCode, Language, LanguageCode} from "../../classes/language.js";
 
-type LanguageLabel = { id: number, value: string, label: string };
+export type LanguageLabel = { id: number, value: LanguageCode, label: Language };
 
 export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
 {
