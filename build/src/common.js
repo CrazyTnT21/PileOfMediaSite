@@ -5,8 +5,9 @@ import {absolutePathPlugin} from "./absolute-path-plugin.js";
 
 export function createBuildSettings(options)
 {
+  // noinspection SpellCheckingInspection
   return {
-    entryPoints: ["src/**/*.ts", "src/**/*.html", "src/**/*.css"],
+    entryPoints: ["src/**/*"],
     outdir: "dist",
     bundle: true,
     splitting: true,
@@ -20,7 +21,14 @@ export function createBuildSettings(options)
       absolutePathPlugin(),
     ],
     loader: {
-      '.svg': 'dataurl',
+      ".svg": "copy",
+      ".png": "copy",
+      ".xml": "copy",
+      ".ico": "copy",
+      ".webmanifest": "copy",
+      ".json": "copy",
+      ".txt": "copy",
+
     },
     ...options,
   };

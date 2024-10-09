@@ -9,4 +9,5 @@
 /.gitignore
 /.idea
 /node_modules
+/build/node_modules
 README.md

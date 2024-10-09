@@ -2,8 +2,8 @@ import {AppTable, Column, ColumnType} from "../assets/components/app-table.js";
 import {Config} from "../assets/classes/config.js";
 import {API_URL} from "../modules.js";
 import {Book} from "../assets/types/book.js";
-import {components} from "mycollection-openapi";
-import {get} from "../assets/scripts/http.js";
+import {paths} from "mycollection-openapi";
+import createClient from "openapi-fetch";
 
 function columns(): Column<Book>[]
 {
@@ -53,18 +53,19 @@ function columns(): Column<Book>[]
 }
 
 const table: AppTable<Book> = document.querySelector("app-table")!;
-try
+
+const client = createClient<paths>({baseUrl: API_URL})
+const {data, error} = await client.GET("/books");
+if (data == undefined)
 {
-  const result: components["schemas"]["BooksTotal"] = await get(API_URL + "books");
+  console.error(error);
+}
+else
+{
   table.classList.add("test");
   table.columns = columns();
-  let items = result.items;
+  let items = data.items;
   items.forEach(x => (<any>x)["uri"] = x.cover.versions[0]!.uri);
   table.items = items;
-  table.total = result.total;
+  table.total = data.total;
 }
-catch (e)
-{
-  console.error(e);
-}
-
