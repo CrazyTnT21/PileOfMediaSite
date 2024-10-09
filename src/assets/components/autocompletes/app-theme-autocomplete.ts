@@ -1,7 +1,8 @@
 import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
-import {get, join} from "../../scripts/http.js";
 import {API_URL} from "../../../modules.js";
 import {Theme} from "../../types/theme.js";
+import createClient from "openapi-fetch";
+import {paths} from "mycollection-openapi";
 
 export class AppThemeAutocomplete extends AppAutocomplete<Theme>
 {
@@ -11,31 +12,52 @@ export class AppThemeAutocomplete extends AppAutocomplete<Theme>
     await super.connectedCallback();
   }
 
-  override async* searchItems(value: string):  AsyncGenerator<Theme[]>
+  override async* searchItems(value: string): AsyncGenerator<Theme[]>
   {
+    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(API_URL, "themes", "name", value), ["page", page.toString()], ["count", count.toString()]);
+      const {data, error} = await client.GET("/themes/name/{name}", {
+        params: {
+          path: {name: value},
+          query: {page, count}
+        }
+      });
+      if (data == undefined)
+      {
+        console.error(error)
+        return [];
+      }
       page++;
-      total = response.total;
-      yield response.items;
+      total = data.total;
+      yield data.items;
     }
   }
 
   override async* loadItems(): AsyncGenerator<Theme[]>
   {
+    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(API_URL, "themes"), ["page", page.toString()], ["count", count.toString()]);
+      const {data, error} = await client.GET("/themes", {
+        params: {
+          query: {page, count}
+        }
+      });
+      if (data == undefined)
+      {
+        console.error(error)
+        return [];
+      }
       page++;
-      total = response.total;
-      yield response.items;
+      total = data.total;
+      yield data.items;
     }
   }
 

@@ -1,7 +1,8 @@
 import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
-import {get, join} from "../../scripts/http.js";
 import {API_URL} from "../../../modules.js";
 import {Character} from "../../types/character.js";
+import createClient from "openapi-fetch";
+import {paths} from "mycollection-openapi";
 
 export class AppCharacterAutocomplete extends AppAutocomplete<Character>
 {
@@ -13,29 +14,50 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
 
   override async* searchItems(value: string): AsyncGenerator<Character[]>
   {
+    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(API_URL, "characters", "name", value), ["page", page.toString()], ["count", count.toString()]);
+      const {data, error} = await client.GET("/characters/name/{name}", {
+        params: {
+          path: {name: value},
+          query: {page, count}
+        }
+      });
+      if (data == undefined)
+      {
+        console.error(error)
+        return [];
+      }
       page++;
-      total = response.total;
-      yield response.items;
+      total = data.total;
+      yield data.items;
     }
   }
 
-  override async* loadItems()
+  override async* loadItems(): AsyncGenerator<Character[]>
   {
+    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const response = await get(join(API_URL, "characters"), ["page", page.toString()], ["count", count.toString()]);
+      const {data, error} = await client.GET("/characters", {
+        params: {
+          query: {page, count}
+        }
+      });
+      if (data == undefined)
+      {
+        console.error(error)
+        return [];
+      }
       page++;
-      total = response.total;
-      yield response.items;
+      total = data.total;
+      yield data.items;
     }
   }
 
