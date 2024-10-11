@@ -33,9 +33,9 @@ document.querySelector("form")!.addEventListener("submit", async e =>
   {
     fieldset.disabled = false;
     const oldError = emailInput.setCustomError;
-    let input = emailInput;
+    const input = emailInput;
 
-    input.setCustomError = (_) =>
+    input.setCustomError = (): void =>
     {
       input.errors.set("customError", () => response.error);
     };

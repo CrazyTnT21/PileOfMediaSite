@@ -6,25 +6,33 @@ import {UploadEvent} from "./upload-event.js";
 
 export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
-  static formAssociated = true;
-  static observedAttributes = ["required", "minlength", "maxlength"];
+  static readonly formAssociated = true;
+  static readonly observedAttributes = ["required", "minlength", "maxlength"];
   public errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  async attributeChangedCallback(name: string, oldValue: any, newValue: any)
+  async attributeChangedCallback(name: string, oldValue: any, newValue: any): Promise<void>
   {
     await this.validate();
   }
 
   private internals: ElementInternals;
+  override shadowRoot: ShadowRoot;
 
   get label(): string
   {
     return this.dataset["label"]!;
   }
 
+  set label(value: string)
+  {
+    this.dataset["label"] = value;
+    this.shadowRoot.querySelector("label")!.innerText = value;
+    this.shadowRoot.querySelector("img")!.alt = value;
+  }
+
   private innerFiles: { file: File, url: string }[] = [];
 
-  get files()
+  get files(): { file: File, url: string }[]
   {
     return this.innerFiles;
   }
@@ -34,12 +42,6 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.innerFiles = value;
   }
 
-  set label(value: string)
-  {
-    this.dataset["label"] = value;
-    this.shadowRoot!.querySelector("label")!.innerText = value;
-    this.shadowRoot!.querySelector("img")!.alt = value;
-  }
 
   get multiple(): boolean
   {
@@ -54,7 +56,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     else
       this.dataset["multiple"] = "";
 
-    this.shadowRoot!.querySelector("input")!.multiple = value;
+    this.shadowRoot.querySelector("input")!.multiple = value;
   }
 
   get maxFileSize(): number | null
@@ -102,7 +104,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       this.setAttribute("disabled", "");
     else
       this.removeAttribute("disabled");
-    this.shadowRoot!.querySelector("input")!.disabled = value;
+    this.shadowRoot.querySelector("input")!.disabled = value;
   }
 
   get imageTitle(): string | null | undefined
@@ -116,7 +118,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       delete this.dataset["title"];
     else
       this.dataset["title"] = value;
-    this.shadowRoot!.querySelector("img")!.title = value ?? "";
+    this.shadowRoot.querySelector("img")!.title = value ?? "";
   }
 
   #src: string | undefined;
@@ -130,22 +132,22 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     if (!value)
       throw Error("Src has to be set");
     this.#src = value;
-    this.shadowRoot!.querySelector("img")!.src = value;
+    this.shadowRoot.querySelector("img")!.src = value;
   }
 
-  async connectedCallback()
+  async connectedCallback(): Promise<void>
   {
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     input.addEventListener("change", event => this.setImage(<InputEvent>event));
 
-    const image = this.shadowRoot!.querySelector("img")!;
+    const image = this.shadowRoot.querySelector("img")!;
     const label = this.dataset["label"] ?? "";
     if (!label)
       logNoValueError("label", this.outerHTML);
 
     image.alt = label;
     this.multiple = this.dataset["multiple"] == ""
-    this.shadowRoot!.querySelector("label")!.innerText = label;
+    this.shadowRoot.querySelector("label")!.innerText = label;
     if (this.imageTitle)
       image.title = this.imageTitle;
 
@@ -168,7 +170,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   {
     super();
     this.internals = this.attachInternals();
-    this.attach();
+    this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
   }
@@ -176,45 +178,45 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   attach = attach_delegates;
   applyStyleSheet = applyStyleSheet;
 
-  async setupValidation()
+  async setupValidation(): Promise<void>
   {
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     input.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
-  async validate()
+  async validate(): Promise<void>
   {
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     await this.setValidity(input);
     this.internals.setValidity({});
     input.setCustomValidity("");
     const error = this.errors.entries().next().value;
     if (error)
     {
-      const img = this.shadowRoot!.querySelector("img")!;
+      const img = this.shadowRoot.querySelector("img")!;
       this.internals.setValidity({[error[0]]: true}, error[1](), img);
     }
-    this.setCustomError = () =>
+    this.setCustomError = (): void =>
     {
     };
   }
 
-  setCustomError(input: HTMLInputElement)
+  setCustomError(input: HTMLInputElement): void
   {
   }
 
-  async validateAndReport()
+  async validateAndReport(): Promise<void>
   {
     await this.validate();
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     const error = this.errors.entries().next().value;
     if (error)
       input.setCustomValidity(error[1]());
     this.internals.reportValidity();
   }
 
-  async setValidity(input: HTMLInputElement)
+  async setValidity(input: HTMLInputElement): Promise<void>
   {
     this.internals.setFormValue(input.value);
     this.errors = new Map();
@@ -225,7 +227,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.setCustomError(input);
   }
 
-  setUnsupportedType(input: HTMLInputElement)
+  setUnsupportedType(input: HTMLInputElement): void
   {
     if (!unsupportedImageType(input))
       return;
@@ -233,7 +235,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.errors.set("customError", () => `Unsupported image type`);
   }
 
-  setMaxFileSize(input: HTMLInputElement)
+  setMaxFileSize(input: HTMLInputElement): void
   {
     const max = this.maxFileSize;
     if (!fileTooBig(input, max))
@@ -242,7 +244,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.errors.set("customError", () => `Input only allows a maximum of ${max} characters. Current length: ${input.value.length}`);
   }
 
-  setMinFileSize(input: HTMLInputElement)
+  setMinFileSize(input: HTMLInputElement): void
   {
     const min = this.minFileSize;
 
@@ -252,7 +254,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.errors.set("customError", () => `Input requires at least ${min} characters. Current length: ${input.value.length}`);
   }
 
-  setValueMissing(input: HTMLInputElement)
+  setValueMissing(input: HTMLInputElement): void
   {
     if (!this.isRequired() || !valueMissing(input))
       return;
@@ -260,23 +262,23 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.errors.set("valueMissing", () => "No value given");
   }
 
-  isRequired()
+  isRequired(): boolean
   {
     return this.getAttribute("required") === "";
   }
 
-  render()
+  render(): void
   {
     //TODO: Clear image button
     //language=HTML
-    this.shadowRoot!.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <label for="input"></label>
       <input part="input" id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
       <img alt="" part="img" tabindex=0 src="${this.defaultSrc}">
     `;
   }
 
-  styleCSS()
+  styleCSS(): string
   {
     //language=CSS
     return `
@@ -346,14 +348,14 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     `;
   }
 
-  async valid()
+  async valid(): Promise<boolean>
   {
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     await this.setValidity(input);
     return this.errors.size === 0;
   }
 
-  async setImage(event: InputEvent)
+  async setImage(event: InputEvent): Promise<void>
   {
     const input = (<HTMLInputElement>event.target);
     const files = [...input.files!].map(x => ({file: x, url: URL.createObjectURL(x)}));
@@ -363,14 +365,14 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     {
       const file = files[files.length - 1]!;
       if (!file.file.type.includes("image"))
-        this.shadowRoot!.querySelector("img")!.src = this.defaultSrc;
+        this.shadowRoot.querySelector("img")!.src = this.defaultSrc;
       else
-        this.shadowRoot!.querySelector("img")!.src = file.url!;
+        this.shadowRoot.querySelector("img")!.src = file.url!;
       this.#src = file.url;
     }
     if (await this.valid())
     {
-      this.shadowRoot!.dispatchEvent(new UploadEvent({composed: true, detail: files}));
+      this.shadowRoot.dispatchEvent(new UploadEvent({composed: true, detail: files}));
       this.files = files;
     }
   }
@@ -378,7 +380,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
 customElements.define("app-image-input", AppImageInput);
 
-function unsupportedImageType(input: HTMLInputElement)
+function unsupportedImageType(input: HTMLInputElement): boolean
 {
   for (const file of input.files!)
   {
@@ -388,7 +390,7 @@ function unsupportedImageType(input: HTMLInputElement)
   return false;
 }
 
-function fileTooBig(input: HTMLInputElement, max: number | undefined | null)
+function fileTooBig(input: HTMLInputElement, max: number | undefined | null): boolean
 {
   if (!max)
     return false;
@@ -401,7 +403,7 @@ function fileTooBig(input: HTMLInputElement, max: number | undefined | null)
   return false;
 }
 
-function fileTooSmall(input: HTMLInputElement, min: number | undefined | null)
+function fileTooSmall(input: HTMLInputElement, min: number | undefined | null): boolean
 {
   if (!min)
     return false;
@@ -414,7 +416,7 @@ function fileTooSmall(input: HTMLInputElement, min: number | undefined | null)
   return false;
 }
 
-function valueMissing(input: HTMLInputElement)
+function valueMissing(input: HTMLInputElement): boolean
 {
   return input.files!.length === 0;
 }

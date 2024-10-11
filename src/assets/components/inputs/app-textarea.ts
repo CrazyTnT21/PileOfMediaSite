@@ -6,20 +6,27 @@ import {handleFieldset} from "./common.js";
 
 export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
-  static formAssociated = true;
-  static observedAttributes = ["required", "minlength", "maxlength"];
+  static readonly formAssociated = true;
+  static readonly observedAttributes = ["required", "minlength", "maxlength"];
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  async attributeChangedCallback(name: string, oldValue: any, newValue: any)
+  async attributeChangedCallback(name: string, oldValue: string, newValue: string): Promise<void>
   {
     await this.validate();
   }
 
-  #internals;
+  private internals;
+  override shadowRoot: ShadowRoot;
 
   get label(): string
   {
     return this.dataset["label"]!;
+  }
+
+  set label(value: string)
+  {
+    this.dataset["label"] = value;
+    this.shadowRoot.querySelector("label")!.innerText = value;
   }
 
   get placeholder(): string | null | undefined
@@ -32,32 +39,26 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     if (value == null)
     {
       delete this.dataset["placeholder"];
-      this.shadowRoot!.querySelector("textarea")!.placeholder = "";
+      this.shadowRoot.querySelector("textarea")!.placeholder = "";
     }
     else
     {
       this.dataset["placeholder"] = value;
-      this.shadowRoot!.querySelector("textarea")!.placeholder = value;
+      this.shadowRoot.querySelector("textarea")!.placeholder = value;
     }
-  }
-
-  set label(value: string)
-  {
-    this.dataset["label"] = value;
-    this.shadowRoot!.querySelector("label")!.innerText = value;
   }
 
   get value(): string
   {
-    return this.shadowRoot!.querySelector("textarea")!.value;
+    return this.shadowRoot.querySelector("textarea")!.value;
   }
 
   set value(value: string)
   {
-    this.shadowRoot!.querySelector("textarea")!.value = value;
+    this.shadowRoot.querySelector("textarea")!.value = value;
   }
 
-  async connectedCallback()
+  async connectedCallback(): Promise<void>
   {
     const label = this.dataset["label"] ?? "";
     if (!label)
@@ -66,7 +67,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     this.placeholder = this.dataset["placeholder"] ?? "";
     this.disabled = this.getAttribute("disabled") == "";
 
-    this.shadowRoot!.querySelector("label")!.innerText = label;
+    this.shadowRoot.querySelector("label")!.innerText = label;
 
     handleFieldset(this);
 
@@ -76,9 +77,9 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   constructor()
   {
     super();
-    this.#internals = this.attachInternals();
-    this.#internals.role = "textarea";
-    this.attach();
+    this.internals = this.attachInternals();
+    this.internals.role = "textarea";
+    this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
   }
@@ -86,45 +87,45 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   attach = attach_delegates;
   applyStyleSheet = applyStyleSheet;
 
-  async setupValidation()
+  async setupValidation(): Promise<void>
   {
-    const textarea = this.shadowRoot!.querySelector("textarea")!;
+    const textarea = this.shadowRoot.querySelector("textarea")!;
     textarea.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
-  async validate()
+  async validate(): Promise<void>
   {
-    const textarea = this.shadowRoot!.querySelector("textarea")!;
+    const textarea = this.shadowRoot.querySelector("textarea")!;
     await this.setValidity(textarea);
-    this.#internals.setValidity({});
+    this.internals.setValidity({});
     textarea.setCustomValidity("");
     const error = this.errors.entries().next().value;
     if (error)
-      this.#internals.setValidity({[error[0]]: true}, error[1](), textarea);
-    this.setCustomError = () =>
+      this.internals.setValidity({[error[0]]: true}, error[1](), textarea);
+    this.setCustomError = (): void =>
     {
     };
   }
 
-  setCustomError(input: HTMLTextAreaElement)
+  setCustomError(input: HTMLTextAreaElement): void
   {
   }
 
-  async validateAndReport()
+  async validateAndReport(): Promise<void>
   {
     await this.validate();
-    const textarea = this.shadowRoot!.querySelector("textarea")!;
+    const textarea = this.shadowRoot.querySelector("textarea")!;
     const error = this.errors.entries().next().value;
 
     if (error)
       textarea.setCustomValidity(error[1]());
-    this.#internals.reportValidity();
+    this.internals.reportValidity();
   }
 
-  async setValidity(input: HTMLTextAreaElement)
+  async setValidity(input: HTMLTextAreaElement): Promise<void>
   {
-    this.#internals.setFormValue(input.value);
+    this.internals.setFormValue(input.value);
     this.errors = new Map();
     this.setMinLength(input);
     this.setMaxLength(input);
@@ -132,7 +133,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     this.setCustomError(input);
   }
 
-  setMinLength(input: HTMLTextAreaElement)
+  setMinLength(input: HTMLTextAreaElement): void
   {
     const min = this.getAttribute("minlength");
 
@@ -158,10 +159,10 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
       this.setAttribute("disabled", "");
     else
       this.removeAttribute("disabled");
-    this.shadowRoot!.querySelector("textarea")!.disabled = value;
+    this.shadowRoot.querySelector("textarea")!.disabled = value;
   }
 
-  setMaxLength(input: HTMLTextAreaElement)
+  setMaxLength(input: HTMLTextAreaElement): void
   {
     const max = this.getAttribute("maxlength");
 
@@ -171,7 +172,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     }
   }
 
-  setValueMissing(input: HTMLTextAreaElement)
+  setValueMissing(input: HTMLTextAreaElement): void
   {
     if (this.isRequired() && valueMissing(input))
     {
@@ -179,15 +180,15 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     }
   }
 
-  isRequired()
+  isRequired(): boolean
   {
     return this.getAttribute("required") === "";
   }
 
-  render()
+  render(): void
   {
     //language=HTML
-    this.shadowRoot!.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <span class="parent container">
       <textarea part="textarea" rows="5" id="input"></textarea>
       <label part="label" for="input"></label>
@@ -195,7 +196,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     `;
   }
 
-  styleCSS()
+  styleCSS(): string
   {
     //language=CSS
     return `

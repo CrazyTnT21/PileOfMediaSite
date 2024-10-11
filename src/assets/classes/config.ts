@@ -4,7 +4,7 @@ export class Config
 {
   dateFormatter: Intl.DateTimeFormat = this.#dateFormatter();
 
-  static #config: Config = (() =>
+  static #config: Config = ((): Config =>
   {
     const config = localStorage.getItem("config");
     if (config)
@@ -13,12 +13,12 @@ export class Config
   })()
 
 
-  static getConfig()
+  static getConfig(): Config
   {
     return this.#config;
   }
 
-  static setConfig(value: Config)
+  static setConfig(value: Config): void
   {
     this.#config = value;
     localStorage.setItem("config", JSON.stringify(value));
@@ -26,7 +26,7 @@ export class Config
 
   language: Language = Language.EN;
 
-  #dateFormatter()
+  #dateFormatter(): Intl.DateTimeFormat
   {
     const dateFormat = localStorage.getItem("date-format");
     if (dateFormat)

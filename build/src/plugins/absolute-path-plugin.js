@@ -1,4 +1,5 @@
 import path from "node:path";
+import process from "node:process"
 
 export function absolutePathPlugin()
 {
@@ -8,7 +9,6 @@ export function absolutePathPlugin()
     {
       build.onResolve({filter: /^\//}, args =>
       {
-        // eslint-disable-next-line no-undef
         return {path: path.join(process.cwd(), "/src", args.path)}
       })
     }

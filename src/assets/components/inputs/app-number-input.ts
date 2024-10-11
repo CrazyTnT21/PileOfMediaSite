@@ -5,10 +5,10 @@ export class AppNumberInput extends AppInput
   constructor()
   {
     super();
-    this.shadowRoot!.querySelector("input")!.type = "number";
+    this.shadowRoot.querySelector("input")!.type = "number";
   }
 
-  override styleCSS()
+  override styleCSS(): string
   {
     //language=CSS
     return super.styleCSS() + `

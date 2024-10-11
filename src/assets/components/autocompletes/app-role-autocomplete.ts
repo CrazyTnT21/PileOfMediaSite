@@ -6,9 +6,9 @@ import {paths} from "mycollection-openapi";
 
 export class AppRoleAutocomplete extends AppAutocomplete<Role>
 {
-  override async connectedCallback()
+  override async connectedCallback(): Promise<void>
   {
-    this.label = this.label ?? "Role";
+    this.label = this.label || "Role";
     await super.connectedCallback();
   }
 

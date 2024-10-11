@@ -35,7 +35,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     super.value = this.itemLabel(value) ?? this.itemValue(value);
   }
 
-  findValue(value: string)
+  findValue(value: string): T | undefined
   {
     return this.findSameValue(value, this.items);
   }
@@ -51,13 +51,13 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     this.createOptions(this.internalItems);
   }
 
-  addItem(item: T)
+  addItem(item: T): void
   {
     this.items.push(item);
     this.#addOptions([item]);
   }
 
-  removeItem(item: T)
+  removeItem(item: T): void
   {
     const index = this.items.findIndex(x => this.itemId(x) === this.itemId(item));
     this.items.splice(index, 1);
@@ -78,29 +78,29 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   {
     this.selectedItems = items;
 
-    const selected: HTMLUListElement = this.shadowRoot!.querySelector("#selected")!;
+    const selected: HTMLUListElement = this.shadowRoot.querySelector("#selected")!;
     selected.innerHTML = "";
     this.pushSelected(selected, items);
   }
 
-  addSelected(value: T)
+  addSelected(value: T): void
   {
-    const selected: HTMLUListElement = this.shadowRoot!.querySelector("#selected")!;
+    const selected: HTMLUListElement = this.shadowRoot.querySelector("#selected")!;
     this.pushSelected(selected, [value]);
-    this.shadowRoot!.dispatchEvent(new SelectedAddedEvent<T>({composed: true, detail: value}));
+    this.shadowRoot.dispatchEvent(new SelectedAddedEvent<T>({composed: true, detail: value}));
   }
 
-  removeSelected(item: T)
+  removeSelected(item: T): void
   {
     const id = this.itemId(item);
 
     const index = this.selectedItems.findIndex(x => this.itemId(x) === id);
     this.selectedItems.splice(index, 1);
-    const selected = this.shadowRoot!.querySelector("#selected")!;
+    const selected = this.shadowRoot.querySelector("#selected")!;
     const children = selected.children;
     for (let i = children.length - 1; i >= 0; i--)
     {
-      let item = children[i]!;
+      const item = children[i]!;
       const child = <HTMLDataElement>item.firstElementChild;
       if (Number(child.value) != id)
       {
@@ -123,7 +123,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     console.error(`Item with the id '${id}' could not be removed. Item not found`);
   }
 
-  private pushSelected(selected: HTMLUListElement, items: T[])
+  private pushSelected(selected: HTMLUListElement, items: T[]): void
   {
     this.selectedItems.push(...items);
     for (const item of items)
@@ -141,9 +141,9 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       button.addEventListener("click", async () =>
       {
         this.removeSelected(item);
-        const input = this.shadowRoot!.querySelector("input")!;
+        const input = this.shadowRoot.querySelector("input")!;
         await this.search(input.value);
-        this.shadowRoot!.dispatchEvent(new SelectedRemovedEvent({composed: true, detail: item}));
+        this.shadowRoot.dispatchEvent(new SelectedRemovedEvent({composed: true, detail: item}));
       });
     }
   }
@@ -155,25 +155,25 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   }
 
 
-  findSelectedValue(value: string)
+  findSelectedValue(value: string): T | undefined
   {
     return this.findSameValue(value, this.selected);
   }
 
-  findSearch(item: T)
+  findSearch(item: T): T | undefined
   {
     const id = this.itemId(item);
     return this.#search.find(x => this.itemId(x) === id);
   }
 
-  findSearchValue(value: string)
+  findSearchValue(value: string): T | undefined
   {
     return this.findSameValue(value, this.#search);
   }
 
-  private findSameValue(value: string, items: T[])
+  private findSameValue(value: string, items: T[]): T | undefined
   {
-    const trimAndLowercase = (x: any) => x.toString().trim().toLowerCase();
+    const trimAndLowercase = (x: any): string => x.toString().trim().toLowerCase();
     value = trimAndLowercase(value);
     return items.find(x =>
     {
@@ -187,22 +187,22 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     });
   }
 
-  override async onInputChange(event: Event)
+  override async onInputChange(event: Event): Promise<void>
   {
     const input = <HTMLInputElement>event.target;
     await super.onInputChange(event);
     await this.valueChange(input);
   }
 
-  override async onValueSet(event: Event)
+  override async onValueSet(event: Event): Promise<void>
   {
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     await this.search(input.value);
     await super.onValueSet(event);
     await this.valueChange(input);
   }
 
-  async valueChange(input: HTMLInputElement)
+  async valueChange(input: HTMLInputElement): Promise<void>
   {
     if (!await this.valid())
       return;
@@ -210,7 +210,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     const value = input.value;
     if (!value)
     {
-      this.shadowRoot!.dispatchEvent(new ValueChangeEvent<T>({composed: true}));
+      this.shadowRoot.dispatchEvent(new ValueChangeEvent<T>({composed: true}));
       this.internalItem = null;
       return;
     }
@@ -224,38 +224,40 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       input.value = "";
       await this.search("");
     }
-
-    this.shadowRoot!.dispatchEvent(new ValueChangeEvent<T>({composed: true, detail: item}));
+    const eventInitDict: CustomEventInit = {composed: true};
+    if (item)
+      eventInitDict.detail = item
+    this.shadowRoot.dispatchEvent(new ValueChangeEvent<T>(eventInitDict));
   }
 
 
-  async onInputInput(event: InputEvent)
+  async onInputInput(event: InputEvent): Promise<void>
   {
     if (event.inputType !== "insertReplacementText")
       await this.search((<HTMLInputElement>event.target).value);
   }
 
-  async onInputFocus(event: FocusEvent)
+  async onInputFocus(event: FocusEvent): Promise<void>
   {
     await this.firstOpen();
   }
 
-  override async connectedCallback()
+  override async connectedCallback(): Promise<void>
   {
     await super.connectedCallback();
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     const value = this.dataset["value"];
     if (value != undefined)
       input.value = value;
 
     input.addEventListener("input", (e) => this.onInputInput(<InputEvent>e));
-    triggerOnce(input, "focus", (e) => this.onInputFocus(<FocusEvent>e));
+    input.addEventListener("focus", (e) => this.onInputFocus(e), {once: true})
   }
 
-  override render()
+  override render(): void
   {
     //language=HTML
-    this.shadowRoot!.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <span class="parent container">
       <label part="label" for="input"></label>
       <input class="input control" part="input" id="input" list="items"/>
@@ -265,22 +267,22 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     `;
   }
 
-  createOptions(items: T[])
+  createOptions(items: T[]): void
   {
-    const datalist: HTMLDataListElement = this.shadowRoot!.querySelector("#items")!;
+    const datalist: HTMLDataListElement = this.shadowRoot.querySelector("#items")!;
 
     datalist.innerHTML = "";
 
     this.#pushOptions(datalist, items);
   }
 
-  #addOptions(items: T[])
+  #addOptions(items: T[]): void
   {
-    const datalist: HTMLDataListElement = this.shadowRoot!.querySelector("#items")!;
+    const datalist: HTMLDataListElement = this.shadowRoot.querySelector("#items")!;
     this.#pushOptions(datalist, items);
   }
 
-  #pushOptions(datalist: HTMLDataListElement, items: T[])
+  #pushOptions(datalist: HTMLDataListElement, items: T[]): void
   {
     for (const item of items)
     {
@@ -294,7 +296,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     }
   }
 
-  override async setValidity(input: HTMLInputElement)
+  override async setValidity(input: HTMLInputElement): Promise<void>
   {
     await super.setValidity(input);
     if (!input.value)
@@ -316,18 +318,18 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       this.errors.set("customError", () => `Item '${value}' was not found`);
   }
 
-  isMultiple()
+  isMultiple(): boolean
   {
     return this.dataset["multiple"] === "";
   }
 
-  async firstOpen()
+  async firstOpen(): Promise<void>
   {
     this.items.push(...(await this.itemsGenerator.next()).value);
     this.createOptions(this.items.filter((x) => !this.findSelected(x)));
   }
 
-  async search(value: string)
+  async search(value: string): Promise<void>
   {
     if (value === "")
     {
@@ -340,7 +342,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       return;
     }
 
-    const search = (await this.searchItems(value).next()).value;
+    const search: T[] = (await this.searchItems(value).next()).value;
     this.#search = search;
     this.cachedSearch.set(value, search);
     this.createOptions(search.filter((x) => !this.findSelected(x)));
@@ -348,16 +350,16 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   async* loadItems(): AsyncGenerator<T[]>
   {
-    return [...this.children].map(x =>
+    yield [...this.children].map(x =>
     {
       const element = <HTMLOptionElement>x;
       return {id: Number(element.dataset["id"]), value: element.value ?? element.innerText, label: element.label}
-    });
+    }) as T[];
   }
 
-  async* searchItems(value: string): AsyncGenerator<T[], T[], T[]>
+  async* searchItems(value: string): AsyncGenerator<T[]>
   {
-    return this.items;
+    yield this.items;
   }
 
   override styleCSS(): string
@@ -412,13 +414,3 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 }
 
 customElements.define("app-autocomplete", AppAutocomplete);
-
-function triggerOnce(element: HTMLElement, type: string, listener: (e: Event) => {})
-{
-  const remove = (event: Event) =>
-  {
-    element.removeEventListener(type, remove);
-    listener(event);
-  };
-  element.addEventListener(type, remove);
-}

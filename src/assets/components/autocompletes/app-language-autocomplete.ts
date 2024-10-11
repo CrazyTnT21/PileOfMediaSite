@@ -10,9 +10,9 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
     super.value = value;
   }
 
-  override async connectedCallback()
+  override async connectedCallback(): Promise<void>
   {
-    this.label = this.label ?? "Language";
+    this.label = this.label || "Language";
     await super.connectedCallback();
   }
 
@@ -25,18 +25,18 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
 
   override async* searchItems(): AsyncGenerator<LanguageLabel[]>
   {
-    return this.#items;
+    yield this.#items;
   }
 
-  override async* loadItems()
+  override async* loadItems(): AsyncGenerator<LanguageLabel[]>
   {
-    return this.#items;
+    yield this.#items;
   }
 }
 
 customElements.define("app-language-autocomplete", AppLanguageAutocomplete);
 
-function getLanguageAndCode(language: Language)
+function getLanguageAndCode(language: Language): { label: Language, value: LanguageCode }
 {
   return {label: language, value: getLanguageCode(language)}
 }

@@ -1,7 +1,7 @@
 import esbuildPluginTsc from "esbuild-plugin-tsc";
-import htmlPlugin from "./html-plugin.js";
-import woff2Plugin from "./woff2-plugin.js";
-import {absolutePathPlugin} from "./absolute-path-plugin.js";
+import htmlPlugin from "./plugins/html-plugin.js";
+import woff2Plugin from "./plugins/woff2-plugin.js";
+import {absolutePathPlugin} from "./plugins/absolute-path-plugin.js";
 
 export function createBuildSettings(options)
 {

@@ -5,7 +5,7 @@ export class AppDateInput extends AppInput
   constructor()
   {
     super();
-    this.shadowRoot!.querySelector("input")!.type = "date";
+    this.shadowRoot.querySelector("input")!.type = "date";
   }
 }
 

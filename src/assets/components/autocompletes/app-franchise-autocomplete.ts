@@ -6,9 +6,9 @@ import {paths} from "mycollection-openapi";
 
 export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
 {
-  override async connectedCallback()
+  override async connectedCallback(): Promise<void>
   {
-    this.label = this.label ?? "Franchise";
+    this.label = this.label || "Franchise";
     await super.connectedCallback();
   }
 

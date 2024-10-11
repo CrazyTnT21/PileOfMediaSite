@@ -6,9 +6,9 @@ import {paths} from "mycollection-openapi";
 
 export class AppThemeAutocomplete extends AppAutocomplete<Theme>
 {
-  override async connectedCallback()
+  override async connectedCallback(): Promise<void>
   {
-    this.label = this.label ?? "Theme";
+    this.label = this.label || "Theme";
     await super.connectedCallback();
   }
 

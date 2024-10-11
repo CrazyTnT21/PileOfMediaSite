@@ -4,7 +4,7 @@ const currentColorScheme = localStorage.getItem("color-scheme");
 
 setColorSchemeChoice();
 
-function setColorSchemeChoice()
+function setColorSchemeChoice(): void
 {
   if (!currentColorScheme || currentColorScheme === "{}")
     return;
@@ -23,7 +23,7 @@ document.querySelector("#default-color")!.addEventListener("click", () => remove
 
 document.querySelector("#dark-color")!.addEventListener("click", () => saveAndLoadColorScheme(ColorScheme.dark()));
 
-function saveAndLoadColorScheme(scheme: ColorScheme)
+function saveAndLoadColorScheme(scheme: ColorScheme): void
 {
   saveColorScheme(scheme);
   loadColorScheme();

@@ -1,23 +1,23 @@
-export function logNoValueError(property: string, outerHtml: string)
+export function logNoValueError(property: string, outerHtml: string): void
 {
   console.error(`No value was given for '${property}' in '${outerHtml}'.`);
 }
 
-export function tooShort(input: HTMLInputElement | HTMLTextAreaElement, min: number | null | undefined)
+export function tooShort(input: HTMLInputElement | HTMLTextAreaElement, min: number | null | undefined): boolean
 {
   if (min == null)
     return false;
-  return !input.value || input.value.length < min;
+  return input.value.length < min;
 }
 
-export function valueMissing(input: HTMLInputElement | HTMLTextAreaElement)
+export function valueMissing(input: HTMLInputElement | HTMLTextAreaElement): boolean
 {
-  return input.value === null || input.value === undefined || input.value === "";
+  return input.value.trim() === "";
 }
 
-export function tooLong(input: HTMLInputElement | HTMLTextAreaElement, max: number | null | undefined)
+export function tooLong(input: HTMLInputElement | HTMLTextAreaElement, max: number | null | undefined): boolean
 {
   if (max == null)
     return false;
-  return input.value && input.value.length > max;
+  return input.value.length > max;
 }

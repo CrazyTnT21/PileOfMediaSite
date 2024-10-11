@@ -7,31 +7,32 @@ import {ValueSetEvent} from "./value-set-event.js";
 
 export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
-  static formAssociated = true;
-  static observedAttributes = ["required", "minlength", "maxlength"];
+  static readonly formAssociated = true;
+  static readonly observedAttributes = ["required", "minlength", "maxlength"];
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  async attributeChangedCallback(name: string, oldValue: any, newValue: any)
+  async attributeChangedCallback(name: string, oldValue: string, newValue: string): Promise<void>
   {
     await this.validate();
   }
 
-  private internals!: ElementInternals;
+  private internals: ElementInternals;
+  override shadowRoot: ShadowRoot;
 
   get label(): string
   {
-    return this.dataset["label"]!;
+    return this.dataset["label"] ?? "";
   }
 
   set label(value: string)
   {
     this.dataset["label"] = value;
-    this.shadowRoot!.querySelector("label")!.innerHTML = value;
+    this.shadowRoot.querySelector("label")!.innerHTML = value;
   }
 
   get value(): any
   {
-    return this.shadowRoot!.querySelector("input")!.value;
+    return this.shadowRoot.querySelector("input")!.value;
   }
 
   set value(value: string | null | undefined)
@@ -39,7 +40,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     if (value == null)
       value = "";
 
-    this.shadowRoot!.querySelector("input")!.value = value;
+    this.shadowRoot.querySelector("input")!.value = value;
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
@@ -59,7 +60,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
       this.setAttribute("disabled", "");
     else
       this.removeAttribute("disabled");
-    this.shadowRoot!.querySelector("input")!.disabled = value;
+    this.shadowRoot.querySelector("input")!.disabled = value;
   }
 
   get placeholder(): string | null | undefined
@@ -72,16 +73,16 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     if (value == null)
     {
       delete this.dataset["placeholder"];
-      this.shadowRoot!.querySelector("input")!.placeholder = "";
+      this.shadowRoot.querySelector("input")!.placeholder = "";
     }
     else
     {
       this.dataset["placeholder"] = value;
-      this.shadowRoot!.querySelector("input")!.placeholder = value;
+      this.shadowRoot.querySelector("input")!.placeholder = value;
     }
   }
 
-  async connectedCallback()
+  async connectedCallback(): Promise<void>
   {
     const label = this.dataset["label"] ?? "";
     if (!label)
@@ -90,18 +91,18 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.placeholder = this.dataset["placeholder"] ?? "";
     this.disabled = this.getAttribute("disabled") == "";
 
-    this.shadowRoot!.querySelector("input")!.addEventListener("change", (e) => this.onInputChange(e));
+    this.shadowRoot.querySelector("input")!.addEventListener("change", (e) => this.onInputChange(e));
 
     handleFieldset(this);
     await this.setupValidation();
   }
 
-  async onValueSet(event: Event)
+  async onValueSet(event: Event): Promise<void>
   {
     await this.validate();
   }
 
-  async onInputChange(event: Event)
+  async onInputChange(event: Event): Promise<void>
   {
     await this.validateAndReport();
   }
@@ -109,8 +110,8 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   constructor()
   {
     super();
-    this.setupInternals();
-    this.attach();
+    this.internals = this.setupInternals();
+    this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
     this.addEventListener(ValueSetEvent.type, (e) => this.onValueSet(e));
@@ -119,44 +120,45 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   attach = attach_delegates;
   applyStyleSheet = applyStyleSheet;
 
-  setupInternals()
+  setupInternals(): ElementInternals
   {
-    this.internals = this.attachInternals();
-    this.internals.role = "textbox";
+    const internals = this.attachInternals();
+    internals.role = "textbox";
+    return internals;
   }
 
-  async setupValidation()
+  async setupValidation(): Promise<void>
   {
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     input.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
-  async validate()
+  async validate(): Promise<void>
   {
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     await this.setValidity(input);
     this.internals.setValidity({});
     input.setCustomValidity("");
     const error = this.errors.entries().next().value;
     if (error)
       this.internals.setValidity({[error[0]]: true}, error[1](), input);
-    this.setCustomError = () =>
+    this.setCustomError = (): void =>
     {
     };
   }
 
-  async validateAndReport()
+  async validateAndReport(): Promise<void>
   {
     await this.validate();
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     const error = this.errors.entries().next().value;
     if (error)
       input.setCustomValidity(error[1]());
     this.internals.reportValidity();
   }
 
-  async setValidity(input: HTMLInputElement)
+  async setValidity(input: HTMLInputElement): Promise<void>
   {
     this.internals.setFormValue(input.value);
     this.errors = new Map();
@@ -166,14 +168,14 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.setCustomError(input);
   }
 
-  async valid()
+  async valid(): Promise<boolean>
   {
-    const input = this.shadowRoot!.querySelector("input")!;
+    const input = this.shadowRoot.querySelector("input")!;
     await this.setValidity(input);
     return this.errors.size == 0;
   }
 
-  setValueMissing(input: HTMLInputElement)
+  setValueMissing(input: HTMLInputElement): void
   {
     if (this.isRequired() && valueMissing(input))
     {
@@ -181,12 +183,12 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     }
   }
 
-  isRequired()
+  isRequired(): boolean
   {
     return this.getAttribute("required") === "";
   }
 
-  setMinLength(input: HTMLInputElement)
+  setMinLength(input: HTMLInputElement): void
   {
     const min = this.getAttribute("minlength");
 
@@ -196,7 +198,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     }
   }
 
-  setMaxLength(input: HTMLInputElement)
+  setMaxLength(input: HTMLInputElement): void
   {
     const max = this.getAttribute("maxlength");
 
@@ -206,14 +208,14 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     }
   }
 
-  setCustomError(input: HTMLInputElement)
+  setCustomError(input: HTMLInputElement): void
   {
   }
 
-  render()
+  render(): void
   {
     //language=HTML
-    this.shadowRoot!.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <span class="parent container">
         <label part="label" for="input"></label>
         <input class="input control" part="input" id="input"/>
@@ -221,7 +223,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     `;
   }
 
-  styleCSS()
+  styleCSS(): string
   {
     //language=CSS
     return `

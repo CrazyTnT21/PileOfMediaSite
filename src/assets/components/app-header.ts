@@ -10,11 +10,13 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   private loginData: LoginReturn | undefined | null;
 
-  async connectedCallback()
+  override shadowRoot: ShadowRoot;
+
+  async connectedCallback(): Promise<void>
   {
-    const items = <HTMLLIElement[]>[...this.shadowRoot!.querySelectorAll(".items > li")];
-    this.#copyToHamburger(items);
-    const logoutButton: AppButton = this.shadowRoot!.querySelector("#logout > app-button")!;
+    const items = <HTMLLIElement[]>[...this.shadowRoot.querySelectorAll(".items > li")];
+    this.copyToHamburger(items);
+    const logoutButton: AppButton = this.shadowRoot.querySelector("#logout > app-button")!;
     logoutButton.addEventListener("click", () => this.account = null);
     this.loadAccount();
   }
@@ -30,10 +32,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.loadAccount();
   }
 
-  loadAccount()
+  loadAccount(): void
   {
     const localAccount = localStorage.getItem("account");
-    const dropDownItems = [...this.shadowRoot!.querySelector("#user-dropdown")!.children]
+    const dropDownItems = [...this.shadowRoot.querySelector("#user-dropdown")!.children]
     dropDownItems.forEach(x =>
     {
       const element = (<HTMLElement>x);
@@ -51,7 +53,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           element.hidden = false;
       }
     });
-    let profilePicture: HTMLImageElement = this.shadowRoot!.querySelector("#profile-picture")!;
+    const profilePicture: HTMLImageElement = this.shadowRoot.querySelector("#profile-picture")!;
     if (localAccount)
     {
       const user = JSON.parse(localAccount).user;
@@ -65,7 +67,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     profilePicture.src = this.placeholderImageUrl;
   }
 
-  #copyToHamburger(items: HTMLLIElement[])
+  private copyToHamburger(items: HTMLLIElement[]): void
   {
     const nodes = items.map(x => x.cloneNode(true));
     const ul = document.createElement("ul");
@@ -74,13 +76,13 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     {
       ul.append(item);
     }
-    this.shadowRoot!.querySelector("#burger")!.appendChild(ul);
+    this.shadowRoot.querySelector("#burger")!.appendChild(ul);
   }
 
   constructor()
   {
     super();
-    this.attach();
+    this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
   }
@@ -89,10 +91,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   applyStyleSheet = applyStyleSheet;
   placeholderImageUrl = "/assets/img/User_Placeholder.svg";
 
-  render()
+  render(): void
   {
     // language=HTML
-    this.shadowRoot!.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <details id="burger">
         <summary>
         </summary>
@@ -138,10 +140,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     appButton.setAttribute("exportparts", "button,button: logout-button");
     appButton.innerHTML = `<span class="center"><span class="logout-icon" part="icon, logout-icon"></span>Logout</span>`;
     appButton.classList.add("logout");
-    this.shadowRoot!.querySelector("#logout")!.append(appButton)
+    this.shadowRoot.querySelector("#logout")!.append(appButton)
   }
 
-  styleCSS()
+  styleCSS(): string
   {
     //language=CSS
     return `
@@ -365,7 +367,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     `;
   }
 
-  iconsCSS()
+  iconsCSS(): string
   {
     //language=CSS
     return `

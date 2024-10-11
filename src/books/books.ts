@@ -30,7 +30,7 @@ function columns(): Column<Book>[]
       display: "Published",
       width: "80px",
       type: ColumnType.Text,
-      formatFn: (item: Book) =>
+      formatFn: (item: Book): string =>
       {
         if (!item.published)
           return "";
@@ -64,8 +64,6 @@ else
 {
   table.classList.add("test");
   table.columns = columns();
-  let items = data.items;
-  items.forEach(x => (<any>x)["uri"] = x.cover.versions[0]!.uri);
-  table.items = items;
+  table.items = data.items.map(x => ({...x, uri: x.cover.versions[0]!.uri}));
   table.total = data.total;
 }

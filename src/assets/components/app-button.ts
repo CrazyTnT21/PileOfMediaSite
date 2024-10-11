@@ -5,10 +5,11 @@ import {handleFieldset} from "./inputs/common.js";
 
 export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
-  static formAssociated = true;
-  static observedAttributes = ["type"];
+  static readonly formAssociated = true;
+  static readonly observedAttributes = ["type"];
 
   private internals: ElementInternals;
+  override shadowRoot: ShadowRoot;
 
   get type(): "button" | "submit" | "reset"
   {
@@ -18,7 +19,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   set type(value: "button" | "submit" | "reset")
   {
     this.setAttribute("type", value);
-    const button = this.shadowRoot!.querySelector("button")!;
+    const button = this.shadowRoot.querySelector("button")!;
     button.type = value;
   }
 
@@ -38,12 +39,12 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
       this.setAttribute("disabled", "");
     else
       this.removeAttribute("disabled");
-    this.shadowRoot!.querySelector("button")!.disabled = value;
+    this.shadowRoot.querySelector("button")!.disabled = value;
   }
 
-  connectedCallback()
+  connectedCallback(): void
   {
-    const button = this.shadowRoot!.querySelector("button")!;
+    const button = this.shadowRoot.querySelector("button")!;
     const type = this.getAttribute("type");
     if (type && ["submit", "button", "reset"].includes(type))
       this.type = type as "submit" | "button" | "reset";
@@ -68,7 +69,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
     super();
     this.internals = this.attachInternals();
     this.internals.role = "button";
-    this.attach();
+    this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
   }
@@ -76,17 +77,17 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   attach = attach_delegates;
   applyStyleSheet = applyStyleSheet;
 
-  render()
+  render(): void
   {
     //language=HTML
-    this.shadowRoot!.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <button part="button">
         <slot></slot>
       </button>
     `;
   }
 
-  styleCSS()
+  styleCSS(): string
   {
     //language=CSS
     return `

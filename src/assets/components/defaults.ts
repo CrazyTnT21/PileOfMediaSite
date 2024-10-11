@@ -1,21 +1,21 @@
 import {StyleCSS} from "./style-css.js";
 
-export function attach(this: HTMLElement)
+export function attach(this: HTMLElement): ShadowRoot
 {
-  this.attachShadow({
+  return this.attachShadow({
     mode: "open",
   });
 }
 
-export function attach_delegates(this: HTMLElement)
+export function attach_delegates(this: HTMLElement): ShadowRoot
 {
-  this.attachShadow({
+  return this.attachShadow({
     mode: "open",
     delegatesFocus: true,
   });
 }
 
-export function applyStyleSheet(this: StyleCSS & HTMLElement)
+export function applyStyleSheet(this: StyleCSS & HTMLElement): void
 {
   const styleSheet = new CSSStyleSheet();
   styleSheet.replaceSync(this.styleCSS());

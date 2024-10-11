@@ -6,9 +6,9 @@ import {paths} from "mycollection-openapi";
 
 export class AppGenreAutocomplete extends AppAutocomplete<Genre>
 {
-  override async connectedCallback()
+  override async connectedCallback(): Promise<void>
   {
-    this.label = this.label ?? "Genre";
+    this.label = this.label || "Genre";
     await super.connectedCallback();
   }
 

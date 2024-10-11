@@ -1,12 +1,11 @@
-// noinspection ES6UnusedImports
-
 import {attach, applyStyleSheet} from "./defaults.js";
-import {AppButton} from "./app-button.js";
 import {ApplyStyleSheet} from "./apply-style-sheet.js";
 import {StyleCSS} from "./style-css.js";
 
 export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
+  override shadowRoot: ShadowRoot;
+
   get caption(): string
   {
     return this.dataset["caption"] ?? "";
@@ -15,28 +14,28 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
   set caption(value: string)
   {
     this.dataset["caption"] = value;
-    this.shadowRoot!.querySelector("caption")!.innerText = value;
+    this.shadowRoot.querySelector("caption")!.innerText = value;
   }
 
   set total(value: number)
   {
-    const tfoot = this.shadowRoot!.querySelector("tfoot")!;
+    const tfoot = this.shadowRoot.querySelector("tfoot")!;
 
     const tr = <HTMLTableRowElement>tfoot.firstElementChild;
     tr.hidden = value === 0;
     (<HTMLTableCellElement>tr.children[1])!.innerText = value.toString();
   }
 
-  private _items: any[] = [];
-  set items(items: any[])
+  private _items: T[] = [];
+  set items(items: T[])
   {
     this._items = items;
     this.total = this._items.length;
-    const rows = this.shadowRoot!.querySelector("tbody")!;
+    const rows = this.shadowRoot.querySelector("tbody")!;
     rows.innerHTML = ``;
     for (let i = 0; i < items.length; i++)
     {
-      const row = this.createRow(items[i]);
+      const row = this.createRow(items[i]!);
       row.part.add("tbody-tr");
       for (const x of row.children)
       {
@@ -50,7 +49,7 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     }
   }
 
-  createRow(item: any)
+  createRow(item: T): HTMLTableRowElement
   {
     const row = document.createElement("tr");
     row.part.add("tr");
@@ -62,18 +61,19 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     return row;
   }
 
-  getValue(item: any, keys: string[]): string | null
+  getValue(item: T, keys: string[]): string | null
   {
+    let result: any = item;
     for (const key of keys)
     {
-      if (item[key] == null)
+      if (result[key] == null)
         return null;
-      item = item[key];
+      result = result[key];
     }
-    return item;
+    return result;
   }
 
-  createRowElement(column: Column<T>, item: T)
+  createRowElement(column: Column<T>, item: T): HTMLTableCellElement
   {
     const element = column.type === ColumnType.Image
       ? document.createElement("img")
@@ -92,7 +92,7 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     return data;
   }
 
-  setInnerHTML(column: Column<T>, element: HTMLImageElement | HTMLDivElement, item: T)
+  setInnerHTML(column: Column<T>, element: HTMLImageElement | HTMLDivElement, item: T): void
   {
     if (column.formatFn)
     {
@@ -115,12 +115,12 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   set nextDisabled(value: boolean)
   {
-    (<HTMLButtonElement>this.shadowRoot!.querySelector("#next")).disabled = value;
+    (<HTMLButtonElement>this.shadowRoot.querySelector("#next")).disabled = value;
   }
 
   set backDisabled(value: boolean)
   {
-    (<HTMLButtonElement>this.shadowRoot!.querySelector("#back")).disabled = value;
+    (<HTMLButtonElement>this.shadowRoot.querySelector("#back")).disabled = value;
   }
 
   _columns: Column<T>[] = [];
@@ -128,7 +128,7 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
   {
     this._columns = columns;
 
-    const theadElement = this.shadowRoot!.querySelector("thead")!.firstElementChild!;
+    const theadElement = this.shadowRoot.querySelector("thead")!.firstElementChild!;
     theadElement.innerHTML = ``;
     for (const column of columns)
     {
@@ -136,7 +136,7 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
       columnElement.part.add("th", "thead-th");
       columnElement.classList.add("pad");
       columnElement.scope = "col";
-      columnElement.innerHTML = column.display;
+      columnElement.innerText = column.display;
 
       if (column.width)
         columnElement.style.width = column.width;
@@ -149,21 +149,21 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
   #nextEvent = new Event("next", {composed: true});
   #backEvent = new Event("back", {composed: true});
 
-  connectedCallback()
+  connectedCallback(): void
   {
-    this.shadowRoot!.querySelector("#next")!.addEventListener("click", () =>
-      this.shadowRoot!.dispatchEvent(this.#nextEvent));
+    this.shadowRoot.querySelector("#next")!.addEventListener("click", () =>
+      this.shadowRoot.dispatchEvent(this.#nextEvent));
 
-    this.shadowRoot!.querySelector("#back")!.addEventListener("click", () =>
-      this.shadowRoot!.dispatchEvent(this.#backEvent));
+    this.shadowRoot.querySelector("#back")!.addEventListener("click", () =>
+      this.shadowRoot.dispatchEvent(this.#backEvent));
 
-    this.shadowRoot!.querySelector("caption")!.innerHTML = this.caption;
+    this.shadowRoot.querySelector("caption")!.innerText = this.caption;
   }
 
   constructor()
   {
     super();
-    this.attach();
+    this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
   }
@@ -171,10 +171,10 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
   attach = attach;
   applyStyleSheet = applyStyleSheet;
 
-  render()
+  render(): void
   {
     //language=HTML
-    this.shadowRoot!.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <table part="table">
         <caption part="caption"></caption>
         <thead part="thead">
@@ -201,7 +201,7 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     `;
   }
 
-  styleCSS()
+  styleCSS(): string
   {
     //language=CSS
     return `

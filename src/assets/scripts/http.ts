@@ -1,4 +1,4 @@
-export async function get(url: string, ...parameters: string[][])
+export async function get<O>(url: string, ...parameters: string[][]): Promise<O>
 {
   if (parameters.length > 0)
     url += "?";
@@ -12,7 +12,7 @@ export async function get(url: string, ...parameters: string[][])
   return result.json();
 }
 
-export async function post<T>(url: string, value: T)
+export async function post<T,O>(url: string, value: T): Promise<O>
 {
   const result = await fetch(url, {
     method: "POST",
@@ -25,7 +25,7 @@ export async function post<T>(url: string, value: T)
   return result.json();
 }
 
-export async function put<T>(url: string, value: T)
+export async function put<T,O>(url: string, value: T): Promise<O>
 {
   const result = await fetch(url, {
     method: "PUT",

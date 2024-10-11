@@ -3,14 +3,14 @@ import {StyleCSS} from "../style-css.js";
 
 export class AppPasswordInput extends AppInput implements StyleCSS
 {
-  override async connectedCallback()
+  override async connectedCallback(): Promise<void>
   {
-    this.label = this.label ?? "Password";
+    this.label = this.label || "Password";
     await super.connectedCallback();
-    this.shadowRoot!.querySelector("app-button")!.addEventListener("click", (e) =>
+    this.shadowRoot.querySelector("app-button")!.addEventListener("click", () =>
     {
-      const input = this.shadowRoot!.querySelector("input")!;
-      const eyeIcon: HTMLSpanElement = this.shadowRoot!.querySelector("#eye-icon")!;
+      const input = this.shadowRoot.querySelector("input")!;
+      const eyeIcon: HTMLSpanElement = this.shadowRoot.querySelector("#eye-icon")!;
 
       if (input.type === "password")
       {
@@ -28,13 +28,13 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   constructor()
   {
     super();
-    this.shadowRoot!.querySelector("input")!.type = "password";
+    this.shadowRoot.querySelector("input")!.type = "password";
   }
 
-  override render()
+  override render(): void
   {
     //language=HTML
-    this.shadowRoot!.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <span class="input parent" part="outline" id="outline">
       <label part="label" for="input"></label>
         <input class="control" part="inner-input" id="input"/>
@@ -47,7 +47,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     `;
   }
 
-  override styleCSS()
+  override styleCSS(): string
   {
     //language=CSS
     return super.styleCSS() + `
@@ -56,11 +56,13 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         font-family: "Material Symbols Outlined", serif;
         font-size: 24px;
       }
+
       .eye-closed-icon::before {
         content: "visibility_off";
         font-family: "Material Symbols Outlined", serif;
         font-size: 24px;
       }
+
       input {
         display: inline-flex;
         flex: 1 1 100%;
@@ -68,6 +70,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         outline: none;
         border: none
       }
+
       .parent {
         flex: 1;
       }

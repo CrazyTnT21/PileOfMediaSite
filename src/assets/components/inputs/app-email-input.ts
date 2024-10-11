@@ -5,7 +5,7 @@ export class AppEmailInput extends AppInput
   constructor()
   {
     super();
-    this.shadowRoot!.querySelector("input")!.type = "email";
+    this.shadowRoot.querySelector("input")!.type = "email";
   }
 }
 

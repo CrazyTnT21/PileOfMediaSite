@@ -4,6 +4,7 @@ import {AppPasswordInput} from "./assets/components/inputs/app-password-input.js
 import {AppHeader} from "./assets/components/app-header.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
+
 document.querySelector("form")!.addEventListener("submit", async e =>
 {
   e.preventDefault();
@@ -31,7 +32,7 @@ document.querySelector("form")!.addEventListener("submit", async e =>
     else
       input = emailInput;
 
-    input.setCustomError = (_) =>
+    input.setCustomError = (): void =>
     {
       input.errors.set("customError", () => response.error);
     };

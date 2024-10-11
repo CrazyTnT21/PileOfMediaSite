@@ -9,7 +9,7 @@ export class ColorScheme
     this.style = style;
   }
 
-  static dark()
+  static dark(): ColorScheme
   {
     const colorStyle = new ColorStyle();
     colorStyle.background = "#282828";
@@ -49,7 +49,7 @@ export class ColorStyle
   visited: string | undefined;
 }
 
-export function removeColorScheme()
+export function removeColorScheme(): void
 {
   for (const key of Object.keys(new ColorStyle()))
     document.documentElement.style.setProperty("--" + key.replace("_", "-"), null);
@@ -57,7 +57,7 @@ export function removeColorScheme()
   localStorage.removeItem("color-scheme");
 }
 
-export function saveColorScheme(value: ColorScheme)
+export function saveColorScheme(value: ColorScheme): void
 {
   const style: any = {};
   const keys = <(keyof ColorStyle)[]>Object.keys(value.style);
@@ -69,7 +69,7 @@ export function saveColorScheme(value: ColorScheme)
   localStorage.setItem("color-scheme", JSON.stringify(result));
 }
 
-export function loadColorScheme()
+export function loadColorScheme(): void
 {
   const jsonScheme = localStorage.getItem("color-scheme");
   if (!jsonScheme || jsonScheme === "{}")

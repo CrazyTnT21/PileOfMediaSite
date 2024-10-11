@@ -27,12 +27,12 @@ async function getTranslation(language: Language): Promise<Translation>
   }
   catch (e)
   {
-    console.error(`Error while processing the translation for language '${language}'`);
+    console.error(`Error while processing the translation for language '${language}'`, e);
     return await get(getTranslationUri(getLanguageCode(Language.EN)));
   }
 }
 
-function getTranslationUri(code: LanguageCode)
+function getTranslationUri(code: LanguageCode): `/assets/translations/translation_${LanguageCode}.json`
 {
   return `/assets/translations/translation_${code}.json`;
 }

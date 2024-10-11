@@ -1,4 +1,4 @@
-export function observeFieldset(fieldset: HTMLFieldSetElement, node: Node, callback: (disabled: boolean) => void)
+export function observeFieldset(fieldset: HTMLFieldSetElement, node: Node, callback: (disabled: boolean) => void): void
 {
   const observer = new MutationObserver((mutationList, observer) =>
   {
@@ -31,7 +31,7 @@ export function handleFieldset(item: Node & {
   hasDisabledFieldset: boolean,
   set disabled(value: boolean),
   disabledValue: boolean
-})
+}): void
 {
   const parentFieldset = findParentFieldset(item);
   if (parentFieldset)

@@ -20,7 +20,6 @@ let lastError;
 const result = fs.promises.watch(settings.outdir, {recursive: true});
 (async () =>
 {
-  // eslint-disable-next-line no-unused-vars
   for await (const x of result)
   {
     try
