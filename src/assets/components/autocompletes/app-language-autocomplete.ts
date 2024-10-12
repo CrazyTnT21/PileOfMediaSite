@@ -16,7 +16,7 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
     await super.connectedCallback();
   }
 
-  #items = [
+  readonly #items = [
     {id: 1, ...getLanguageAndCode(Language.EN)},
     {id: 2, ...getLanguageAndCode(Language.DE)},
     {id: 3, ...getLanguageAndCode(Language.ES)},

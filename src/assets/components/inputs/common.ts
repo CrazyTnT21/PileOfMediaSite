@@ -28,9 +28,7 @@ export function findParentFieldset(node: Node): HTMLFieldSetElement | null
 }
 
 export function handleFieldset(item: Node & {
-  hasDisabledFieldset: boolean,
-  set disabled(value: boolean),
-  disabledValue: boolean
+  set hasDisabledFieldset(value: boolean),
 }): void
 {
   const parentFieldset = findParentFieldset(item);
@@ -39,12 +37,10 @@ export function handleFieldset(item: Node & {
     if (parentFieldset.disabled)
     {
       item.hasDisabledFieldset = true;
-      item.disabled = item.disabledValue;
     }
     observeFieldset(parentFieldset, item, disabled =>
     {
       item.hasDisabledFieldset = disabled
-      item.disabled = item.disabledValue;
     });
   }
 }

@@ -146,8 +146,8 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     this.items = this._items;
   }
 
-  #nextEvent = new Event("next", {composed: true});
-  #backEvent = new Event("back", {composed: true});
+  readonly #nextEvent = new Event("next", {composed: true});
+  readonly #backEvent = new Event("back", {composed: true});
 
   connectedCallback(): void
   {

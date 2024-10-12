@@ -52,12 +52,14 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     //language=CSS
     return super.styleCSS() + `
       .eye-open-icon::before {
+        display: flex;
         content: "visibility";
         font-family: "Material Symbols Outlined", serif;
         font-size: 24px;
       }
 
       .eye-closed-icon::before {
+        display: flex;
         content: "visibility_off";
         font-family: "Material Symbols Outlined", serif;
         font-size: 24px;
@@ -100,7 +102,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         border: none;
       }
 
-      #outline:has(input:invalid) {
+      #outline:has(input[data-invalid]) {
         border-color: red;
       }
     `;

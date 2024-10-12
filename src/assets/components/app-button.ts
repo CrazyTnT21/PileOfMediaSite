@@ -3,43 +3,82 @@ import {StyleCSS} from "./style-css.js";
 import {ApplyStyleSheet} from "./apply-style-sheet.js";
 import {handleFieldset} from "./inputs/common.js";
 
+type attributeKey = keyof typeof AppButton["observedAttributesMap"];
+
 export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   static readonly formAssociated = true;
-  static readonly observedAttributes = ["type"];
-
-  private internals: ElementInternals;
+  private readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
+
+  private static readonly observedAttributesMap = {
+    "disabled": AppButton.disabledAttr,
+    "type": AppButton.typeAttr,
+  }
+  static readonly observedAttributes = <[attributeKey]>Object.keys(AppButton.observedAttributesMap);
+
+  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
+  {
+    if (Object.keys(AppButton.observedAttributesMap).includes(name))
+    {
+      const callback = AppButton.observedAttributesMap[name as attributeKey]!;
+      callback(this, newValue);
+    }
+  }
+
+  //Attributes
+
+  private static disabledAttr(element: AppButton, value: string | null | undefined): void
+  {
+    const disabled = element.hasDisabledFieldset || value == "";
+    const input = element.shadowRoot.querySelector("input")!;
+    input.disabled = disabled;
+    element.internals.ariaDisabled = disabled ? "" : null;
+  }
+
+  private static typeAttr(element: AppButton, value: string | null | undefined): void
+  {
+    const button = element.shadowRoot.querySelector("button")!;
+    button.type = value as "button" | "reset" | "submit";
+  }
+
+  get disabled(): boolean
+  {
+    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
+  }
+
+  set disabled(value: boolean)
+  {
+    if (value)
+      this.setAttribute("disabled", "")
+    else
+      this.removeAttribute("disabled");
+  }
+
+  private internalHasDisabledFieldset: boolean = false;
+
+  get hasDisabledFieldset(): boolean
+  {
+    return this.internalHasDisabledFieldset;
+  }
+
+  set hasDisabledFieldset(value: boolean)
+  {
+    this.internalHasDisabledFieldset = value;
+    AppButton.disabledAttr(this, this.getAttribute("disabled"))
+  }
 
   get type(): "button" | "submit" | "reset"
   {
-    return this.getAttribute("type") as "button" | "reset" | "submit";
+    const attribute = this.getAttribute("type");
+    if (attribute && ["button", "submit", "reset"].includes(attribute))
+      return attribute as "button" | "reset" | "submit";
+    return "submit";
   }
 
   set type(value: "button" | "submit" | "reset")
   {
     this.setAttribute("type", value);
-    const button = this.shadowRoot.querySelector("button")!;
-    button.type = value;
-  }
-
-  disabledValue: boolean = false;
-  hasDisabledFieldset: boolean = false;
-
-  get disabled(): boolean
-  {
-    return this.getAttribute("disabled") == "";
-  }
-
-  set disabled(value: boolean)
-  {
-    this.disabledValue = value;
-    value = this.disabledValue || this.hasDisabledFieldset;
-    if (value)
-      this.setAttribute("disabled", "");
-    else
-      this.removeAttribute("disabled");
-    this.shadowRoot.querySelector("button")!.disabled = value;
   }
 
   connectedCallback(): void

@@ -5,19 +5,83 @@ import {StyleCSS} from "../../style-css.js";
 import {handleFieldset} from "../common.js";
 import {ValueSetEvent} from "./value-set-event.js";
 
+type attributeKey = keyof typeof AppInput["observedAttributesMap"];
+
 export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   static readonly formAssociated = true;
-  static readonly observedAttributes = ["required", "minlength", "maxlength"];
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  async attributeChangedCallback(name: string, oldValue: string, newValue: string): Promise<void>
+  private readonly internals: ElementInternals;
+  override shadowRoot: ShadowRoot;
+
+  private static readonly observedAttributesMap = {
+    "data-label": AppInput.dataLabelAttr,
+    "required": AppInput.requiredAttr,
+    "disabled": AppInput.disabledAttr,
+    "maxlength": AppInput.maxLengthAttr,
+    "minlength": AppInput.minlengthAttr,
+    "placeholder": AppInput.placeholderAttr
+  }
+  static readonly observedAttributes = <[attributeKey]>Object.keys(AppInput.observedAttributesMap);
+
+  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
   {
+    if (Object.keys(AppInput.observedAttributesMap).includes(name))
+    {
+      const callback = AppInput.observedAttributesMap[name as attributeKey]!;
+      callback(this, newValue);
+    }
     await this.validate();
   }
 
-  private internals: ElementInternals;
-  override shadowRoot: ShadowRoot;
+  //Attributes
+
+  private static dataLabelAttr(element: AppInput, value: string | null | undefined): void
+  {
+    if (value == null || value.trim() == "")
+    {
+      logNoValueError("label", element.outerHTML);
+      value = ""
+    }
+    element.shadowRoot.querySelector("label")!.innerText = value;
+  }
+
+  private static placeholderAttr(element: AppInput, value: string | null | undefined): void
+  {
+    element.shadowRoot.querySelector("input")!.placeholder = value ?? "";
+  }
+
+  private static disabledAttr(element: AppInput, value: string | null | undefined): void
+  {
+    const disabled = element.hasDisabledFieldset || value == "";
+    const input = element.shadowRoot.querySelector("input")!;
+    input.disabled = disabled;
+    element.internals.ariaDisabled = disabled ? "" : null;
+  }
+
+  private static maxLengthAttr(element: AppInput, value: string | null | undefined): void
+  {
+    const input = element.shadowRoot.querySelector("input")!;
+    if (value == null)
+      input.removeAttribute("maxlength");
+    else
+      input.setAttribute("maxlength", value.toString());
+  }
+
+  private static minlengthAttr(element: AppInput, value: string | null | undefined): void
+  {
+    const input = element.shadowRoot.querySelector("input")!;
+    if (value == null)
+      input.removeAttribute("minlength");
+    else
+      input.setAttribute("minlength", value.toString());
+  }
+
+  private static requiredAttr(element: AppInput, value: string | null | undefined): void
+  {
+    element.shadowRoot.querySelector("input")!.required = value == "";
+  }
 
   get label(): string
   {
@@ -27,7 +91,61 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   set label(value: string)
   {
     this.dataset["label"] = value;
-    this.shadowRoot.querySelector("label")!.innerHTML = value;
+  }
+
+  get required(): boolean
+  {
+    const attribute = this.getAttribute("required");
+    return attribute ? attribute == "" : false;
+  }
+
+  set required(value: boolean)
+  {
+    if (value)
+      this.setAttribute("required", "")
+    else
+      this.removeAttribute("required");
+  }
+
+  get disabled(): boolean
+  {
+    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
+  }
+
+  set disabled(value: boolean)
+  {
+    if (value)
+      this.setAttribute("disabled", "")
+    else
+      this.removeAttribute("disabled");
+  }
+
+  get minLength(): number | null
+  {
+    const attribute = this.getAttribute("minlength");
+    return attribute ? Number(attribute) : null;
+  }
+
+  set minLength(value: number | null)
+  {
+    if (value == null)
+      this.removeAttribute("minlength")
+    else
+      this.setAttribute("minlength", value.toString());
+  }
+
+  get maxLength(): number | null
+  {
+    const attribute = this.getAttribute("maxlength");
+    return attribute ? Number(attribute) : null;
+  }
+
+  set maxLength(value: number | null)
+  {
+    if (value == null)
+      this.removeAttribute("maxlength")
+    else
+      this.setAttribute("maxlength", value.toString())
   }
 
   get value(): any
@@ -44,55 +162,39 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
-  disabledValue: boolean = false;
-  hasDisabledFieldset: boolean = false;
+  private internalHasDisabledFieldset: boolean = false;
 
-  get disabled(): boolean
+  get hasDisabledFieldset(): boolean
   {
-    return this.getAttribute("disabled") == "";
+    return this.internalHasDisabledFieldset;
   }
 
-  set disabled(value: boolean)
+  set hasDisabledFieldset(value: boolean)
   {
-    this.disabledValue = value;
-    value = this.disabledValue || this.hasDisabledFieldset;
-    if (value)
-      this.setAttribute("disabled", "");
-    else
-      this.removeAttribute("disabled");
-    this.shadowRoot.querySelector("input")!.disabled = value;
+    this.internalHasDisabledFieldset = value;
+    AppInput.disabledAttr(this, this.getAttribute("disabled"))
   }
 
   get placeholder(): string | null | undefined
   {
-    return this.dataset["placeholder"]
+    return this.getAttribute("placeholder")
   }
 
   set placeholder(value: string | null | undefined)
   {
     if (value == null)
-    {
-      delete this.dataset["placeholder"];
-      this.shadowRoot.querySelector("input")!.placeholder = "";
-    }
+      this.removeAttribute("placeholder");
     else
-    {
-      this.dataset["placeholder"] = value;
-      this.shadowRoot.querySelector("input")!.placeholder = value;
-    }
+      this.setAttribute("placeholder", value);
   }
 
   async connectedCallback(): Promise<void>
   {
-    const label = this.dataset["label"] ?? "";
-    if (!label)
-      logNoValueError("label", this.outerHTML);
-    this.label = label;
-    this.placeholder = this.dataset["placeholder"] ?? "";
+    this.label = this.label || "";
     this.disabled = this.getAttribute("disabled") == "";
-
-    this.shadowRoot.querySelector("input")!.addEventListener("change", (e) => this.onInputChange(e));
-
+    const input = this.shadowRoot.querySelector("input")!;
+    input.addEventListener("change", (e) => this.onInputChange(e));
+    input.placeholder = this.placeholder ?? "";
     handleFieldset(this);
     await this.setupValidation();
   }
@@ -104,6 +206,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   async onInputChange(event: Event): Promise<void>
   {
+    this.interacted = true;
     await this.validateAndReport();
   }
 
@@ -142,11 +245,30 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     input.setCustomValidity("");
     const error = this.errors.entries().next().value;
     if (error)
+    {
       this.internals.setValidity({[error[0]]: true}, error[1](), input);
+      input.setCustomValidity(error[1]());
+    }
     this.setCustomError = (): void =>
     {
     };
+    if (this.interacted)
+    {
+      if (!input.checkValidity())
+      {
+        this.dataset["invalid"] = "";
+        input.dataset["invalid"] = ""
+      }
+      else
+      {
+        delete this.dataset["invalid"];
+        delete input.dataset["invalid"]
+      }
+
+    }
   }
+
+  private interacted: boolean = false;
 
   async validateAndReport(): Promise<void>
   {
@@ -241,7 +363,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
         transition: border-color ease 50ms;
       }
 
-      .input:invalid {
+      .input[data-invalid] {
         border-color: red;
       }
 

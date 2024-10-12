@@ -5,8 +5,8 @@ import {SelectedRemovedEvent} from "./selected-removed-event.js";
 
 export class AppAutocomplete<T = { id: number, value: any, label?: string }> extends AppInput
 {
-  private itemsGenerator: AsyncGenerator<T[], T[], T[]>;
-  private cachedSearch: Map<string, T[]> = new Map();
+  private readonly itemsGenerator: AsyncGenerator<T[], T[], T[]>;
+  private readonly cachedSearch: Map<string, T[]> = new Map();
   private internalItems: T[] = [];
   private internalItem: T | undefined | null;
   private selectedItems: T[] = [];

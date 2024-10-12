@@ -7,12 +7,20 @@ const config = tslint.config(
   eslint.configs.recommended,
   ...tslint.configs.recommended,
   {
-    languageOptions: {globals: globals.browser},
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: {
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/explicit-function-return-type": "error",
-      "@typescript-eslint/adjacent-overload-signatures": "warn"
+      "@typescript-eslint/adjacent-overload-signatures": "warn",
+      "@typescript-eslint/prefer-readonly": "error",
+      "@typescript-eslint/switch-exhaustiveness-check": "error"
     }
   },
 ).map(conf => ({

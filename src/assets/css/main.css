@@ -1,23 +1,6 @@
 /*Shadow dom*/
 @import '@material-symbols/font-400';
 
-html {
-  font: 1rem "Fira Sans", sans-serif;
-  background-color: var(--background);
-}
-
-html {
-  color: var(--primary-text);
-}
-
-app-footer {
-  background: var(--primary-background);
-}
-
-body {
-  margin: 0;
-}
-
 :root {
   --primary-text: #000000;
   --secondary-text: #888888;
@@ -40,6 +23,20 @@ body {
   --highlight: #0078d7;
   --highlight-hover: rgba(0, 120, 215, 0.60);
   --visited: #551a8b;
+}
+
+html {
+  font: 1rem "Fira Sans", sans-serif;
+  background-color: var(--background);
+  color: var(--primary-text);
+}
+
+body {
+  margin: 0;
+}
+
+app-footer {
+  background: var(--primary-background);
 }
 
 app-header {
@@ -76,15 +73,17 @@ app-password-input::part(outline) {
   }
 }
 
-/*
-TODO: Outline invalid color
- */
-/*app-password-input::part(outline)::part(input) {*/
-/*  border-color: var(--negative)*/
-/*}*/
-
 app-password-input::part(outline):hover {
   border-color: var(--hover);
+}
+
+app-password-input[data-invalid]::part(outline) {
+  border-color: var(--negative)
+}
+
+app-password-input[data-invalid]::part(outline):hover,
+app-password-input[data-invalid]:focus::part(outline) {
+  border-color: var(--negative-hover)
 }
 
 app-password-input::part(eye-button) {
@@ -108,43 +107,11 @@ app-password-input::part(inner-input) {
   background-color: var(--primary-background);
 }
 
-::part(textarea) {
-  background-color: var(--input-background);
-  color: var(--primary-text);
-}
-
-::part(textarea):not(:invalid) {
-  border-color: var(--border);
-}
-
-::part(textarea):hover {
-  border-color: var(--hover);
-}
-
-::part(input) {
-  background-color: var(--input-background);
-  color: var(--primary-text);
-}
 
 [required]::part(label):after {
   color: var(--negative)
 }
 
-::part(input) {
-  border-color: var(--border);
-}
-
-::part(input):invalid {
-  border-color: var(--negative)
-}
-
-::part(input):hover {
-  border-color: var(--hover);
-}
-
-app-image-input:not(:invalid)::part(img) {
-  border-color: var(--border);
-}
 
 .right {
   display: flex;
@@ -163,20 +130,6 @@ img {
   max-height: 100%;
   max-width: 100%;
 }
-
-.footer {
-  display: flex;
-  flex: 1;
-  align-content: space-evenly;
-  margin: 10px;
-  padding: 0.25rem;
-  background: lightgray;
-  border-radius: 5px;
-  justify-content: center;
-  width: 96%;
-  bottom: 0;
-}
-
 
 .pad {
   padding: 0.33rem;
@@ -311,6 +264,7 @@ fieldset {
   color: var(--inverted-primary-text);
   background-color: var(--negative);
 }
+
 ::part(logout-icon) {
   color: var(--inverted-primary-text);
   background-color: var(--negative);
@@ -326,4 +280,59 @@ fieldset {
 
 ::part(icon) {
   color: var(--primary-text);
+}
+
+::part(input) {
+  background-color: var(--input-background);
+  color: var(--primary-text);
+  border-color: var(--border);
+}
+
+::part(input):hover {
+  border-color: var(--hover);
+}
+
+[data-invalid]::part(input) {
+  border-color: var(--negative)
+}
+
+[data-invalid]::part(input):hover,
+[data-invalid]::part(input):focus {
+  border-color: var(--negative-hover)
+}
+
+::part(textarea) {
+  background-color: var(--input-background);
+  color: var(--primary-text);
+  border-color: var(--border);
+}
+
+::part(textarea):hover {
+  border-color: var(--hover);
+}
+
+[data-invalid]::part(textarea) {
+  border-color: var(--negative)
+}
+
+[data-invalid]::part(textarea):hover,
+[data-invalid]::part(textarea):focus {
+  border-color: var(--negative-hover)
+}
+
+::part(img) {
+  border-color: var(--border);
+}
+
+::part(img):hover {
+  border-color: var(--hover);
+}
+
+[data-invalid]::part(img) {
+  border-color: var(--negative)
+}
+
+[data-invalid]::part(img):hover,
+[data-invalid]::part(img):focus {
+  border-color: var(--negative-hover)
 }

@@ -3,80 +3,239 @@ import {applyStyleSheet, attach_delegates} from "../defaults.js";
 import {ApplyStyleSheet} from "../apply-style-sheet.js";
 import {StyleCSS} from "../style-css.js";
 import {handleFieldset} from "./common.js";
+import {ValueSetEvent} from "./app-input/value-set-event";
+import {AppInput} from "./app-input/app-input";
+
+type attributeKey = keyof typeof AppInput["observedAttributesMap"];
 
 export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   static readonly formAssociated = true;
-  static readonly observedAttributes = ["required", "minlength", "maxlength"];
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  async attributeChangedCallback(name: string, oldValue: string, newValue: string): Promise<void>
+  private readonly internals: ElementInternals;
+  override shadowRoot: ShadowRoot;
+
+  private static readonly observedAttributesMap = {
+    "data-label": AppTextArea.dataLabelAttr,
+    "required": AppTextArea.requiredAttr,
+    "disabled": AppTextArea.disabledAttr,
+    "maxlength": AppTextArea.maxLengthAttr,
+    "minlength": AppTextArea.minlengthAttr,
+    "placeholder": AppTextArea.placeholderAttr,
+    "rows": AppTextArea.rowsAttr
+  }
+  static readonly observedAttributes = <[attributeKey]>Object.keys(AppTextArea.observedAttributesMap);
+
+  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
   {
+    if (Object.keys(AppTextArea.observedAttributesMap).includes(name))
+    {
+      const callback = AppTextArea.observedAttributesMap[name as attributeKey]!;
+      callback(this, newValue);
+    }
     await this.validate();
   }
 
-  private internals;
-  override shadowRoot: ShadowRoot;
+  //Attributes
+
+  private static dataLabelAttr(element: AppTextArea, value: string | null | undefined): void
+  {
+    if (value == null || value.trim() == "")
+    {
+      logNoValueError("label", element.outerHTML);
+      value = ""
+    }
+    element.shadowRoot.querySelector("label")!.innerText = value;
+  }
+
+  private static placeholderAttr(element: AppTextArea, value: string | null | undefined): void
+  {
+    element.shadowRoot.querySelector("textarea")!.placeholder = value ?? "";
+  }
+
+  private static disabledAttr(element: AppTextArea, value: string | null | undefined): void
+  {
+    const disabled = element.hasDisabledFieldset || value == "";
+    const input = element.shadowRoot.querySelector("input")!;
+    input.disabled = disabled;
+    element.internals.ariaDisabled = disabled ? "" : null;
+  }
+
+  private static maxLengthAttr(element: AppTextArea, value: string | null | undefined): void
+  {
+    const input = element.shadowRoot.querySelector("textarea")!;
+    if (value == null)
+      input.removeAttribute("maxlength");
+    else
+      input.setAttribute("maxlength", value.toString());
+  }
+
+  private static rowsAttr(element: AppTextArea, value: string | null | undefined): void
+  {
+    const input = element.shadowRoot.querySelector("textarea")!;
+    if (value == null)
+      input.removeAttribute("rows");
+    else
+      input.setAttribute("rows", value.toString());
+  }
+
+  private static minlengthAttr(element: AppTextArea, value: string | null | undefined): void
+  {
+    const input = element.shadowRoot.querySelector("textarea")!;
+    if (value == null)
+      input.removeAttribute("minlength");
+    else
+      input.setAttribute("minlength", value.toString());
+  }
+
+  private static requiredAttr(element: AppTextArea, value: string | null | undefined): void
+  {
+    element.shadowRoot.querySelector("textarea")!.required = value == "";
+  }
 
   get label(): string
   {
-    return this.dataset["label"]!;
+    return this.dataset["label"] ?? "";
   }
 
   set label(value: string)
   {
     this.dataset["label"] = value;
-    this.shadowRoot.querySelector("label")!.innerText = value;
   }
 
-  get placeholder(): string | null | undefined
+  get required(): boolean
   {
-    return this.dataset["placeholder"]
+    const attribute = this.getAttribute("required");
+    return attribute ? attribute == "" : false;
   }
 
-  set placeholder(value: string | null | undefined)
+  set required(value: boolean)
+  {
+    if (value)
+      this.setAttribute("required", "")
+    else
+      this.removeAttribute("required");
+  }
+
+  get disabled(): boolean
+  {
+    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
+  }
+
+  set disabled(value: boolean)
+  {
+    if (value)
+      this.setAttribute("disabled", "")
+    else
+      this.removeAttribute("disabled");
+  }
+
+  get minLength(): number | null
+  {
+    const attribute = this.getAttribute("minlength");
+    return attribute ? Number(attribute) : null;
+  }
+
+  set minLength(value: number | null)
   {
     if (value == null)
-    {
-      delete this.dataset["placeholder"];
-      this.shadowRoot.querySelector("textarea")!.placeholder = "";
-    }
+      this.removeAttribute("minlength")
     else
-    {
-      this.dataset["placeholder"] = value;
-      this.shadowRoot.querySelector("textarea")!.placeholder = value;
-    }
+      this.setAttribute("minlength", value.toString());
   }
 
-  get value(): string
+  get rows(): number | null
   {
-    return this.shadowRoot.querySelector("textarea")!.value;
+    const attribute = this.getAttribute("rows");
+    return attribute ? Number(attribute) : null;
   }
 
-  set value(value: string)
+  set rows(value: number | null)
   {
-    this.shadowRoot.querySelector("textarea")!.value = value;
+    if (value == null)
+      this.removeAttribute("rows")
+    else
+      this.setAttribute("rows", value.toString());
+  }
+
+  get maxLength(): number | null
+  {
+    const attribute = this.getAttribute("maxlength");
+    return attribute ? Number(attribute) : null;
+  }
+
+  set maxLength(value: number | null)
+  {
+    if (value == null)
+      this.removeAttribute("maxlength")
+    else
+      this.setAttribute("maxlength", value.toString())
   }
 
   async connectedCallback(): Promise<void>
   {
-    const label = this.dataset["label"] ?? "";
-    if (!label)
-      logNoValueError("label", this.outerHTML);
-    this.label = label;
-    this.placeholder = this.dataset["placeholder"] ?? "";
-    this.disabled = this.getAttribute("disabled") == "";
-
-    this.shadowRoot.querySelector("label")!.innerText = label;
+    this.label = this.label || "";
+    this.shadowRoot.querySelector("label")!.innerText = this.label;
+    const textarea = this.shadowRoot.querySelector("textarea")!;
+    textarea.addEventListener("change", (e) => this.onTextAreaChange(e));
+    textarea.placeholder = this.placeholder ?? "";
 
     handleFieldset(this);
 
     await this.setupValidation();
   }
 
+  get value(): any
+  {
+    return this.shadowRoot.querySelector("textarea")!.value;
+  }
+
+  set value(value: string | null | undefined)
+  {
+    if (value == null)
+      value = "";
+
+    this.shadowRoot.querySelector("textarea")!.value = value;
+    this.dispatchEvent(new ValueSetEvent({detail: value}));
+  }
+
+  private internalHasDisabledFieldset: boolean = false;
+
+  get hasDisabledFieldset(): boolean
+  {
+    return this.internalHasDisabledFieldset;
+  }
+
+  set hasDisabledFieldset(value: boolean)
+  {
+    this.internalHasDisabledFieldset = value;
+    AppTextArea.disabledAttr(this, this.getAttribute("disabled"))
+  }
+
+  get placeholder(): string | null | undefined
+  {
+    return this.getAttribute("placeholder")
+  }
+
+  set placeholder(value: string | null | undefined)
+  {
+    if (value == null)
+      this.removeAttribute("placeholder");
+    else
+      this.setAttribute("placeholder", value);
+  }
+
+  async onTextAreaChange(event: Event): Promise<void>
+  {
+    this.interacted = true;
+    await this.validateAndReport();
+  }
+
   constructor()
   {
     super();
+
     this.internals = this.attachInternals();
     this.internals.role = "textarea";
     this.shadowRoot = this.attach();
@@ -102,11 +261,30 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     textarea.setCustomValidity("");
     const error = this.errors.entries().next().value;
     if (error)
+    {
       this.internals.setValidity({[error[0]]: true}, error[1](), textarea);
+      textarea.setCustomValidity(error[1]());
+    }
     this.setCustomError = (): void =>
     {
     };
+    if (this.interacted)
+    {
+      if (!textarea.checkValidity())
+      {
+        this.dataset["invalid"] = "";
+        textarea.dataset["invalid"] = ""
+      }
+      else
+      {
+        delete this.dataset["invalid"];
+        delete textarea.dataset["invalid"]
+      }
+    }
   }
+
+  private interacted: boolean = false;
+
 
   setCustomError(input: HTMLTextAreaElement): void
   {
@@ -143,25 +321,6 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     }
   }
 
-  disabledValue: boolean = false;
-  hasDisabledFieldset: boolean = false;
-
-  get disabled(): boolean
-  {
-    return this.getAttribute("disabled") == "";
-  }
-
-  set disabled(value: boolean)
-  {
-    this.disabledValue = value;
-    value = this.disabledValue || this.hasDisabledFieldset;
-    if (value)
-      this.setAttribute("disabled", "");
-    else
-      this.removeAttribute("disabled");
-    this.shadowRoot.querySelector("textarea")!.disabled = value;
-  }
-
   setMaxLength(input: HTMLTextAreaElement): void
   {
     const max = this.getAttribute("maxlength");
@@ -190,8 +349,8 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     //language=HTML
     this.shadowRoot.innerHTML = `
       <span class="parent container">
-      <textarea part="textarea" rows="5" id="input"></textarea>
-      <label part="label" for="input"></label>
+      <textarea part="textarea" rows="5" id="textarea"></textarea>
+      <label part="label" for="textarea"></label>
         </span>
     `;
   }
@@ -225,7 +384,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
         transition: border-color ease 50ms;
       }
 
-      .textarea:invalid {
+      .textarea[data-invalid] {
         border-color: red;
       }
 
@@ -293,7 +452,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
         display: flex;
       }
 
-      textarea:invalid {
+      textarea[data-invalid] {
         border-color: red;
       }
     `;

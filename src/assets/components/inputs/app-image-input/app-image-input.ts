@@ -4,30 +4,99 @@ import {StyleCSS} from "../../style-css.js";
 import {logNoValueError} from "../validation/validation.js";
 import {UploadEvent} from "./upload-event.js";
 
+type attributeKey = keyof typeof AppImageInput["observedAttributesMap"];
+
 export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   static readonly formAssociated = true;
-  static readonly observedAttributes = ["required", "minlength", "maxlength"];
-  public errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+  private readonly internals: ElementInternals;
+  override shadowRoot: ShadowRoot;
 
-  async attributeChangedCallback(name: string, oldValue: any, newValue: any): Promise<void>
+  errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+
+  private static readonly observedAttributesMap = {
+    "data-label": AppImageInput.dataLabelAttr,
+    "required": AppImageInput.requiredAttr,
+    "disabled": AppImageInput.disabledAttr,
+    "data-max-filesize": AppImageInput.dataMaxFilesizeAttr,
+    "ata-min-filesize": AppImageInput.dataMinFilesizeAttr,
+    "data-title": AppImageInput.dataTitleAttr,
+    "data-multiple": AppImageInput.dataMultipleAttr
+  }
+  static readonly observedAttributes = <[attributeKey]>Object.keys(AppImageInput.observedAttributesMap);
+
+  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
   {
+    if (Object.keys(AppImageInput.observedAttributesMap).includes(name))
+    {
+      const callback = AppImageInput.observedAttributesMap[name as attributeKey]!;
+      callback(this, newValue);
+    }
     await this.validate();
   }
 
-  private internals: ElementInternals;
-  override shadowRoot: ShadowRoot;
+  //Attributes
+
+  private static dataLabelAttr(element: AppImageInput, value: string | null | undefined): void
+  {
+    if (value == null || value.trim() == "")
+    {
+      logNoValueError("label", element.outerHTML);
+      value = ""
+    }
+    element.shadowRoot.querySelector("label")!.innerText = value;
+    element.shadowRoot.querySelector("img")!.alt = value;
+  }
+
+  private static dataMultipleAttr(element: AppImageInput, value: string | null | undefined): void
+  {
+    element.shadowRoot.querySelector("input")!.multiple = value == "";
+  }
+
+  private static disabledAttr(element: AppImageInput, value: string | null | undefined): void
+  {
+    const disabled = element.hasDisabledFieldset || value == "";
+    const input = element.shadowRoot.querySelector("input")!;
+    input.disabled = disabled;
+    element.internals.ariaDisabled = disabled ? "" : null;
+  }
+
+  private static dataMaxFilesizeAttr(element: AppImageInput, value: string | null | undefined): void
+  {
+    const input = element.shadowRoot.querySelector("input")!;
+    if (value == null)
+      input.removeAttribute("max-filesize");
+    else
+      input.setAttribute("max-filesize", value.toString());
+  }
+
+  private static dataMinFilesizeAttr(element: AppImageInput, value: string | null | undefined): void
+  {
+    const input = element.shadowRoot.querySelector("input")!;
+    if (value == null)
+      input.removeAttribute("min-filesize");
+    else
+      input.setAttribute("min-filesize", value.toString());
+  }
+
+  private static dataTitleAttr(element: AppImageInput, value: string | null | undefined): void
+  {
+    element.shadowRoot.querySelector("img")!.title = value ?? "";
+  }
+
+  private static requiredAttr(element: AppImageInput, value: string | null | undefined): void
+  {
+    element.shadowRoot.querySelector("input")!.required = value == "";
+  }
 
   get label(): string
   {
-    return this.dataset["label"]!;
+    return this.dataset["label"] ?? "";
   }
 
   set label(value: string)
   {
     this.dataset["label"] = value;
-    this.shadowRoot.querySelector("label")!.innerText = value;
-    this.shadowRoot.querySelector("img")!.alt = value;
   }
 
   private innerFiles: { file: File, url: string }[] = [];
@@ -42,7 +111,6 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.innerFiles = value;
   }
 
-
   get multiple(): boolean
   {
     const value = this.dataset["multiple"];
@@ -55,70 +123,84 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       delete this.dataset["multiple"];
     else
       this.dataset["multiple"] = "";
-
-    this.shadowRoot.querySelector("input")!.multiple = value;
   }
 
-  get maxFileSize(): number | null
+  private internalHasDisabledFieldset: boolean = false;
+
+  get hasDisabledFieldset(): boolean
   {
-    const value = this.dataset["maxFilesize"];
-    return value ? Number(value) : null;
+    return this.internalHasDisabledFieldset;
   }
 
-  set maxFileSize(value: number | null)
+  set hasDisabledFieldset(value: boolean)
   {
-    if (value == null)
-      delete this.dataset["max-filesize"];
-    else
-      this.dataset["maxFilesize"] = value.toString();
+    this.internalHasDisabledFieldset = value;
+    AppImageInput.disabledAttr(this, this.getAttribute("disabled"))
   }
-
-  get minFileSize(): number | null
-  {
-    const value = this.dataset["minFilesize"];
-    return value ? Number(value) : null;
-  }
-
-  set minFileSize(value: number | null)
-  {
-    if (value == null)
-      delete this.dataset["minFilesize"];
-    else
-      this.dataset["minFilesize"] = value.toString();
-  }
-
-  disabledValue: boolean = false;
-  hasDisabledFieldset: boolean = false;
-
   get disabled(): boolean
   {
-    return this.getAttribute("disabled") == "";
+    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
   }
 
   set disabled(value: boolean)
   {
-    this.disabledValue = value;
-    value = this.disabledValue || this.hasDisabledFieldset;
-
     if (value)
-      this.setAttribute("disabled", "");
+      this.setAttribute("disabled", "")
     else
       this.removeAttribute("disabled");
-    this.shadowRoot.querySelector("input")!.disabled = value;
   }
 
-  get imageTitle(): string | null | undefined
+  get maxFilesize(): number | null
   {
-    return this.dataset["title"];
+    const attribute = this.dataset["max-filesize"];
+    return attribute ? Number(attribute) : null;
   }
 
-  set imageTitle(value: string | null | undefined)
+  set maxFilesize(value: number | null)
   {
     if (value == null)
-      delete this.dataset["title"];
+      delete this.dataset["max-filesize"]
     else
-      this.dataset["title"] = value;
-    this.shadowRoot.querySelector("img")!.title = value ?? "";
+      this.dataset["max-filesize"] = value.toString()
+  }
+
+  get minFilesize(): number | null
+  {
+    const attribute = this.dataset["min-filesize"];
+    return attribute ? Number(attribute) : null;
+  }
+
+  set minFilesize(value: number | null)
+  {
+    if (value == null)
+      delete this.dataset["min-filesize"]
+    else
+      this.dataset["min-filesize"] = value.toString()
+  }
+
+  get required(): boolean
+  {
+    const attribute = this.getAttribute("required");
+    return attribute ? attribute == "" : false;
+  }
+
+  set required(value: boolean)
+  {
+    if (value)
+      this.setAttribute("required", "")
+    else
+      this.removeAttribute("required");
+  }
+
+
+  get imageTitle(): string
+  {
+    return this.dataset["title"] ?? "";
+  }
+
+  set imageTitle(value: string)
+  {
+    this.dataset["title"] = value;
   }
 
   #src: string | undefined;
@@ -138,16 +220,13 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   async connectedCallback(): Promise<void>
   {
     const input = this.shadowRoot.querySelector("input")!;
-    input.addEventListener("change", event => this.setImage(<InputEvent>event));
-
+    input.addEventListener("change", (e) => this.onInputChange(e));
     const image = this.shadowRoot.querySelector("img")!;
-    const label = this.dataset["label"] ?? "";
-    if (!label)
-      logNoValueError("label", this.outerHTML);
+    this.label = this.label || "";
 
-    image.alt = label;
+    image.alt = this.label;
     this.multiple = this.dataset["multiple"] == ""
-    this.shadowRoot.querySelector("label")!.innerText = label;
+    this.shadowRoot.querySelector("label")!.innerText = this.label;
     if (this.imageTitle)
       image.title = this.imageTitle;
 
@@ -164,7 +243,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     await this.setupValidation();
   }
 
-  private defaultSrc = "/assets/img/Image_Input_Placeholder.svg";
+  private readonly defaultSrc = "/assets/img/Image_Input_Placeholder.svg";
 
   constructor()
   {
@@ -177,6 +256,13 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   attach = attach_delegates;
   applyStyleSheet = applyStyleSheet;
+
+  async onInputChange(event: Event): Promise<void>
+  {
+    await this.setImage(<InputEvent>event)
+    this.interacted = true;
+    await this.validateAndReport();
+  }
 
   async setupValidation(): Promise<void>
   {
@@ -196,11 +282,27 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     {
       const img = this.shadowRoot.querySelector("img")!;
       this.internals.setValidity({[error[0]]: true}, error[1](), img);
+      input.setCustomValidity(error[1]())
     }
     this.setCustomError = (): void =>
     {
     };
+    if (this.interacted)
+    {
+      if (!input.checkValidity())
+      {
+        this.dataset["invalid"] = "";
+        input.dataset["invalid"] = ""
+      }
+      else
+      {
+        delete this.dataset["invalid"];
+        delete input.dataset["invalid"]
+      }
+    }
   }
+
+  private interacted: boolean = false;
 
   setCustomError(input: HTMLInputElement): void
   {
@@ -237,7 +339,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   setMaxFileSize(input: HTMLInputElement): void
   {
-    const max = this.maxFileSize;
+    const max = this.maxFilesize;
     if (!fileTooBig(input, max))
       return;
 
@@ -246,7 +348,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   setMinFileSize(input: HTMLInputElement): void
   {
-    const min = this.minFileSize;
+    const min = this.minFilesize;
 
     if (!fileTooSmall(input, min))
       return;
@@ -333,14 +435,13 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
         transition: border-color ease 50ms;
       }
 
-      input:invalid + img {
+      input[data-invalid] + img {
         border-color: red
       }
 
       img:hover {
         filter: opacity(50%);
       }
-
 
       :host([disabled]) > img {
         filter: brightness(75%);
