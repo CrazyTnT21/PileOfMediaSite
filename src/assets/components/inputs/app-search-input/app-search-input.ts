@@ -1,34 +1,34 @@
-import {AppInput} from "./app-input/app-input.js";
-import {StyleCSS} from "../style-css.js";
+import {AppInput} from "../app-input/app-input";
+import {StyleCSS} from "../../style-css";
+import {SearchEvent} from "./search-event";
 
-export class AppPasswordInput extends AppInput implements StyleCSS
+export class AppSearchInput extends AppInput implements StyleCSS
 {
   override async connectedCallback(): Promise<void>
   {
-    this.label = this.label || "Password";
+    this.label = this.label || "Search";
     await super.connectedCallback();
+    const input = this.shadowRoot.querySelector("input")!;
     this.shadowRoot.querySelector("app-button")!.addEventListener("click", () =>
     {
-      const input = this.shadowRoot.querySelector("input")!;
-      const eyeIcon: HTMLSpanElement = this.shadowRoot.querySelector("#eye-icon")!;
-
-      if (input.type === "password")
-      {
-        input.type = "text";
-        eyeIcon.className = "eye-open-icon";
-      }
-      else
-      {
-        input.type = "password";
-        eyeIcon.className = "eye-closed-icon";
-      }
+      input.focus();
+      this.shadowRoot.dispatchEvent(new SearchEvent({composed: true, detail: input.value}));
+    });
+    input.addEventListener("search", () => this.shadowRoot.dispatchEvent(new SearchEvent({
+      composed: true,
+      detail: input.value
+    })));
+    input.addEventListener("keyup", (e) =>
+    {
+      if (e.key == "Enter")
+        this.shadowRoot.dispatchEvent(new SearchEvent({composed: true, detail: input.value}));
     });
   }
 
   constructor()
   {
     super();
-    this.shadowRoot.querySelector("input")!.type = "password";
+    this.shadowRoot.querySelector("input")!.type = "search";
   }
 
   override render(): void
@@ -38,9 +38,9 @@ export class AppPasswordInput extends AppInput implements StyleCSS
       <span class="input parent" part="outline" id="outline">
       <label part="label" for="input"></label>
         <input class="control" part="inner-input" id="input"/>
-            <app-button exportparts="button: eye-button" aria-label="Toggle show password">
-              <slot name="eye-button">
-                <span id="eye-icon" class="eye-closed-icon" part="icon"></span>
+             <app-button exportparts="button: icon-button" aria-label="Search">
+              <slot name="icon-button">
+                <span id="icon" class="icon" part="icon"></span>
               </slot>
             </app-button>
       </span>
@@ -51,18 +51,15 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   {
     //language=CSS
     return super.styleCSS() + `
-      .eye-open-icon::before {
+      .icon::before {
         display: flex;
-        content: "visibility";
+        content: "search";
         font-family: "Material Symbols Outlined", serif;
         font-size: 22px;
       }
 
-      .eye-closed-icon::before {
-        display: flex;
-        content: "visibility_off";
-        font-family: "Material Symbols Outlined", serif;
-        font-size: 22px;
+      .parent {
+        min-width: 0;
       }
 
       input {
@@ -100,6 +97,8 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         display: inline-flex;
         padding: 0 5px 0 5px;
         border: none;
+        background-color: transparent;
+        cursor: pointer;
       }
 
       #outline:has(input[data-invalid]) {
@@ -107,6 +106,13 @@ export class AppPasswordInput extends AppInput implements StyleCSS
       }
     `;
   }
+
+  public static define(): void
+  {
+    if (customElements.get("app-search-input"))
+      return;
+    customElements.define("app-search-input", AppSearchInput);
+  }
 }
 
-customElements.define("app-password-input", AppPasswordInput);
+AppSearchInput.define()

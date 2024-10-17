@@ -3,18 +3,18 @@
 
 :root {
   --primary-text: #000000;
-  --secondary-text: #888888;
+  --secondary-text: #646464;
 
   --inverted-primary-text: white;
   --inverted-secondary-text: white;
   --background: #ffffff;
-  --primary-background: #f0f0f0;
-  --secondary-background: #dadada;
+  --primary-background: #f8f8f8;
+  --secondary-background: #dcdcdc;
   --input-background: #ffffff;
   --border: #b6b6b6;
 
-  --hover: #e6e6e6;
-  --clickable: #d6d6d6;
+  --hover: #ebebeb;
+  --clickable: #f0f0f0;
   --feedback: #c5c5c5;
   --positive: #16aa15;
   --positive-hover: rgba(22, 170, 21, 0.60);
@@ -40,7 +40,7 @@ app-footer {
 }
 
 app-header {
-  border-color: var(--border);
+  border-color: var(--secondary-text);
 }
 
 ::part(button) {
@@ -107,11 +107,9 @@ app-password-input::part(inner-input) {
   background-color: var(--primary-background);
 }
 
-
 [required]::part(label):after {
   color: var(--negative)
 }
-
 
 .right {
   display: flex;
@@ -236,28 +234,10 @@ a:visited {
   background-color: var(--positive-hover);
 }
 
-app-wizard::part(button) {
-  background-color: var(--highlight)
-}
-
-app-wizard::part(button):focus, app-wizard::part(button):hover {
-  background-color: var(--highlight-hover)
-}
-
-.square::part(img) {
-  aspect-ratio: 1;
-}
-
 [hidden] {
   visibility: collapse;
   width: 0;
   height: 0;
-}
-
-fieldset {
-  margin: 0;
-  border: 0;
-  border-top: 1px solid var(--border);
 }
 
 ::part(logout-button) {
@@ -335,4 +315,45 @@ fieldset {
 [data-invalid]::part(img):hover,
 [data-invalid]::part(img):focus {
   border-color: var(--negative-hover)
+}
+
+.gap {
+  gap: 10px;
+}
+
+app-search-input::part(outline) {
+  background-color: var(--input-background);
+  border-color: var(--border);
+}
+
+@supports (-moz-orient: inherit) {
+  app-search-input::part(outline) {
+    outline-color: Highlight;
+  }
+}
+
+app-search-input::part(outline):hover {
+  border-color: var(--hover);
+}
+
+app-search-input[data-invalid]::part(outline) {
+  border-color: var(--negative)
+}
+
+app-search-input[data-invalid]::part(outline):hover,
+app-search-input[data-invalid]:focus::part(outline) {
+  border-color: var(--negative-hover)
+}
+
+app-search-input::part(icon-button) {
+  background-color: var(--input-background);
+}
+
+app-search-input::part(inner-input) {
+  color: var(--primary-text);
+  background-color: var(--input-background);
+}
+
+.search::part(inner-input) {
+  padding: 8px;
 }

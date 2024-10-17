@@ -154,7 +154,6 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     return this.selected.find(x => this.itemId(x) === id);
   }
 
-
   findSelectedValue(value: string): T | undefined
   {
     return this.findSameValue(value, this.selected);
@@ -229,7 +228,6 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       eventInitDict.detail = item
     this.shadowRoot.dispatchEvent(new ValueChangeEvent<T>(eventInitDict));
   }
-
 
   async onInputInput(event: InputEvent): Promise<void>
   {

@@ -4,6 +4,8 @@ import {StyleCSS} from "./style-css.js";
 import {LoginReturn} from "../types/login-return.js";
 import {ImageData} from "../types/image-data.js";
 import {AppButton} from "./app-button.js";
+import {AppSearchInput} from "./inputs/app-search-input/app-search-input";
+import {SearchEvent} from "./inputs/app-search-input/search-event";
 
 //TODO: color-scheme part
 export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
@@ -14,6 +16,11 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   async connectedCallback(): Promise<void>
   {
+    const burger: HTMLDetailsElement = this.shadowRoot.querySelector("#burger")!;
+    const user: HTMLDetailsElement = this.shadowRoot.querySelector("#user")!;
+    burger.addEventListener("click", () => user.open = false);
+    user.addEventListener("click", () => burger.open = false);
+
     const items = <HTMLLIElement[]>[...this.shadowRoot.querySelectorAll(".items > li")];
     this.copyToHamburger(items);
     const logoutButton: AppButton = this.shadowRoot.querySelector("#logout > app-button")!;
@@ -56,11 +63,14 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     const profilePicture: HTMLImageElement = this.shadowRoot.querySelector("#profile-picture")!;
     if (localAccount)
     {
-      const user = JSON.parse(localAccount).user;
+      const user: LoginReturn["user"] = JSON.parse(localAccount).user;
+      const profileLink: HTMLAnchorElement = this.shadowRoot.querySelector("#profile-link")!;
+      //TODO
+      profileLink.href = `/user/user`///${user.name}`
       if (user.profile_picture)
       {
         user.profile_picture.versions.sort((x: ImageData, y: ImageData) => x.width * x.height - y.width * y.height);
-        profilePicture.src = user.profile_picture.versions[0].uri;
+        profilePicture.src = user.profile_picture.versions[0]!.uri;
         return;
       }
     }
@@ -111,12 +121,16 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           <li><a href="/games"><span class="game-icon" part="icon"></span>Games</a></li>
         </ul>
       </nav>
+      <slot name="search-input">
+      </slot>
       <details id="user">
         <summary>
           <img id="profile-picture" src="${this.placeholderImageUrl}" alt="Profile"/>
         </summary>
         <ul id="user-dropdown">
-          <li data-login><a href="/user/profile"><span class="profile-icon" part="icon"></span>Profile</a></li>
+          <li data-login>
+            <a id="profile-link" href="/user/user"><span class="profile-icon" part="icon"></span>Profile</a>
+          </li>
           <li data-login><a href="/user/friends"><span class="friends-icon" part="icon"></span>Friends</a></li>
           <li data-login>
             <a href="/user/comments"><span class="comment-icon" part="icon"></span>Comments</a>
@@ -127,7 +141,11 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           <li data-default>
             <a href="/user/preferences"><span class="settings-icon" part="icon"></span>Preferences</a>
           </li>
-          <li data-login id="logout"></li>
+          <li data-login id="logout">
+            <app-button class="logout" exportparts="button,button: logout-button">
+              <span class="center"><span class="logout-icon" part="icon, logout-icon"></span>Logout</span>
+            </app-button>
+          </li>
           <li data-logout id="login"><a href="/login"><span class="login-icon" part="icon"></span>Log in</a>
           </li>
           <li data-logout id="signup">
@@ -136,11 +154,15 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         </ul>
       </details>
     `;
-    const appButton: AppButton = new AppButton();
-    appButton.setAttribute("exportparts", "button,button: logout-button");
-    appButton.innerHTML = `<span class="center"><span class="logout-icon" part="icon, logout-icon"></span>Logout</span>`;
-    appButton.classList.add("logout");
-    this.shadowRoot.querySelector("#logout")!.append(appButton)
+    //Inside innerHTML, so it gets styled
+    this.innerHTML = `<app-search-input slot="search-input"></app-search-input>`
+    this.querySelector("app-search-input")!.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>
+    {
+      if (e.detail!.trim().length > 0)
+        window.location.href = "/search?q=" + e.detail!
+      else
+        window.location.href = "/search"!
+    })
   }
 
   styleCSS(): string
@@ -149,6 +171,12 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     return `
       ::part(button) {
         padding: 5px;
+      }
+
+      ::slotted(app-search-input) {
+        display: flex;
+        min-width: 0;
+        margin-left: auto;
       }
 
       .center {
@@ -178,64 +206,61 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       .logo {
+        margin-left: 5px;
         width: 35px;
         height: 35px;
-        /*margin-right: auto;*/
+        display: flex;
       }
 
       #user {
-        /*margin-left: auto;*/
+        margin-right: 5px;
         height: 35px;
         width: 35px;
       }
 
       li {
         box-sizing: border-box;
-      }
 
-      li > a {
-        align-items: center;
-      }
-
-      #user > ul {
-        z-index: 1;
-        position: absolute;
-        background-color: var(--primary-background);
-        border-radius: 5px;
-        padding: 5px;
-        display: inline-flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        overflow: hidden;
-
-        & li {
-          white-space: nowrap;
-          display: inline-flex;
-
-          & app-button {
-            flex: 1;
-          }
-
-          & a {
-            flex: 1;
-            border-radius: 5px;
-            display: inline-flex;
-            padding: 5px;
-          }
+        & a {
+          align-items: center;
         }
       }
 
-      #user > ul > li {
-        border-radius: 10px;
+      #user {
+        ul {
+          z-index: 1;
+          position: absolute;
+          background-color: var(--primary-background);
+          border-radius: 5px;
+          padding: 5px;
+          display: inline-flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          overflow: hidden;
+
+          & li {
+            white-space: nowrap;
+            display: inline-flex;
+            background-color: var(--clickable);
+            padding: 0;
+
+            & app-button {
+              flex: 1;
+            }
+
+            & a {
+              flex: 1;
+              border-radius: 5px;
+              display: inline-flex;
+              padding: 5px;
+            }
+          }
+        }
       }
 
       #user > ul > li > a:focus,
       #user > ul > li > a:hover {
         background-color: var(--hover);
-      }
-
-      #user > ul > li {
-        padding: 0;
       }
 
       .burger-items {
@@ -247,16 +272,30 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
       .items {
         display: flex;
+
+        & li {
+          * {
+            display: flex;
+            padding: 5px;
+            border-radius: 5px;
+            align-items: center;
+          }
+        }
       }
 
-      .items > li > * {
-        display: flex;
-        padding: 5px;
-        border-radius: 15px;
-        align-items: center;
+      .items {
+        li {
+          * {
+            display: flex;
+            padding: 5px;
+            border-radius: 15px;
+            align-items: center;
+          }
+        }
       }
 
-      .burger-items > li, .burger-items > li > * {
+      .burger-items > li,
+      .burger-items > li > * {
         display: flex;
         width: 100%;
       }
@@ -271,10 +310,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       .items {
         align-items: center;
         justify-content: center;
-      }
 
-      .items > * {
-        display: flex;
+        * {
+          display: flex;
+        }
       }
 
       ul {
@@ -292,31 +331,39 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         text-decoration: none;
       }
 
-      #burger > summary {
-        font-family: "Material Symbols Outlined", serif;
-        padding-left: 5px;
-        font-size: 40px;
+      #burger {
+        summary {
+          display: flex;
+          font-family: "Material Symbols Outlined", serif;
+          padding-left: 5px;
+          font-size: 1.6rem;
+          place-content: center;
+          place-items: center;
+          width: 35px;
+          height: 35px;
+        }
+
+        summary::after {
+          content: "menu";
+        }
+
+        ul {
+          margin-top: 8px;
+          position: absolute;
+          z-index: 1;
+          background-color: var(--background);
+
+          li {
+            border-bottom: 1px solid var(--secondary-background);
+          }
+        }
       }
 
-      #burger > summary::after {
-        content: "menu";
-      }
-
-      #burger[open] > summary::after {
-        content: "close";
-      }
-
-      #burger > summary {
-        width: 45px;
-        height: 45px;
-      }
-
-      details > ul {
-        margin-top: 1px;
-      }
-
-      details > ul > li {
-        padding: 5px;
+      #burger[open] {
+        summary::after {
+          content: "close";
+          font-size: 1.4rem;
+        }
       }
 
       details {
@@ -324,11 +371,23 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         background: var(--background);
         user-select: none;
         padding: 0;
+
+        ul {
+          margin-top: 1px;
+
+          li {
+            padding: 5px;
+          }
+        }
       }
 
-      @media (min-width: 601px) {
+      @media (min-width: 701px) {
         #burger {
           display: none;
+        }
+
+        ::slotted(app-search-input) {
+          max-width: 400px;
         }
       }
 
@@ -338,7 +397,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         height: 0;
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 700px) {
         nav {
           display: none;
         }
@@ -347,20 +406,17 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           justify-content: space-between;
         }
 
-        #user {
-          /*    margin-left: auto;*/
-          margin-right: 5px;
-        }
-
-        #user > ul {
-          transform: translateX(calc(-100% + 35px));
+        .logo {
+          margin-right: auto;
         }
       }
 
-      #burger > ul {
-        position: absolute;
-        z-index: 1;
-        background-color: var(--primary-background);
+      #user {
+        margin-right: 5px;
+
+        ul {
+          transform: translateX(calc(-100% + 35px));
+        }
       }
 
       ${this.iconsCSS()}
@@ -450,6 +506,15 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
     `;
   }
+
+  public static define(): void
+  {
+    AppSearchInput.define();
+    AppButton.define();
+    if (customElements.get("app-header"))
+      return;
+    customElements.define("app-header", AppHeader);
+  }
 }
 
-customElements.define("app-header", AppHeader);
+AppHeader.define()

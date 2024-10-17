@@ -19,7 +19,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     "required": AppImageInput.requiredAttr,
     "disabled": AppImageInput.disabledAttr,
     "data-max-filesize": AppImageInput.dataMaxFilesizeAttr,
-    "ata-min-filesize": AppImageInput.dataMinFilesizeAttr,
+    "data-min-filesize": AppImageInput.dataMinFilesizeAttr,
     "data-title": AppImageInput.dataTitleAttr,
     "data-multiple": AppImageInput.dataMultipleAttr
   }
@@ -191,7 +191,6 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     else
       this.removeAttribute("required");
   }
-
 
   get imageTitle(): string
   {
@@ -400,8 +399,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
         color: var(--primary-text, black);
         margin: 0 0 0 5px;
         transform: translateY(calc(-60%));
-        background-color: var(--background);
-
+        background: linear-gradient(180deg, transparent 0 8px, var(--input-background) 3px 80%,transparent 3px);
         transition: transform ease 50ms;
       }
 

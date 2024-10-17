@@ -117,18 +117,23 @@ function writeResponse(response, file)
 
 function processRequest(request, src)
 {
-  const filePath = path.join(src, request.url);
+  const filePath = path.join(src, request.url).split("?")[0];
 
   return getFile(filePath) ??
     getFile(filePath + ".html") ??
     getFile(path.join(filePath, "/index.html")) ??
     getFile(path.join(filePath, `/${last(filePath.split("\\"))}.html`)) ??
+    getFile(path.join(filePath, `/${secondLast(filePath.split("\\"))}.html`)) ??
     {statusCode: 404, data: null, headers: {}};
 }
 
 function last(items)
 {
   return items[items.length - 1];
+}
+function secondLast(items)
+{
+  return items[items.length - 2] ?? "";
 }
 
 export function getFile(filePath)

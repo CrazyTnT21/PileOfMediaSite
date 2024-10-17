@@ -24,4 +24,3 @@ export function applyStyleSheet(this: StyleCSS & HTMLElement): void
   this.shadowRoot.adoptedStyleSheets = [styleSheet];
 }
 
-

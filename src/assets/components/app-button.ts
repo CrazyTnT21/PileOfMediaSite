@@ -154,6 +154,13 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
     `;
   }
+
+  public static define(): void
+  {
+    if (customElements.get("app-button"))
+      return;
+    customElements.define("app-button", AppButton);
+  }
 }
 
-customElements.define("app-button", AppButton);
+AppButton.define()

@@ -385,7 +385,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
         margin: 0 0 0 5px;
         transform: translateY(calc(-60%));
         /*TODO: part*/
-        background: linear-gradient(180deg, var(--background) 0% 25%, var(--input-background) 30% 100%);
+        background: linear-gradient(180deg, transparent 0 3px, var(--input-background) 3px 100%);
 
         transition: transform ease 50ms;
       }

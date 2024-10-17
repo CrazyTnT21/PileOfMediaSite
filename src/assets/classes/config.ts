@@ -12,7 +12,6 @@ export class Config
     return new Config();
   })()
 
-
   static getConfig(): Config
   {
     return this.#config;
