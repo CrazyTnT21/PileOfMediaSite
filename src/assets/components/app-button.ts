@@ -19,11 +19,8 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    if (Object.keys(AppButton.observedAttributesMap).includes(name))
-    {
-      const callback = AppButton.observedAttributesMap[name as attributeKey]!;
-      callback(this, newValue);
-    }
+    const callback = AppButton.observedAttributesMap[name as attributeKey]!;
+    callback(this, newValue);
   }
 
   //Attributes

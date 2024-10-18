@@ -5,6 +5,7 @@ import {logNoValueError} from "../validation/validation.js";
 import {UploadEvent} from "./upload-event.js";
 
 type attributeKey = keyof typeof AppImageInput["observedAttributesMap"];
+type kiloByte = number;
 
 export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -27,11 +28,8 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    if (Object.keys(AppImageInput.observedAttributesMap).includes(name))
-    {
-      const callback = AppImageInput.observedAttributesMap[name as attributeKey]!;
-      callback(this, newValue);
-    }
+    const callback = AppImageInput.observedAttributesMap[name as attributeKey]!;
+    callback(this, newValue);
     await this.validate();
   }
 
@@ -61,22 +59,12 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     element.internals.ariaDisabled = disabled ? "" : null;
   }
 
-  private static dataMaxFilesizeAttr(element: AppImageInput, value: string | null | undefined): void
+  private static dataMaxFilesizeAttr(_element: AppImageInput, _value: string | null | undefined): void
   {
-    const input = element.shadowRoot.querySelector("input")!;
-    if (value == null)
-      input.removeAttribute("max-filesize");
-    else
-      input.setAttribute("max-filesize", value.toString());
   }
 
-  private static dataMinFilesizeAttr(element: AppImageInput, value: string | null | undefined): void
+  private static dataMinFilesizeAttr(_element: AppImageInput, _value: string | null | undefined): void
   {
-    const input = element.shadowRoot.querySelector("input")!;
-    if (value == null)
-      input.removeAttribute("min-filesize");
-    else
-      input.setAttribute("min-filesize", value.toString());
   }
 
   private static dataTitleAttr(element: AppImageInput, value: string | null | undefined): void
@@ -137,6 +125,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.internalHasDisabledFieldset = value;
     AppImageInput.disabledAttr(this, this.getAttribute("disabled"))
   }
+
   get disabled(): boolean
   {
     return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
@@ -150,32 +139,32 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       this.removeAttribute("disabled");
   }
 
-  get maxFilesize(): number | null
+  get maxFilesize(): kiloByte | null
   {
-    const attribute = this.dataset["max-filesize"];
+    const attribute = this.dataset["maxFilesize"];
     return attribute ? Number(attribute) : null;
   }
 
-  set maxFilesize(value: number | null)
+  set maxFilesize(value: kiloByte | null)
   {
     if (value == null)
-      delete this.dataset["max-filesize"]
+      delete this.dataset["maxFilesize"]
     else
-      this.dataset["max-filesize"] = value.toString()
+      this.dataset["maxFilesize"] = value.toString()
   }
 
-  get minFilesize(): number | null
+  get minFilesize(): kiloByte | null
   {
-    const attribute = this.dataset["min-filesize"];
+    const attribute = this.dataset["minFilesize"];
     return attribute ? Number(attribute) : null;
   }
 
-  set minFilesize(value: number | null)
+  set minFilesize(value: kiloByte | null)
   {
     if (value == null)
-      delete this.dataset["min-filesize"]
+      delete this.dataset["minFilesize"]
     else
-      this.dataset["min-filesize"] = value.toString()
+      this.dataset["minFilesize"] = value.toString()
   }
 
   get required(): boolean
@@ -303,7 +292,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   private interacted: boolean = false;
 
-  setCustomError(input: HTMLInputElement): void
+  setCustomError(_input: HTMLInputElement): void
   {
   }
 
@@ -341,8 +330,8 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     const max = this.maxFilesize;
     if (!fileTooBig(input, max))
       return;
-
-    this.errors.set("customError", () => `Input only allows a maximum of ${max} characters. Current length: ${input.value.length}`);
+    const fileSizes = [...input.files!].map(x => (x.size / 1000).toString() + " kB").join(", ");
+    this.errors.set("customError", () => `Input requires files to be at most ${max} kB. Current sizes: [${fileSizes}]`);
   }
 
   setMinFileSize(input: HTMLInputElement): void
@@ -352,7 +341,8 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     if (!fileTooSmall(input, min))
       return;
 
-    this.errors.set("customError", () => `Input requires at least ${min} characters. Current length: ${input.value.length}`);
+    const fileSizes = [...input.files!].map(x => (x.size / 1000).toString() + " kB").join(", ");
+    this.errors.set("customError", () => `Input requires files to be at least ${min} kB. Current sizes: [${fileSizes}]`);
   }
 
   setValueMissing(input: HTMLInputElement): void
@@ -399,7 +389,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
         color: var(--primary-text, black);
         margin: 0 0 0 5px;
         transform: translateY(calc(-60%));
-        background: linear-gradient(180deg, transparent 0 8px, var(--input-background) 3px 80%,transparent 3px);
+        background: linear-gradient(180deg, transparent 0 8px, var(--input-background) 3px 80%, transparent 3px);
         transition: transform ease 50ms;
       }
 
@@ -489,27 +479,27 @@ function unsupportedImageType(input: HTMLInputElement): boolean
   return false;
 }
 
-function fileTooBig(input: HTMLInputElement, max: number | undefined | null): boolean
+function fileTooBig(input: HTMLInputElement, max: kiloByte | undefined | null): boolean
 {
   if (!max)
     return false;
 
   for (const file of input.files!)
   {
-    if (file.size > max * 1024)
+    if (file.size > max * 1000)
       return true;
   }
   return false;
 }
 
-function fileTooSmall(input: HTMLInputElement, min: number | undefined | null): boolean
+function fileTooSmall(input: HTMLInputElement, min: kiloByte | undefined | null): boolean
 {
   if (!min)
     return false;
 
   for (const file of input.files!)
   {
-    if (file.size < min * 1024)
+    if (file.size < min * 1000)
       return true;
   }
   return false;

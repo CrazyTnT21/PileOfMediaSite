@@ -29,11 +29,8 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    if (Object.keys(AppTextArea.observedAttributesMap).includes(name))
-    {
-      const callback = AppTextArea.observedAttributesMap[name as attributeKey]!;
-      callback(this, newValue);
-    }
+    const callback = AppTextArea.observedAttributesMap[name as attributeKey]!;
+    callback(this, newValue);
     await this.validate();
   }
 
@@ -226,7 +223,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
       this.setAttribute("placeholder", value);
   }
 
-  async onTextAreaChange(event: Event): Promise<void>
+  async onTextAreaChange(_event: Event): Promise<void>
   {
     this.interacted = true;
     await this.validateAndReport();
@@ -285,7 +282,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   private interacted: boolean = false;
 
-  setCustomError(input: HTMLTextAreaElement): void
+  setCustomError(_input: HTMLTextAreaElement): void
   {
   }
 

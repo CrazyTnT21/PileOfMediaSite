@@ -235,7 +235,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       await this.search((<HTMLInputElement>event.target).value);
   }
 
-  async onInputFocus(event: FocusEvent): Promise<void>
+  async onInputFocus(_event: FocusEvent): Promise<void>
   {
     await this.firstOpen();
   }
@@ -355,7 +355,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     }) as T[];
   }
 
-  async* searchItems(value: string): AsyncGenerator<T[]>
+  async* searchItems(_value: string): AsyncGenerator<T[]>
   {
     yield this.items;
   }

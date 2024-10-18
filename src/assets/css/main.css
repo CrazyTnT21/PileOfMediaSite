@@ -1,114 +1,12 @@
 /*Shadow dom*/
 @import '@material-symbols/font-400';
 
-:root {
-  --primary-text: #000000;
-  --secondary-text: #646464;
-
-  --inverted-primary-text: white;
-  --inverted-secondary-text: white;
-  --background: #ffffff;
-  --primary-background: #f8f8f8;
-  --secondary-background: #dcdcdc;
-  --input-background: #ffffff;
-  --border: #b6b6b6;
-
-  --hover: #ebebeb;
-  --clickable: #f0f0f0;
-  --feedback: #c5c5c5;
-  --positive: #16aa15;
-  --positive-hover: rgba(22, 170, 21, 0.60);
-  --negative: #df1c1c;
-  --negative-hover: rgba(223, 28, 28, 0.60);
-  --highlight: #0078d7;
-  --highlight-hover: rgba(0, 120, 215, 0.60);
-  --visited: #551a8b;
-}
-
 html {
   font: 1rem "Fira Sans", sans-serif;
-  background-color: var(--background);
-  color: var(--primary-text);
 }
 
 body {
   margin: 0;
-}
-
-app-footer {
-  background: var(--primary-background);
-}
-
-app-header {
-  border-color: var(--secondary-text);
-}
-
-::part(button) {
-  background-color: var(--clickable);
-  color: var(--primary-text);
-}
-
-::part(button):hover, ::part(button):focus {
-  background-color: var(--hover);
-}
-
-::part(button):active {
-  background-color: var(--feedback);
-}
-
-::part(selected-button) {
-  border-color: var(--border);
-  background-color: var(--primary-background);
-  color: var(--primary-text);
-}
-
-app-password-input::part(outline) {
-  background-color: var(--input-background);
-  border-color: var(--border);
-}
-
-@supports (-moz-orient: inherit) {
-  app-password-input::part(outline) {
-    outline-color: Highlight;
-  }
-}
-
-app-password-input::part(outline):hover {
-  border-color: var(--hover);
-}
-
-app-password-input[data-invalid]::part(outline) {
-  border-color: var(--negative)
-}
-
-app-password-input[data-invalid]::part(outline):hover,
-app-password-input[data-invalid]:focus::part(outline) {
-  border-color: var(--negative-hover)
-}
-
-app-password-input::part(eye-button) {
-  background-color: var(--input-background);
-}
-
-app-password-input::part(inner-input) {
-  color: var(--primary-text);
-  background-color: var(--input-background);
-}
-
-::part(table) {
-  background-color: var(--primary-background);
-}
-
-::part(tbody) {
-  background-color: var(--secondary-background);
-}
-
-::part(tr-even) {
-  background-color: var(--primary-background);
-}
-
-[required]::part(label):after {
-  color: var(--negative)
 }
 
 .right {
@@ -203,7 +101,7 @@ app-header {
 .login {
   margin: 5px;
   border-radius: 5px;
-  box-shadow: 0 0 10px var(--secondary-background);
+  box-shadow: 0 0 10px var(--secondary-background, lightgray);
 }
 
 .login-box {
@@ -218,20 +116,6 @@ app-header {
 
 a, ::part(a) {
   text-decoration: none;
-  color: var(--highlight);
-}
-
-a:visited {
-  color: var(--visited);
-}
-
-.login-button::part(button) {
-  background-color: var(--positive);
-  color: var(--inverted-primary-text)
-}
-
-.login-button::part(button):hover {
-  background-color: var(--positive-hover);
 }
 
 [hidden] {
@@ -240,118 +124,12 @@ a:visited {
   height: 0;
 }
 
-::part(logout-button) {
-  color: var(--inverted-primary-text);
-  background-color: var(--negative);
-}
-
-::part(logout-icon) {
-  color: var(--inverted-primary-text);
-  background-color: var(--negative);
-}
-
-::part(logout-button):focus, ::part(logout-button):hover {
-  background-color: var(--negative-hover);
-}
-
 .column {
   flex-direction: column
 }
 
-::part(icon) {
-  color: var(--primary-text);
-}
-
-::part(input) {
-  background-color: var(--input-background);
-  color: var(--primary-text);
-  border-color: var(--border);
-}
-
-::part(input):hover {
-  border-color: var(--hover);
-}
-
-[data-invalid]::part(input) {
-  border-color: var(--negative)
-}
-
-[data-invalid]::part(input):hover,
-[data-invalid]::part(input):focus {
-  border-color: var(--negative-hover)
-}
-
-::part(textarea) {
-  background-color: var(--input-background);
-  color: var(--primary-text);
-  border-color: var(--border);
-}
-
-::part(textarea):hover {
-  border-color: var(--hover);
-}
-
-[data-invalid]::part(textarea) {
-  border-color: var(--negative)
-}
-
-[data-invalid]::part(textarea):hover,
-[data-invalid]::part(textarea):focus {
-  border-color: var(--negative-hover)
-}
-
-::part(img) {
-  border-color: var(--border);
-}
-
-::part(img):hover {
-  border-color: var(--hover);
-}
-
-[data-invalid]::part(img) {
-  border-color: var(--negative)
-}
-
-[data-invalid]::part(img):hover,
-[data-invalid]::part(img):focus {
-  border-color: var(--negative-hover)
-}
-
 .gap {
   gap: 10px;
-}
-
-app-search-input::part(outline) {
-  background-color: var(--input-background);
-  border-color: var(--border);
-}
-
-@supports (-moz-orient: inherit) {
-  app-search-input::part(outline) {
-    outline-color: Highlight;
-  }
-}
-
-app-search-input::part(outline):hover {
-  border-color: var(--hover);
-}
-
-app-search-input[data-invalid]::part(outline) {
-  border-color: var(--negative)
-}
-
-app-search-input[data-invalid]::part(outline):hover,
-app-search-input[data-invalid]:focus::part(outline) {
-  border-color: var(--negative-hover)
-}
-
-app-search-input::part(icon-button) {
-  background-color: var(--input-background);
-}
-
-app-search-input::part(inner-input) {
-  color: var(--primary-text);
-  background-color: var(--input-background);
 }
 
 .search::part(inner-input) {

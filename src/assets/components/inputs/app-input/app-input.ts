@@ -27,11 +27,8 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    if (Object.keys(AppInput.observedAttributesMap).includes(name))
-    {
-      const callback = AppInput.observedAttributesMap[name as attributeKey]!;
-      callback(this, newValue);
-    }
+    const callback = AppInput.observedAttributesMap[name as attributeKey]!;
+    callback(this, newValue);
     await this.validate();
   }
 
@@ -199,12 +196,12 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     await this.setupValidation();
   }
 
-  async onValueSet(event: Event): Promise<void>
+  async onValueSet(_event: Event): Promise<void>
   {
     await this.validate();
   }
 
-  async onInputChange(event: Event): Promise<void>
+  async onInputChange(_event: Event): Promise<void>
   {
     this.interacted = true;
     await this.validateAndReport();
@@ -330,7 +327,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     }
   }
 
-  setCustomError(input: HTMLInputElement): void
+  setCustomError(_input: HTMLInputElement): void
   {
   }
 
