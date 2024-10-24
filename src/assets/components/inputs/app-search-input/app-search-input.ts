@@ -38,11 +38,11 @@ export class AppSearchInput extends AppInput implements StyleCSS
       <span class="input parent" part="outline" id="outline">
       <label part="label" for="input"></label>
         <input class="control" part="inner-input" id="input"/>
-             <app-button exportparts="button: icon-button" aria-label="Search">
-              <slot name="icon-button">
-                <span id="icon" class="icon" part="icon"></span>
-              </slot>
-            </app-button>
+        <app-button exportparts="button: icon-button" aria-label="Search">
+          <slot name="icon-button">
+            <span id="icon" class="icon" part="icon"></span>
+          </slot>
+        </app-button>
       </span>
     `;
   }

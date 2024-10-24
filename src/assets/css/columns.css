@@ -24,7 +24,6 @@
   flex: 0 0 auto;
   align-content: flex-start;
   box-sizing: border-box;
-  /*Experiment*/
   transition: width linear 150ms;
 }
 
@@ -94,7 +93,6 @@
     flex: 0 0 auto;
     align-content: flex-start;
     box-sizing: border-box;
-    /*Experiment*/
     transition: width linear 150ms;
   }
 
@@ -165,7 +163,6 @@
     flex: 0 0 auto;
     align-content: flex-start;
     box-sizing: border-box;
-    /*Experiment*/
     transition: width linear 150ms;
   }
 
@@ -236,7 +233,6 @@
     flex: 0 0 auto;
     align-content: flex-start;
     box-sizing: border-box;
-    /*Experiment*/
     transition: width linear 150ms;
   }
 

@@ -12,12 +12,14 @@ COPY package*.json ./
 RUN npm install
 RUN cd build && npm install
 COPY . .
+RUN node locations.js
 RUN npm run build
 
 FROM nginx:alpine
 RUN mkdir -p /usr/share/nginx/mycollection/html && mkdir /usr/share/nginx/mycollection/content
 COPY --from=0 /app/dist /usr/share/nginx/mycollection/html
 COPY --from=0 /app/nginx.key /app/password.txt /app/nginx.pem /etc/nginx/
+COPY --from=0 /app/locations.nginx.conf /etc/nginx/
 COPY nginx.conf /etc/nginx/
 
 EXPOSE 80

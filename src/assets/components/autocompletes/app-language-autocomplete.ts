@@ -32,9 +32,16 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
   {
     yield this.#items;
   }
+
+  public static define(): void
+  {
+    if (customElements.get("app-language-autocomplete"))
+      return;
+    customElements.define("app-language-autocomplete", AppLanguageAutocomplete);
+  }
 }
 
-customElements.define("app-language-autocomplete", AppLanguageAutocomplete);
+AppLanguageAutocomplete.define();
 
 function getLanguageAndCode(language: Language): { label: Language, value: LanguageCode }
 {

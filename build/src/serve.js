@@ -51,26 +51,32 @@ export const contentTypeExtensions = {
   "ico": "image/x-icon",
   "ts": "video",
 };
+const port = 5000;
+const file = await fs.promises.readFile("routes.json");
+const data = JSON.parse(file.toString());
+const keys = Object.keys(data).map(x => ({
+  pattern: new RegExp(data[x]),
+  target: `http://localhost:${port}` + x
+}))
 const proxies = [{
   pattern: /^\/api\/(.*)/,
-  target: "http://localhost:3000/",
-  params: "$1"
-}];
-runServer({port: 5000, src: path.join(process.cwd(), "src"), proxies});
+  target: "http://localhost:3000/$1"
+}, ...keys];
+runServer({port, src: path.join(process.cwd(), "src"), proxies});
 
 /**
- * @param {{port: number, src: string, proxies: {pattern: RegExp, params: string,target}[]}} settings
+ * @param {{port: number, src: string, proxies: {pattern: RegExp,target}[]}} settings
  */
 export function runServer({port, src, proxies})
 {
+  const proxyServers = new Map();
+  proxies.forEach(x =>
+  {
+    // noinspection JSUnresolvedReference
+    proxyServers.set(x.target, httpProxy.createProxyServer({target: new URL(x.target).origin}));
+  })
   http.createServer(async (request, response) =>
   {
-    const proxyServers = new Map();
-    proxies.forEach(x =>
-    {
-      // noinspection JSUnresolvedReference
-      proxyServers.set(x.target, httpProxy.createProxyServer({target: x.target}));
-    })
     for (const proxy of proxies)
     {
       const matches = request.url.match(proxy.pattern);
@@ -92,13 +98,12 @@ export function runServer({port, src, proxies})
 
 function proxyRequest(request, response, proxy, proxyServer, matches)
 {
-  let resultLocation = proxy.params;
-  const indices = resultLocation.match(/(?<=\$)\d+/);
+  let resultLocation = proxy.target;
+  const indices = resultLocation.match(/(?<=\$)\d+/g) ?? [];
   for (const index of indices)
   {
     resultLocation = resultLocation.replaceAll("$" + index, matches[index]);
   }
-  resultLocation = proxy.target + resultLocation;
   request.url = resultLocation;
   proxyServer.web(request, response, null, (error) =>
   {
@@ -131,6 +136,7 @@ function last(items)
 {
   return items[items.length - 1];
 }
+
 function secondLast(items)
 {
   return items[items.length - 2] ?? "";

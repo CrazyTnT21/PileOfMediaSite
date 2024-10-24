@@ -414,7 +414,6 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
         flex: 1;
         box-sizing: border-box;
         max-width: 100%;
-        align-self: flex-start;
       }
 
       .container {

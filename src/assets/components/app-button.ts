@@ -28,8 +28,8 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   private static disabledAttr(element: AppButton, value: string | null | undefined): void
   {
     const disabled = element.hasDisabledFieldset || value == "";
-    const input = element.shadowRoot.querySelector("input")!;
-    input.disabled = disabled;
+    const button = element.shadowRoot.querySelector("button")!;
+    button.disabled = disabled;
     element.internals.ariaDisabled = disabled ? "" : null;
   }
 

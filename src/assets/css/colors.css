@@ -130,10 +130,10 @@ a:visited {
 
 ::part(logout-icon) {
   color: var(--inverted-primary-text);
-  background-color: var(--negative);
 }
 
-::part(logout-button):focus, ::part(logout-button):hover {
+::part(logout-button):focus,
+::part(logout-button):hover {
   background-color: var(--negative-hover);
 }
 

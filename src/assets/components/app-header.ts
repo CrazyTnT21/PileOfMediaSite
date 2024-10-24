@@ -65,8 +65,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     {
       const user: LoginReturn["user"] = JSON.parse(localAccount).user;
       const profileLink: HTMLAnchorElement = this.shadowRoot.querySelector("#profile-link")!;
-      //TODO
-      profileLink.href = `/user/user`///${user.name}`
+      profileLink.href = `/user/${user.id}`//`/user/${user.name}`
       if (user.profile_picture)
       {
         user.profile_picture.versions.sort((x: ImageData, y: ImageData) => x.width * x.height - y.width * y.height);
@@ -202,6 +201,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         border-bottom: 1px solid gray;
         gap: 5px;
         align-items: center;
+        align-content: center;
         justify-content: center;
       }
 
@@ -227,6 +227,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       #user {
+        summary {
+          aspect-ratio: 1;
+        }
+
         ul {
           z-index: 1;
           position: absolute;
@@ -276,19 +280,8 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         & li {
           * {
             display: flex;
-            padding: 5px;
-            border-radius: 5px;
-            align-items: center;
-          }
-        }
-      }
-
-      .items {
-        li {
-          * {
-            display: flex;
-            padding: 5px;
-            border-radius: 15px;
+            padding: 4px;
+            border-radius: 2px;
             align-items: center;
           }
         }
