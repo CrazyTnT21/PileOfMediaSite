@@ -1,10 +1,10 @@
-import {API_URL} from "./modules.js";
-import {AppInput} from "./assets/components/inputs/app-input/app-input.js";
-import {AppPasswordInput} from "./assets/components/inputs/app-password-input.js";
-import {AppHeader} from "./assets/components/app-header.js";
+import {API_URL} from "../modules";
+import {AppInput} from "../../components/inputs/app-input/app-input";
+import {AppPasswordInput} from "../../components/inputs/app-password-input";
+import {AppHeader} from "../../components/app-header";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
-import {formData} from "./assets/components/inputs/common.js";
+import {formData} from "../../components/inputs/common";
 
 document.querySelector("form")!.addEventListener("submit", async e =>
 {

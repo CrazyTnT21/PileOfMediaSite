@@ -1,9 +1,9 @@
-import {AppSearchInput} from "./assets/components/inputs/app-search-input/app-search-input";
+import {AppSearchInput} from "../../components/inputs/app-search-input/app-search-input";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
-import {API_URL} from "./modules";
-import {SearchEvent} from "./assets/components/inputs/app-search-input/search-event";
-import {Book} from "./assets/types/book";
+import {API_URL} from "../modules";
+import {SearchEvent} from "../../components/inputs/app-search-input/search-event";
+import {Book} from "../../types/book";
 
 const params = new URLSearchParams((window.location.search))
 AppSearchInput.define()

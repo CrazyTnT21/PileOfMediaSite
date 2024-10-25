@@ -1,5 +1,5 @@
 import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
-import {API_URL} from "../../../modules.js";
+import {API_URL} from "../../scripts/modules";
 import {Person} from "../../types/person.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";

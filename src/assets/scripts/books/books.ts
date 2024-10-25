@@ -1,7 +1,7 @@
-import {AppTable, Column, ColumnType} from "../assets/components/app-table.js";
-import {Config} from "../assets/classes/config.js";
-import {API_URL} from "../modules.js";
-import {Book} from "../assets/types/book.js";
+import {AppTable, Column, ColumnType} from "../../components/app-table";
+import {Config} from "../../classes/config";
+import {API_URL} from "../modules";
+import {Book} from "../../types/book";
 import {paths} from "mycollection-openapi";
 import createClient from "openapi-fetch";
 
