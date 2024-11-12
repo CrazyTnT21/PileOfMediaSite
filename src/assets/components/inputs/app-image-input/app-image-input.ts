@@ -373,6 +373,24 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   {
     //language=CSS
     return `
+      :host {
+        --image-input-brightness-1--: var(--image-input-brightness-1, -20);
+        --image-input-brightness-2--: var(--button-brightness-2, -40);
+        --image-input-background-color--: var(--image-input-background-color, white);
+        --image-input-background-color-hover--: hsl(from var(--image-input-background-color--) h s calc(l + var(--image-input-brightness-1--)));
+        --image-input-background-color-disabled--: hsl(from var(--image-input-background-color--) h s calc(l + var(--image-input-brightness-2--)));
+
+        --image-input-color--: var(--image-input-color, black);
+
+        --image-input-border-color--: var(--image-input-border-color, #969696);
+        --image-input-border-color-hover--: hsl(from var(--image-input-border-color--) h s calc(l + var(--image-input-brightness-1--)));
+        --image-input-border-color-disabled--: hsl(from var(--image-input-border-color--) h s calc(l + var(--image-input-brightness-2--)));
+
+        --image-input-invalid-color--: var(--image-input-invalid-color, #dc0000);
+        --image-input-invalid-color-hover--: hsl(from var(--image-input-invalid-color--) h s calc(l + var(--image-input-brightness-1--)));
+        --image-input-outline-color--: var(--image-input-outline-color, highlight)
+      }
+
       img {
         border-radius: 5px;
         display: inline-flex;
@@ -380,16 +398,16 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
         max-height: 100%;
         aspect-ratio: 1 / 1.41421;
         object-fit: contain;
-        border: 1px solid lightgray;
+        border: 1px solid var(--image-input-border-color--);
         flex: 1;
       }
 
       label {
         position: absolute;
-        color: var(--primary-text, black);
+        color: var(--image-input-color--);
         margin: 0 0 0 5px;
         transform: translateY(calc(-60%));
-        background: linear-gradient(180deg, transparent 0 8px, var(--input-background) 3px 80%, transparent 3px);
+        background: linear-gradient(180deg, transparent 0 7px, var(--image-input-background-color--) 7px 15px, transparent 15px 100%);
         transition: transform ease 50ms;
       }
 
@@ -405,12 +423,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       :host([required]) {
         label::after {
           content: "*";
-          color: red;
-
-          input:not(input:focus) ~ label::after {
-            /*TODO: Part*/
-            color: var(--negative-hover, #ff9191);
-          }
+          color: var(--image-input-invalid-color--);
         }
       }
 
@@ -418,21 +431,31 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
         color: transparent;
       }
 
-      input:hover {
-        border-color: #E6E6E6FF;
-        transition: border-color ease 50ms;
+      img:hover, img:focus {
+        border-color: var(--image-input-border-color-hover--);
       }
 
       input[data-invalid] + img {
-        border-color: red
+        border-color: var(--image-input-invalid-color--)
       }
 
-      img:hover {
-        filter: opacity(50%);
+      input[data-invalid] + img:hover {
+        border-color: var(--image-input-invalid-color-hover--);
+      }
+
+      img:focus {
+        outline: var(--image-input-outline-color--) 2px solid;
       }
 
       :host([disabled]) > img {
-        filter: brightness(75%);
+        background-color: var(--image-input-background-color-disabled--)
+      }
+
+      :host([disabled]) {
+        label {
+          content: "*";
+          background: linear-gradient(180deg, transparent 0 7px, var(--image-input-background-color-disabled--) 7px 15px, transparent 15px 100%);
+        }
       }
     `;
   }

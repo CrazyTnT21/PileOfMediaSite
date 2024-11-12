@@ -3,6 +3,7 @@ import {API_URL} from "../../scripts/modules";
 import {Franchise} from "../../types/franchise.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
+import {Config} from "../../classes/config";
 
 export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
 {
@@ -23,7 +24,8 @@ export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
       const {data, error} = await client.GET("/franchises/name/{name}", {
         params: {
           path: {name: value},
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)
@@ -47,7 +49,8 @@ export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
     {
       const {data, error} = await client.GET("/franchises", {
         params: {
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)

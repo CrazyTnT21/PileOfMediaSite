@@ -36,23 +36,13 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     for (let i = 0; i < items.length; i++)
     {
       const row = this.createRow(items[i]!);
-      row.part.add("tbody-tr");
-      for (const x of row.children)
-      {
-        x.part.add("tbody-td");
-      }
       rows.append(row);
-    }
-    for (let i = 1; i < rows.children.length; i += 2)
-    {
-      rows.children[i]!.part.add("tr-even");
     }
   }
 
   createRow(item: T): HTMLTableRowElement
   {
     const row = document.createElement("tr");
-    row.part.add("tr");
     for (const column of this._columns)
     {
       const data = this.createRowElement(column, item);
@@ -82,7 +72,6 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     this.setInnerHTML(column, element, item);
 
     const data = document.createElement("td");
-    data.part.add("td");
     data.classList.add("pad");
 
     if (column.width)
@@ -133,7 +122,6 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
     for (const column of columns)
     {
       const columnElement = document.createElement("th");
-      columnElement.part.add("th", "thead-th");
       columnElement.classList.add("pad");
       columnElement.scope = "col";
       columnElement.innerText = column.display;
@@ -205,6 +193,17 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
   {
     //language=CSS
     return `
+      :host {
+        --table-odd-background-color--: var(--table-odd-background-color, #f0f0f0);
+        --table-even-background-color--: var(--table-even-background-color, #ebebeb);
+
+        --table-color--: var(--table-color, black);
+      }
+
+      * {
+        color: var(--table-color--);
+      }
+
       img {
         width: 100%;
       }
@@ -215,13 +214,8 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
 
       table {
         border-radius: 5px;
-        background-color: #f0f0f0;
         width: 100%;
         border-collapse: collapse;
-      }
-
-      tbody {
-        background-color: #DADADAFF;
       }
 
       thead > tr > th:first-child {
@@ -237,7 +231,10 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
       }
 
       tr:nth-of-type(even) {
-        background-color: #f0f0f0;
+        background-color: var(--table-even-background-color--);
+      }
+      tr:nth-of-type(odd) {
+        background-color: var(--table-odd-background-color--);
       }
 
       ::part(button) {

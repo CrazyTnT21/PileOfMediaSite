@@ -1,13 +1,13 @@
 import {Config} from "../classes/config.js";
 import {get} from "./http.js";
-import {getLanguageCode, Language, LanguageCode} from "../classes/language.js";
+import {LanguageCode, getLanguageTag} from "../classes/language.js";
 import {Translation} from "../translations/translation.js";
 
 const elements = <NodeListOf<HTMLElement>>document.querySelectorAll("[data-translate]");
-const language = Config.getConfig().language;
+const language = Config.languageCode;
 getTranslation(language).then(translation =>
 {
-  document.querySelector("html")!.lang = getLanguageCode(language).toLowerCase();
+  document.querySelector("html")!.lang = getLanguageTag(language);
   for (const element of elements)
   {
     const translated = element.dataset["translate"]!;
@@ -18,17 +18,17 @@ getTranslation(language).then(translation =>
   }
 });
 
-async function getTranslation(language: Language): Promise<Translation>
+async function getTranslation(language: LanguageCode): Promise<Translation>
 {
   try
   {
-    const uri = getTranslationUri(getLanguageCode(language));
+    const uri = getTranslationUri(language);
     return await get(uri);
   }
   catch (e)
   {
     console.error(`Error while processing the translation for language '${language}'`, e);
-    return await get(getTranslationUri(getLanguageCode(Language.EN)));
+    return await get(getTranslationUri(LanguageCode.EN));
   }
 }
 

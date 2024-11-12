@@ -3,6 +3,7 @@ import {API_URL} from "../../scripts/modules";
 import {Character} from "../../types/character.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
+import {Config} from "../../classes/config";
 
 export class AppCharacterAutocomplete extends AppAutocomplete<Character>
 {
@@ -23,7 +24,8 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
       const {data, error} = await client.GET("/characters/name/{name}", {
         params: {
           path: {name: value},
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)
@@ -47,7 +49,8 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
     {
       const {data, error} = await client.GET("/characters", {
         params: {
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)

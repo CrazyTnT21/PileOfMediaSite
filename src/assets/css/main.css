@@ -98,10 +98,34 @@ app-header {
   justify-content: center;
 }
 
+@media (min-width: 900px) {
+  .center-l {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 900px) {
+  .center-m {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .center-s {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 .login {
   margin: 5px;
   border-radius: 5px;
-  box-shadow: 0 0 10px var(--secondary-background, lightgray);
+  box-shadow: 0 0 10px var(--app-background-4, lightgray);
 }
 
 .login-box {
@@ -134,4 +158,13 @@ a, ::part(a) {
 
 .search::part(inner-input) {
   padding: 8px;
+}
+
+p {
+  margin: 0;
+}
+
+.din-4 {
+  aspect-ratio: 1 / 1.41421;
+  object-fit: contain;
 }

@@ -56,6 +56,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
         content: "search";
         font-family: "Material Symbols Outlined", serif;
         font-size: 22px;
+        color: var(--input-label-color--);
       }
 
       .parent {
@@ -74,20 +75,18 @@ export class AppSearchInput extends AppInput implements StyleCSS
         flex: 1;
       }
 
+      #outline:has(input:focus) {
+        outline: solid 2px var(--input-outline-color--);
+      }
+
       #outline:hover {
-        border-color: #E6E6E6FF;
         transition: border-color ease 50ms;
       }
 
-      #outline:has(input:focus) {
-        outline: solid 2px;
-      }
-
-      #outline {
-        outline-color: Highlight;
-      }
-
       app-button {
+        --button-outline-color: var(--input-outline-color--);
+        --button-background-color: none;
+        --button-background-color-hover: none;
         display: inline-flex;
         align-self: center;
         align-items: center;
@@ -97,12 +96,11 @@ export class AppSearchInput extends AppInput implements StyleCSS
         display: inline-flex;
         padding: 0 5px 0 5px;
         border: none;
-        background-color: transparent;
         cursor: pointer;
       }
 
       #outline:has(input[data-invalid]) {
-        border-color: red;
+        border-color: var(--input-invalid-color--);
       }
     `;
   }

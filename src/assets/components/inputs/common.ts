@@ -45,7 +45,7 @@ export function handleFieldset(item: Node & {
   }
 }
 
-export function formData<T>(...values: ([keyof T & string, "serialize"] | [keyof T & string])[])
+export function formData<T>(...values: ([(keyof T) & string, "serialize"] | [string & keyof T])[])
 {
   return (body: T): FormData =>
   {
@@ -54,11 +54,23 @@ export function formData<T>(...values: ([keyof T & string, "serialize"] | [keyof
     {
       if (body[value[0]] == null)
         continue;
-
-      const data = value[1] == "serialize" ? JSON.stringify(body[value[0]]) : body[value[0]] as Blob
-
-      formData.set(value[0], data)
+      if (value[1] == "serialize")
+      {
+        formData.set(value[0], JSON.stringify(body[value[0]]));
+        continue;
+      }
+      const blobData = body[value[0]] as Blob | Blob[];
+      if (!Array.isArray(blobData))
+      {
+        formData.set(value[0], blobData)
+        continue;
+      }
+      formData.delete(value[0]);
+      for (const x of blobData)
+      {
+        formData.append(value[0], x);
+      }
     }
-    return formData
+    return formData;
   }
 }

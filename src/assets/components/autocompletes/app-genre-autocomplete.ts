@@ -3,6 +3,7 @@ import {API_URL} from "../../scripts/modules";
 import {Genre} from "../../types/genre.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
+import {Config} from "../../classes/config";
 
 export class AppGenreAutocomplete extends AppAutocomplete<Genre>
 {
@@ -23,7 +24,8 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
       const {data, error} = await client.GET("/genres/name/{name}", {
         params: {
           path: {name: value},
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)
@@ -47,7 +49,8 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
     {
       const {data, error} = await client.GET("/genres", {
         params: {
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)

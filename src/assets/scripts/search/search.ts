@@ -4,6 +4,7 @@ import {paths} from "mycollection-openapi";
 import {API_URL} from "../modules";
 import {SearchEvent} from "../../components/inputs/app-search-input/search-event";
 import {Book} from "../../types/book";
+import {Config} from "../../classes/config";
 
 const params = new URLSearchParams((window.location.search))
 AppSearchInput.define()
@@ -45,7 +46,8 @@ async function* searchBooks(value: string): AsyncGenerator<Book[]>
         query: {count, page},
         path: {
           title: value
-        }
+        },
+        header: {"Accept-Language": Config.languageTag}
       }
     })
     if (data == undefined)

@@ -3,6 +3,7 @@ import {API_URL} from "../../scripts/modules";
 import {Role} from "../../types/role.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
+import {Config} from "../../classes/config";
 
 export class AppRoleAutocomplete extends AppAutocomplete<Role>
 {
@@ -23,7 +24,8 @@ export class AppRoleAutocomplete extends AppAutocomplete<Role>
       const {data, error} = await client.GET("/roles/name/{name}", {
         params: {
           path: {name: value},
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)
@@ -47,7 +49,8 @@ export class AppRoleAutocomplete extends AppAutocomplete<Role>
     {
       const {data, error} = await client.GET("/roles", {
         params: {
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)

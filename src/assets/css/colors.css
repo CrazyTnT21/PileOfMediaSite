@@ -1,230 +1,207 @@
-/*Shadow dom*/
-@import '@material-symbols/font-400';
-
 :root {
-  --primary-text: #000000;
-  --secondary-text: #646464;
+  --default-brightness-1: -10;
+  --default-brightness-2: -20;
 
-  --inverted-primary-text: white;
-  --inverted-secondary-text: white;
-  --background: #ffffff;
-  --primary-background: #f8f8f8;
-  --secondary-background: #dcdcdc;
-  --input-background: #ffffff;
-  --border: #b6b6b6;
+  --app-background-1-brightness: var(--default-brightness-1);
+  --app-background-2-brightness: var(--default-brightness-1);
+  --app-background-3-brightness: var(--default-brightness-1);
+  --app-background-4-brightness: var(--default-brightness-1);
 
-  --hover: #ebebeb;
-  --clickable: #f0f0f0;
-  --feedback: #c5c5c5;
-  --positive: #16aa15;
-  --positive-hover: rgba(22, 170, 21, 0.60);
-  --negative: #df1c1c;
-  --negative-hover: rgba(223, 28, 28, 0.60);
-  --highlight: #0078d7;
-  --highlight-hover: rgba(0, 120, 215, 0.60);
-  --visited: #551a8b;
+  --app-color-1-brightness: var(--default-brightness-1);
+  --app-color-2-brightness: var(--default-brightness-1);
+
+  --app-input-brightness: var(--default-brightness-2);
+  --app-button-brightness: var(10);
+
+  --app-visited-brightness: var(--default-brightness-1);
+  --app-negative-brightness: var(--default-brightness-1);
+  --app-positive-brightness: var(--default-brightness-1);
+
+  --button-background-color: var(--app-button-background-color);
+  --button-brightness-1: var(--app-button-brightness);
+  --button-brightness-2: calc(var(--app-button-brightness) * 2);
+
+  --button-color: var(--app-button-color);
+  --button-outline-color: var(--app-outline);
+
+  --input-background-color: var(--app-input-background-color);
+  --input-brightness-1: var(--app-input-brightness);
+  --input-brightness-2: calc(var(--app-input-brightness) * 2);
+
+  --input-color: var(--app-text-1);
+  --input-outline-color: var(--app-outline);
+  --input-label-color: var(--app-text-2);
+
+  --textarea-background-color: var(--app-input-background-color);
+  --textarea-brightness-1: var(--app-input-brightness);
+  --textarea-brightness-2: calc(var(--app-input-brightness) * 2);
+
+  --textarea-color: var(--app-text-1);
+  --textarea-outline-color: var(--app-outline);
+  --textarea-label-color: var(--app-text-2);
+
+  --image-input-background-color: var(--app-background-1);
+  --image-input-brightness-1: var(--app-input-brightness);
+  --image-input-brightness-2: calc(var(--app-input-brightness) * 2);
+
+  --image-input-color: var(--app-text-1);
+  --image-input-outline-color: var(--app-outline);
+
+  --header-brightness-1: var(--app-background-1-brightness);
+  --header-brightness-2: calc(var(--app-background-1-brightness) * 2);
+  --header-background-color: var(--app-background-1);
+
+  --header-color: var(--app-text-1);
+
+  --header-border-color: var(--app-color-1);
+  --header-secondary-border-color: var(--app-color-2);
+
+  --header-logout-button-background-color: var(--app-negative);
+  --header-logout-button-brightness: var(--app-negative-brightness);
+
+  --header-logout-button-color: var(--app-negative-text);
+  --table-odd-background-color: var(--app-background-2);
+  --table-even-background-color: var(--app-background-3);
+
+  --table-color: var(--app-text-1);
+}
+
+/*noinspection DuplicatedCode*/
+@media (prefers-color-scheme: light) {
+  :root {
+    --app-background-1: hsl(0 0 100);
+    --app-background-2: hsl(0 0 95);
+    --app-background-3: hsl(0 0 90);
+    --app-background-4: hsl(0 0 85);
+
+    --app-color-1: hsl(0 0% 25%);
+    --app-color-2: hsl(0 0% 30%);
+
+    --app-text-1: hsl(0 0% 5%);
+    --app-text-2: hsl(0 0% 35%);
+
+    --app-input-color: hsl(0 0% 95%);
+    --app-button-color: hsl(0 0% 95%);
+
+    --app-input-text: hsl(0 0% 5%);
+    --app-button-text: hsl(0 0% 95%);
+
+    --app-outline: highlight;
+    --app-visited: #842fb6;
+    --app-negative: #c80f0f;
+    --app-positive: #16aa15;
+    --app-negative-text: hsl(0 0% 95%);
+    --app-positive-text: hsl(0 0% 95%);
+  }
+}
+
+/*noinspection DuplicatedCode*/
+@media (prefers-color-scheme: dark) {
+  :root {
+    --default-brightness-1: 10;
+    --default-brightness-2: 20;
+
+    --app-background-1: hsl(0 0 15);
+    --app-background-2: hsl(0 0 20);
+    --app-background-3: hsl(0 0 25);
+    --app-background-4: hsl(0 0 30);
+
+    --app-color-1: hsl(0 0% 90%);
+    --app-color-2: hsl(0 0% 85%);
+
+    --app-text-1: hsl(0 0% 95%);
+    --app-text-2: hsl(0 0% 65%);
+
+    --app-input-background-color: hsl(0 0% 20%);
+    --app-button-background-color: hsl(208, 76%, 37%);
+
+    --app-input-color: hsl(0 0% 95%);
+    --app-button-color: hsl(0 0% 95%);
+
+    --app-outline: highlight;
+    --app-visited: #c76fff;
+    --app-negative: #c80f0f;
+    --app-positive: #16aa15;
+    --app-negative-text: hsl(0 0% 95%);
+    --app-positive-text: hsl(0 0% 95%);
+
+    --app-negative-brightness: -10;
+    --app-positive-brightness: -10;
+  }
+}
+
+/*noinspection DuplicatedCode*/
+:root[data-color-scheme="light"] {
+  --app-background-1: hsl(0 0 100);
+  --app-background-2: hsl(0 0 95);
+  --app-background-3: hsl(0 0 90);
+  --app-background-4: hsl(0 0 85);
+
+  --app-color-1: hsl(0 0 25);
+  --app-color-2: hsl(0 0 30);
+
+  --app-text-1: hsl(0 0% 5%);
+  --app-text-2: hsl(0 0% 35%);
+
+  --app-input-background-color: hsl(0 0% 100%);
+  --app-button-background-color: hsl(208 50% 46.5%);
+
+  --app-input-color: hsl(0 0% 95%);
+  --app-button-color: hsl(0 0% 95%);
+
+  --app-outline: highlight;
+  --app-visited: #842fb6;
+  --app-negative: #c80f0f;
+  --app-positive: #16aa15;
+  --app-negative-text: hsl(0 0% 95%);
+  --app-positive-text: hsl(0 0% 95%);
+}
+
+/*noinspection DuplicatedCode*/
+:root[data-color-scheme="dark"] {
+  --default-brightness-1: 10;
+  --default-brightness-2: 20;
+
+  --app-background-1: hsl(0 0 15);
+  --app-background-2: hsl(0 0 20);
+  --app-background-3: hsl(0 0 25);
+  --app-background-4: hsl(0 0 30);
+
+  --app-color-1: hsl(0 0% 75%);
+  --app-color-2: hsl(0 0% 70%);
+
+  --app-text-1: hsl(0 0% 95%);
+  --app-text-2: hsl(0 0% 65%);
+
+  --app-input-background-color: hsl(0 0 20);
+  --app-button-background-color: hsl(208, 76%, 37%);
+
+  --app-input-color: hsl(0 0% 95%);
+  --app-button-color: hsl(0 0% 95%);
+
+  --app-outline: highlight;
+  --app-visited: #c76fff;
+  --app-negative: #c80f0f;
+  --app-positive: #16aa15;
+  --app-negative-text: hsl(0 0% 95%);
+  --app-positive-text: hsl(0 0% 95%);
+
+  --app-negative-brightness: -10;
+  --app-positive-brightness: -10;
 }
 
 html {
-  background-color: var(--background);
-  color: var(--primary-text);
-}
-
-app-footer {
-  background: var(--primary-background);
-}
-
-app-header {
-  border-color: var(--secondary-text);
-}
-
-::part(button) {
-  background-color: var(--clickable);
-  color: var(--primary-text);
-}
-
-::part(button):hover, ::part(button):focus {
-  background-color: var(--hover);
-}
-
-::part(button):active {
-  background-color: var(--feedback);
-}
-
-::part(selected-button) {
-  border-color: var(--border);
-  background-color: var(--primary-background);
-  color: var(--primary-text);
-}
-
-app-password-input::part(outline) {
-  background-color: var(--input-background);
-  border-color: var(--border);
-}
-
-@supports (-moz-orient: inherit) {
-  app-password-input::part(outline) {
-    outline-color: Highlight;
-  }
-}
-
-app-password-input::part(outline):hover {
-  border-color: var(--hover);
-}
-
-app-password-input[data-invalid]::part(outline) {
-  border-color: var(--negative)
-}
-
-app-password-input[data-invalid]::part(outline):hover,
-app-password-input[data-invalid]:focus::part(outline) {
-  border-color: var(--negative-hover)
-}
-
-app-password-input::part(eye-button) {
-  background-color: var(--input-background);
-}
-
-app-password-input::part(inner-input) {
-  color: var(--primary-text);
-  background-color: var(--input-background);
-}
-
-::part(table) {
-  background-color: var(--primary-background);
-}
-
-::part(tbody) {
-  background-color: var(--secondary-background);
-}
-
-::part(tr-even) {
-  background-color: var(--primary-background);
-}
-
-[required]::part(label):after {
-  color: var(--negative)
-}
-
-a, ::part(a) {
-  color: var(--highlight);
+  background-color: var(--app-background-1);
+  color: var(--app-text-1);
 }
 
 a:visited {
-  color: var(--visited);
+  color: var(--app-visited);
 }
 
-.login-button::part(button) {
-  background-color: var(--positive);
-  color: var(--inverted-primary-text)
-}
-
-.login-button::part(button):hover {
-  background-color: var(--positive-hover);
-}
-
-::part(logout-button) {
-  color: var(--inverted-primary-text);
-  background-color: var(--negative);
-}
-
-::part(logout-icon) {
-  color: var(--inverted-primary-text);
-}
-
-::part(logout-button):focus,
-::part(logout-button):hover {
-  background-color: var(--negative-hover);
-}
-
-::part(icon) {
-  color: var(--primary-text);
-}
-
-::part(input) {
-  background-color: var(--input-background);
-  color: var(--primary-text);
-  border-color: var(--border);
-}
-
-::part(input):hover {
-  border-color: var(--hover);
-}
-
-[data-invalid]::part(input) {
-  border-color: var(--negative)
-}
-
-[data-invalid]::part(input):hover,
-[data-invalid]::part(input):focus {
-  border-color: var(--negative-hover)
-}
-
-::part(textarea) {
-  background-color: var(--input-background);
-  color: var(--primary-text);
-  border-color: var(--border);
-}
-
-::part(textarea):hover {
-  border-color: var(--hover);
-}
-
-[data-invalid]::part(textarea) {
-  border-color: var(--negative)
-}
-
-[data-invalid]::part(textarea):hover,
-[data-invalid]::part(textarea):focus {
-  border-color: var(--negative-hover)
-}
-
-::part(img) {
-  border-color: var(--border);
-}
-
-::part(img):hover {
-  border-color: var(--hover);
-}
-
-[data-invalid]::part(img) {
-  border-color: var(--negative)
-}
-
-[data-invalid]::part(img):hover,
-[data-invalid]::part(img):focus {
-  border-color: var(--negative-hover)
-}
-
-app-search-input::part(outline) {
-  background-color: var(--input-background);
-  border-color: var(--border);
-}
-
-@supports (-moz-orient: inherit) {
-  app-search-input::part(outline) {
-    outline-color: Highlight;
-  }
-}
-
-app-search-input::part(outline):hover {
-  border-color: var(--hover);
-}
-
-app-search-input[data-invalid]::part(outline) {
-  border-color: var(--negative)
-}
-
-app-search-input[data-invalid]::part(outline):hover,
-app-search-input[data-invalid]:focus::part(outline) {
-  border-color: var(--negative-hover)
-}
-
-app-search-input::part(icon-button) {
-  background-color: var(--input-background);
-}
-
-app-search-input::part(inner-input) {
-  color: var(--primary-text);
-  background-color: var(--input-background);
+.login {
+  --button-background-color: var(--app-positive);
+  --button-brightness-1: var(--app-positive-brightness);
+  --button-brightness-2: calc(var(--app-positive-brightness) * 2);
+  --button-color: var(--app-positive-text);
 }

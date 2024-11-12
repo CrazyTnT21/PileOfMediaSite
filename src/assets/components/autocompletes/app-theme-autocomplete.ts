@@ -3,6 +3,7 @@ import {API_URL} from "../../scripts/modules";
 import {Theme} from "../../types/theme.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
+import {Config} from "../../classes/config";
 
 export class AppThemeAutocomplete extends AppAutocomplete<Theme>
 {
@@ -23,7 +24,8 @@ export class AppThemeAutocomplete extends AppAutocomplete<Theme>
       const {data, error} = await client.GET("/themes/name/{name}", {
         params: {
           path: {name: value},
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)
@@ -47,7 +49,8 @@ export class AppThemeAutocomplete extends AppAutocomplete<Theme>
     {
       const {data, error} = await client.GET("/themes", {
         params: {
-          query: {page, count}
+          query: {page, count},
+          header: {"Accept-Language": Config.languageTag}
         }
       });
       if (data == undefined)

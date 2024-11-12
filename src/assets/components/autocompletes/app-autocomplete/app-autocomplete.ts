@@ -134,7 +134,6 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       data.value = this.itemId(item).toString();
       selected.append(li);
       const button = document.createElement("button");
-      button.part.add("selected-button");
       data.append(button);
 
       button.innerText = this.itemLabel(item) ?? this.itemValue(item);
@@ -364,6 +363,11 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   {
     //language=CSS
     return super.styleCSS() + `
+      :host {
+        --autocomplete-selected-background-color--: var(--autocomplete-selected-background-color, whitesmoke);
+        --autocomplete-selected-background-color-hover--: hsl(from var(--autocomplete-selected-background-color--) h s calc(l + var(--input-brightness-1--)));
+      }
+
       ul {
         margin: 0;
         padding: 0;
@@ -381,12 +385,19 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
         display: inline-flex;
         flex-wrap: wrap;
         padding-top: 5px;
+        gap: 2px;
       }
 
       button {
         font-size: .75em;
         border-radius: 10px;
-        border: gray 1px solid;
+        border: var(--input-border-color--) 1px solid;
+        color: var(--input-color--);
+        background-color: var(--autocomplete-selected-background-color--);
+      }
+
+      button:hover {
+        background-color: var(--autocomplete-selected-background-color-hover--);
       }
 
       button::after {

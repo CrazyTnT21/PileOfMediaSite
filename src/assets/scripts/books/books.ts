@@ -34,7 +34,7 @@ function columns(): Column<Book>[]
       {
         if (!item.published)
           return "";
-        return Config.getConfig().dateFormatter.format(new Date(item.published));
+        return Config.dateFormatter.format(new Date(item.published));
       },
     },
     {

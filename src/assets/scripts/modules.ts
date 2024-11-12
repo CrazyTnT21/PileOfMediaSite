@@ -1,1 +1,1 @@
-export const API_URL = `${location.protocol}//${location.host}/api/`;
+export const API_URL = `${location.origin}/api/`;

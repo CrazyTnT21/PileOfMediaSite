@@ -4,9 +4,8 @@ import {ApplyStyleSheet} from "../apply-style-sheet.js";
 import {StyleCSS} from "../style-css.js";
 import {handleFieldset} from "./common.js";
 import {ValueSetEvent} from "./app-input/value-set-event";
-import {AppInput} from "./app-input/app-input";
 
-type attributeKey = keyof typeof AppInput["observedAttributesMap"];
+type attributeKey = keyof typeof AppTextArea["observedAttributesMap"];
 
 export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -54,7 +53,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   private static disabledAttr(element: AppTextArea, value: string | null | undefined): void
   {
     const disabled = element.hasDisabledFieldset || value == "";
-    const input = element.shadowRoot.querySelector("input")!;
+    const input = element.shadowRoot.querySelector("textarea")!;
     input.disabled = disabled;
     element.internals.ariaDisabled = disabled ? "" : null;
   }
@@ -345,7 +344,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     //language=HTML
     this.shadowRoot.innerHTML = `
       <span class="parent container">
-      <textarea part="textarea" rows="5" id="textarea"></textarea>
+      <textarea class="textarea control" part="textarea" rows="5" id="textarea"></textarea>
       <label part="label" for="textarea"></label>
         </span>
     `;
@@ -355,67 +354,91 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   {
     //language=CSS
     return `
-      textarea {
-        border-radius: 5px;
-        display: flex;
-        flex: 1 1 100%;
-        font-size: 1.10em;
+      :host {
+        --textarea-brightness-1--: var(--textarea-brightness-1, -20);
+        --textarea-brightness-2--: var(--button-brightness-2, -40);
+        --textarea-background-color--: var(--textarea-background-color, white);
+        --textarea-background-color-disabled--: hsl(from var(--textarea-background-color--) h s calc(l + var(--textarea-brightness-1--)));
 
-        max-width: 100%;
-        box-sizing: border-box;
+        --textarea-color--: var(--textarea-color, black);
+        --textarea-color-disabled--: var(--textarea-color-disabled-hover, #c8c8c8);
 
-        border-width: 1px;
-        border-style: solid;
-        border-color: lightgray;
+        --textarea-border-color--: var(--textarea-border-color, #969696);
+        --textarea-border-color-hover--: hsl(from var(--textarea-border-color--) h s calc(l + var(--textarea-brightness-1--)));
+        --textarea-border-color-disabled--: var(--textarea-border-color-disabled, var(--textarea-border-color--));
 
-        padding: 5px;
-        font-family: "Fira Sans", sans-serif;
+        --textarea-label-color--: var(--textarea-label-color, #737373);
 
-        min-width: 0;
-        resize: none;
+        --textarea-invalid-color--: var(--textarea-invalid-color, #dc0000);
+        --textarea-invalid-color-hover--: hsl(from var(--textarea-invalid-color--) h s calc(l + var(--textarea-brightness-1--)));
+
+        --textarea-outline-color--: var(--textarea-outline-color, Highlight);
       }
 
-      .textarea:hover {
-        border-color: #E6E6E6FF;
+      * {
+        font: 1rem "Fira Sans", sans-serif;
+      }
+
+      .textarea {
+        background-color: var(--textarea-background-color--);
+        display: inline-flex;
+        border-radius: 5px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: var(--textarea-border-color--);
+        flex: 1;
+      }
+
+      .textarea:focus {
+        outline: var(--textarea-outline-color--) 2px solid;
+      }
+
+      .textarea:hover,
+      .textarea:focus {
+        color: var(--textarea-color--);
+        border-color: var(--textarea-border-color-hover--);
         transition: border-color ease 50ms;
       }
 
       .textarea[data-invalid] {
-        border-color: red;
+        border-color: var(--textarea-invalid-color--);
+      }
+
+      .textarea[data-invalid]:hover,
+      .textarea[data-invalid]:focus {
+        border-color: var(--textarea-invalid-color-hover--);
       }
 
       label {
         position: absolute;
-        /*TODO: Part*/
-        color: var(--secondary-text, lightgray);
+        color: var(--textarea-label-color--);
         transition: transform ease 50ms;
         margin: 6px;
         font-size: 1.10em;
+        cursor: text;
       }
 
       .parent:has(textarea:focus) > label,
       .parent:has(textarea:not(textarea:placeholder-shown)) > label {
-        /*TODO: Part*/
-        color: var(--primary-text, black);
-        font-size: 0.8em;
-        line-height: 0.8em;
+        cursor: default;
+        color: var(--textarea-color--);
+        font-size: 1em;
         margin: 0 0 0 5px;
         transform: translateY(calc(-60%));
-        /*TODO: part*/
-        background: linear-gradient(180deg, transparent 0 3px, var(--input-background) 3px 100%);
+        background: linear-gradient(180deg, transparent 0 7px, var(--textarea-background-color--) 7px 15px, transparent 15px 100%);
 
         transition: transform ease 50ms;
+      }
+
+      .parent:has(textarea:hover:not([disabled])) > label,
+      .parent:has(textarea:focus) > label {
+        background: linear-gradient(180deg, transparent 0 7px, var(--textarea-background-color--) 7px 15px, transparent 15px 100%);
       }
 
       :host([required]) {
         label::after {
           content: "*";
-          color: red;
-        }
-
-        textarea:not(textarea:focus) ~ label::after {
-          /*TODO: Part*/
-          color: var(--negative-hover, #ff9191);
+          color: var(--textarea-invalid-color--);
         }
       }
 
@@ -425,12 +448,11 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
       :host {
         padding: 5px;
-        margin-top: 2px;
         display: inline-flex;
+        margin-top: 2px;
         flex: 1;
         box-sizing: border-box;
         max-width: 100%;
-        align-self: flex-start;
       }
 
       .container {
@@ -440,16 +462,29 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
         max-width: 100%;
       }
 
-      * {
-        font-family: "Fira Sans", sans-serif;
+      .control {
+        background-color: var(--textarea-background-color--);
+        color: var(--textarea-color--);
+        display: inline-flex;
+        padding: 5px;
+        min-height: 0;
+        min-width: 0;
+        flex-wrap: wrap;
+        border-radius: 5px;
+        font-size: 1.10em;
+        resize: none;
       }
 
-      label {
-        display: flex;
-      }
+      :host([disabled]) {
+        .textarea {
+          background-color: var(--textarea-background-color-disabled--);
+          color: var(--textarea-color-disabled--);
+          border-color: var(--textarea-border-color-disabled--);
+        }
 
-      textarea[data-invalid] {
-        border-color: red;
+        label:not([x]) {
+          background: linear-gradient(180deg, transparent 0 7px, var(--textarea-background-color-disabled--) 7px 15px, transparent 15px 100%);
+        }
       }
     `;
   }

@@ -21,6 +21,7 @@ function setColorSchemeChoice(): void
 
 document.querySelector("#default-color")!.addEventListener("click", () => removeColorScheme());
 
+document.querySelector("#light-color")!.addEventListener("click", () => saveAndLoadColorScheme(ColorScheme.light()));
 document.querySelector("#dark-color")!.addEventListener("click", () => saveAndLoadColorScheme(ColorScheme.dark()));
 
 function saveAndLoadColorScheme(scheme: ColorScheme): void

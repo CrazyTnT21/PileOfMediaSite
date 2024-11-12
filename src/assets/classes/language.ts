@@ -1,3 +1,5 @@
+import {components} from "mycollection-openapi";
+
 export enum Language
 {
   EN = "English",
@@ -64,5 +66,28 @@ export function getLanguage(language: LanguageCode): Language
       return Language.ES;
     default:
       return Language.EN;
+  }
+}
+
+export type languageTag = "en" | "de" | "es" | "da" | "nl" | "ja" | "ko";
+
+export function getLanguageTag(language: LanguageCode | components["schemas"]["Language"]): languageTag
+{
+  switch (language as LanguageCode)
+  {
+    case LanguageCode.EN:
+      return "en";
+    case LanguageCode.DE:
+      return "de";
+    case LanguageCode.ES:
+      return "es";
+    case LanguageCode.DA:
+      return "da";
+    case LanguageCode.NL:
+      return "nl";
+    case LanguageCode.JA:
+      return "ja";
+    case LanguageCode.KO:
+      return "ko";
   }
 }

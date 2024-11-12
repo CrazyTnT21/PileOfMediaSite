@@ -56,6 +56,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         content: "visibility";
         font-family: "Material Symbols Outlined", serif;
         font-size: 22px;
+        color: var(--input-label-color--);
       }
 
       .eye-closed-icon::before {
@@ -63,6 +64,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         content: "visibility_off";
         font-family: "Material Symbols Outlined", serif;
         font-size: 22px;
+        color: var(--input-label-color--);
       }
 
       input {
@@ -73,17 +75,24 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         border: none
       }
 
+      app-button {
+        --button-outline-color: var(--input-outline-color--);
+        --button-background-color: none;
+        --button-background-color-hover: none;
+      }
+
       .parent {
         flex: 1;
       }
 
-      #outline:hover {
-        border-color: #E6E6E6FF;
+      #outline:hover,
+      #outline:has(input:focus) {
+        border-color: var(--input-border-color-hover--);
         transition: border-color ease 50ms;
       }
 
       #outline:has(input:focus) {
-        outline: solid 2px;
+        outline: solid 2px var(--input-outline-color--);
       }
 
       #outline {

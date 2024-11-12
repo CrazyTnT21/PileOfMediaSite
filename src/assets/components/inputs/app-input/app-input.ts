@@ -336,8 +336,8 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     //language=HTML
     this.shadowRoot.innerHTML = `
       <span class="parent container">
-        <label part="label" for="input"></label>
-        <input class="input control" part="input" id="input"/>
+        <input class="input control" id="input"/>
+        <label for="input"></label>
       </span>
     `;
   }
@@ -346,67 +346,30 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=CSS
     return `
-      .input {
-        display: inline-flex;
-        border-radius: 5px;
-        border-width: 1px;
-        border-style: solid;
-        border-color: lightgray;
-        flex: 1;
-      }
+      :host {
+        --input-brightness-1--: var(--input-brightness-1, -20);
+        --input-brightness-2--: var(--button-brightness-2, -40);
+        --input-background-color--: var(--input-background-color, white);
+        --input-background-color-disabled--: hsl(from var(--input-background-color--) h s calc(l + var(--input-brightness-1--)));
 
-      .input:hover {
-        border-color: #E6E6E6FF;
-        transition: border-color ease 50ms;
-      }
+        --input-color--: var(--input-color, black);
+        --input-color-disabled--: hsl(from var(--input-color--) h s calc(l + var(--input-brightness-1--)));
 
-      .input[data-invalid] {
-        border-color: red;
-      }
+        --input-border-color--: var(--input-border-color, #969696);
+        --input-border-color-hover--: hsl(from var(--input-border-color--) h s calc(l + var(--input-brightness-1--)));
+        --input-border-color-disabled--:  hsl(from var(--input-border-color--) h s calc(l + var(--input-brightness-1--)));
 
-      label {
-        position: absolute;
-        /*TODO: Part*/
-        color: var(--secondary-text, lightgray);
-        transition: transform ease 50ms;
-        margin: 6px;
-        font-size: 1.10em;
-      }
+        --input-label-color--: var(--input-label-color, #737373);
 
-      .parent:has(input:focus) > label,
-      .parent:has(input:not(input:placeholder-shown)) > label {
-        /*TODO: Part*/
-        color: var(--primary-text, black);
-        font-size: 0.8em;
-        line-height: 0.8em;
-        margin: 0 0 0 5px;
-        transform: translateY(calc(-60%));
-        /*TODO: part*/
-        background: linear-gradient(180deg, transparent 0 3px, var(--input-background) 3px 100%);
+        --input-invalid-color--: var(--input-invalid-color, #dc0000);
+        --input-invalid-color-hover--: hsl(from var(--input-invalid-color--) h s calc(l + var(--input-brightness-1--)));
 
-        transition: transform ease 50ms;
-      }
-
-      :host([required]) {
-        label::after {
-          content: "*";
-          color: red;
-        }
-
-        input:not(input:focus) ~ label::after {
-          /*TODO: Part*/
-          color: var(--negative-hover, #ff9191);
-        }
-      }
-
-      input:not(input:focus)::placeholder {
-        color: transparent;
+        --input-outline-color--: var(--input-outline-color, Highlight);
       }
 
       * {
-        font-family: "Fira Sans", sans-serif;
+        font: 1rem "Fira Sans", sans-serif;
       }
-
       :host {
         padding: 5px;
         display: inline-flex;
@@ -414,6 +377,74 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
         flex: 1;
         box-sizing: border-box;
         max-width: 100%;
+      }
+
+      .input {
+        background-color: var(--input-background-color--);
+        display: inline-flex;
+        border-radius: 5px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: var(--input-border-color--);
+        flex: 1;
+      }
+
+      .input:focus {
+        outline: var(--input-outline-color--) 2px solid;
+      }
+
+      .input:hover,
+      .input:focus {
+        background-color: var(--input-background-color--);
+        color: var(--input-color--);
+        border-color: var(--input-border-color-hover--);
+        transition: border-color ease 50ms;
+      }
+
+      .input[data-invalid] {
+        border-color: var(--input-invalid-color--);
+      }
+
+      .input[data-invalid]:hover,
+      .input[data-invalid]:focus {
+        border-color: var(--input-invalid-color-hover--);
+      }
+
+      label {
+        position: absolute;
+        color: var(--input-label-color--);
+        transition: transform ease 50ms;
+        margin: 6px;
+        font-size: 1.10em;
+        cursor: text;
+      }
+
+      .parent:has(input:focus) > label,
+      .parent:has(input:not(input:placeholder-shown)) > label {
+        cursor: default;
+        color: var(--input-color--);
+        font-size: 1em;
+        margin: 0 0 0 5px;
+        transform: translateY(calc(-60%));
+        background: linear-gradient(180deg, transparent 0 7px, var(--input-background-color--) 7px 15px, transparent 15px 100%);
+
+        transition: transform ease 50ms;
+      }
+
+      .parent:has(input:hover) > label,
+      .parent:has(input:focus) > label {
+        background: linear-gradient(180deg, transparent 0 7px, var(--input-background-color--) 7px 15px, transparent 15px 100%);
+      }
+
+      :host([required]) {
+        label::after {
+          content: "*";
+          color: var(--input-invalid-color--);
+        }
+      }
+
+      input:not(input:focus)::placeholder {
+        color: transparent;
       }
 
       .container {
@@ -424,6 +455,8 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       .control {
+        background-color: var(--input-background-color--);
+        color: var(--input-color--);
         display: inline-flex;
         padding: 5px;
         min-height: 0;
@@ -431,6 +464,18 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
         flex-wrap: wrap;
         border-radius: 5px;
         font-size: 1.10em;
+      }
+
+      :host([disabled]) {
+        .input {
+          background-color: var(--input-background-color-disabled--);
+          color: var(--input-color-disabled--);
+          border-color: var(--input-border-color-disabled--);
+        }
+
+        label:not([x]) {
+          background: linear-gradient(180deg, transparent 0 7px, var(--input-background-color-disabled--) 7px 15px, transparent 15px 100%);
+        }
       }
     `;
   }

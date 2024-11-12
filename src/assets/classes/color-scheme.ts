@@ -11,48 +11,62 @@ export class ColorScheme
 
   static dark(): ColorScheme
   {
-    const colorStyle = new ColorStyle();
-    colorStyle.background = "#282828";
-    colorStyle.primary_background = "#323232";
-    colorStyle.secondary_background = "#3c3c3c";
-    colorStyle.input_background = "#3f3f3f";
-    colorStyle.border = "#a6a6a6";
-    colorStyle.primary_text = "#e3e3e3";
-    colorStyle.hover = "#464646";
-    colorStyle.clickable = "#505050";
-    colorStyle.feedback = "#3d3d3d";
-    colorStyle.visited = "#c76fff"
-    return new ColorScheme("dark", colorStyle);
+    return new ColorScheme("dark", new ColorStyle());
+  }
+
+  static light(): ColorScheme
+  {
+    return new ColorScheme("light", new ColorStyle());
   }
 }
 
 export class ColorStyle
 {
-  primary_text: string | undefined;
-  secondary_text: string | undefined;
-  inverted_primary_text: string | undefined;
-  inverted_secondary_text: string | undefined;
-  background: string | undefined;
-  primary_background: string | undefined;
-  secondary_background: string | undefined;
-  input_background: string | undefined;
-  border: string | undefined;
-  hover: string | undefined;
-  clickable: string | undefined;
-  feedback: string | undefined;
-  positive: string | undefined;
-  positive_hover: string | undefined;
-  negative: string | undefined;
-  negative_hover: string | undefined;
-  highlight: string | undefined;
-  highlight_hover: string | undefined;
-  visited: string | undefined;
+  app_background_1: string | undefined;
+  app_background_2: string | undefined;
+  app_background_3: string | undefined;
+  app_background_4: string | undefined;
+
+  app_color_1: string | undefined;
+  app_color_2: string | undefined;
+
+  app_text_1: string | undefined;
+  app_text_2: string | undefined;
+
+  app_input_background_color: string | undefined;
+  app_button_background_color: string | undefined;
+
+  app_outline: string | undefined;
+  app_visited: string | undefined;
+  app_negative: string | undefined;
+  app_positive: string | undefined;
+  app_negative_text: string | undefined;
+  app_positive_text: string | undefined;
+
+  default_brightness_1: number | undefined;
+  default_brightness_2: number | undefined;
+
+  app_background_1_brightness: number | undefined;
+  app_background_2_brightness: number | undefined;
+  app_background_3_brightness: number | undefined;
+  app_background_4_brightness: number | undefined;
+
+  app_color_1_brightness: number | undefined;
+  app_color_2_brightness: number | undefined;
+
+  app_input_brightness: number | undefined;
+  app_button_brightness: number | undefined;
+
+  app_visited_brightness: number | undefined;
+  app_negative_brightness: number | undefined;
+  app_positive_brightness: number | undefined;
 }
 
 export function removeColorScheme(): void
 {
+  delete document.documentElement.dataset["colorScheme"];
   for (const key of Object.keys(new ColorStyle()))
-    document.documentElement.style.setProperty("--" + key.replace("_", "-"), null);
+    document.documentElement.style.setProperty("--" + key.replaceAll("_", "-"), null);
 
   localStorage.removeItem("color-scheme");
 }
@@ -63,7 +77,7 @@ export function saveColorScheme(value: ColorScheme): void
   const keys = <(keyof ColorStyle)[]>Object.keys(value.style);
 
   for (const key of keys)
-    style[key.replace("_", "-")] = value.style[key];
+    style[key.replaceAll("_", "-")] = value.style[key];
 
   const result = {name: value.name, style};
   localStorage.setItem("color-scheme", JSON.stringify(result));
@@ -75,9 +89,13 @@ export function loadColorScheme(): void
   if (!jsonScheme || jsonScheme === "{}")
     return;
 
-  const colorScheme = JSON.parse(jsonScheme);
+  const colorScheme: ColorScheme = JSON.parse(jsonScheme);
   const colorStyle = colorScheme.style;
-  const keys = Object.keys(new ColorStyle()).map(x => x.replace("_", "-"));
+  const keys = <(keyof ColorStyle)[]>Object.keys(new ColorStyle()).map(x => x.replaceAll("_", "-"));
+
+  document.documentElement.dataset["colorScheme"] = colorScheme.name;
   for (const key of keys)
-    document.documentElement.style.setProperty("--" + key, colorStyle[key] ? colorStyle[key] : null);
+  {
+    document.documentElement.style.setProperty("--" + key, colorStyle[key] ? colorStyle[key]!.toString() : null);
+  }
 }

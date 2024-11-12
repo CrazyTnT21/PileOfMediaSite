@@ -127,8 +127,6 @@ function processRequest(request, src)
   return getFile(filePath) ??
     getFile(filePath + ".html") ??
     getFile(path.join(filePath, "/index.html")) ??
-    getFile(path.join(filePath, `/${last(filePath.split("\\"))}.html`)) ??
-    getFile(path.join(filePath, `/${secondLast(filePath.split("\\"))}.html`)) ??
     {statusCode: 404, data: null, headers: {}};
 }
 

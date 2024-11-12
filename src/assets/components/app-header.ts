@@ -120,8 +120,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           <li><a href="/games"><span class="game-icon" part="icon"></span>Games</a></li>
         </ul>
       </nav>
-      <slot name="search-input">
-      </slot>
+      <app-search-input></app-search-input>
       <details id="user">
         <summary>
           <img id="profile-picture" src="${this.placeholderImageUrl}" alt="Profile"/>
@@ -153,14 +152,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         </ul>
       </details>
     `;
-    //Inside innerHTML, so it gets styled
-    this.innerHTML = `<app-search-input slot="search-input"></app-search-input>`
-    this.querySelector("app-search-input")!.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>
+    this.shadowRoot.querySelector("app-search-input")!.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>
     {
-      if (e.detail!.trim().length > 0)
-        window.location.href = "/search?q=" + e.detail!
-      else
-        window.location.href = "/search"!
+      const emptySearch = e.detail!.trim().length == 0;
+      window.location.href = emptySearch ? "/search" : "/search?q=" + e.detail!;
     })
   }
 
@@ -168,11 +163,42 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     //language=CSS
     return `
+      :host {
+        --header-brightness-1--: var(--header-brightness-1, -10);
+        --header-brightness-2--: var(--header-brightness-2, -20);
+        --header-background-color--: var(--header-background-color, white);
+        --header-background-color-hover--: hsl(from var(--header-background-color--) h s calc(l + var(--header-brightness-1--)));
+
+        --header-color--: var(--header-color, black);
+
+        --header-border-color--: var(--header-border-color, gray);
+        --header-secondary-border-color--: var(--header-secondary-border-color, lightgray);
+
+        --header-logout-button-background-color--: var(--header-logout-button-background-color, #c80f0f);
+        --header-logout-button-brightness--: var(--header-logout-button-brightness, -10);
+
+        --header-logout-button-color--: var(--header-logout-button-color, white);
+      }
+
+      :host {
+        display: flex;
+        border-bottom: 1px solid gray;
+        gap: 5px;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        background-color: var(--header-background-color--);
+      }
+
+      * {
+        color: var(--header-color--);
+      }
+
       ::part(button) {
         padding: 5px;
       }
 
-      ::slotted(app-search-input) {
+      app-search-input {
         display: flex;
         min-width: 0;
         margin-left: auto;
@@ -185,9 +211,15 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       .logout {
+        --button-background-color: var(--header-logout-button-background-color--);
+        --button-brightness-1: var(--header-logout-button-brightness--);
         display: flex;
         align-items: center;
         justify-content: center;
+
+        * {
+          color: var(--header-logout-button-color--);
+        }
       }
 
       img {
@@ -196,26 +228,11 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
         object-fit: contain;
       }
 
-      :host {
-        display: flex;
-        border-bottom: 1px solid gray;
-        gap: 5px;
-        align-items: center;
-        align-content: center;
-        justify-content: center;
-      }
-
       .logo {
         margin-left: 5px;
         width: 35px;
         height: 35px;
         display: flex;
-      }
-
-      #user {
-        margin-right: 5px;
-        height: 35px;
-        width: 35px;
       }
 
       li {
@@ -227,26 +244,41 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       #user {
+        margin-right: 5px;
+        height: 35px;
+        width: 35px;
+
         summary {
+          img {
+            border: 1px solid var(--header-secondary-border-color--);
+            border-radius: 2px;
+          }
+
           aspect-ratio: 1;
         }
 
         ul {
+          border: 1px solid var(--header-secondary-border-color--);
+          background-color: var(--header-background-color--);
           z-index: 1;
           position: absolute;
-          background-color: var(--primary-background);
           border-radius: 5px;
           padding: 5px;
+          margin-top: 5px;
           display: inline-flex;
           flex-direction: column;
           justify-content: flex-end;
           overflow: hidden;
 
+          & li ~ li > a {
+            border-top: 1px solid var(--header-secondary-border-color--);
+          }
+
           & li {
             white-space: nowrap;
             display: inline-flex;
-            background-color: var(--clickable);
             padding: 0;
+
 
             & app-button {
               flex: 1;
@@ -254,7 +286,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
             & a {
               flex: 1;
-              border-radius: 5px;
               display: inline-flex;
               padding: 5px;
             }
@@ -264,7 +295,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
       #user > ul > li > a:focus,
       #user > ul > li > a:hover {
-        background-color: var(--hover);
+        background-color: var(--header-background-color-hover--);
       }
 
       .burger-items {
@@ -297,7 +328,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       .items > li > *:hover,
       .burger-items > li:has(*:focus),
       .burger-items > li:hover {
-        background-color: var(--hover);
+        background-color: var(--header-background-color-hover--);
       }
 
       .items {
@@ -320,7 +351,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       }
 
       a {
-        color: var(--primary-text);
         text-decoration: none;
       }
 
@@ -344,10 +374,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           margin-top: 8px;
           position: absolute;
           z-index: 1;
-          background-color: var(--background);
+          background-color: var(--header-background-color--);
 
           li {
-            border-bottom: 1px solid var(--secondary-background);
+            border-bottom: 1px solid var(--header-secondary-border-color--);
           }
         }
       }
@@ -361,7 +391,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
       details {
         cursor: pointer;
-        background: var(--background);
         user-select: none;
         padding: 0;
 
@@ -379,7 +408,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           display: none;
         }
 
-        ::slotted(app-search-input) {
+        app-search-input {
           max-width: 400px;
         }
       }
