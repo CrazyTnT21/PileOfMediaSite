@@ -2,6 +2,8 @@ import {AppInput} from "../../inputs/app-input/app-input.js";
 import {ValueChangeEvent} from "./value-change-event.js";
 import {SelectedAddedEvent} from "./selected-added-event.js";
 import {SelectedRemovedEvent} from "./selected-removed-event.js";
+import html from "./app-autocomplete.html" with {type: "inline"};
+import css from "./app-autocomplete.css" with {type: "inline"};
 
 export class AppAutocomplete<T = { id: number, value: any, label?: string }> extends AppInput
 {
@@ -253,15 +255,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   override render(): void
   {
-    //language=HTML
-    this.shadowRoot.innerHTML = `
-      <span class="parent container">
-      <label part="label" for="input"></label>
-      <input class="input control" part="input" id="input" list="items"/>
-      <datalist part="datalist" id="items"></datalist>
-      <ul part="selected" id="selected"></ul>
-      </span>
-    `;
+    this.shadowRoot.innerHTML = html;
   }
 
   createOptions(items: T[]): void
@@ -361,49 +355,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   override styleCSS(): string
   {
-    //language=CSS
-    return super.styleCSS() + `
-      :host {
-        --autocomplete-selected-background-color--: var(--autocomplete-selected-background-color, whitesmoke);
-        --autocomplete-selected-background-color-hover--: hsl(from var(--autocomplete-selected-background-color--) h s calc(l + var(--input-brightness-1--)));
-      }
-
-      ul {
-        margin: 0;
-        padding: 0;
-      }
-
-      .parent {
-        flex-direction: column;
-      }
-
-      li {
-        list-style: none;
-      }
-
-      #selected {
-        display: inline-flex;
-        flex-wrap: wrap;
-        padding-top: 5px;
-        gap: 2px;
-      }
-
-      button {
-        font-size: .75em;
-        border-radius: 10px;
-        border: var(--input-border-color--) 1px solid;
-        color: var(--input-color--);
-        background-color: var(--autocomplete-selected-background-color--);
-      }
-
-      button:hover {
-        background-color: var(--autocomplete-selected-background-color-hover--);
-      }
-
-      button::after {
-        content: " x"
-      }
-    `;
+    return super.styleCSS() + css;
   }
 
   itemLabel(item: T): string

@@ -1,0 +1,355 @@
+:host {
+  --header-brightness-1--: var(--header-brightness-1, 10);
+  --header-brightness-2--: var(--header-brightness-2, -20);
+  --header-background-color--: var(--header-background-color, white);
+  --header-background-color-hover--: hsl(from var(--header-background-color--) h s calc(l + var(--header-brightness-1--)));
+
+  --header-color--: var(--header-color, black);
+
+  --header-border-color--: var(--header-border-color, gray);
+  --header-secondary-border-color--: var(--header-secondary-border-color, lightgray);
+
+  --header-logout-button-background-color--: var(--header-logout-button-background-color, #c80f0f);
+  --header-logout-button-brightness--: var(--header-logout-button-brightness, -10);
+
+  --header-logout-button-color--: var(--header-logout-button-color, white);
+}
+
+:host {
+  display: flex;
+  border-bottom: 1px solid gray;
+  gap: 5px;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  background-color: var(--header-background-color--);
+}
+
+* {
+  color: var(--header-color--);
+}
+
+::part(button) {
+  padding: 5px;
+}
+
+app-search-input {
+  display: flex;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout {
+  --button-background-color: var(--header-logout-button-background-color--);
+  --button-brightness-1: var(--header-logout-button-brightness--);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  * {
+    color: var(--header-logout-button-color--);
+  }
+}
+
+img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.logo {
+  margin-left: 5px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+}
+
+li {
+  box-sizing: border-box;
+
+  & a {
+    align-items: center;
+  }
+}
+
+#user {
+  margin-right: 5px;
+  height: 35px;
+  width: 35px;
+
+  summary {
+    img {
+      border: 1px solid var(--header-secondary-border-color--);
+      border-radius: 2px;
+    }
+
+    aspect-ratio: 1;
+  }
+
+  ul {
+    border: 1px solid var(--header-secondary-border-color--);
+    background-color: var(--header-background-color--);
+    z-index: 1;
+    position: absolute;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+
+    & li:not([hidden]) ~ li > a {
+      border-top: 1px solid var(--header-secondary-border-color--);
+    }
+
+    & li {
+      white-space: nowrap;
+      display: inline-flex;
+      padding: 0;
+
+
+      & app-button {
+        flex: 1;
+      }
+
+      & a {
+        flex: 1;
+        display: inline-flex;
+        padding: 5px;
+      }
+    }
+  }
+}
+
+#user > ul > li > a:focus,
+#user > ul > li > a:hover {
+  background-color: var(--header-background-color-hover--);
+}
+
+.burger-items {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-items: stretch;
+}
+
+.items {
+  display: flex;
+
+  & li {
+    * {
+      display: flex;
+      padding: 4px;
+      border-radius: 2px;
+      align-items: center;
+    }
+  }
+}
+
+.burger-items > li,
+.burger-items > li > * {
+  display: flex;
+  width: 100%;
+}
+
+.items > li > *:focus,
+.items > li > *:hover,
+.burger-items > li:has(*:focus),
+.burger-items > li:hover {
+  background-color: var(--header-background-color-hover--);
+}
+
+.items {
+  align-items: center;
+  justify-content: center;
+
+  * {
+    display: flex;
+  }
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+summary {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+#burger {
+  summary {
+    display: flex;
+    font-family: "Material Symbols Outlined", "Invisible", serif;
+    padding-left: 5px;
+    font-size: 1.6rem;
+    place-content: center;
+    place-items: center;
+    width: 35px;
+    height: 35px;
+  }
+
+  summary::after {
+    content: "menu";
+  }
+
+  ul {
+    margin-top: 8px;
+    position: absolute;
+    z-index: 1;
+    background-color: var(--header-background-color--);
+
+    li {
+      border-bottom: 1px solid var(--header-secondary-border-color--);
+    }
+  }
+}
+
+#burger[open] {
+  summary::after {
+    content: "close";
+    font-size: 1.4rem;
+  }
+}
+
+details {
+  cursor: pointer;
+  user-select: none;
+  padding: 0;
+
+  ul {
+    margin-top: 1px;
+
+    li {
+      padding: 5px;
+    }
+  }
+}
+
+@media (min-width: 701px) {
+  #burger {
+    display: none;
+  }
+
+  app-search-input {
+    max-width: 400px;
+  }
+}
+
+[hidden] {
+  visibility: collapse;
+  width: 0;
+  height: 0;
+}
+
+@media (max-width: 700px) {
+  nav {
+    display: none;
+  }
+
+  :host {
+    justify-content: space-between;
+  }
+
+  .logo {
+    margin-right: auto;
+  }
+}
+
+#user {
+  margin-right: 5px;
+
+  ul {
+    transform: translateX(calc(-100% + 35px));
+  }
+}
+
+.movie-icon::before {
+  content: "theaters";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.book-icon::before {
+  content: "book_2";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.graphic-novel-icon::before {
+  content: "menu_book";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.show-icon::before {
+  content: "tv";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.game-icon::before {
+  content: "videogame_asset";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.profile-icon::before {
+  content: "person";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.friends-icon::before {
+  content: "group";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.comment-icon::before {
+  content: "comment";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.comment-icon::before {
+  content: "comment";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.review-icon::before {
+  content: "reviews";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.settings-icon::before {
+  content: "settings";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.login-icon::before {
+  content: "login";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}
+
+.logout-icon::before {
+  content: "logout";
+  font-family: "Material Symbols Outlined", "Invisible", serif;
+  font-size: 24px;
+}

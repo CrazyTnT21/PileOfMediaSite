@@ -1,9 +1,8 @@
 import esbuild from "esbuild";
-import {createBuildSettings} from "./common.js";
+import {createBuildSettings, SRC_DIR} from "./common.js";
 import * as fs from "node:fs";
 import * as http from "node:http";
 import * as path from "node:path";
-import * as process from "node:process";
 import httpProxy from "http-proxy";
 
 const settings = createBuildSettings({
@@ -62,7 +61,7 @@ const proxies = [{
   pattern: /^\/api\/(.*)/,
   target: "http://localhost:3000/$1"
 }, ...keys];
-runServer({port, src: path.join(process.cwd(), "src"), proxies});
+runServer({port, src: SRC_DIR, proxies});
 
 /**
  * @param {{port: number, src: string, proxies: {pattern: RegExp,target}[]}} settings

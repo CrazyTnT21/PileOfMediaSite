@@ -37,6 +37,7 @@ export class ColorStyle
   app_button_background_color: string | undefined;
 
   app_outline: string | undefined;
+  app_link: string | undefined;
   app_visited: string | undefined;
   app_negative: string | undefined;
   app_positive: string | undefined;

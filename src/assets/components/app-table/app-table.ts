@@ -1,6 +1,8 @@
-import {attach, applyStyleSheet} from "./defaults.js";
-import {ApplyStyleSheet} from "./apply-style-sheet.js";
-import {StyleCSS} from "./style-css.js";
+import {attach, applyStyleSheet} from "../defaults";
+import {ApplyStyleSheet} from "../apply-style-sheet";
+import {StyleCSS} from "../style-css";
+import html from "./app-table.html" with {type: "inline"};
+import css from "./app-table.css" with {type: "inline"};
 
 export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -76,6 +78,9 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
 
     if (column.width)
       data.style.width = column.width;
+
+    if (column.height)
+      data.style.height = column.height;
 
     data.append(element);
     return data;
@@ -161,88 +166,12 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   render(): void
   {
-    //language=HTML
-    this.shadowRoot.innerHTML = `
-      <table part="table">
-        <caption part="caption"></caption>
-        <thead part="thead">
-        <tr part="thead-tr tr">
-
-        </tr>
-        </thead>
-        <tbody part="tbody">
-
-        </tbody>
-        <tfoot part="tfoot">
-        <tr part="tfoot-tr tr" hidden>
-          <th part="tfoot-th th" scope="row" colspan="2">Total</th>
-          <td part="tfoot-td td" colspan="2"></td>
-          <td part="tfoot-td td">
-            <app-button exportparts="button, button: back-button" id="back">Back</app-button>
-          </td>
-          <td part="tfoot-td td">
-            <app-button exportparts="button, button: next-button" id="next">Next</app-button>
-          </td>
-        </tr>
-        </tfoot>
-      </table>
-    `;
+    this.shadowRoot.innerHTML = html;
   }
 
   styleCSS(): string
   {
-    //language=CSS
-    return `
-      :host {
-        --table-odd-background-color--: var(--table-odd-background-color, #f0f0f0);
-        --table-even-background-color--: var(--table-even-background-color, #ebebeb);
-
-        --table-color--: var(--table-color, black);
-      }
-
-      * {
-        color: var(--table-color--);
-      }
-
-      img {
-        width: 100%;
-      }
-
-      .pad {
-        padding: 5px;
-      }
-
-      table {
-        border-radius: 5px;
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      thead > tr > th:first-child {
-        border-radius: 5px 0 0 0;
-      }
-
-      thead > tr > th:last-child {
-        border-radius: 0 5px 0 0;
-      }
-
-      tfoot > tr > th:first-child {
-        border-radius: 0 0 0 5px;
-      }
-
-      tr:nth-of-type(even) {
-        background-color: var(--table-even-background-color--);
-      }
-      tr:nth-of-type(odd) {
-        background-color: var(--table-odd-background-color--);
-      }
-
-      ::part(button) {
-        min-width: 4rem;
-        min-height: 2rem;
-        border: 0;
-      }
-    `;
+    return css;
   }
 }
 
@@ -264,6 +193,7 @@ export type Column<T> = {
   display: string,
   type: ColumnType,
   width?: string,
+  height?: string,
   formatFn?: (item: T) => string,
 }
 

@@ -1,0 +1,52 @@
+.icon::before {
+  display: flex;
+  content: "search";
+  font-family: "Material Symbols Outlined", serif;
+  font-size: 22px;
+  color: var(--input-label-color--);
+}
+
+.parent {
+  min-width: 0;
+}
+
+input {
+  display: inline-flex;
+  flex: 1 1 100%;
+  min-width: 0;
+  outline: none;
+  border: none
+}
+
+.parent {
+  flex: 1;
+}
+
+#outline:has(input:focus) {
+  outline: solid 2px var(--input-outline-color--);
+}
+
+#outline:hover {
+  transition: border-color ease 50ms;
+}
+
+app-button {
+  --button-outline-color: var(--input-outline-color--);
+  --button-background-color: none;
+  --button-background-color-hover: none;
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  margin-right: var(--input-padding--);
+}
+
+::part(button) {
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+
+#outline:has(input[data-invalid]) {
+  border-color: var(--input-invalid-color--);
+}

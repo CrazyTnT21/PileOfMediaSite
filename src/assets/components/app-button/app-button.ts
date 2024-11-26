@@ -1,7 +1,9 @@
-import {applyStyleSheet, attach_delegates} from "./defaults.js";
-import {StyleCSS} from "./style-css.js";
-import {ApplyStyleSheet} from "./apply-style-sheet.js";
-import {handleFieldset} from "./inputs/common.js";
+import {applyStyleSheet, attach_delegates} from "../defaults";
+import {StyleCSS} from "../style-css";
+import {ApplyStyleSheet} from "../apply-style-sheet";
+import {handleFieldset} from "../inputs/common";
+import html from "./app-button.html" with {type: "inline"};
+import css from "./app-button.css" with {type: "inline"};
 
 type attributeKey = keyof typeof AppButton["observedAttributesMap"];
 
@@ -115,66 +117,12 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   render(): void
   {
-    //language=HTML
-    this.shadowRoot.innerHTML = `
-      <button part="button">
-        <slot></slot>
-      </button>
-    `;
+    this.shadowRoot.innerHTML = html;
   }
 
   styleCSS(): string
   {
-    //language=CSS
-    return `
-      :host {
-        --button-brightness-1--: var(--button-brightness-1, -10);
-        --button-brightness-2--: var(--button-brightness-2, -20);
-        --button-background-color--: var(--button-background-color, hsl(208 50% 46.5%));
-        --button-background-color-hover--: hsl(from var(--button-background-color--) h s calc(l + var(--button-brightness-1--)));
-
-        --button-color--: var(--button-color, white);
-
-        --button-outline-color--: var(--button-outline-color, highlight);
-
-        --button-background-color-disabled--: hsl(from var(--button-background-color--) h s calc(l + var(--button-brightness-2--)));
-
-        --button-color-disabled--: hsl(from var(--button-color--) h s calc(l + var(--button-brightness-1--)));
-      }
-
-      :host {
-        display: inline-flex;
-      }
-
-      button {
-        border-radius: 5px;
-        display: inline-flex;
-        color: var(--button-color--);
-        flex: 1 1 100%;
-        padding: 8px;
-        justify-content: center;
-        border: 0;
-        background-color: var(--button-background-color--);
-        align-items: center;
-      }
-
-      button:focus {
-        outline: var(--button-outline-color--) 2px solid;
-      }
-
-      button:hover, button:focus {
-        background-color: var(--button-background-color-hover--);
-      }
-
-      button:active {
-        background-color: var(--button-background-color-hover--);
-      }
-
-      button[disabled] {
-        background-color: var(--button-background-color-disabled--);
-        color: var(--button-color-disabled--);
-      }
-    `;
+    return css;
   }
 
   public static define(): void

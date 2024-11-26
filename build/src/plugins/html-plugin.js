@@ -1,12 +1,17 @@
 import {promises as fs} from "node:fs";
+import path from "node:path";
 
 let htmlPlugin = () => ({
   name: "html",
   setup(build)
   {
-    build.onResolve({filter: /\.html$/}, args => ({
-      path: args.path,
-    }));
+    build.onResolve({filter: /\.html$/}, args =>
+    {
+      return {
+        path: path.join(args.resolveDir, args.path),
+      }
+    });
+
 
     build.onLoad({filter: /\.html$/}, async (args) =>
     {

@@ -1,0 +1,50 @@
+:host {
+  --table-odd-background-color--: var(--table-odd-background-color, #f0f0f0);
+  --table-even-background-color--: var(--table-even-background-color, #ebebeb);
+
+  --table-color--: var(--table-color, black);
+}
+
+* {
+  color: var(--table-color--);
+}
+
+img {
+  width: 100%;
+}
+
+.pad {
+  padding: 5px;
+}
+
+table {
+  border-radius: 5px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead > tr > th:first-child {
+  border-radius: 5px 0 0 0;
+}
+
+thead > tr > th:last-child {
+  border-radius: 0 5px 0 0;
+}
+
+tfoot > tr > th:first-child {
+  border-radius: 0 0 0 5px;
+}
+
+tr:nth-of-type(even) {
+  background-color: var(--table-even-background-color--);
+}
+
+tr:nth-of-type(odd) {
+  background-color: var(--table-odd-background-color--);
+}
+
+::part(button) {
+  min-width: 4rem;
+  min-height: 2rem;
+  border: 0;
+}

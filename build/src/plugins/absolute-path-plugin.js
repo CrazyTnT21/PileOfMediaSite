@@ -9,7 +9,7 @@ export function absolutePathPlugin()
     {
       build.onResolve({filter: /^\//}, args =>
       {
-        return {path: path.join(process.cwd(), "/src", args.path)}
+        return {path: path.join(process.cwd(), "src", args.path)}
       })
     }
   }

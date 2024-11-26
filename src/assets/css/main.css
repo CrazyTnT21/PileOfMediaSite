@@ -76,7 +76,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 app-header {
-  height: 50px;
+  height: 46px;
+}
+
+body:has(app-header:not(:defined)) {
+  margin-top: 47px;
 }
 
 .placeholder {
@@ -94,14 +98,17 @@ app-header {
 
 .center {
   display: flex;
-  align-items: center;
   justify-content: center;
+}
+
+.center-align {
+  display: flex;
+  align-items: center;
 }
 
 @media (min-width: 900px) {
   .center-l {
     display: flex;
-    align-items: center;
     justify-content: center;
   }
 }
@@ -109,7 +116,6 @@ app-header {
 @media (max-width: 900px) {
   .center-m {
     display: flex;
-    align-items: center;
     justify-content: center;
   }
 }
@@ -117,7 +123,6 @@ app-header {
 @media (max-width: 500px) {
   .center-s {
     display: flex;
-    align-items: center;
     justify-content: center;
   }
 }
@@ -156,8 +161,8 @@ a, ::part(a) {
   gap: 10px;
 }
 
-.search::part(inner-input) {
-  padding: 8px;
+.search {
+  --input-padding: 10px;
 }
 
 p {

@@ -11,7 +11,7 @@
   --app-color-2-brightness: var(--default-brightness-1);
 
   --app-input-brightness: var(--default-brightness-2);
-  --app-button-brightness: var(10);
+  --app-button-brightness: 10;
 
   --app-visited-brightness: var(--default-brightness-1);
   --app-negative-brightness: var(--default-brightness-1);
@@ -69,6 +69,9 @@
 /*noinspection DuplicatedCode*/
 @media (prefers-color-scheme: light) {
   :root {
+    --default-brightness-1: -10;
+    --default-brightness-2: -20;
+
     --app-background-1: hsl(0 0 100);
     --app-background-2: hsl(0 0 95);
     --app-background-3: hsl(0 0 90);
@@ -87,6 +90,7 @@
     --app-button-text: hsl(0 0% 95%);
 
     --app-outline: highlight;
+    --app-link: #4385e4;
     --app-visited: #842fb6;
     --app-negative: #c80f0f;
     --app-positive: #16aa15;
@@ -120,6 +124,7 @@
 
     --app-outline: highlight;
     --app-visited: #c76fff;
+    --app-link: #4182e6;
     --app-negative: #c80f0f;
     --app-positive: #16aa15;
     --app-negative-text: hsl(0 0% 95%);
@@ -132,6 +137,9 @@
 
 /*noinspection DuplicatedCode*/
 :root[data-color-scheme="light"] {
+  --default-brightness-1: -10;
+  --default-brightness-2: -20;
+
   --app-background-1: hsl(0 0 100);
   --app-background-2: hsl(0 0 95);
   --app-background-3: hsl(0 0 90);
@@ -193,6 +201,10 @@
 html {
   background-color: var(--app-background-1);
   color: var(--app-text-1);
+}
+
+a:link {
+  color: var(--app-link);
 }
 
 a:visited {

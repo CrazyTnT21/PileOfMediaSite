@@ -1,4 +1,4 @@
-import {AppTable, Column, ColumnType} from "../../components/app-table";
+import {AppTable, Column, ColumnType} from "../../components/app-table/app-table";
 import {Config} from "../../classes/config";
 import {API_URL} from "../modules";
 import {Book} from "../../types/book";
@@ -13,6 +13,7 @@ function columns(): Column<Book>[]
       display: "Cover",
       type: ColumnType.Image,
       width: "80px",
+      height: "113px"
     },
     {
       key: "title",

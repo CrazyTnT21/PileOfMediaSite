@@ -67,7 +67,10 @@ function loadBooks(items: Book[]): void
   for (const book of items)
   {
     const li = document.createElement("li");
-    li.innerText = book.title;
+    const anchor = document.createElement("a");
+    anchor.href = `/books/${book.id}`;
+    anchor.innerText = book.title;
+    li.append(anchor);
     booksUl.append(li);
   }
 }

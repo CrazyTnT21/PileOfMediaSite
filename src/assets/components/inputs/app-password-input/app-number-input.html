@@ -1,0 +1,9 @@
+<span class="input parent" part="outline" id="outline">
+  <label part="label" for="input"></label>
+  <input class="control" part="inner-input" id="input"/>
+  <app-button exportparts="button: eye-button" aria-label="Toggle show password">
+    <slot name="eye-button">
+      <span id="eye-icon" class="eye-closed-icon" part="icon"></span>
+    </slot>
+  </app-button>
+</span>

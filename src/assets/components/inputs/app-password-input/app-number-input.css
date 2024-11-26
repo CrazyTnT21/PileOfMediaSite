@@ -1,0 +1,63 @@
+.eye-open-icon::before {
+  display: flex;
+  content: "visibility";
+  font-family: "Material Symbols Outlined", serif;
+  font-size: 22px;
+  color: var(--input-label-color--);
+}
+
+.eye-closed-icon::before {
+  display: flex;
+  content: "visibility_off";
+  font-family: "Material Symbols Outlined", serif;
+  font-size: 22px;
+  color: var(--input-label-color--);
+}
+
+input {
+  display: inline-flex;
+  flex: 1 1 100%;
+  min-width: 0;
+  outline: none;
+  border: none
+}
+
+app-button {
+  --button-outline-color: var(--input-outline-color--);
+  --button-background-color: none;
+  --button-background-color-hover: none;
+}
+
+.parent {
+  flex: 1;
+}
+
+#outline:hover,
+#outline:has(input:focus) {
+  border-color: var(--input-border-color-hover--);
+  transition: border-color ease 50ms;
+}
+
+#outline:has(input:focus) {
+  outline: solid 2px var(--input-outline-color--);
+}
+
+#outline {
+  outline-color: Highlight;
+}
+
+app-button {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+}
+
+::part(button) {
+  display: inline-flex;
+  padding: 0 5px 0 5px;
+  border: none;
+}
+
+#outline:has(input[data-invalid]) {
+  border-color: red;
+}

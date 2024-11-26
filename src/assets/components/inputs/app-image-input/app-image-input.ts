@@ -3,6 +3,8 @@ import {ApplyStyleSheet} from "../../apply-style-sheet.js";
 import {StyleCSS} from "../../style-css.js";
 import {logNoValueError} from "../validation/validation.js";
 import {UploadEvent} from "./upload-event.js";
+import html from "./app-image-input.html" with {type: "inline"};
+import css from "./app-image-input.css" with {type: "inline"};
 
 type attributeKey = keyof typeof AppImageInput["observedAttributesMap"];
 type kiloByte = number;
@@ -361,103 +363,12 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   render(): void
   {
     //TODO: Clear image button
-    //language=HTML
-    this.shadowRoot.innerHTML = `
-      <label for="input"></label>
-      <input part="input" id="input" type="file" hidden="hidden" accept=".jpg,.jpeg,.png"/>
-      <img alt="" part="img" tabindex=0 src="${this.defaultSrc}">
-    `;
+    this.shadowRoot.innerHTML = html;
   }
 
   styleCSS(): string
   {
-    //language=CSS
-    return `
-      :host {
-        --image-input-brightness-1--: var(--image-input-brightness-1, -20);
-        --image-input-brightness-2--: var(--button-brightness-2, -40);
-        --image-input-background-color--: var(--image-input-background-color, white);
-        --image-input-background-color-hover--: hsl(from var(--image-input-background-color--) h s calc(l + var(--image-input-brightness-1--)));
-        --image-input-background-color-disabled--: hsl(from var(--image-input-background-color--) h s calc(l + var(--image-input-brightness-2--)));
-
-        --image-input-color--: var(--image-input-color, black);
-
-        --image-input-border-color--: var(--image-input-border-color, #969696);
-        --image-input-border-color-hover--: hsl(from var(--image-input-border-color--) h s calc(l + var(--image-input-brightness-1--)));
-        --image-input-border-color-disabled--: hsl(from var(--image-input-border-color--) h s calc(l + var(--image-input-brightness-2--)));
-
-        --image-input-invalid-color--: var(--image-input-invalid-color, #dc0000);
-        --image-input-invalid-color-hover--: hsl(from var(--image-input-invalid-color--) h s calc(l + var(--image-input-brightness-1--)));
-        --image-input-outline-color--: var(--image-input-outline-color, highlight)
-      }
-
-      img {
-        border-radius: 5px;
-        display: inline-flex;
-        max-width: 100%;
-        max-height: 100%;
-        aspect-ratio: 1 / 1.41421;
-        object-fit: contain;
-        border: 1px solid var(--image-input-border-color--);
-        flex: 1;
-      }
-
-      label {
-        position: absolute;
-        color: var(--image-input-color--);
-        margin: 0 0 0 5px;
-        transform: translateY(calc(-60%));
-        background: linear-gradient(180deg, transparent 0 7px, var(--image-input-background-color--) 7px 15px, transparent 15px 100%);
-        transition: transform ease 50ms;
-      }
-
-      :host {
-        padding: 5px;
-        margin-top: 2px;
-        display: inline-flex;
-        flex: 1;
-        box-sizing: border-box;
-        max-width: 100%;
-      }
-
-      :host([required]) {
-        label::after {
-          content: "*";
-          color: var(--image-input-invalid-color--);
-        }
-      }
-
-      input:not(input:focus)::placeholder {
-        color: transparent;
-      }
-
-      img:hover, img:focus {
-        border-color: var(--image-input-border-color-hover--);
-      }
-
-      input[data-invalid] + img {
-        border-color: var(--image-input-invalid-color--)
-      }
-
-      input[data-invalid] + img:hover {
-        border-color: var(--image-input-invalid-color-hover--);
-      }
-
-      img:focus {
-        outline: var(--image-input-outline-color--) 2px solid;
-      }
-
-      :host([disabled]) > img {
-        background-color: var(--image-input-background-color-disabled--)
-      }
-
-      :host([disabled]) {
-        label {
-          content: "*";
-          background: linear-gradient(180deg, transparent 0 7px, var(--image-input-background-color-disabled--) 7px 15px, transparent 15px 100%);
-        }
-      }
-    `;
+    return css;
   }
 
   async valid(): Promise<boolean>

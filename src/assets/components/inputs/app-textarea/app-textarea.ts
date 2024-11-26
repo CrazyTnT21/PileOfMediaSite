@@ -1,9 +1,11 @@
-import {logNoValueError, tooLong, tooShort, valueMissing} from "./validation/validation.js";
-import {applyStyleSheet, attach_delegates} from "../defaults.js";
-import {ApplyStyleSheet} from "../apply-style-sheet.js";
-import {StyleCSS} from "../style-css.js";
-import {handleFieldset} from "./common.js";
-import {ValueSetEvent} from "./app-input/value-set-event";
+import {logNoValueError, tooLong, tooShort, valueMissing} from "../validation/validation";
+import {applyStyleSheet, attach_delegates} from "../../defaults";
+import {ApplyStyleSheet} from "../../apply-style-sheet";
+import {StyleCSS} from "../../style-css";
+import {handleFieldset} from "../common";
+import {ValueSetEvent} from "../app-input/value-set-event";
+import html from "./app-textarea.html" with {type: "inline"};
+import css from "./app-textarea.css" with {type: "inline"};
 
 type attributeKey = keyof typeof AppTextArea["observedAttributesMap"];
 
@@ -341,152 +343,12 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   render(): void
   {
-    //language=HTML
-    this.shadowRoot.innerHTML = `
-      <span class="parent container">
-      <textarea class="textarea control" part="textarea" rows="5" id="textarea"></textarea>
-      <label part="label" for="textarea"></label>
-        </span>
-    `;
+    this.shadowRoot.innerHTML = html;
   }
 
   styleCSS(): string
   {
-    //language=CSS
-    return `
-      :host {
-        --textarea-brightness-1--: var(--textarea-brightness-1, -20);
-        --textarea-brightness-2--: var(--button-brightness-2, -40);
-        --textarea-background-color--: var(--textarea-background-color, white);
-        --textarea-background-color-disabled--: hsl(from var(--textarea-background-color--) h s calc(l + var(--textarea-brightness-1--)));
-
-        --textarea-color--: var(--textarea-color, black);
-        --textarea-color-disabled--: var(--textarea-color-disabled-hover, #c8c8c8);
-
-        --textarea-border-color--: var(--textarea-border-color, #969696);
-        --textarea-border-color-hover--: hsl(from var(--textarea-border-color--) h s calc(l + var(--textarea-brightness-1--)));
-        --textarea-border-color-disabled--: var(--textarea-border-color-disabled, var(--textarea-border-color--));
-
-        --textarea-label-color--: var(--textarea-label-color, #737373);
-
-        --textarea-invalid-color--: var(--textarea-invalid-color, #dc0000);
-        --textarea-invalid-color-hover--: hsl(from var(--textarea-invalid-color--) h s calc(l + var(--textarea-brightness-1--)));
-
-        --textarea-outline-color--: var(--textarea-outline-color, Highlight);
-      }
-
-      * {
-        font: 1rem "Fira Sans", sans-serif;
-      }
-
-      .textarea {
-        background-color: var(--textarea-background-color--);
-        display: inline-flex;
-        border-radius: 5px;
-        border-width: 1px;
-        border-style: solid;
-        border-color: var(--textarea-border-color--);
-        flex: 1;
-      }
-
-      .textarea:focus {
-        outline: var(--textarea-outline-color--) 2px solid;
-      }
-
-      .textarea:hover,
-      .textarea:focus {
-        color: var(--textarea-color--);
-        border-color: var(--textarea-border-color-hover--);
-        transition: border-color ease 50ms;
-      }
-
-      .textarea[data-invalid] {
-        border-color: var(--textarea-invalid-color--);
-      }
-
-      .textarea[data-invalid]:hover,
-      .textarea[data-invalid]:focus {
-        border-color: var(--textarea-invalid-color-hover--);
-      }
-
-      label {
-        position: absolute;
-        color: var(--textarea-label-color--);
-        transition: transform ease 50ms;
-        margin: 6px;
-        font-size: 1.10em;
-        cursor: text;
-      }
-
-      .parent:has(textarea:focus) > label,
-      .parent:has(textarea:not(textarea:placeholder-shown)) > label {
-        cursor: default;
-        color: var(--textarea-color--);
-        font-size: 1em;
-        margin: 0 0 0 5px;
-        transform: translateY(calc(-60%));
-        background: linear-gradient(180deg, transparent 0 7px, var(--textarea-background-color--) 7px 15px, transparent 15px 100%);
-
-        transition: transform ease 50ms;
-      }
-
-      .parent:has(textarea:hover:not([disabled])) > label,
-      .parent:has(textarea:focus) > label {
-        background: linear-gradient(180deg, transparent 0 7px, var(--textarea-background-color--) 7px 15px, transparent 15px 100%);
-      }
-
-      :host([required]) {
-        label::after {
-          content: "*";
-          color: var(--textarea-invalid-color--);
-        }
-      }
-
-      textarea:not(textarea:focus)::placeholder {
-        color: transparent;
-      }
-
-      :host {
-        padding: 5px;
-        display: inline-flex;
-        margin-top: 2px;
-        flex: 1;
-        box-sizing: border-box;
-        max-width: 100%;
-      }
-
-      .container {
-        display: inline-flex;
-        flex: 1;
-        box-sizing: border-box;
-        max-width: 100%;
-      }
-
-      .control {
-        background-color: var(--textarea-background-color--);
-        color: var(--textarea-color--);
-        display: inline-flex;
-        padding: 5px;
-        min-height: 0;
-        min-width: 0;
-        flex-wrap: wrap;
-        border-radius: 5px;
-        font-size: 1.10em;
-        resize: none;
-      }
-
-      :host([disabled]) {
-        .textarea {
-          background-color: var(--textarea-background-color-disabled--);
-          color: var(--textarea-color-disabled--);
-          border-color: var(--textarea-border-color-disabled--);
-        }
-
-        label:not([x]) {
-          background: linear-gradient(180deg, transparent 0 7px, var(--textarea-background-color-disabled--) 7px 15px, transparent 15px 100%);
-        }
-      }
-    `;
+    return css;
   }
 }
 

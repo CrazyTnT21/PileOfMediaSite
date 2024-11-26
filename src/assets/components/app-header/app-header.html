@@ -1,0 +1,47 @@
+<details id="burger">
+  <summary>
+  </summary>
+</details>
+<a class="logo" href="/">
+  <img src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
+</a>
+<nav>
+  <ul class="items">
+    <li><a href="/graphicnovels"><span class="graphic-novel-icon" part="icon"></span>Graphic novels</a></li>
+    <li><a href="/books"><span class="book-icon" part="icon"></span>Books</a></li>
+    <li><a href="/movies"><span class="movie-icon" part="icon"></span>Movies</a></li>
+    <li><a href="/shows"><span class="show-icon" part="icon"></span>Shows</a></li>
+    <li><a href="/games"><span class="game-icon" part="icon"></span>Games</a></li>
+  </ul>
+</nav>
+<app-search-input></app-search-input>
+<details id="user">
+  <summary>
+    <img id="profile-picture" src="/assets/img/User_Placeholder.svg" alt="Profile"/>
+  </summary>
+  <ul id="user-dropdown">
+    <li data-login>
+      <a id="profile-link" href="/user/user"><span class="profile-icon" part="icon"></span>Profile</a>
+    </li>
+    <li data-login><a href="/user/friends"><span class="friends-icon" part="icon"></span>Friends</a></li>
+    <li data-login>
+      <a href="/user/comments"><span class="comment-icon" part="icon"></span>Comments</a>
+    </li>
+    <li data-login><a href="/user/reviews"><span class="review-icon" part="icon"></span>Reviews</a></li>
+    <li data-default><a href="/user/settings"><span class="settings-icon" part="icon"></span>Settings</a>
+    </li>
+    <li data-default>
+      <a href="/user/preferences"><span class="settings-icon" part="icon"></span>Preferences</a>
+    </li>
+    <li data-login id="logout">
+      <app-button class="logout" exportparts="button,button: logout-button">
+        <span class="center"><span class="logout-icon" part="icon, logout-icon"></span>Logout</span>
+      </app-button>
+    </li>
+    <li data-logout id="login"><a href="/login"><span class="login-icon" part="icon"></span>Log in</a>
+    </li>
+    <li data-logout id="signup">
+      <a href="/signup"><span class="login-icon" part="icon"></span>Sign up</a>
+    </li>
+  </ul>
+</details>
