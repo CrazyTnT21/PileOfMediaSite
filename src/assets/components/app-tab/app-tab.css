@@ -1,0 +1,47 @@
+:host {
+  --tab-brightness-1--: var(--tab-brightness-1, -10);
+  --tab-brightness-2--: var(--button-brightness-2, -20);
+
+  --tab-color--: var(--tab-color, hsl(0 0% 10%));
+  --tab-color-hover--: var(--tab-color-hover, gray);
+  --tab-color-hover-mix--: color-mix(in srgb-linear, var(--tab-color--), var(--tab-color-hover--) 40%);
+
+  --tab-border-color--: var(--tab-border-color, #969696);
+  --tab-border-color-hover--: var(--tab-color, gray);
+  --tab-border-color-hover-mix--: color-mix(in srgb-linear, var(--tab-border-color--), var(--tab-border-color-hover--) 40%);
+
+  --tab-outline-color--: var(--tab-outline-color, Highlight);
+}
+
+* {
+  font: 1rem "Roboto", serif;
+}
+
+#headers {
+  display: flex;
+
+  app-button {
+    --button-background-color: transparent;
+    border-bottom: .2rem solid var(--tab-border-color--);
+  }
+
+  ::part(button) {
+    color: var(--tab-color--);
+  }
+
+  app-button:hover {
+    border-bottom: .2rem solid var(--tab-border-color-hover-mix--);
+  }
+
+  :hover::part(button) {
+    color: var(--tab-color-hover-mix--);
+  }
+
+  app-button[data-selected] {
+    border-bottom: .2rem solid var(--tab-outline-color--)
+  }
+
+  [data-selected]::part(button) {
+    color: var(--tab-color-hover-mix--);
+  }
+}

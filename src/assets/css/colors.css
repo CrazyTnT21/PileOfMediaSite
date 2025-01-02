@@ -63,6 +63,12 @@
 
   --table-color: var(--app-text-1);
 
+  --tab-color: var(--app-text-1);
+  --tab-color-hover: var(--app-color-2);
+  --tab-border-color: var(--app-color-1);
+  --tab-border-color-hover: var(--app-color-2);
+  --tab-outline-color: var(--app-outline);
+
   --app-text-1-brightness: calc(var(--default-brightness-1) * -1);
   --app-text-2-brightness: calc(var(--default-brightness-2) * -1);
 }
