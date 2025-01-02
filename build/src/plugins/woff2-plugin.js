@@ -15,7 +15,7 @@ let woff2Plugin = () => ({
       //TODO
       let contents;
       if (args.path.startsWith("./material-symbols"))
-        contents = await fs.readFile(path.join("node_modules", "@material-symbols", "font-400", args.path));
+        contents = await fs.readFile(path.join("node_modules", "@material-symbols", "font-300", args.path));
       else
         contents = await fs.readFile(args.path);
       return {

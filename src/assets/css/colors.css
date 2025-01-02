@@ -1,6 +1,6 @@
 :root {
-  --default-brightness-1: -10;
-  --default-brightness-2: -20;
+  --default-brightness-1: -5;
+  --default-brightness-2: -10;
 
   --app-background-1-brightness: var(--default-brightness-1);
   --app-background-2-brightness: var(--default-brightness-1);
@@ -47,14 +47,12 @@
   --image-input-color: var(--app-text-1);
   --image-input-outline-color: var(--app-outline);
 
-  --header-brightness-1: var(--app-background-1-brightness);
-  --header-brightness-2: calc(var(--app-background-1-brightness) * 2);
   --header-background-color: var(--app-background-1);
 
   --header-color: var(--app-text-1);
+  --header-color-hover: var(--app-color-2);
 
-  --header-border-color: var(--app-color-1);
-  --header-secondary-border-color: var(--app-color-2);
+  --header-border-color: var(--app-color-2);
 
   --header-logout-button-background-color: var(--app-negative);
   --header-logout-button-brightness: var(--app-negative-brightness);
@@ -64,24 +62,27 @@
   --table-even-background-color: var(--app-background-3);
 
   --table-color: var(--app-text-1);
+
+  --app-text-1-brightness: calc(var(--default-brightness-1) * -1);
+  --app-text-2-brightness: calc(var(--default-brightness-2) * -1);
 }
 
 /*noinspection DuplicatedCode*/
 @media (prefers-color-scheme: light) {
   :root {
-    --default-brightness-1: -10;
-    --default-brightness-2: -20;
+    --default-brightness-1: -5;
+    --default-brightness-2: -10;
 
-    --app-background-1: hsl(0 0 100);
-    --app-background-2: hsl(0 0 95);
-    --app-background-3: hsl(0 0 90);
-    --app-background-4: hsl(0 0 85);
+    --app-background-1: hsl(0 0% 100%);
+    --app-background-2: hsl(0 0% 95%);
+    --app-background-3: hsl(0 0% 90%);
+    --app-background-4: hsl(0 0% 85%);
 
-    --app-color-1: hsl(0 0% 25%);
-    --app-color-2: hsl(0 0% 30%);
+    --app-color-1: hsl(0 0% 30%);
+    --app-color-2: hsl(0 0% 60%);
 
-    --app-text-1: hsl(0 0% 5%);
-    --app-text-2: hsl(0 0% 35%);
+    --app-text-1: hsl(0 0% 10%);
+    --app-text-2: hsl(0 0% 30%);
 
     --app-input-color: hsl(0 0% 95%);
     --app-button-color: hsl(0 0% 95%);
@@ -105,15 +106,15 @@
     --default-brightness-1: 10;
     --default-brightness-2: 20;
 
-    --app-background-1: hsl(0 0 15);
-    --app-background-2: hsl(0 0 20);
-    --app-background-3: hsl(0 0 25);
-    --app-background-4: hsl(0 0 30);
+    --app-background-1: hsl(0 0% 15%);
+    --app-background-2: hsl(0 0% 20%);
+    --app-background-3: hsl(0 0% 25%);
+    --app-background-4: hsl(0 0% 30%);
 
-    --app-color-1: hsl(0 0% 90%);
-    --app-color-2: hsl(0 0% 85%);
+    --app-color-1: hsl(0 0% 70%);
+    --app-color-2: hsl(0 0% 40%);
 
-    --app-text-1: hsl(0 0% 95%);
+    --app-text-1: hsl(0 0% 90%);
     --app-text-2: hsl(0 0% 65%);
 
     --app-input-background-color: hsl(0 0% 20%);
@@ -137,19 +138,19 @@
 
 /*noinspection DuplicatedCode*/
 :root[data-color-scheme="light"] {
-  --default-brightness-1: -10;
-  --default-brightness-2: -20;
+  --default-brightness-1: -5;
+  --default-brightness-2: -10;
 
-  --app-background-1: hsl(0 0 100);
-  --app-background-2: hsl(0 0 95);
-  --app-background-3: hsl(0 0 90);
-  --app-background-4: hsl(0 0 85);
+  --app-background-1: hsl(0 0% 100%);
+  --app-background-2: hsl(0 0% 95%);
+  --app-background-3: hsl(0 0% 90%);
+  --app-background-4: hsl(0 0% 85%);
 
-  --app-color-1: hsl(0 0 25);
-  --app-color-2: hsl(0 0 30);
+  --app-color-1: hsl(0 0% 30%);
+  --app-color-2: hsl(0 0% 60%);
 
-  --app-text-1: hsl(0 0% 5%);
-  --app-text-2: hsl(0 0% 35%);
+  --app-text-1: hsl(0 0% 10%);
+  --app-text-2: hsl(0 0% 30%);
 
   --app-input-background-color: hsl(0 0% 100%);
   --app-button-background-color: hsl(208 50% 46.5%);
@@ -170,18 +171,18 @@
   --default-brightness-1: 10;
   --default-brightness-2: 20;
 
-  --app-background-1: hsl(0 0 15);
-  --app-background-2: hsl(0 0 20);
-  --app-background-3: hsl(0 0 25);
-  --app-background-4: hsl(0 0 30);
+  --app-background-1: hsl(0 0% 15%);
+  --app-background-2: hsl(0 0% 20%);
+  --app-background-3: hsl(0 0% 25%);
+  --app-background-4: hsl(0 0% 30%);
 
-  --app-color-1: hsl(0 0% 75%);
-  --app-color-2: hsl(0 0% 70%);
+  --app-color-1: hsl(0 0% 70%);
+  --app-color-2: hsl(0 0% 40%);
 
-  --app-text-1: hsl(0 0% 95%);
+  --app-text-1: hsl(0 0% 90%);
   --app-text-2: hsl(0 0% 65%);
 
-  --app-input-background-color: hsl(0 0 20);
+  --app-input-background-color: hsl(0 0% 20%);
   --app-button-background-color: hsl(208, 76%, 37%);
 
   --app-input-color: hsl(0 0% 95%);

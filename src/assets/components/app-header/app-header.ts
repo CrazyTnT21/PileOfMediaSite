@@ -66,7 +66,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     {
       const user: LoginReturn["user"] = JSON.parse(localAccount).user;
       const profileLink: HTMLAnchorElement = this.shadowRoot.querySelector("#profile-link")!;
-      profileLink.href = `/user/${user.id}`//`/user/${user.name}`
+      profileLink.href = `/user/${user.name}`;
       if (user.profile_picture)
       {
         user.profile_picture.versions.sort((x: ImageData, y: ImageData) => x.width * x.height - y.width * y.height);

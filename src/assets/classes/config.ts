@@ -58,3 +58,8 @@ function getTranslationUri(code: language.LanguageCode): `/assets/translations/t
 {
   return `/assets/translations/translation_${code}.json`;
 }
+
+export function logError(error: Error): void
+{
+  console.error(error);
+}

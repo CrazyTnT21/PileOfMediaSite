@@ -1,5 +1,5 @@
 import {AppTable, Column, ColumnType} from "../../components/app-table/app-table";
-import {Config} from "../../classes/config";
+import {Config, logError} from "../../classes/config";
 import {API_URL} from "../modules";
 import {Book} from "../../types/book";
 import {paths} from "mycollection-openapi";
@@ -59,7 +59,7 @@ const client = createClient<paths>({baseUrl: API_URL})
 const {data, error} = await client.GET("/books");
 if (data == undefined)
 {
-  console.error(error);
+  logError(new Error(error));
 }
 else
 {

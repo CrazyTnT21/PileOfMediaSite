@@ -3,7 +3,7 @@ import {API_URL} from "../../scripts/modules";
 import {Role} from "../../types/role.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
-import {Config} from "../../classes/config";
+import {Config, logError} from "../../classes/config";
 
 export class AppRoleAutocomplete extends AppAutocomplete<Role>
 {
@@ -30,7 +30,7 @@ export class AppRoleAutocomplete extends AppAutocomplete<Role>
       });
       if (data == undefined)
       {
-        console.error(error)
+        logError(new Error(error))
         return [];
       }
       page++;
@@ -55,7 +55,7 @@ export class AppRoleAutocomplete extends AppAutocomplete<Role>
       });
       if (data == undefined)
       {
-        console.error(error)
+        logError(new Error(error))
         return [];
       }
       page++;

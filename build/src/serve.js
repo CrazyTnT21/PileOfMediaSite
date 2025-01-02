@@ -4,6 +4,7 @@ import * as fs from "node:fs";
 import * as http from "node:http";
 import * as path from "node:path";
 import httpProxy from "http-proxy";
+import * as glob from "glob";
 
 const settings = createBuildSettings({
   sourcemap: true,
@@ -11,10 +12,9 @@ const settings = createBuildSettings({
 });
 settings.outdir = "src";
 
-const ctx = await esbuild.context(settings);
+let ctx = await esbuild.context(settings);
 
 let buildOutput = await ctx.rebuild();
-
 let lastError;
 const result = fs.promises.watch(settings.outdir, {recursive: true});
 (async () =>
@@ -23,6 +23,11 @@ const result = fs.promises.watch(settings.outdir, {recursive: true});
   {
     try
     {
+      if (!x.filename.endsWith("~"))
+      {
+        settings.entryPoints = glob.sync("src/**/*", {nodir: true});
+        ctx = await esbuild.context(settings);
+      }
       buildOutput = await ctx.rebuild();
       if (lastError)
       {
@@ -124,9 +129,9 @@ function processRequest(request, src)
   const filePath = path.join(src, request.url).split("?")[0];
 
   return getFile(filePath) ??
-    getFile(filePath + ".html") ??
-    getFile(path.join(filePath, "/index.html")) ??
-    {statusCode: 404, data: null, headers: {}};
+      getFile(filePath + ".html") ??
+      getFile(path.join(filePath, "/index.html")) ??
+      {statusCode: 404, data: null, headers: {}};
 }
 
 function last(items)

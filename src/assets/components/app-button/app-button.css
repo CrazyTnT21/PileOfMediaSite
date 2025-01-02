@@ -1,6 +1,6 @@
 :host {
-  --button-brightness-1--: var(--button-brightness-1, -10);
-  --button-brightness-2--: var(--button-brightness-2, -20);
+  --button-brightness-1--: var(--button-brightness-1, -5);
+  --button-brightness-2--: var(--button-brightness-2, -10);
   --button-background-color--: var(--button-background-color, hsl(208 50% 46.5%));
   --button-background-color-hover--: hsl(from var(--button-background-color--) h s calc(l + var(--button-brightness-1--)));
 
@@ -22,7 +22,7 @@ button {
   display: inline-flex;
   color: var(--button-color--);
   flex: 1 1 100%;
-  padding: 8px;
+  padding: 6px;
   justify-content: center;
   border: 0;
   background-color: var(--button-background-color--);

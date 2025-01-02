@@ -1,15 +1,25 @@
+[class$='-icon'] {
+  font-family: "Material Symbols Outlined", serif;
+  font-size: 22px;
+  line-height: 1;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
+}
 .eye-open-icon::before {
   display: flex;
   content: "visibility";
-  font-family: "Material Symbols Outlined", serif;
-  font-size: 22px;
   color: var(--input-label-color--);
 }
 
 .eye-closed-icon::before {
   display: flex;
   content: "visibility_off";
-  font-family: "Material Symbols Outlined", serif;
   font-size: 22px;
   color: var(--input-label-color--);
 }

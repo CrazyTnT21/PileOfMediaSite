@@ -6,6 +6,16 @@
     <TypeScriptCodeStyleSettings version="0">
       <option name="FUNCTION_EXPRESSION_BRACE_STYLE" value="2" />
     </TypeScriptCodeStyleSettings>
+    <codeStyleSettings language="CSS">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="HTML">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
     <codeStyleSettings language="JavaScript">
       <option name="BRACE_STYLE" value="2" />
       <option name="CLASS_BRACE_STYLE" value="2" />
@@ -13,6 +23,9 @@
       <option name="ELSE_ON_NEW_LINE" value="true" />
       <option name="CATCH_ON_NEW_LINE" value="true" />
       <option name="FINALLY_ON_NEW_LINE" value="true" />
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+      </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="TypeScript">
       <option name="BRACE_STYLE" value="2" />
@@ -21,6 +34,9 @@
       <option name="ELSE_ON_NEW_LINE" value="true" />
       <option name="CATCH_ON_NEW_LINE" value="true" />
       <option name="FINALLY_ON_NEW_LINE" value="true" />
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+      </indentOptions>
     </codeStyleSettings>
   </code_scheme>
 </component>

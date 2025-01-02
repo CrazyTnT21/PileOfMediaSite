@@ -4,13 +4,15 @@ import woff2Plugin from "./plugins/woff2-plugin.js";
 import {absolutePathPlugin} from "./plugins/absolute-path-plugin.js";
 import inlinePlugin from "./plugins/inline-plugin.js";
 import path from "node:path";
+import * as glob from "glob"
 
-export const SRC_DIR = path.join(import.meta.dirname,"..","..","src");
+export const SRC_DIR = path.join(path.resolve("."), "src");
+
 export function createBuildSettings(options)
 {
   // noinspection SpellCheckingInspection
   return {
-    entryPoints: ["src/**/*"],
+    entryPoints: glob.sync("src/**/*", {nodir: true}),
     outdir: "dist",
     bundle: true,
     splitting: true,

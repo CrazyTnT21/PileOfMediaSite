@@ -1,8 +1,9 @@
 /*Shadow dom*/
-@import '@material-symbols/font-400';
+@import '@material-symbols/font-300/outlined.css';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 html {
-  font: 1rem "Fira Sans", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
@@ -75,12 +76,14 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 
-app-header {
-  height: 46px;
+app-header:not(:defined) {
+  display: blocK;
+  background-color: var(--header-background-color);
+  padding-bottom: 1px;
 }
 
-body:has(app-header:not(:defined)) {
-  margin-top: 47px;
+app-header {
+  height: 45px;
 }
 
 .placeholder {

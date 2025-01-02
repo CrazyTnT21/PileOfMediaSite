@@ -3,3 +3,4 @@ dist
 .cache
 /build/node_modules
 locations.nginx.conf
+.local/*

@@ -4,7 +4,7 @@ import {paths} from "mycollection-openapi";
 import {API_URL} from "../modules";
 import {SearchEvent} from "../../components/inputs/app-search-input/search-event";
 import {Book} from "../../types/book";
-import {Config} from "../../classes/config";
+import {Config, logError} from "../../classes/config";
 
 const params = new URLSearchParams((window.location.search))
 AppSearchInput.define()
@@ -52,7 +52,7 @@ async function* searchBooks(value: string): AsyncGenerator<Book[]>
     })
     if (data == undefined)
     {
-      console.error(error)
+      logError(new Error(error))
       return [];
     }
     page++;

@@ -1,14 +1,9 @@
 :host {
-  --header-brightness-1--: var(--header-brightness-1, 10);
-  --header-brightness-2--: var(--header-brightness-2, -20);
   --header-background-color--: var(--header-background-color, white);
-  --header-background-color-hover--: hsl(from var(--header-background-color--) h s calc(l + var(--header-brightness-1--)));
-
   --header-color--: var(--header-color, black);
-
-  --header-border-color--: var(--header-border-color, gray);
-  --header-secondary-border-color--: var(--header-secondary-border-color, lightgray);
-
+  --header-color-hover--: var(--header-color-hover, gray);
+  --header-color-hover-mix--: color-mix(in srgb-linear, var(--header-color--), var(--header-color-hover--) 40%);
+  --header-border-color--: var(--header-border-color, lightgray);
   --header-logout-button-background-color--: var(--header-logout-button-background-color, #c80f0f);
   --header-logout-button-brightness--: var(--header-logout-button-brightness, -10);
 
@@ -17,7 +12,7 @@
 
 :host {
   display: flex;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid var(--header-border-color--);
   gap: 5px;
   align-items: center;
   align-content: center;
@@ -65,9 +60,13 @@ img {
 
 .logo {
   margin-left: 5px;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   display: flex;
+
+  img {
+    border-radius: 2px;
+  }
 }
 
 li {
@@ -80,20 +79,22 @@ li {
 
 #user {
   margin-right: 5px;
-  height: 35px;
-  width: 35px;
 
   summary {
+    height: 35px;
+    width: 35px;
+    border: 1px solid var(--header-border-color--);
+    border-radius: 2px;
+
     img {
-      border: 1px solid var(--header-secondary-border-color--);
-      border-radius: 2px;
+      border-radius: 1px;
     }
 
     aspect-ratio: 1;
   }
 
   ul {
-    border: 1px solid var(--header-secondary-border-color--);
+    border: 1px solid var(--header-border-color--);
     background-color: var(--header-background-color--);
     z-index: 1;
     position: absolute;
@@ -106,14 +107,13 @@ li {
     overflow: hidden;
 
     & li:not([hidden]) ~ li > a {
-      border-top: 1px solid var(--header-secondary-border-color--);
+      border-top: 1px solid var(--header-border-color--);
     }
 
     & li {
       white-space: nowrap;
       display: inline-flex;
       padding: 0;
-
 
       & app-button {
         flex: 1;
@@ -122,7 +122,7 @@ li {
       & a {
         flex: 1;
         display: inline-flex;
-        padding: 5px;
+        padding: 8px;
       }
     }
   }
@@ -130,7 +130,11 @@ li {
 
 #user > ul > li > a:focus,
 #user > ul > li > a:hover {
-  background-color: var(--header-background-color-hover--);
+  color: var(--header-color-hover-mix--);
+
+  * {
+    color: var(--header-color-hover-mix--);
+  }
 }
 
 .burger-items {
@@ -142,19 +146,25 @@ li {
 
 .items {
   display: flex;
+  gap: 2px;
 
   & li {
-    * {
+    a {
       display: flex;
-      padding: 4px;
-      border-radius: 2px;
+      padding: 2px;
+      border-radius: 5px;
       align-items: center;
     }
   }
 }
 
-.burger-items > li,
+.burger-items > li {
+  padding: 0;
+}
+
 .burger-items > li > * {
+  padding: 8px;
+  height: 100%;
   display: flex;
   width: 100%;
 }
@@ -163,7 +173,11 @@ li {
 .items > li > *:hover,
 .burger-items > li:has(*:focus),
 .burger-items > li:hover {
-  background-color: var(--header-background-color-hover--);
+  color: var(--header-color-hover-mix--);
+
+  * {
+    color: var(--header-color-hover-mix--)
+  }
 }
 
 .items {
@@ -192,7 +206,6 @@ a {
 #burger {
   summary {
     display: flex;
-    font-family: "Material Symbols Outlined", "Invisible", serif;
     padding-left: 5px;
     font-size: 1.6rem;
     place-content: center;
@@ -201,7 +214,7 @@ a {
     height: 35px;
   }
 
-  summary::after {
+  summary::before {
     content: "menu";
   }
 
@@ -211,14 +224,14 @@ a {
     z-index: 1;
     background-color: var(--header-background-color--);
 
-    li {
-      border-bottom: 1px solid var(--header-secondary-border-color--);
+    li ~ li {
+      border-top: 1px solid var(--header-border-color--);
     }
   }
 }
 
 #burger[open] {
-  summary::after {
+  summary::before {
     content: "close";
     font-size: 1.4rem;
   }
@@ -278,78 +291,66 @@ details {
 
 .movie-icon::before {
   content: "theaters";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
+}
+
+.icon::before, [class$='-icon'] {
+  font-family: "Material Symbols Outlined", serif;
+  line-height: 1;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
   font-size: 24px;
 }
 
 .book-icon::before {
   content: "book_2";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .graphic-novel-icon::before {
   content: "menu_book";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .show-icon::before {
   content: "tv";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .game-icon::before {
   content: "videogame_asset";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .profile-icon::before {
   content: "person";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .friends-icon::before {
   content: "group";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .comment-icon::before {
   content: "comment";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .comment-icon::before {
   content: "comment";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .review-icon::before {
   content: "reviews";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .settings-icon::before {
   content: "settings";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .login-icon::before {
   content: "login";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }
 
 .logout-icon::before {
   content: "logout";
-  font-family: "Material Symbols Outlined", "Invisible", serif;
-  font-size: 24px;
 }

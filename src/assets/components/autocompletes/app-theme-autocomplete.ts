@@ -3,7 +3,7 @@ import {API_URL} from "../../scripts/modules";
 import {Theme} from "../../types/theme.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
-import {Config} from "../../classes/config";
+import {Config, logError} from "../../classes/config";
 
 export class AppThemeAutocomplete extends AppAutocomplete<Theme>
 {
@@ -30,7 +30,7 @@ export class AppThemeAutocomplete extends AppAutocomplete<Theme>
       });
       if (data == undefined)
       {
-        console.error(error)
+        logError(new Error(error))
         return [];
       }
       page++;
@@ -55,7 +55,7 @@ export class AppThemeAutocomplete extends AppAutocomplete<Theme>
       });
       if (data == undefined)
       {
-        console.error(error)
+        logError(new Error(error))
         return [];
       }
       page++;

@@ -3,7 +3,7 @@ import {API_URL} from "../../scripts/modules";
 import {Genre} from "../../types/genre.js";
 import createClient from "openapi-fetch";
 import {paths} from "mycollection-openapi";
-import {Config} from "../../classes/config";
+import {Config, logError} from "../../classes/config";
 
 export class AppGenreAutocomplete extends AppAutocomplete<Genre>
 {
@@ -30,7 +30,7 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
       });
       if (data == undefined)
       {
-        console.error(error)
+        logError(new Error(error))
         return [];
       }
       page++;
@@ -55,7 +55,7 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
       });
       if (data == undefined)
       {
-        console.error(error)
+        logError(new Error(error))
         return [];
       }
       page++;

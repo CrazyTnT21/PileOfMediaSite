@@ -1,7 +1,15 @@
 .icon::before {
+  font-family: "Material Symbols Outlined", serif;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
   display: flex;
   content: "search";
-  font-family: "Material Symbols Outlined", serif;
   font-size: 22px;
   color: var(--input-label-color--);
 }
