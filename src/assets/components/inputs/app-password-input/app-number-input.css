@@ -1,6 +1,6 @@
 [class$='-icon'] {
   font-family: "Material Symbols Outlined", serif;
-  font-size: 22px;
+  font-size: 1.5rem;
   line-height: 1;
   text-transform: none;
   display: inline-block;
@@ -11,6 +11,7 @@
   text-rendering: optimizeLegibility;
   font-feature-settings: "liga";
 }
+
 .eye-open-icon::before {
   display: flex;
   content: "visibility";
@@ -20,7 +21,7 @@
 .eye-closed-icon::before {
   display: flex;
   content: "visibility_off";
-  font-size: 22px;
+  font-size: 1.5rem;
   color: var(--input-label-color--);
 }
 
@@ -60,12 +61,13 @@ app-button {
   display: inline-flex;
   align-self: center;
   align-items: center;
+  margin-right: 5px;
 }
 
 ::part(button) {
   display: inline-flex;
-  padding: 0 5px 0 5px;
   border: none;
+  padding: 0;
 }
 
 #outline:has(input[data-invalid]) {

@@ -10,7 +10,7 @@
   font-feature-settings: "liga";
   display: flex;
   content: "search";
-  font-size: 22px;
+  font-size: 1.5rem;
   color: var(--input-label-color--);
 }
 

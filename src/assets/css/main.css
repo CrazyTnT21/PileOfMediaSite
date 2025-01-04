@@ -6,6 +6,10 @@ html {
   font-family: "Roboto", sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
 }
@@ -76,6 +80,10 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 
+:not(:defined) {
+  display: none;
+}
+
 app-header:not(:defined) {
   display: blocK;
   background-color: var(--header-background-color);
@@ -83,7 +91,7 @@ app-header:not(:defined) {
 }
 
 app-header {
-  height: 45px;
+  height: 3rem;
 }
 
 .placeholder {
@@ -133,7 +141,7 @@ app-header {
 .login {
   margin: 5px;
   border-radius: 5px;
-  box-shadow: 0 0 10px var(--app-background-4, lightgray);
+  box-shadow: 0 0 5px var(--app-background-4, lightgray);
 }
 
 .login-box {

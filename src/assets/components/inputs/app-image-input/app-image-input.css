@@ -32,7 +32,7 @@ label {
   color: var(--image-input-color--);
   margin: 0 0 0 5px;
   transform: translateY(-60%);
-  background: linear-gradient(180deg, transparent 0 7px, var(--image-input-background-color--) 7px 15px, transparent 15px 100%);
+  background: linear-gradient(180deg, transparent 0 0.44rem, var(--image-input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
   transition: transform ease 50ms;
 }
 
@@ -79,6 +79,6 @@ img:focus {
 :host([disabled]) {
   label {
     content: "*";
-    background: linear-gradient(180deg, transparent 0 7px, var(--image-input-background-color-disabled--) 7px 15px, transparent 15px 100%);
+    background: linear-gradient(180deg, transparent 0 0.44rem, var(--image-input-background-color-disabled--) 0.44rem 0.9rem, transparent 0.9rem 100%);
   }
 }

@@ -17,8 +17,17 @@
   font: 1rem "Roboto", serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  flex-direction: column;
+}
+
 #headers {
   display: flex;
+  flex-wrap: wrap;
 
   app-button {
     --button-background-color: transparent;

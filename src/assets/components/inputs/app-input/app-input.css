@@ -81,14 +81,13 @@ label {
   font-size: 1em;
   margin: 0 0 0 5px;
   transform: translateY(-60%);
-  background: linear-gradient(180deg, transparent 0 7px, var(--input-background-color--) 7px 15px, transparent 15px 100%);
+  background: linear-gradient(180deg, transparent 0 0.44rem, var(--input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
 
   transition: transform ease 50ms;
 }
 
-.parent:has(input:hover) > label,
 .parent:has(input:focus) > label {
-  background: linear-gradient(180deg, transparent 0 7px, var(--input-background-color--) 7px 15px, transparent 15px 100%);
+  background: linear-gradient(180deg, transparent 0 0.44rem, var(--input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
 }
 
 :host([required]) {

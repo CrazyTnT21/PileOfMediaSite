@@ -10,6 +10,7 @@
   --header-logout-button-color--: var(--header-logout-button-color, white);
 }
 
+
 :host {
   display: flex;
   border-bottom: 1px solid var(--header-border-color--);
@@ -18,6 +19,10 @@
   align-content: center;
   justify-content: center;
   background-color: var(--header-background-color--);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 * {
@@ -60,8 +65,10 @@ img {
 
 .logo {
   margin-left: 5px;
-  width: 30px;
-  height: 30px;
+  width: 1.6rem;
+  min-width: 33px;
+  min-height: 33px;
+  height: 1.6rem;
   display: flex;
 
   img {
@@ -70,8 +77,6 @@ img {
 }
 
 li {
-  box-sizing: border-box;
-
   & a {
     align-items: center;
   }
@@ -81,8 +86,11 @@ li {
   margin-right: 5px;
 
   summary {
-    height: 35px;
-    width: 35px;
+    height: 1.6rem;
+    width: 1.6rem;
+    min-height: 33px;
+    min-width: 33px;
+
     border: 1px solid var(--header-border-color--);
     border-radius: 2px;
 
@@ -304,7 +312,7 @@ details {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-feature-settings: "liga";
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 
 .book-icon::before {
