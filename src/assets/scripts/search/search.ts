@@ -1,6 +1,6 @@
 import {AppSearchInput} from "../../components/inputs/app-search-input/app-search-input";
 import createClient from "openapi-fetch";
-import {paths} from "mycollection-openapi";
+import {paths} from "pileofmedia-openapi";
 import {API_URL} from "../modules";
 import {SearchEvent} from "../../components/inputs/app-search-input/search-event";
 import {Book} from "../../types/book";

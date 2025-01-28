@@ -2,7 +2,7 @@ import {AppTable, Column, ColumnType} from "../../components/app-table/app-table
 import {Config, logError} from "../../classes/config";
 import {API_URL} from "../modules";
 import {Book} from "../../types/book";
-import {paths} from "mycollection-openapi";
+import {paths} from "pileofmedia-openapi";
 import createClient from "openapi-fetch";
 
 function columns(): Column<Book>[]

@@ -1,4 +1,4 @@
-import {components} from "mycollection-openapi";
+import {components} from "pileofmedia-openapi";
 
 export enum Language
 {

@@ -2,7 +2,7 @@ import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
 import {API_URL} from "../../scripts/modules";
 import {Character} from "../../types/character.js";
 import createClient from "openapi-fetch";
-import {paths} from "mycollection-openapi";
+import {paths} from "pileofmedia-openapi";
 import {Config, logError} from "../../classes/config";
 
 export class AppCharacterAutocomplete extends AppAutocomplete<Character>

@@ -3,7 +3,7 @@ import {AppInput} from "../../components/inputs/app-input/app-input";
 import {AppPasswordInput} from "../../components/inputs/app-password-input/app-password-input";
 import {AppHeader} from "../../components/app-header/app-header";
 import createClient from "openapi-fetch";
-import {paths} from "mycollection-openapi";
+import {paths} from "pileofmedia-openapi";
 
 document.querySelector("form")!.addEventListener("submit", async e =>
 {

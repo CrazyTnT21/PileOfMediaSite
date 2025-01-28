@@ -2,7 +2,7 @@ import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
 import {API_URL} from "../../scripts/modules";
 import {Genre} from "../../types/genre.js";
 import createClient from "openapi-fetch";
-import {paths} from "mycollection-openapi";
+import {paths} from "pileofmedia-openapi";
 import {Config, logError} from "../../classes/config";
 
 export class AppGenreAutocomplete extends AppAutocomplete<Genre>
