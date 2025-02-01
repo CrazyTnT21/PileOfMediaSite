@@ -1,20 +1,21 @@
 :host {
-  --input-brightness-1--: var(--input-brightness-1, -20);
-  --input-brightness-2--: var(--button-brightness-2, -40);
+  --brightness-change--: 20;
   --input-background-color--: var(--input-background-color, white);
-  --input-background-color-disabled--: hsl(from var(--input-background-color--) h s calc(l + var(--input-brightness-1--) / 2));
+  --input-background-color-disabled--: hsl(from var(--input-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) / 2));
 
   --input-color--: var(--input-color, black);
-  --input-color-disabled--: hsl(from var(--input-color--) h s calc(l + var(--input-brightness-1--)));
+  --input-color-disabled--: hsl(from var(--input-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --input-border-color--: var(--input-border-color, #969696);
-  --input-border-color-hover--: hsl(from var(--input-border-color--) h s calc(l + var(--input-brightness-1--)));
-  --input-border-color-disabled--: hsl(from var(--input-border-color--) h s calc(l + var(--input-brightness-1--)));
+
+  --input-border-color-hover--: hsl(from var(--input-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+  --input-border-color-disabled--: hsl(from var(--input-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --input-label-color--: var(--input-label-color, #737373);
+  --input-label-color-disabled--: hsl(from var(--input-label-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * -.5));
 
   --input-invalid-color--: var(--input-invalid-color, #dc0000);
-  --input-invalid-color-hover--: hsl(from var(--input-invalid-color--) h s calc(l + var(--input-brightness-1--)));
+  --input-invalid-color-hover--: hsl(from var(--input-invalid-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --input-outline-color--: var(--input-outline-color, Highlight);
   --input-padding--: var(--input-padding, 5px);
@@ -43,7 +44,7 @@
   flex: 1;
 }
 
-.input:focus {
+.input:focus-visible {
   outline: var(--input-outline-color--) 2px solid;
 }
 
@@ -125,6 +126,10 @@ input[disabled]::placeholder {
     background-color: var(--input-background-color-disabled--);
     color: var(--input-color-disabled--);
     border-color: var(--input-border-color-disabled--);
+  }
+
+  label {
+    color: var(--textarea-label-color-disabled--)
   }
 
   label:not([x]) {

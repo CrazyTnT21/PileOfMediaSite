@@ -1,19 +1,26 @@
 :host {
-  --image-input-brightness-1--: var(--image-input-brightness-1, -20);
-  --image-input-brightness-2--: var(--button-brightness-2, -40);
+  --brightness-change--: 20;
   --image-input-background-color--: var(--image-input-background-color, white);
-  --image-input-background-color-hover--: hsl(from var(--image-input-background-color--) h s calc(l + var(--image-input-brightness-1--)));
-  --image-input-background-color-disabled--: hsl(from var(--image-input-background-color--) h s calc(l + var(--image-input-brightness-2--)));
+  --image-input-background-color-disabled--: hsl(from var(--image-input-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) / 2));
 
   --image-input-color--: var(--image-input-color, black);
+  --image-input-color-disabled--: hsl(from var(--image-input-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --image-input-border-color--: var(--image-input-border-color, #969696);
-  --image-input-border-color-hover--: hsl(from var(--image-input-border-color--) h s calc(l + var(--image-input-brightness-1--)));
-  --image-input-border-color-disabled--: hsl(from var(--image-input-border-color--) h s calc(l + var(--image-input-brightness-2--)));
+
+  --image-input-border-color-hover--: hsl(from var(--image-input-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+  --image-input-border-color-disabled--: hsl(from var(--image-input-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+
+  --image-input-label-color--: var(--image-input-label-color, #737373);
+  --image-input-label-color-disabled--: hsl(from var(--image-input-label-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * -.5));
 
   --image-input-invalid-color--: var(--image-input-invalid-color, #dc0000);
-  --image-input-invalid-color-hover--: hsl(from var(--image-input-invalid-color--) h s calc(l + var(--image-input-brightness-1--)));
-  --image-input-outline-color--: var(--image-input-outline-color, highlight)
+  --image-input-invalid-color-hover--: hsl(from var(--image-input-invalid-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+
+  --image-input-outline-color--: var(--image-input-outline-color, Highlight);
+  --image-input-padding--: var(--image-input-padding, 5px);
+
+  --image-input-background-color-hover--: hsl(from var(--image-input-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 }
 
 img {
@@ -68,7 +75,7 @@ input[data-invalid] + img:hover {
   border-color: var(--image-input-invalid-color-hover--);
 }
 
-img:focus {
+img:focus-visible {
   outline: var(--image-input-outline-color--) 2px solid;
 }
 

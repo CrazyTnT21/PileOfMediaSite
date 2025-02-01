@@ -49,7 +49,7 @@ app-button {
   transition: border-color ease 50ms;
 }
 
-#outline:has(input:focus) {
+#outline:has(input:focus-visible) {
   outline: solid 2px var(--input-outline-color--);
 }
 

@@ -13,7 +13,6 @@ const settings = createBuildSettings({
 settings.outdir = "src";
 
 let ctx = await esbuild.context(settings);
-
 let buildOutput = await ctx.rebuild();
 let lastError;
 const result = fs.promises.watch(settings.outdir, {recursive: true});
@@ -32,8 +31,8 @@ const result = fs.promises.watch(settings.outdir, {recursive: true});
       if (lastError)
       {
         lastError = null;
-        console.info("Rebuilt sucessfully!");
       }
+      console.info("Rebuilt successfully!", new Date().toLocaleTimeString());
     }
     catch (e)
     {
@@ -41,6 +40,7 @@ const result = fs.promises.watch(settings.outdir, {recursive: true});
       console.error(e.message);
     }
   }
+
 })();
 
 export const contentTypeExtensions = {
@@ -128,10 +128,15 @@ function processRequest(request, src)
 {
   const filePath = path.join(src, request.url).split("?")[0];
 
-  return getFile(filePath) ??
-      getFile(filePath + ".html") ??
-      getFile(path.join(filePath, "/index.html")) ??
-      {statusCode: 404, data: null, headers: {}};
+  if (request.headers.accept?.includes("text/html"))
+  {
+    return getFile(filePath.replace(/\/$/, "") + ".html") ??
+        getFile(path.join(filePath, "index.html")) ??
+        getFile(filePath) ??
+        getFile(path.join(src, "404.html"))
+  }
+
+  return getFile(filePath) ?? {statusCode: 404, data: null, headers: {}};
 }
 
 function last(items)
@@ -139,19 +144,12 @@ function last(items)
   return items[items.length - 1];
 }
 
-function secondLast(items)
-{
-  return items[items.length - 2] ?? "";
-}
-
 export function getFile(filePath)
 {
   const find = buildOutput.outputFiles.find(x => x.path === filePath);
   if (!find)
-  {
     return null;
-  }
-  const extension = last(find.path.split("."));
+  const extension = last(filePath.split("."));
   const headers = {};
   if (extension && contentTypeExtensions[extension])
     headers["Content-Type"] = contentTypeExtensions[extension];

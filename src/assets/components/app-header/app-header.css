@@ -1,20 +1,22 @@
 :host {
   --header-background-color--: var(--header-background-color, white);
   --header-color--: var(--header-color, black);
-  --header-color-hover--: var(--header-color-hover, gray);
-  --header-color-hover-mix--: color-mix(in srgb-linear, var(--header-color--), var(--header-color-hover--) 40%);
+  --brightness-change--: 20;
+  --header-color-hover--: hsl(from var(--header-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
   --header-border-color--: var(--header-border-color, lightgray);
   --header-logout-button-background-color--: var(--header-logout-button-background-color, #c80f0f);
-  --header-logout-button-brightness--: var(--header-logout-button-brightness, -10);
 
   --header-logout-button-color--: var(--header-logout-button-color, white);
+  --header-logout-button-color-hover--: hsl(from var(--header-logout-button-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * 5));
 }
 
 
 :host {
   display: flex;
-  border-bottom: 1px solid var(--header-border-color--);
-  gap: 5px;
+  margin: .3rem;
+  box-shadow: 0 0 .09rem 0 var(--header-border-color--);
+  border-radius: .09rem;
+  gap: .3rem;
   align-items: center;
   align-content: center;
   justify-content: center;
@@ -30,7 +32,7 @@
 }
 
 ::part(button) {
-  padding: 5px;
+  padding: .3rem;
 }
 
 app-search-input {
@@ -45,18 +47,6 @@ app-search-input {
   justify-content: center;
 }
 
-.logout {
-  --button-background-color: var(--header-logout-button-background-color--);
-  --button-brightness-1: var(--header-logout-button-brightness--);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  * {
-    color: var(--header-logout-button-color--);
-  }
-}
-
 img {
   max-height: 100%;
   max-width: 100%;
@@ -64,7 +54,7 @@ img {
 }
 
 .logo {
-  margin-left: 5px;
+  margin-left: .3rem;
   width: 1.6rem;
   min-width: 33px;
   min-height: 33px;
@@ -83,7 +73,7 @@ li {
 }
 
 #user {
-  margin-right: 5px;
+  margin-right: .3rem;
 
   summary {
     height: 1.6rem;
@@ -102,13 +92,13 @@ li {
   }
 
   ul {
-    border: 1px solid var(--header-border-color--);
+    box-shadow: 0 0 .09rem 0 var(--header-border-color--);
     background-color: var(--header-background-color--);
     z-index: 1;
     position: absolute;
-    border-radius: 5px;
-    padding: 5px;
-    margin-top: 5px;
+    border-radius: .09rem;
+    padding: .3rem;
+    margin-top: .9rem;
     display: inline-flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -130,7 +120,7 @@ li {
       & a {
         flex: 1;
         display: inline-flex;
-        padding: 8px;
+        padding: .6rem;
       }
     }
   }
@@ -138,29 +128,38 @@ li {
 
 #user > ul > li > a:focus,
 #user > ul > li > a:hover {
-  color: var(--header-color-hover-mix--);
+  color: var(--header-color-hover--);
 
   * {
-    color: var(--header-color-hover-mix--);
+    color: var(--header-color-hover--);
   }
 }
 
 .burger-items {
   display: flex;
-  width: 100%;
+  width: calc(100% - .6rem);
   flex-direction: column;
   justify-items: stretch;
+
+  box-shadow: 0 0 .09rem 0 var(--header-border-color--);
+  border-radius: .09rem;
+  margin-top: .9rem;
+  flex: 1;
 }
 
 .items {
   display: flex;
-  gap: 2px;
+  gap: .1rem;
 
   & li {
+    display: flex;
+    /*flex: 1;*/
+
     a {
       display: flex;
-      padding: 2px;
-      border-radius: 5px;
+      flex: 1;
+      padding: .1rem;
+      border-radius: .3rem;
       align-items: center;
     }
   }
@@ -171,7 +170,7 @@ li {
 }
 
 .burger-items > li > * {
-  padding: 8px;
+  padding: .6rem;
   height: 100%;
   display: flex;
   width: 100%;
@@ -181,10 +180,10 @@ li {
 .items > li > *:hover,
 .burger-items > li:has(*:focus),
 .burger-items > li:hover {
-  color: var(--header-color-hover-mix--);
+  color: var(--header-color-hover--);
 
   * {
-    color: var(--header-color-hover-mix--)
+    color: var(--header-color-hover--)
   }
 }
 
@@ -214,7 +213,7 @@ a {
 #burger {
   summary {
     display: flex;
-    padding-left: 5px;
+    padding-left: .3rem;
     font-size: 1.6rem;
     place-content: center;
     place-items: center;
@@ -227,7 +226,6 @@ a {
   }
 
   ul {
-    margin-top: 8px;
     position: absolute;
     z-index: 1;
     background-color: var(--header-background-color--);
@@ -254,7 +252,7 @@ details {
     margin-top: 1px;
 
     li {
-      padding: 5px;
+      padding: .3rem;
     }
   }
 }
@@ -290,7 +288,7 @@ details {
 }
 
 #user {
-  margin-right: 5px;
+  margin-right: .3rem;
 
   ul {
     transform: translateX(calc(-100% + 35px));
@@ -314,6 +312,25 @@ details {
   font-feature-settings: "liga";
   font-size: 1.5rem;
 }
+
+.logout {
+  --button-background-color: var(--header-logout-button-background-color--);
+
+  * {
+    color: var(--header-logout-button-color--);
+  }
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout:hover, .logout:focus {
+  * {
+    color: var(--header-logout-button-color-hover--);
+  }
+}
+
 
 .book-icon::before {
   content: "book_2";

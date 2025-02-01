@@ -1,7 +1,7 @@
 import {AppTable, Column, ColumnType} from "../../components/app-table/app-table";
 import {Config, logError} from "../../classes/config";
 import {API_URL} from "../modules";
-import {Book} from "../../types/book";
+import {Book} from "../../openapi/book";
 import {paths} from "pileofmedia-openapi";
 import createClient from "openapi-fetch";
 

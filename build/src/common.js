@@ -28,6 +28,7 @@ export function createBuildSettings(options)
     ],
     loader: {
       ".svg": "copy",
+      ".jpg": "copy",
       ".png": "copy",
       ".xml": "copy",
       ".ico": "copy",

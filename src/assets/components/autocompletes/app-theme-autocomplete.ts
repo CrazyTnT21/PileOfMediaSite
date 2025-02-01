@@ -1,6 +1,6 @@
 import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
 import {API_URL} from "../../scripts/modules";
-import {Theme} from "../../types/theme.js";
+import {Theme} from "../../openapi/theme";
 import createClient from "openapi-fetch";
 import {paths} from "pileofmedia-openapi";
 import {Config, logError} from "../../classes/config";

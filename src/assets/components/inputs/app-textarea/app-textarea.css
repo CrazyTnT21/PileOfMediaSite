@@ -1,20 +1,21 @@
 :host {
-  --textarea-brightness-1--: var(--textarea-brightness-1, -20);
-  --textarea-brightness-2--: var(--button-brightness-2, -40);
+  --brightness-change--: 20;
   --textarea-background-color--: var(--textarea-background-color, white);
-  --textarea-background-color-disabled--: hsl(from var(--textarea-background-color--) h s calc(l + var(--textarea-brightness-1--) / 2));
+  --textarea-background-color-disabled--: hsl(from var(--textarea-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) / 2));
 
   --textarea-color--: var(--textarea-color, black);
-  --textarea-color-disabled--: var(--textarea-color-disabled-hover, #c8c8c8);
+  --textarea-color-disabled--: hsl(from var(--textarea-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --textarea-border-color--: var(--textarea-border-color, #969696);
-  --textarea-border-color-hover--: hsl(from var(--textarea-border-color--) h s calc(l + var(--textarea-brightness-1--)));
-  --textarea-border-color-disabled--: var(--textarea-border-color-disabled, var(--textarea-border-color--));
+
+  --textarea-border-color-hover--: hsl(from var(--textarea-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+  --textarea-border-color-disabled--: hsl(from var(--textarea-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --textarea-label-color--: var(--textarea-label-color, #737373);
+  --textarea-label-color-disabled--: hsl(from var(--textarea-label-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * -.5));
 
   --textarea-invalid-color--: var(--textarea-invalid-color, #dc0000);
-  --textarea-invalid-color-hover--: hsl(from var(--textarea-invalid-color--) h s calc(l + var(--textarea-brightness-1--)));
+  --textarea-invalid-color-hover--: hsl(from var(--textarea-invalid-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --textarea-outline-color--: var(--textarea-outline-color, Highlight);
   --textarea-padding--: var(--textarea-padding, 5px);
@@ -125,6 +126,10 @@ textarea[disabled]::placeholder {
     background-color: var(--textarea-background-color-disabled--);
     color: var(--textarea-color-disabled--);
     border-color: var(--textarea-border-color-disabled--);
+  }
+
+  label {
+    color: var(--textarea-label-color-disabled--)
   }
 
   label:not([x]) {

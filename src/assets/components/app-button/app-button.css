@@ -1,16 +1,15 @@
 :host {
-  --button-brightness-1--: var(--button-brightness-1, -5);
-  --button-brightness-2--: var(--button-brightness-2, -10);
+  --brightness-change--: 5;
   --button-background-color--: var(--button-background-color, hsl(208 50% 46.5%));
-  --button-background-color-hover--: hsl(from var(--button-background-color--) h s calc(l + var(--button-brightness-1--)));
+  --button-background-color-hover--: hsl(from var(--button-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --button-color--: var(--button-color, white);
+  --button-color-hover--: hsl(from var(--button-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --button-outline-color--: var(--button-outline-color, highlight);
 
-  --button-background-color-disabled--: hsl(from var(--button-background-color--) h s calc(l + var(--button-brightness-2--)));
-
-  --button-color-disabled--: hsl(from var(--button-color--) h s calc(l + var(--button-brightness-1--)));
+  --button-background-color-disabled--: hsl(from var(--button-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * 2));
+  --button-color-disabled--: hsl(from var(--button-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * 2));
 }
 
 :host {
@@ -29,12 +28,13 @@ button {
   align-items: center;
 }
 
-button:focus {
+button:focus-visible {
   outline: var(--button-outline-color--) 2px solid;
 }
 
 button:hover, button:focus {
   background-color: var(--button-background-color-hover--);
+  color: var(--button-color-hover--);
 }
 
 button:active {

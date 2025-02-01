@@ -30,7 +30,7 @@ input {
   flex: 1;
 }
 
-#outline:has(input:focus) {
+#outline:has(input:focus-visible) {
   outline: solid 2px var(--input-outline-color--);
 }
 

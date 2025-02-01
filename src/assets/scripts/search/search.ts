@@ -3,7 +3,7 @@ import createClient from "openapi-fetch";
 import {paths} from "pileofmedia-openapi";
 import {API_URL} from "../modules";
 import {SearchEvent} from "../../components/inputs/app-search-input/search-event";
-import {Book} from "../../types/book";
+import {Book} from "../../openapi/book";
 import {Config, logError} from "../../classes/config";
 
 const params = new URLSearchParams((window.location.search))

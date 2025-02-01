@@ -30,46 +30,47 @@ ul {
 img {
   max-height: 100%;
   max-width: 100%;
+  object-fit: contain;
 }
 
 .pad {
-  padding: 0.33rem;
+  padding: 0.3rem;
 }
 
 .pad-left {
-  padding-left: 0.33rem;
+  padding-left: 0.3rem;
 }
 
 .pad-right {
-  padding-right: 0.33rem;
+  padding-right: 0.3rem;
 }
 
 .pad-top {
-  padding-top: 0.33rem;
+  padding-top: 0.3rem;
 }
 
 .pad-bottom {
-  padding-bottom: 0.33rem;
+  padding-bottom: 0.3rem;
 }
 
 .mar {
-  margin: 0.33rem;
+  margin: .3rem;
 }
 
 .mar-left {
-  margin-left: 0.33rem;
+  margin-left: 0.3rem;
 }
 
 .mar-right {
-  margin-right: 0.33rem;
+  margin-right: 0.3rem;
 }
 
 .mar-top {
-  margin-top: 0.33rem;
+  margin-top: 0.3rem;
 }
 
 .mar-bottom {
-  margin-bottom: 0.33rem;
+  margin-bottom: 0.3rem;
 }
 
 .small-text {
@@ -85,9 +86,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 app-header:not(:defined) {
-  display: blocK;
+  display: block;
+  margin: .3rem;
   background-color: var(--header-background-color);
-  padding-bottom: 1px;
 }
 
 app-header {
@@ -169,7 +170,7 @@ a, ::part(a) {
 }
 
 .gap {
-  gap: 10px;
+  gap: 0.6rem;
 }
 
 .search {
@@ -183,4 +184,19 @@ p {
 .din-4 {
   aspect-ratio: 1 / 1.41421;
   object-fit: contain;
+}
+
+.icon {
+  line-height: 1;
+  text-transform: none;
+  font-family: "Material Symbols Outlined", serif;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "liga";
+  display: inline-flex;
+  text-rendering: optimizeLegibility;
+  color: var(--input-label-color--);
+  font-size: 1.5rem;
 }

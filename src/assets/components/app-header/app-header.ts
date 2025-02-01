@@ -1,8 +1,8 @@
 import {applyStyleSheet, attach} from "../defaults";
 import {ApplyStyleSheet} from "../apply-style-sheet";
 import {StyleCSS} from "../style-css";
-import {LoginReturn} from "../../types/login-return";
-import {ImageData} from "../../types/image-data";
+import {LoginReturn} from "../../openapi/login-return";
+import {ImageData} from "../../openapi/image-data";
 import {AppButton} from "../app-button/app-button";
 import {AppSearchInput} from "../inputs/app-search-input/app-search-input";
 import {SearchEvent} from "../inputs/app-search-input/search-event";

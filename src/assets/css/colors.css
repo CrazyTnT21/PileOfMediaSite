@@ -1,48 +1,22 @@
 :root {
-  --default-brightness-1: -5;
-  --default-brightness-2: -10;
-
-  --app-background-1-brightness: var(--default-brightness-1);
-  --app-background-2-brightness: var(--default-brightness-1);
-  --app-background-3-brightness: var(--default-brightness-1);
-  --app-background-4-brightness: var(--default-brightness-1);
-
-  --app-color-1-brightness: var(--default-brightness-1);
-  --app-color-2-brightness: var(--default-brightness-1);
-
-  --app-input-brightness: var(--default-brightness-2);
-  --app-button-brightness: 10;
-
-  --app-visited-brightness: var(--default-brightness-1);
-  --app-negative-brightness: var(--default-brightness-1);
-  --app-positive-brightness: var(--default-brightness-1);
-
   --button-background-color: var(--app-button-background-color);
-  --button-brightness-1: var(--app-button-brightness);
-  --button-brightness-2: calc(var(--app-button-brightness) * 2);
 
   --button-color: var(--app-button-color);
   --button-outline-color: var(--app-outline);
 
   --input-background-color: var(--app-input-background-color);
-  --input-brightness-1: var(--app-input-brightness);
-  --input-brightness-2: calc(var(--app-input-brightness) * 2);
 
   --input-color: var(--app-text-1);
   --input-outline-color: var(--app-outline);
   --input-label-color: var(--app-text-2);
 
   --textarea-background-color: var(--app-input-background-color);
-  --textarea-brightness-1: var(--app-input-brightness);
-  --textarea-brightness-2: calc(var(--app-input-brightness) * 2);
 
   --textarea-color: var(--app-text-1);
   --textarea-outline-color: var(--app-outline);
   --textarea-label-color: var(--app-text-2);
 
   --image-input-background-color: var(--app-background-1);
-  --image-input-brightness-1: var(--app-input-brightness);
-  --image-input-brightness-2: calc(var(--app-input-brightness) * 2);
 
   --image-input-color: var(--app-text-1);
   --image-input-outline-color: var(--app-outline);
@@ -55,7 +29,6 @@
   --header-border-color: var(--app-color-2);
 
   --header-logout-button-background-color: var(--app-negative);
-  --header-logout-button-brightness: var(--app-negative-brightness);
 
   --header-logout-button-color: var(--app-negative-text);
   --table-odd-background-color: var(--app-background-2);
@@ -68,17 +41,11 @@
   --tab-border-color: var(--app-color-1);
   --tab-border-color-hover: var(--app-color-2);
   --tab-outline-color: var(--app-outline);
-
-  --app-text-1-brightness: calc(var(--default-brightness-1) * -1);
-  --app-text-2-brightness: calc(var(--default-brightness-2) * -1);
 }
 
 /*noinspection DuplicatedCode*/
 @media (prefers-color-scheme: light) {
   :root {
-    --default-brightness-1: -5;
-    --default-brightness-2: -10;
-
     --app-background-1: hsl(0 0% 100%);
     --app-background-2: hsl(0 0% 95%);
     --app-background-3: hsl(0 0% 90%);
@@ -109,9 +76,6 @@
 /*noinspection DuplicatedCode*/
 @media (prefers-color-scheme: dark) {
   :root {
-    --default-brightness-1: 10;
-    --default-brightness-2: 20;
-
     --app-background-1: hsl(0 0% 15%);
     --app-background-2: hsl(0 0% 20%);
     --app-background-3: hsl(0 0% 25%);
@@ -136,17 +100,11 @@
     --app-positive: #16aa15;
     --app-negative-text: hsl(0 0% 95%);
     --app-positive-text: hsl(0 0% 95%);
-
-    --app-negative-brightness: -10;
-    --app-positive-brightness: -10;
   }
 }
 
 /*noinspection DuplicatedCode*/
 :root[data-color-scheme="light"] {
-  --default-brightness-1: -5;
-  --default-brightness-2: -10;
-
   --app-background-1: hsl(0 0% 100%);
   --app-background-2: hsl(0 0% 95%);
   --app-background-3: hsl(0 0% 90%);
@@ -174,9 +132,6 @@
 
 /*noinspection DuplicatedCode*/
 :root[data-color-scheme="dark"] {
-  --default-brightness-1: 10;
-  --default-brightness-2: 20;
-
   --app-background-1: hsl(0 0% 15%);
   --app-background-2: hsl(0 0% 20%);
   --app-background-3: hsl(0 0% 25%);
@@ -200,9 +155,6 @@
   --app-positive: #16aa15;
   --app-negative-text: hsl(0 0% 95%);
   --app-positive-text: hsl(0 0% 95%);
-
-  --app-negative-brightness: -10;
-  --app-positive-brightness: -10;
 }
 
 html {
@@ -220,7 +172,5 @@ a:visited {
 
 .login {
   --button-background-color: var(--app-positive);
-  --button-brightness-1: var(--app-positive-brightness);
-  --button-brightness-2: calc(var(--app-positive-brightness) * 2);
   --button-color: var(--app-positive-text);
 }
