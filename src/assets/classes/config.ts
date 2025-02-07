@@ -1,6 +1,6 @@
-import * as language from "./language.js";
 import {Translation} from "../translations/translation";
 import {get} from "../scripts/http";
+import {LanguageCode} from "./language";
 
 export class Config
 {
@@ -20,41 +20,43 @@ export class Config
     if (config)
       return <Config>JSON.parse(config);
     return new Config();
-  })()
+  })();
 
-  static languageCode: language.LanguageCode = language.LanguageCode.EN;
-
-  static get languageTag(): language.languageTag
-  {
-    return language.getLanguageTag(Config.languageCode);
-  }
+  static preferredLanguages: LanguageCode[] = [LanguageCode.EN];
 
   private static readonly translations = new Map();
 
-  static async translation(): Promise<Translation | undefined>
+  static async translation(): Promise<Translation>
   {
-    const languageCode = Config.languageCode;
-    if (Config.translations.has(languageCode))
-      return Config.translations.get(languageCode)!;
+    for (const x of Config.preferredLanguages)
+    {
+      const languageCode = x;
+      if (Config.translations.has(languageCode))
+        return Config.translations.get(languageCode);
 
-    try
-    {
-      const uri = getTranslationUri(languageCode);
-      const result: Translation | undefined = await get(uri);
-      Config.translations.set(languageCode, result);
-      return result;
+      try
+      {
+        const result: Translation | undefined = await get(getTranslationUri(languageCode));
+        if (result)
+        {
+          Config.translations.set(languageCode, result);
+          return result;
+        }
+      }
+      catch (e)
+      {
+        console.error(`Error while processing the translation for language '${languageCode}'`, e);
+      }
     }
-    catch (e)
-    {
-      console.error(`Error while processing the translation for language '${languageCode}'`, e);
-      const result: Translation | undefined = await get(getTranslationUri(language.LanguageCode.EN))
-      Config.translations.set(languageCode, result);
-      return result;
-    }
+
+    if (!Config.translations.has(LanguageCode.EN))
+      Config.translations.set(LanguageCode.EN, await get(getTranslationUri(LanguageCode.EN)))
+
+    return Config.translations.get(LanguageCode.EN);
   }
 }
 
-function getTranslationUri(code: language.LanguageCode): `/assets/translations/translation_${language.LanguageCode}.json`
+function getTranslationUri(code: LanguageCode): `/assets/translations/translation_${LanguageCode}.json`
 {
   return `/assets/translations/translation_${code}.json`;
 }
@@ -62,4 +64,30 @@ function getTranslationUri(code: language.LanguageCode): `/assets/translations/t
 export function logError(error: Error): void
 {
   console.error(error);
+}
+
+export function acceptLanguageHeader(): { "Accept-Language": string }
+{
+  return {"Accept-Language": Config.preferredLanguages.join(",")}
+}
+
+type translation = {
+  translations: { translations: { [p: string]: any } }
+};
+type translatedField<T extends translation> = T["translations"]["translations"][""];
+
+export function getTranslatedField<T extends translation>(item: T): {
+  language: LanguageCode,
+  translation: translatedField<T>
+}
+{
+  for (const language of Config.preferredLanguages)
+  {
+    const translation = item.translations.translations[language];
+    if (translation)
+      return {language, translation};
+  }
+  const key = Object.keys(item.translations.translations)[0]!;
+
+  return {language: key as LanguageCode, translation: item.translations.translations[key]!};
 }

@@ -1,9 +1,9 @@
-import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
+import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
 import {API_URL} from "../../scripts/modules";
 import {Person} from "../../openapi/person";
 import createClient from "openapi-fetch";
 import {paths} from "pileofmedia-openapi";
-import {Config, logError} from "../../classes/config";
+import {acceptLanguageHeader, logError} from "../../classes/config";
 
 export class AppPersonAutocomplete extends AppAutocomplete<Person>
 {
@@ -25,7 +25,7 @@ export class AppPersonAutocomplete extends AppAutocomplete<Person>
         params: {
           path: {name: value},
           query: {page, count},
-          header: {"Accept-Language": Config.languageTag}
+          header: {...acceptLanguageHeader()}
         }
       });
       if (data == undefined)
@@ -50,7 +50,7 @@ export class AppPersonAutocomplete extends AppAutocomplete<Person>
       const {data, error} = await client.GET("/people", {
         params: {
           query: {page, count},
-          header: {"Accept-Language": Config.languageTag}
+          header: {...acceptLanguageHeader()}
         }
       });
       if (data == undefined)

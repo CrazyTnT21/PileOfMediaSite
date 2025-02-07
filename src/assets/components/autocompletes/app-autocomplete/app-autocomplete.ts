@@ -1,7 +1,7 @@
-import {AppInput} from "../../inputs/app-input/app-input.js";
-import {ValueChangeEvent} from "./value-change-event.js";
-import {SelectedAddedEvent} from "./selected-added-event.js";
-import {SelectedRemovedEvent} from "./selected-removed-event.js";
+import {AppInput} from "../../inputs/app-input/app-input";
+import {ValueChangeEvent} from "./value-change-event";
+import {SelectedAddedEvent} from "./selected-added-event";
+import {SelectedRemovedEvent} from "./selected-removed-event";
 import html from "./app-autocomplete.html" with {type: "inline"};
 import css from "./app-autocomplete.css" with {type: "inline"};
 

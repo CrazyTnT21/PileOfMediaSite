@@ -1,9 +1,9 @@
-import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
+import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
 import {API_URL} from "../../scripts/modules";
 import {Character} from "../../openapi/character";
 import createClient from "openapi-fetch";
 import {paths} from "pileofmedia-openapi";
-import {Config, logError} from "../../classes/config";
+import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
 
 export class AppCharacterAutocomplete extends AppAutocomplete<Character>
 {
@@ -25,7 +25,7 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
         params: {
           path: {name: value},
           query: {page, count},
-          header: {"Accept-Language": Config.languageTag}
+          header: {...acceptLanguageHeader()}
         }
       });
       if (data == undefined)
@@ -50,7 +50,7 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
       const {data, error} = await client.GET("/characters", {
         params: {
           query: {page, count},
-          header: {"Accept-Language": Config.languageTag}
+          header: {...acceptLanguageHeader()}
         }
       });
       if (data == undefined)
@@ -66,7 +66,8 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
 
   override itemValue(item: Character): string
   {
-    return item.name;
+    const {translation} = getTranslatedField(item);
+    return translation.name
   }
 
   override itemId(item: Character): number

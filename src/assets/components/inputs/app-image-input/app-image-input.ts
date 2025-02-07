@@ -1,8 +1,8 @@
-import {applyStyleSheet, attach_delegates} from "../../defaults.js";
-import {ApplyStyleSheet} from "../../apply-style-sheet.js";
-import {StyleCSS} from "../../style-css.js";
-import {logNoValueError} from "../validation/validation.js";
-import {UploadEvent} from "./upload-event.js";
+import {applyStyleSheet, attach_delegates} from "../../defaults";
+import {ApplyStyleSheet} from "../../apply-style-sheet";
+import {StyleCSS} from "../../style-css";
+import {logNoValueError} from "../validation/validation";
+import {UploadEvent} from "./upload-event";
 import html from "./app-image-input.html" with {type: "inline"};
 import css from "./app-image-input.css" with {type: "inline"};
 

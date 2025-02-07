@@ -1,5 +1,5 @@
 import {AppTable, Column, ColumnType} from "../../components/app-table/app-table";
-import {Config, logError} from "../../classes/config";
+import {Config, getTranslatedField, logError} from "../../classes/config";
 import {API_URL} from "../modules";
 import {Book} from "../../openapi/book";
 import {paths} from "pileofmedia-openapi";
@@ -65,6 +65,15 @@ else
 {
   table.classList.add("test");
   table.columns = columns();
-  table.items = data.items.map(x => ({...x, uri: x.cover.versions[0]!.uri}));
+  table.items = data.items.map(x =>
+  {
+    const {translation} = getTranslatedField(x);
+    return {
+      ...
+          x,
+      title: translation.title,
+      uri: translation.cover.versions[0]!.uri
+    }
+  });
   table.total = data.total;
 }

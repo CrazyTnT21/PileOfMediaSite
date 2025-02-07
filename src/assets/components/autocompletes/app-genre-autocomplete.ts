@@ -1,9 +1,9 @@
-import {AppAutocomplete} from "./app-autocomplete/app-autocomplete.js";
+import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
 import {API_URL} from "../../scripts/modules";
 import {Genre} from "../../openapi/genre";
 import createClient from "openapi-fetch";
 import {paths} from "pileofmedia-openapi";
-import {Config, logError} from "../../classes/config";
+import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
 
 export class AppGenreAutocomplete extends AppAutocomplete<Genre>
 {
@@ -25,7 +25,7 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
         params: {
           path: {name: value},
           query: {page, count},
-          header: {"Accept-Language": Config.languageTag}
+          header: {...acceptLanguageHeader()}
         }
       });
       if (data == undefined)
@@ -50,7 +50,7 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
       const {data, error} = await client.GET("/genres", {
         params: {
           query: {page, count},
-          header: {"Accept-Language": Config.languageTag}
+          header: {...acceptLanguageHeader()}
         }
       });
       if (data == undefined)
@@ -66,7 +66,8 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
 
   override itemValue(item: Genre): string
   {
-    return item.name;
+    const {translation} = getTranslatedField(item);
+    return translation.name
   }
 
   override itemId(item: Genre): number

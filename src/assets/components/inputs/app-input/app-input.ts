@@ -1,9 +1,9 @@
-import {applyStyleSheet, attach_delegates} from "../../defaults.js";
-import {logNoValueError, tooLong, tooShort, valueMissing} from "../validation/validation.js";
-import {ApplyStyleSheet} from "../../apply-style-sheet.js";
-import {StyleCSS} from "../../style-css.js";
-import {handleFieldset} from "../common.js";
-import {ValueSetEvent} from "./value-set-event.js";
+import {applyStyleSheet, attach_delegates} from "../../defaults";
+import {logNoValueError, tooLong, tooShort, valueMissing} from "../validation/validation";
+import {ApplyStyleSheet} from "../../apply-style-sheet";
+import {StyleCSS} from "../../style-css";
+import {handleFieldset} from "../common";
+import {ValueSetEvent} from "./value-set-event";
 import html from "./app-input.html" with {type: "inline"};
 import css from "./app-input.css" with {type: "inline"};
 

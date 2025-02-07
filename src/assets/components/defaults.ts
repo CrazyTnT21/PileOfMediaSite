@@ -1,4 +1,4 @@
-import {StyleCSS} from "./style-css.js";
+import {StyleCSS} from "./style-css";
 
 export function attach(this: HTMLElement): ShadowRoot
 {

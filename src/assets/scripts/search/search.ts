@@ -4,7 +4,7 @@ import {paths} from "pileofmedia-openapi";
 import {API_URL} from "../modules";
 import {SearchEvent} from "../../components/inputs/app-search-input/search-event";
 import {Book} from "../../openapi/book";
-import {Config, logError} from "../../classes/config";
+import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
 
 const params = new URLSearchParams((window.location.search))
 AppSearchInput.define()
@@ -47,7 +47,7 @@ async function* searchBooks(value: string): AsyncGenerator<Book[]>
         path: {
           title: value
         },
-        header: {"Accept-Language": Config.languageTag}
+        header: {...acceptLanguageHeader()}
       }
     })
     if (data == undefined)
@@ -66,10 +66,11 @@ function loadBooks(items: Book[]): void
   const booksUl: HTMLUListElement = document.querySelector("#books")!;
   for (const book of items)
   {
+    const {translation} = getTranslatedField(book);
     const li = document.createElement("li");
     const anchor = document.createElement("a");
     anchor.href = `/books/${book.slug}`;
-    anchor.innerText = book.title;
+    anchor.innerText = translation.title;
     li.append(anchor);
     booksUl.append(li);
   }

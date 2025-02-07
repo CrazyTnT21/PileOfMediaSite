@@ -21,6 +21,12 @@
   align-content: center;
   justify-content: center;
   background-color: var(--header-background-color--);
+  padding-left: .3rem;
+  padding-right: .3rem;
+}
+
+* {
+  font: inherit;
 }
 
 * {
@@ -211,6 +217,8 @@ a {
 }
 
 #burger {
+  margin-left: -.3rem;
+
   summary {
     display: flex;
     padding-left: .3rem;
@@ -288,8 +296,6 @@ details {
 }
 
 #user {
-  margin-right: .3rem;
-
   ul {
     transform: translateX(calc(-100% + 35px));
   }
