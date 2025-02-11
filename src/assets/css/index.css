@@ -1,0 +1,65 @@
+.popular > div, .top > div {
+  min-height: 6rem
+}
+
+a:link, a:visited {
+  color: color-mix(in srgb, var(--app-text-1), var(--app-link) 50%);
+}
+
+a:hover, a:focus {
+  > .underscore {
+    text-decoration: underline var(--app-link) .12rem;
+  }
+}
+
+#top, #popular {
+  min-height: 16rem;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  flex-shrink: 0;
+
+  > li {
+    display: flex;
+    max-width: 16rem;
+    min-width: 9rem;
+    width: 100%;
+
+    > app-card {
+      flex: 1;
+    }
+
+    a {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  a {
+    color: var(--app-color-1);
+    display: flex;
+    align-items: center;
+  }
+}
+
+.cover {
+  border-radius: .12rem;
+}
+
+.lists {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.max-size {
+  max-width: 120rem;
+}
+
+.icon {
+  box-shadow: none;
+}
+
+.extra {
+  align-items: center;
+  display: flex;
+}

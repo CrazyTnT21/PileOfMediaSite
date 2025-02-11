@@ -41,6 +41,11 @@
   --tab-border-color: var(--app-color-1);
   --tab-border-color-hover: var(--app-color-2);
   --tab-outline-color: var(--app-outline);
+
+  --card-background-color: var(--app-background-1);
+  --card-color: var(--app-text-1);
+  --card-underline-color: var(--app-link);
+  --card-border-color: var(app-color-1);
 }
 
 /*noinspection DuplicatedCode*/
@@ -55,7 +60,8 @@
     --app-color-2: hsl(0 0% 60%);
 
     --app-text-1: hsl(0 0% 10%);
-    --app-text-2: hsl(0 0% 30%);
+    --app-text-2: hsl(0 0% 25%);
+    --app-text-3: hsl(0 0% 40%);
 
     --app-input-color: hsl(0 0% 95%);
     --app-button-color: hsl(0 0% 95%);
@@ -85,7 +91,9 @@
     --app-color-2: hsl(0 0% 40%);
 
     --app-text-1: hsl(0 0% 90%);
-    --app-text-2: hsl(0 0% 65%);
+    --app-text-2: hsl(0 0% 80%);
+    --app-text-3: hsl(0 0% 65%);
+
 
     --app-input-background-color: hsl(0 0% 20%);
     --app-button-background-color: hsl(208, 76%, 37%);
@@ -114,7 +122,9 @@
   --app-color-2: hsl(0 0% 60%);
 
   --app-text-1: hsl(0 0% 10%);
-  --app-text-2: hsl(0 0% 30%);
+  --app-text-2: hsl(0 0% 25%);
+  --app-text-3: hsl(0 0% 40%);
+
 
   --app-input-background-color: hsl(0 0% 100%);
   --app-button-background-color: hsl(208 50% 46.5%);
@@ -141,7 +151,8 @@
   --app-color-2: hsl(0 0% 40%);
 
   --app-text-1: hsl(0 0% 90%);
-  --app-text-2: hsl(0 0% 65%);
+  --app-text-2: hsl(0 0% 80%);
+  --app-text-3: hsl(0 0% 65%);
 
   --app-input-background-color: hsl(0 0% 20%);
   --app-button-background-color: hsl(208, 76%, 37%);

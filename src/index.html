@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/colors.css">
   <link rel="stylesheet" href="/assets/css/columns.css">
+  <link rel="stylesheet" href="/assets/css/index.css">
   <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
   <link rel="author" href="/humans.txt"/>
   <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,18 +14,39 @@
 <body>
 <noscript>This Website <strong>requires</strong> javascript to function.</noscript>
 <app-header></app-header>
-<!--<div class="right pad mar-top" style="background: lightgray">Notification</div>-->
-<app-genre-autocomplete data-multiple></app-genre-autocomplete>
-<app-autocomplete data-label="Normal Select">
-  <option data-id="1">Test</option>
-</app-autocomplete>
-<app-date-input data-label="Test">
-</app-date-input>
-<app-search-input></app-search-input>
-<!--<app-autocomplete title="Genres">-->
-<!--</app-autocomplete>-->
-<!--<app-footer></app-footer>-->
-<script src="/assets/scripts/modules.ts" type="module" async></script>
+<main class="pad center col-12">
+  <div class="col-12 max-size center">
+    <ul class="gap col-12 pad center">
+      <li>
+        <a href="/browse/discover.html"><span class="underscore">Discover</span></a>
+      </li>
+      <li>
+        <a href="/browse/foryou.html"><span class="underscore">For you</span></a>
+      </li>
+      <li>
+        <a href="/browse/popular.html"><span class="underscore">Popular</span></a>
+      </li>
+      <li>
+        <a href="/browse/top.html"><span class="underscore">Top</span></a>
+      </li>
+    </ul>
+    <div class="col-12 center lists">
+      <div class="popular col-12">
+        <h2 class="col-12 pad center-align"><a class="center-align" href="/browse/popular"><span class="underscore">Popular</span><span
+                class="icon">arrow_right_alt</span></a>
+        </h2>
+        <ul id="popular" class="col-12 gap pad"></ul>
+      </div>
+      <div class="top col-12">
+        <h2 class="col-6 col-s-12 pad">
+          <a class="center-align" href="/browse/top"><span class="underscore">Top</span><span class="icon">arrow_right_alt</span></a>
+        </h2>
+        <ul id="top" class="col-12 gap pad"></ul>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="/assets/scripts/index.ts" type="module" async></script>
 <script src="/assets/components/inputs/app-image-input/app-image-input.ts" type="module" async></script>
 <script src="/assets/scripts/main.ts" type="module" async></script>
 <script src="/assets/scripts/translate.ts" type="module" async></script>

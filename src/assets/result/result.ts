@@ -2,7 +2,7 @@ export type Result<T, E = never> = Ok<T, E> | Err<T, E>;
 
 export class Err<T, E>
 {
-  public get data(): undefined
+  public get ok(): undefined
   {
     return;
   }
@@ -43,26 +43,26 @@ export class Err<T, E>
 
 export class Ok<T, E>
 {
-  private readonly internalData: T;
+  private readonly internalOk: T;
 
-  public get data(): T
+  public get ok(): T
   {
-    return this.internalData;
+    return this.internalOk;
   }
 
   public get error(): undefined
   {
-    return;
+    return
   }
 
-  public constructor(data: T)
+  public constructor(value: T)
   {
-    this.internalData = data;
+    this.internalOk = value;
   }
 
   public unwrap(): T
   {
-    return this.internalData
+    return this.internalOk
   }
 
   public unwrapErr(): never
@@ -72,12 +72,35 @@ export class Ok<T, E>
 
   public andThen<T1>(fn: (x: T) => Result<T1, E>): Result<T1, E>
   {
-    return fn(this.internalData)
+    return fn(this.internalOk)
   }
 
   public unwrapOrElse<E>(_fn: (x: E) => T): T
   {
-    return this.internalData;
+    return this.internalOk;
   }
 }
+
+export function filterErrors<T, E>(...results: Result<T, E>[]): E[]
+{
+  return results.filter(x => x.error).map(x => x.error!)
+}
+
+export function collect_ok<T, E, Original extends [...Result<T, E>[]]>(...results: Result<T, E>[] & Original): Result<MappedTuple<T, Original>, E>
+{
+  const oks = []
+  for (const {ok, error} of results)
+  {
+    if (error)
+      return new Err(error) as Result<MappedTuple<T, Original>, E>
+    oks.push(ok)
+  }
+  return new Ok(oks) as Result<MappedTuple<T, Original>, E>
+}
+
+type sameSizeTuple<FirstTuple extends [...any], SecondTuple extends [...any]> = FirstTuple["length"] extends SecondTuple["length"] ? true : false;
+type InnerMappedTuple<T, Original extends [...any], Tuple extends [...T[]]> = sameSizeTuple<Original, Tuple> extends true ? Tuple : InnerMappedTuple<T, Original, [T, ...Tuple]>
+type MappedTuple<T, Original extends [...any]> = IsTuple<Original> extends true ? InnerMappedTuple<T, Original, []> : T[]
+
+type IsTuple<T> = T extends [any, ...any] ? true : false
 

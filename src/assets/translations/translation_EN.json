@@ -45,5 +45,13 @@
   "added": "Added",
   "reply": "Reply",
   "replyVerb": "Reply",
-  "franchise": "Franchise"
+  "franchise": "Franchise",
+  "popularTitle": "Popular - PileOfMedia",
+  "popular": "Popular",
+  "topTitle": "Top - PileOfMedia",
+  "top": "Top",
+  "discoverTitle": "Discover - PileOfMedia",
+  "discover": "Discover",
+  "foryouTitle": "For you - PileOfMedia",
+  "foryou": "For you"
 }

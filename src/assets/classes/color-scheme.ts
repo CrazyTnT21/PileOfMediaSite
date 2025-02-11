@@ -32,6 +32,7 @@ export class ColorStyle
 
   app_text_1: string | undefined;
   app_text_2: string | undefined;
+  app_text_3: string | undefined;
 
   app_input_background_color: string | undefined;
   app_button_background_color: string | undefined;
@@ -43,24 +44,6 @@ export class ColorStyle
   app_positive: string | undefined;
   app_negative_text: string | undefined;
   app_positive_text: string | undefined;
-
-  default_brightness_1: number | undefined;
-  default_brightness_2: number | undefined;
-
-  app_background_1_brightness: number | undefined;
-  app_background_2_brightness: number | undefined;
-  app_background_3_brightness: number | undefined;
-  app_background_4_brightness: number | undefined;
-
-  app_color_1_brightness: number | undefined;
-  app_color_2_brightness: number | undefined;
-
-  app_input_brightness: number | undefined;
-  app_button_brightness: number | undefined;
-
-  app_visited_brightness: number | undefined;
-  app_negative_brightness: number | undefined;
-  app_positive_brightness: number | undefined;
 }
 
 export function removeColorScheme(): void

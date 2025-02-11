@@ -3,7 +3,7 @@ import {getLanguageTag} from "../classes/language";
 import {Translation} from "../translations/translation";
 
 const elements = <NodeListOf<HTMLElement>>document.querySelectorAll("[data-translate]");
-const language = Config.preferredLanguages[0]!;
+const language = Config.preferredLanguages[0];
 document.querySelector("html")!.lang = getLanguageTag(language);
 Config.translation().then(translation =>
 {

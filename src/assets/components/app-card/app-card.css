@@ -1,0 +1,54 @@
+:host {
+  --brightness-change--: 20;
+  --card-background-color--: var(--card-background-color, white);
+  --card-color--: var(--card-color, black);
+  --card-underline-color--: var(--card-underline-color, Highlight);
+  --card-color-hover--: hsl(from var(--card-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+  --card-border-color--: var(--card-border-color, lightgray);
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 .09rem 0 var(--card-border-color--);
+  padding: .3rem;
+  border-radius: .09rem;
+  background-color: var(--card-background-color--);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  color: var(--card-color--);
+}
+
+img {
+  border-radius: .3rem;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  min-height: 50%;
+}
+
+a {
+  text-decoration: none;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+a:hover, a:focus {
+  slot[name='title'] {
+    color: var(--card-color-hover--);
+  }
+
+  #title {
+    text-decoration: underline var(--card-underline-color--) .12rem;
+  }
+}
+
+#image {
+  min-height: 50%;
+  margin-bottom: .3rem;
+}

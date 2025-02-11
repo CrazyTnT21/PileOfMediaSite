@@ -65,7 +65,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     if (value == null)
       input.removeAttribute("maxlength");
     else
-      input.setAttribute("maxlength", value.toString());
+      input.setAttribute("maxlength", value);
   }
 
   private static minlengthAttr(element: AppInput, value: string | null | undefined): void
@@ -74,7 +74,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     if (value == null)
       input.removeAttribute("minlength");
     else
-      input.setAttribute("minlength", value.toString());
+      input.setAttribute("minlength", value);
   }
 
   private static requiredAttr(element: AppInput, value: string | null | undefined): void

@@ -22,7 +22,7 @@ export class Config
     return new Config();
   })();
 
-  static preferredLanguages: LanguageCode[] = [LanguageCode.EN];
+  static preferredLanguages: [LanguageCode,...LanguageCode[]] = [LanguageCode.EN];
 
   private static readonly translations = new Map();
 
