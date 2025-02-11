@@ -16,6 +16,10 @@
   display: inline-flex;
 }
 
+* {
+  font-family: "Roboto", sans-serif;
+}
+
 button {
   border-radius: 5px;
   display: inline-flex;

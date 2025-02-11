@@ -5,12 +5,17 @@ import {logNoValueError} from "../validation/validation";
 import {UploadEvent} from "./upload-event";
 import html from "./app-image-input.html" with {type: "inline"};
 import css from "./app-image-input.css" with {type: "inline"};
+import {Kilobyte} from "../../../units/kilobyte";
+import {AppButton} from "../../app-button/app-button";
 
 type attributeKey = keyof typeof AppImageInput["observedAttributesMap"];
-type kiloByte = number;
 
 export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
+  private readonly texts = {
+    clearImage: "Clear image",
+    clearImages: "Clear images",
+  }
   static readonly formAssociated = true;
   private readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
@@ -109,10 +114,17 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   set multiple(value: boolean)
   {
+    const button = this.shadowRoot.querySelector<AppButton>("app-button")!;
     if (!value)
+    {
+      button.innerText = this.texts.clearImage;
       delete this.dataset["multiple"];
+    }
     else
+    {
+      button.innerText = this.texts.clearImages;
       this.dataset["multiple"] = "";
+    }
   }
 
   private internalHasDisabledFieldset: boolean = false;
@@ -141,13 +153,13 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       this.removeAttribute("disabled");
   }
 
-  get maxFilesize(): kiloByte | null
+  get maxFilesize(): Kilobyte | null
   {
     const attribute = this.dataset["maxFilesize"];
-    return attribute ? Number(attribute) : null;
+    return attribute ? Kilobyte.fromNumber(Number(attribute)) : null;
   }
 
-  set maxFilesize(value: kiloByte | null)
+  set maxFilesize(value: Kilobyte | null)
   {
     if (value == null)
       delete this.dataset["maxFilesize"]
@@ -155,13 +167,13 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       this.dataset["maxFilesize"] = value.toString()
   }
 
-  get minFilesize(): kiloByte | null
+  get minFilesize(): Kilobyte | null
   {
     const attribute = this.dataset["minFilesize"];
-    return attribute ? Number(attribute) : null;
+    return attribute ? Kilobyte.fromNumber(Number(attribute)) : null;
   }
 
-  set minFilesize(value: kiloByte | null)
+  set minFilesize(value: Kilobyte | null)
   {
     if (value == null)
       delete this.dataset["minFilesize"]
@@ -229,6 +241,12 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     {
       if (e.key === "Enter")
         input.click();
+    });
+    const button: AppButton = this.shadowRoot.querySelector("app-button")!
+    button.addEventListener("click", () =>
+    {
+      this.files = [];
+      image.src = this.defaultSrc;
     });
     await this.setupValidation();
   }
@@ -362,7 +380,6 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   render(): void
   {
-    //TODO: Clear image button
     this.shadowRoot.innerHTML = html;
   }
 
@@ -399,9 +416,17 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       this.files = files;
     }
   }
+
+  public static define(): void
+  {
+    AppButton.define();
+    if (customElements.get("app-image-input"))
+      return;
+    customElements.define("app-image-input", AppImageInput);
+  }
 }
 
-customElements.define("app-image-input", AppImageInput);
+AppImageInput.define();
 
 function unsupportedImageType(input: HTMLInputElement): boolean
 {
@@ -413,27 +438,27 @@ function unsupportedImageType(input: HTMLInputElement): boolean
   return false;
 }
 
-function fileTooBig(input: HTMLInputElement, max: kiloByte | undefined | null): boolean
+function fileTooBig(input: HTMLInputElement, max: Kilobyte | undefined | null): boolean
 {
   if (!max)
     return false;
 
   for (const file of input.files!)
   {
-    if (file.size > max * 1000)
+    if (Kilobyte.fromByte(file.size).more(max))
       return true;
   }
   return false;
 }
 
-function fileTooSmall(input: HTMLInputElement, min: kiloByte | undefined | null): boolean
+function fileTooSmall(input: HTMLInputElement, min: Kilobyte | undefined | null): boolean
 {
   if (!min)
     return false;
 
   for (const file of input.files!)
   {
-    if (file.size < min * 1000)
+    if (Kilobyte.fromByte(file.size).less(min))
       return true;
   }
   return false;

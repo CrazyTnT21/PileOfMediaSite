@@ -155,7 +155,7 @@ li {
 
 .items {
   display: flex;
-  gap: .1rem;
+  gap: .12rem;
 
   & li {
     display: flex;

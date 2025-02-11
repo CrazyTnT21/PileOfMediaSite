@@ -18,38 +18,40 @@
   --image-input-invalid-color-hover--: hsl(from var(--image-input-invalid-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --image-input-outline-color--: var(--image-input-outline-color, Highlight);
-  --image-input-padding--: var(--image-input-padding, 5px);
+  --image-input-padding--: var(--image-input-padding, .3rem);
 
   --image-input-background-color-hover--: hsl(from var(--image-input-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 }
 
 img {
-  border-radius: 5px;
+  border-radius: .3rem;
   display: inline-flex;
   max-width: 100%;
   max-height: 100%;
   aspect-ratio: 1 / 1.41421;
   object-fit: contain;
-  border: 1px solid var(--image-input-border-color--);
+  border: .06rem solid var(--image-input-border-color--);
   flex: 1;
 }
 
 label {
   position: absolute;
   color: var(--image-input-color--);
-  margin: 0 0 0 5px;
+  margin: 0 0 0 .3rem;
   transform: translateY(-60%);
   background: linear-gradient(180deg, transparent 0 0.44rem, var(--image-input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
   transition: transform ease 50ms;
 }
 
 :host {
-  padding: 5px;
-  margin-top: 2px;
+  padding: .3rem;
+  margin-top: .12rem;
   display: inline-flex;
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;
+  flex-direction: column;
+  gap: .3rem
 }
 
 :host([required]) {
@@ -76,7 +78,7 @@ input[data-invalid] + img:hover {
 }
 
 img:focus-visible {
-  outline: var(--image-input-outline-color--) 2px solid;
+  outline: var(--image-input-outline-color--) .12rem solid;
 }
 
 :host([disabled]) > img {

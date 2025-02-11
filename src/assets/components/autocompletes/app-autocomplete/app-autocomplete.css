@@ -19,14 +19,14 @@ li {
 #selected {
   display: inline-flex;
   flex-wrap: wrap;
-  padding-top: 5px;
-  gap: 2px;
+  padding-top: .3rem;
+  gap: .12rem;
 }
 
 button {
   font-size: .75em;
-  border-radius: 10px;
-  border: var(--input-border-color--) 1px solid;
+  border-radius: .6rem;
+  border: var(--input-border-color--) .06rem solid;
   color: var(--input-color--);
   background-color: var(--autocomplete-selected-background-color--);
 }
