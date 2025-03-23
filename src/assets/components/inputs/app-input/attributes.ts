@@ -1,5 +1,6 @@
 import {logNoValueError} from "../validation/validation";
 import {AppInput} from "./app-input";
+import {setOrRemoveAttribute} from "../common";
 
 export function dataLabelAttr(element: AppInput, value: string | null | undefined): void
 {
@@ -27,23 +28,13 @@ export function disabledAttr(element: AppInput, value: string | null | undefined
 export function maxLengthAttr(element: AppInput, value: string | null | undefined): void
 {
   const {input} = element.elements;
-  if (value == null)
-  {
-    input.removeAttribute("maxlength");
-    return;
-  }
-  input.setAttribute("maxlength", value);
+  setOrRemoveAttribute(input, "maxlength", value);
 }
 
 export function minlengthAttr(element: AppInput, value: string | null | undefined): void
 {
   const {input} = element.elements;
-  if (value == null)
-  {
-    input.removeAttribute("minlength");
-    return;
-  }
-  input.setAttribute("minlength", value);
+  setOrRemoveAttribute(input, "minlength", value);
 }
 
 export function requiredAttr(element: AppInput, value: string | null | undefined): void

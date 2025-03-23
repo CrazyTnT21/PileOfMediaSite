@@ -1,5 +1,6 @@
 import {logNoValueError} from "../validation/validation";
 import {AppTextArea} from "./app-textarea";
+import {setOrRemoveAttribute} from "../common";
 
 export function dataLabelAttr(element: AppTextArea, value: string | null | undefined): void
 {
@@ -27,23 +28,13 @@ export function disabledAttr(element: AppTextArea, value: string | null | undefi
 export function maxLengthAttr(element: AppTextArea, value: string | null | undefined): void
 {
   const {textarea} = element.elements;
-  if (value == null)
-  {
-    textarea.removeAttribute("maxlength");
-    return;
-  }
-  textarea.setAttribute("maxlength", value);
+  setOrRemoveAttribute(textarea, "maxlength", value);
 }
 
 export function minlengthAttr(element: AppTextArea, value: string | null | undefined): void
 {
   const {textarea} = element.elements;
-  if (value == null)
-  {
-    textarea.removeAttribute("minlength");
-    return;
-  }
-  textarea.setAttribute("minlength", value);
+  setOrRemoveAttribute(textarea, "minlength", value);
 }
 
 export function requiredAttr(element: AppTextArea, value: string | null | undefined): void
@@ -55,8 +46,5 @@ export function requiredAttr(element: AppTextArea, value: string | null | undefi
 export function rowsAttr(element: AppTextArea, value: string | null | undefined): void
 {
   const {textarea} = element.elements;
-  if (value == null)
-    textarea.removeAttribute("rows");
-  else
-    textarea.setAttribute("rows", value.toString());
+  setOrRemoveAttribute(textarea, "rows", value);
 }

@@ -1,7 +1,13 @@
 import {applyStyleSheet, attach_delegates} from "../../defaults";
 import {ApplyStyleSheet} from "../../apply-style-sheet";
 import {StyleCSS} from "../../style-css";
-import {AttributeValue, handleFieldset, templateString} from "../common";
+import {
+  AttributeValue,
+  handleFieldset,
+  setOrRemoveAttribute,
+  setOrRemoveBooleanAttribute,
+  templateString
+} from "../common";
 import html from "./app-textarea.html" with {type: "inline"};
 import css from "./app-textarea.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
@@ -81,10 +87,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   set required(value: boolean)
   {
-    if (value)
-      this.setAttribute("required", "")
-    else
-      this.removeAttribute("required");
+    setOrRemoveBooleanAttribute(this, "required", value);
   }
 
   get disabled(): boolean
@@ -94,10 +97,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   set disabled(value: boolean)
   {
-    if (value)
-      this.setAttribute("disabled", "")
-    else
-      this.removeAttribute("disabled");
+    setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
   get minLength(): number | null
@@ -108,10 +108,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   set minLength(value: number | null)
   {
-    if (value == null)
-      this.removeAttribute("minlength")
-    else
-      this.setAttribute("minlength", value.toString());
+    setOrRemoveAttribute(this, "minlength", value?.toString());
   }
 
   get rows(): number | null
@@ -122,10 +119,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   set rows(value: number | null)
   {
-    if (value == null)
-      this.removeAttribute("rows")
-    else
-      this.setAttribute("rows", value.toString());
+    setOrRemoveAttribute(this, "rows", value?.toString());
   }
 
   get maxLength(): number | null
@@ -136,10 +130,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   set maxLength(value: number | null)
   {
-    if (value == null)
-      this.removeAttribute("maxlength")
-    else
-      this.setAttribute("maxlength", value.toString())
+    setOrRemoveAttribute(this, "maxlength", value?.toString());
   }
 
   async connectedCallback(): Promise<void>
@@ -184,10 +175,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   set placeholder(value: string | null | undefined)
   {
-    if (value == null)
-      this.removeAttribute("placeholder");
-    else
-      this.setAttribute("placeholder", value);
+    setOrRemoveAttribute(this, "placeholder", value);
   }
 
   async onTextAreaChange(_event: Event): Promise<void>
@@ -236,14 +224,9 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     if (!this.interacted)
       return;
 
-    if (!textarea.checkValidity())
-    {
-      this.setAttribute("data-invalid", "");
-      textarea.setAttribute("data-invalid", "");
-      return;
-    }
-    this.removeAttribute("data-invalid");
-    textarea.removeAttribute("data-invalid");
+    const invalid = !textarea.checkValidity();
+    setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
+    setOrRemoveBooleanAttribute(textarea, "data-invalid", invalid);
   }
 
   private interacted: boolean = false;

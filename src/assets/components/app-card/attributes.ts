@@ -1,25 +1,16 @@
 import {AppCard} from "./app-card";
+import {setOrRemoveAttribute} from "../inputs/common";
 
 export function dataSrcSetAttr(element: AppCard, value: string | null | undefined): void
 {
   const {image} = element.elements;
-  if (value == null)
-  {
-    image.removeAttribute("srcset");
-    return;
-  }
-  image.setAttribute("srcset", value);
+  setOrRemoveAttribute(image, "srcset", value);
 }
 
 export function dataAltAttr(element: AppCard, value: string | null | undefined): void
 {
   const {image} = element.elements;
-  if (value == null)
-  {
-    image.removeAttribute("alt");
-    return;
-  }
-  image.setAttribute("alt", value);
+  setOrRemoveAttribute(image, "alt", value);
 }
 
 export function dataTitleAttr(element: AppCard, value: string | null | undefined): void
@@ -32,10 +23,5 @@ export function dataTitleAttr(element: AppCard, value: string | null | undefined
 export function dataLink(element: AppCard, value: string | null | undefined): void
 {
   const {anchor} = element.elements;
-  if (value == null)
-  {
-    anchor.removeAttribute("href");
-    return;
-  }
-  anchor.setAttribute("href", value);
+  setOrRemoveAttribute(anchor, "href", value);
 }

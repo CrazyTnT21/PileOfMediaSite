@@ -78,3 +78,23 @@ export function templateString<T extends string>(text: string): T
 }
 
 export type SurroundedString<T extends string | number | bigint | boolean | null | undefined> = `${string}${T}${string}`;
+
+export function setOrRemoveAttribute(element: HTMLElement, attribute: string, value: string | null | undefined): void
+{
+  if (value == null)
+  {
+    element.removeAttribute(attribute);
+    return;
+  }
+  element.setAttribute(attribute, value);
+}
+
+export function setOrRemoveBooleanAttribute(element: HTMLElement, attribute: string, value: boolean): void
+{
+  if (value)
+  {
+    element.setAttribute(attribute, "")
+    return;
+  }
+  element.removeAttribute(attribute);
+}

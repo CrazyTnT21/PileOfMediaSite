@@ -5,6 +5,7 @@ import html from "./app-card.html" with {type: "inline"}
 import css from "./app-card.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
 import {dataAltAttr, dataLink, dataSrcSetAttr, dataTitleAttr} from "./attributes";
+import {setOrRemoveAttribute} from "../inputs/common";
 
 type attributeKey = keyof typeof AppCard["observedAttributesMap"];
 
@@ -45,14 +46,8 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set srcSet(value: string | null)
   {
-    if (value == null)
-    {
-      this.removeAttribute("data-srcset");
-      return;
-    }
-    this.setAttribute("data-srcset", value);
+    setOrRemoveAttribute(this, "data-srcset", value);
   }
-
 
   get alt(): string | null
   {
@@ -61,14 +56,8 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set alt(value: string | null)
   {
-    if (value == null)
-    {
-      this.removeAttribute("data-alt");
-      return;
-    }
-    this.setAttribute("data-alt", value);
+    setOrRemoveAttribute(this, "data-srcset", value);
   }
-
 
   get link(): string | null
   {
@@ -77,12 +66,7 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set link(value: string | null)
   {
-    if (value == null)
-    {
-      this.removeAttribute("data-link");
-      return;
-    }
-    this.setAttribute("data-link", value);
+    setOrRemoveAttribute(this, "data-link", value);
   }
 
   get titleText(): string | null
@@ -92,12 +76,7 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set titleText(value: string | null)
   {
-    if (value == null)
-    {
-      this.removeAttribute("data-title");
-      return;
-    }
-    this.setAttribute("data-title", value);
+    setOrRemoveAttribute(this, "data-title", value);
   }
 
   constructor()

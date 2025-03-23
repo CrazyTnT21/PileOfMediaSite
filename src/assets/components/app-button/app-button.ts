@@ -1,7 +1,7 @@
 import {applyStyleSheet, attach_delegates} from "../defaults";
 import {StyleCSS} from "../style-css";
 import {ApplyStyleSheet} from "../apply-style-sheet";
-import {AttributeValue, handleFieldset} from "../inputs/common";
+import {AttributeValue, handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import html from "./app-button.html" with {type: "inline"};
 import css from "./app-button.css" with {type: "inline"};
 import {mapSelectors} from "../../dom";
@@ -44,12 +44,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set disabled(value: boolean)
   {
-    if (value)
-    {
-      this.setAttribute("disabled", "")
-      return;
-    }
-    this.removeAttribute("disabled");
+    setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
   private hasDisabledFieldset: boolean = false;

@@ -15,7 +15,14 @@ import {
   dataTitleAttr, disabledAttr,
   requiredAttr
 } from "./attributes";
-import {AttributeValue, handleFieldset, SurroundedString, templateString} from "../common";
+import {
+  AttributeValue,
+  handleFieldset,
+  setOrRemoveAttribute,
+  setOrRemoveBooleanAttribute,
+  SurroundedString,
+  templateString
+} from "../common";
 import {setMaxFileSize, setMinFileSize, setUnsupportedType, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
 
@@ -38,6 +45,7 @@ export const appImageInputTexts = {
   unsupportedImageType: "Unsupported image type",
   required: "Required",
 };
+
 export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   readonly texts = new Observer(appImageInputTexts);
@@ -97,17 +105,12 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   get multiple(): boolean
   {
     const value = this.getAttribute("data-multiple");
-    return value == ""
+    return value == "";
   }
 
   set multiple(value: boolean)
   {
-    if (!value)
-    {
-      this.removeAttribute("data-multiple");
-      return;
-    }
-    this.setAttribute("data-multiple", "");
+    setOrRemoveBooleanAttribute(this, "data-multiple", value);
   }
 
   private hasDisabledFieldset: boolean = false;
@@ -119,10 +122,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   set disabled(value: boolean)
   {
-    if (value)
-      this.setAttribute("disabled", "")
-    else
-      this.removeAttribute("disabled");
+    setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
   get maxFilesize(): Kilobyte | null
@@ -133,12 +133,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   set maxFilesize(value: Kilobyte | null)
   {
-    if (value == null)
-    {
-      this.removeAttribute("max-file-size");
-      return;
-    }
-    this.setAttribute("data-max-filesize", value.toNumber().toString())
+    setOrRemoveAttribute(this, "max-file-size", value?.toNumber().toString());
   }
 
   get minFilesize(): Kilobyte | null
@@ -149,12 +144,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   set minFilesize(value: Kilobyte | null)
   {
-    if (value == null)
-    {
-      this.removeAttribute("data-min-filesize");
-      return;
-    }
-    this.setAttribute("data-min-filesize", value.toNumber().toString());
+    setOrRemoveAttribute(this, "data-min-filesize", value?.toNumber().toString());
   }
 
   get required(): boolean
@@ -165,12 +155,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   set required(value: boolean)
   {
-    if (value)
-    {
-      this.setAttribute("required", "")
-      return;
-    }
-    this.removeAttribute("required");
+    setOrRemoveBooleanAttribute(this, "required", value);
   }
 
   get imageTitle(): string | null
@@ -180,12 +165,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   set imageTitle(value: string | null)
   {
-    if (value)
-    {
-      this.setAttribute("data-title", value);
-      return;
-    }
-    this.removeAttribute("data-title");
+    setOrRemoveAttribute(this, "data-title", value);
   }
 
   private internalSrc: string | undefined;
@@ -307,14 +287,9 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     if (!this.interacted)
       return;
 
-    if (!input.checkValidity())
-    {
-      this.setAttribute("data-invalid", "");
-      input.setAttribute("data-invalid", "");
-      return;
-    }
-    this.removeAttribute("data-invalid");
-    input.removeAttribute("data-invalid");
+    const invalid = !input.checkValidity();
+    setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
+    setOrRemoveBooleanAttribute(input, "data-invalid", invalid);
   }
 
   private interacted: boolean = false;

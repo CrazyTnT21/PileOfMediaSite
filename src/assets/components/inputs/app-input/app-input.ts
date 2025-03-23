@@ -1,7 +1,14 @@
 import {applyStyleSheet, attach_delegates} from "../../defaults";
 import {ApplyStyleSheet} from "../../apply-style-sheet";
 import {StyleCSS} from "../../style-css";
-import {AttributeValue, handleFieldset, SurroundedString, templateString} from "../common";
+import {
+  AttributeValue,
+  handleFieldset,
+  setOrRemoveAttribute,
+  setOrRemoveBooleanAttribute,
+  SurroundedString,
+  templateString
+} from "../common";
 import {ValueSetEvent} from "./value-set-event";
 import html from "./app-input.html" with {type: "inline"};
 import css from "./app-input.css" with {type: "inline"};
@@ -73,10 +80,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set required(value: boolean)
   {
-    if (value)
-      this.setAttribute("required", "")
-    else
-      this.removeAttribute("required");
+    setOrRemoveBooleanAttribute(this, "required", value);
   }
 
   get disabled(): boolean
@@ -86,10 +90,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set disabled(value: boolean)
   {
-    if (value)
-      this.setAttribute("disabled", "")
-    else
-      this.removeAttribute("disabled");
+    setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
   get minLength(): number | null
@@ -100,10 +101,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set minLength(value: number | null)
   {
-    if (value == null)
-      this.removeAttribute("minlength")
-    else
-      this.setAttribute("minlength", value.toString());
+    setOrRemoveAttribute(this, "minlength", value?.toString());
   }
 
   get maxLength(): number | null
@@ -114,10 +112,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set maxLength(value: number | null)
   {
-    if (value == null)
-      this.removeAttribute("maxlength")
-    else
-      this.setAttribute("maxlength", value.toString())
+    setOrRemoveAttribute(this, "maxlength", value?.toString());
   }
 
   get value(): any
@@ -144,10 +139,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set placeholder(value: string | null)
   {
-    if (value == null)
-      this.removeAttribute("placeholder");
-    else
-      this.setAttribute("placeholder", value);
+    setOrRemoveAttribute(this, "placeholder", value);
   }
 
   async connectedCallback(): Promise<void>
@@ -239,16 +231,9 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     if (!this.interacted)
       return;
 
-    if (!input.checkValidity())
-    {
-      this.setAttribute("data-invalid", "");
-      input.setAttribute("data-invalid", "");
-    }
-    else
-    {
-      this.removeAttribute("data-invalid");
-      input.removeAttribute("data-invalid");
-    }
+    const invalid = !input.checkValidity();
+    setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
+    setOrRemoveBooleanAttribute(input, "data-invalid", invalid);
   }
 
   private interacted: boolean = false;
