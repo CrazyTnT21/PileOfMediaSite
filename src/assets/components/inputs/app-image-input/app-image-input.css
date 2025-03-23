@@ -56,7 +56,7 @@ label {
 
 :host([required]) {
   label::after {
-    content: "*";
+    content: " (" attr(data-text-required) ")";
     color: var(--image-input-invalid-color--);
   }
 }

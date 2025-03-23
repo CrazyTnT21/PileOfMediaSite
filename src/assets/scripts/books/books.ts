@@ -1,9 +1,7 @@
 import {AppTable, Column, ColumnType} from "../../components/app-table/app-table";
 import {Config, getTranslatedField, logError} from "../../classes/config";
-import {API_URL} from "../modules";
 import {Book} from "../../openapi/book";
-import {paths} from "pileofmedia-openapi";
-import createClient from "openapi-fetch";
+import {apiClient} from "../../openapi/client";
 
 function columns(): Column<Book>[]
 {
@@ -55,8 +53,7 @@ function columns(): Column<Book>[]
 
 const table: AppTable<Book> = document.querySelector("app-table")!;
 
-const client = createClient<paths>({baseUrl: API_URL})
-const {data, error} = await client.GET("/books");
+const {data, error} = await apiClient.GET("/books");
 if (data == undefined)
 {
   logError(new Error(error));

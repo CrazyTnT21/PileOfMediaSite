@@ -15,12 +15,10 @@ export function attach_delegates(this: HTMLElement): ShadowRoot
   });
 }
 
-export function applyStyleSheet(this: StyleCSS & HTMLElement): void
+export function applyStyleSheet(this: StyleCSS & HTMLElement & {shadowRoot: ShadowRoot}): void
 {
   const styleSheet = new CSSStyleSheet();
   styleSheet.replaceSync(this.styleCSS());
-  if (!this.shadowRoot)
-    throw Error("No ShadowRoot defined")
   this.shadowRoot.adoptedStyleSheets = [styleSheet];
 }
 

@@ -1,30 +1,58 @@
-import {logNoValueError, tooLong, tooShort, valueMissing} from "../validation/validation";
 import {applyStyleSheet, attach_delegates} from "../../defaults";
 import {ApplyStyleSheet} from "../../apply-style-sheet";
 import {StyleCSS} from "../../style-css";
-import {handleFieldset} from "../common";
-import {ValueSetEvent} from "../app-input/value-set-event";
+import {AttributeValue, handleFieldset, templateString} from "../common";
 import html from "./app-textarea.html" with {type: "inline"};
 import css from "./app-textarea.css" with {type: "inline"};
+import {mapSelectors} from "../../../dom";
+import {
+  dataLabelAttr,
+  disabledAttr,
+  maxLengthAttr,
+  minlengthAttr,
+  placeholderAttr,
+  requiredAttr,
+  rowsAttr
+} from "./attributes";
+import {setMaxLength, setMinLength, setValueMissing} from "./validation";
+import {Observer} from "../../../observer";
+import {ValueSetEvent} from "../app-input/value-set-event";
 
 type attributeKey = keyof typeof AppTextArea["observedAttributesMap"];
+export type AppTextAreaElements = {
+  textarea: HTMLTextAreaElement,
+  label: HTMLLabelElement,
+};
+export const appTextAreaTexts = {
+  required: "Required",
+  textareaMinValidation: templateString<`${string}{min}${string}{currentLength}${string}`>
+  ("Textarea only allows a maximum of {min} characters. Current length: {currentLength}"),
+  textareaMaxValidation: templateString<`${string}{max}${string}{currentLength}${string}`>
+  ("Textarea requires at least {max} characters. Current length: {currentLength}")
+};
 
 export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   static readonly formAssociated = true;
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
+  readonly elements: AppTextAreaElements;
+  protected static readonly elementSelectors: { [key in keyof AppTextArea["elements"]]: string } = {
+    textarea: "textarea",
+    label: "label"
+  }
+  readonly texts = new Observer(appTextAreaTexts);
   private readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
 
   private static readonly observedAttributesMap = {
-    "data-label": AppTextArea.dataLabelAttr,
-    "required": AppTextArea.requiredAttr,
-    "disabled": AppTextArea.disabledAttr,
-    "maxlength": AppTextArea.maxLengthAttr,
-    "minlength": AppTextArea.minlengthAttr,
-    "placeholder": AppTextArea.placeholderAttr,
-    "rows": AppTextArea.rowsAttr
+    "data-label": dataLabelAttr,
+    "required": requiredAttr,
+    "disabled": (element: AppTextArea, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
+    "maxlength": maxLengthAttr,
+    "minlength": minlengthAttr,
+    "placeholder": placeholderAttr,
+    "rows": rowsAttr
   }
   static readonly observedAttributes = <[attributeKey]>Object.keys(AppTextArea.observedAttributesMap);
 
@@ -35,71 +63,14 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     await this.validate();
   }
 
-  //Attributes
-
-  private static dataLabelAttr(element: AppTextArea, value: string | null | undefined): void
-  {
-    if (value == null || value.trim() == "")
-    {
-      logNoValueError("label", element.outerHTML);
-      value = ""
-    }
-    element.shadowRoot.querySelector("label")!.innerText = value;
-  }
-
-  private static placeholderAttr(element: AppTextArea, value: string | null | undefined): void
-  {
-    element.shadowRoot.querySelector("textarea")!.placeholder = value ?? "";
-  }
-
-  private static disabledAttr(element: AppTextArea, value: string | null | undefined): void
-  {
-    const disabled = element.hasDisabledFieldset || value == "";
-    const input = element.shadowRoot.querySelector("textarea")!;
-    input.disabled = disabled;
-    element.internals.ariaDisabled = disabled ? "" : null;
-  }
-
-  private static maxLengthAttr(element: AppTextArea, value: string | null | undefined): void
-  {
-    const input = element.shadowRoot.querySelector("textarea")!;
-    if (value == null)
-      input.removeAttribute("maxlength");
-    else
-      input.setAttribute("maxlength", value.toString());
-  }
-
-  private static rowsAttr(element: AppTextArea, value: string | null | undefined): void
-  {
-    const input = element.shadowRoot.querySelector("textarea")!;
-    if (value == null)
-      input.removeAttribute("rows");
-    else
-      input.setAttribute("rows", value.toString());
-  }
-
-  private static minlengthAttr(element: AppTextArea, value: string | null | undefined): void
-  {
-    const input = element.shadowRoot.querySelector("textarea")!;
-    if (value == null)
-      input.removeAttribute("minlength");
-    else
-      input.setAttribute("minlength", value.toString());
-  }
-
-  private static requiredAttr(element: AppTextArea, value: string | null | undefined): void
-  {
-    element.shadowRoot.querySelector("textarea")!.required = value == "";
-  }
-
   get label(): string
   {
-    return this.dataset["label"] ?? "";
+    return this.getAttribute("data-label") ?? "";
   }
 
   set label(value: string)
   {
-    this.dataset["label"] = value;
+    this.setAttribute("data-label", value)
   }
 
   get required(): boolean
@@ -174,19 +145,24 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   async connectedCallback(): Promise<void>
   {
     this.label = this.label || "";
-    this.shadowRoot.querySelector("label")!.innerText = this.label;
-    const textarea = this.shadowRoot.querySelector("textarea")!;
+    const {label} = this.elements;
+    label.innerText = this.label;
+    const {textarea} = this.elements;
     textarea.addEventListener("change", (e) => this.onTextAreaChange(e));
     textarea.placeholder = this.placeholder ?? "";
 
-    handleFieldset(this);
+    handleFieldset(this, (value: boolean) =>
+    {
+      this.hasDisabledFieldset = value;
+      disabledAttr(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+    });
 
     await this.setupValidation();
   }
 
   get value(): any
   {
-    return this.shadowRoot.querySelector("textarea")!.value;
+    return this.elements.textarea.value;
   }
 
   set value(value: string | null | undefined)
@@ -194,22 +170,12 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     if (value == null)
       value = "";
 
-    this.shadowRoot.querySelector("textarea")!.value = value;
+    this.elements.textarea.value = value;
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
-  private internalHasDisabledFieldset: boolean = false;
+  private hasDisabledFieldset: boolean = false;
 
-  get hasDisabledFieldset(): boolean
-  {
-    return this.internalHasDisabledFieldset;
-  }
-
-  set hasDisabledFieldset(value: boolean)
-  {
-    this.internalHasDisabledFieldset = value;
-    AppTextArea.disabledAttr(this, this.getAttribute("disabled"))
-  }
 
   get placeholder(): string | null | undefined
   {
@@ -239,6 +205,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
+    this.elements = mapSelectors<AppTextAreaElements>(this.shadowRoot, AppTextArea.elementSelectors);
   }
 
   attach = attach_delegates;
@@ -246,14 +213,14 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
   async setupValidation(): Promise<void>
   {
-    const textarea = this.shadowRoot.querySelector("textarea")!;
+    const {textarea} = this.elements;
     textarea.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
   async validate(): Promise<void>
   {
-    const textarea = this.shadowRoot.querySelector("textarea")!;
+    const {textarea} = this.elements;
     await this.setValidity(textarea);
     this.internals.setValidity({});
     textarea.setCustomValidity("");
@@ -266,19 +233,17 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     this.setCustomError = (): void =>
     {
     };
-    if (this.interacted)
+    if (!this.interacted)
+      return;
+
+    if (!textarea.checkValidity())
     {
-      if (!textarea.checkValidity())
-      {
-        this.dataset["invalid"] = "";
-        textarea.dataset["invalid"] = ""
-      }
-      else
-      {
-        delete this.dataset["invalid"];
-        delete textarea.dataset["invalid"]
-      }
+      this.setAttribute("data-invalid", "");
+      textarea.setAttribute("data-invalid", "");
+      return;
     }
+    this.removeAttribute("data-invalid");
+    textarea.removeAttribute("data-invalid");
   }
 
   private interacted: boolean = false;
@@ -290,7 +255,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   async validateAndReport(): Promise<void>
   {
     await this.validate();
-    const textarea = this.shadowRoot.querySelector("textarea")!;
+    const {textarea} = this.elements;
     const error = this.errors.entries().next().value;
 
     if (error)
@@ -302,43 +267,10 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   {
     this.internals.setFormValue(input.value);
     this.errors = new Map();
-    this.setMinLength(input);
-    this.setMaxLength(input);
-    this.setValueMissing(input);
+    setMinLength(this, input);
+    setMaxLength(this, input);
+    setValueMissing(this, input);
     this.setCustomError(input);
-  }
-
-  setMinLength(input: HTMLTextAreaElement): void
-  {
-    const min = this.getAttribute("minlength");
-
-    if (tooShort(input, min ? Number(min) : null))
-    {
-      this.errors.set("tooShort", () => `Input requires at least ${min} characters`);
-    }
-  }
-
-  setMaxLength(input: HTMLTextAreaElement): void
-  {
-    const max = this.getAttribute("maxlength");
-
-    if (tooLong(input, max ? Number(max) : null))
-    {
-      this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters. Current length: ${input.value.length}`);
-    }
-  }
-
-  setValueMissing(input: HTMLTextAreaElement): void
-  {
-    if (this.isRequired() && valueMissing(input))
-    {
-      this.errors.set("valueMissing", () => "No value given");
-    }
-  }
-
-  isRequired(): boolean
-  {
-    return this.getAttribute("required") === "";
   }
 
   render(): void
@@ -350,6 +282,13 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   {
     return css;
   }
+
+  public static define(): void
+  {
+    if (customElements.get("app-textarea"))
+      return;
+    customElements.define("app-textarea", AppTextArea);
+  }
 }
 
-customElements.define("app-textarea", AppTextArea);
+AppTextArea.define();

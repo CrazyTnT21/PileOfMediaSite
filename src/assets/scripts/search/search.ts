@@ -1,10 +1,8 @@
 import {AppSearchInput} from "../../components/inputs/app-search-input/app-search-input";
-import createClient from "openapi-fetch";
-import {paths} from "pileofmedia-openapi";
-import {API_URL} from "../modules";
 import {SearchEvent} from "../../components/inputs/app-search-input/search-event";
 import {Book} from "../../openapi/book";
 import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
+import {apiClient} from "../../openapi/client";
 
 const params = new URLSearchParams((window.location.search))
 AppSearchInput.define()
@@ -35,13 +33,12 @@ async function search(value: string): Promise<void>
 
 async function* searchBooks(value: string): AsyncGenerator<Book[]>
 {
-  const client = createClient<paths>({baseUrl: API_URL});
   let page = 0;
   const count = 10;
   let total = 11;
   while (page * count < total)
   {
-    const {data, error} = await client.GET("/books/title/{title}", {
+    const {data, error} = await apiClient.GET("/books/title/{title}", {
       params: {
         query: {count, page},
         path: {

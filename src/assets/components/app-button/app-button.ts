@@ -1,21 +1,33 @@
 import {applyStyleSheet, attach_delegates} from "../defaults";
 import {StyleCSS} from "../style-css";
 import {ApplyStyleSheet} from "../apply-style-sheet";
-import {handleFieldset} from "../inputs/common";
+import {AttributeValue, handleFieldset} from "../inputs/common";
 import html from "./app-button.html" with {type: "inline"};
 import css from "./app-button.css" with {type: "inline"};
+import {mapSelectors} from "../../dom";
+import {disabledAttr, typeAttr} from "./attributes";
 
 type attributeKey = keyof typeof AppButton["observedAttributesMap"];
 
+export type AppButtonElements = {
+  button: HTMLButtonElement,
+  slot: HTMLSlotElement
+};
+
 export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
+  readonly elements: AppButtonElements;
+  protected static readonly elementSelectors: { [key in keyof AppButton["elements"]]: string } = {
+    button: "button",
+    slot: "slot"
+  }
   static readonly formAssociated = true;
   private readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
 
   private static readonly observedAttributesMap = {
-    "disabled": AppButton.disabledAttr,
-    "type": AppButton.typeAttr,
+    "disabled": (element: AppButton, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
+    "type": typeAttr,
   }
   static readonly observedAttributes = <[attributeKey]>Object.keys(AppButton.observedAttributesMap);
 
@@ -23,22 +35,6 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     const callback = AppButton.observedAttributesMap[name as attributeKey]!;
     callback(this, newValue);
-  }
-
-  //Attributes
-
-  private static disabledAttr(element: AppButton, value: string | null | undefined): void
-  {
-    const disabled = element.hasDisabledFieldset || value == "";
-    const button = element.shadowRoot.querySelector("button")!;
-    button.disabled = disabled;
-    element.internals.ariaDisabled = disabled ? "" : null;
-  }
-
-  private static typeAttr(element: AppButton, value: string | null | undefined): void
-  {
-    const button = element.shadowRoot.querySelector("button")!;
-    button.type = value as "button" | "reset" | "submit";
   }
 
   get disabled(): boolean
@@ -49,23 +45,14 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
   set disabled(value: boolean)
   {
     if (value)
+    {
       this.setAttribute("disabled", "")
-    else
-      this.removeAttribute("disabled");
+      return;
+    }
+    this.removeAttribute("disabled");
   }
 
-  private internalHasDisabledFieldset: boolean = false;
-
-  get hasDisabledFieldset(): boolean
-  {
-    return this.internalHasDisabledFieldset;
-  }
-
-  set hasDisabledFieldset(value: boolean)
-  {
-    this.internalHasDisabledFieldset = value;
-    AppButton.disabledAttr(this, this.getAttribute("disabled"))
-  }
+  private hasDisabledFieldset: boolean = false;
 
   get type(): "button" | "submit" | "reset"
   {
@@ -82,14 +69,14 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   connectedCallback(): void
   {
-    const button = this.shadowRoot.querySelector("button")!;
+    const {button, slot} = this.elements;
     const type = this.getAttribute("type");
     if (type && ["submit", "button", "reset"].includes(type))
       this.type = type as "submit" | "button" | "reset";
     else
       this.type = "submit";
     button.type = this.type;
-
+    slot.addEventListener("click", () => button.click());
     button.addEventListener("click", e =>
     {
       const button = <HTMLButtonElement>e.target;
@@ -99,7 +86,11 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
           this.internals.form.requestSubmit();
       }
     });
-    handleFieldset(this);
+    handleFieldset(this, (value: boolean) =>
+    {
+      this.hasDisabledFieldset = value;
+      disabledAttr(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+    });
   }
 
   constructor()
@@ -110,6 +101,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
+    this.elements = mapSelectors<AppButtonElements>(this.shadowRoot, AppButton.elementSelectors);
   }
 
   attach = attach_delegates;

@@ -48,7 +48,7 @@ export class ColorStyle
 
 export function removeColorScheme(): void
 {
-  delete document.documentElement.dataset["colorScheme"];
+  document.documentElement.removeAttribute("data-color-scheme");
   for (const key of Object.keys(new ColorStyle()))
     document.documentElement.style.setProperty("--" + key.replaceAll("_", "-"), null);
 
@@ -77,7 +77,7 @@ export function loadColorScheme(): void
   const colorStyle = colorScheme.style;
   const keys = <(keyof ColorStyle)[]>Object.keys(new ColorStyle()).map(x => x.replaceAll("_", "-"));
 
-  document.documentElement.dataset["colorScheme"] = colorScheme.name;
+  document.documentElement.setAttribute("data-color-scheme",colorScheme.name);
   for (const key of keys)
   {
     document.documentElement.style.setProperty("--" + key, colorStyle[key] ? colorStyle[key]!.toString() : null);

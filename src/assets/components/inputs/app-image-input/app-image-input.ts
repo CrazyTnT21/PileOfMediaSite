@@ -1,20 +1,52 @@
 import {applyStyleSheet, attach_delegates} from "../../defaults";
 import {ApplyStyleSheet} from "../../apply-style-sheet";
 import {StyleCSS} from "../../style-css";
-import {logNoValueError} from "../validation/validation";
 import {UploadEvent} from "./upload-event";
 import html from "./app-image-input.html" with {type: "inline"};
 import css from "./app-image-input.css" with {type: "inline"};
 import {Kilobyte} from "../../../units/kilobyte";
 import {AppButton} from "../../app-button/app-button";
+import {mapSelectors} from "../../../dom";
+import {
+  dataLabelAttr,
+  dataMaxFilesizeAttr,
+  dataMinFilesizeAttr,
+  dataMultipleAttr,
+  dataTitleAttr, disabledAttr,
+  requiredAttr
+} from "./attributes";
+import {AttributeValue, handleFieldset, SurroundedString, templateString} from "../common";
+import {setMaxFileSize, setMinFileSize, setUnsupportedType, setValueMissing} from "./validation";
+import {Observer} from "../../../observer";
 
 type attributeKey = keyof typeof AppImageInput["observedAttributesMap"];
 
+export type AppImageInputElements = {
+  input: HTMLInputElement,
+  label: HTMLLabelElement,
+  image: HTMLImageElement,
+  clearImage: AppButton
+};
+export const appImageInputTexts = {
+  clearImage: "Clear image",
+  clearImages: "Clear images",
+  inputMinValidation: templateString<`${SurroundedString<"{min}">}{fileSizes}${string}`>
+  ("Input requires files to be at least {min} kB. Current sizes: [{fileSizes}]"),
+  inputMaxValidation: templateString<`${SurroundedString<"{max}">}{fileSizes}${string}`>
+  ("Input requires files to be at most {max} kB. Current sizes: [{fileSizes}]"),
+  valueMissing: "No value given",
+  unsupportedImageType: "Unsupported image type",
+  required: "Required",
+};
 export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
-  private readonly texts = {
-    clearImage: "Clear image",
-    clearImages: "Clear images",
+  readonly texts = new Observer(appImageInputTexts);
+  readonly elements: AppImageInputElements;
+  protected static readonly elementSelectors: { [key in keyof AppImageInput["elements"]]: string } = {
+    input: "input",
+    label: "label",
+    image: "img",
+    clearImage: "app-button"
   }
   static readonly formAssociated = true;
   private readonly internals: ElementInternals;
@@ -23,13 +55,13 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
   private static readonly observedAttributesMap = {
-    "data-label": AppImageInput.dataLabelAttr,
-    "required": AppImageInput.requiredAttr,
-    "disabled": AppImageInput.disabledAttr,
-    "data-max-filesize": AppImageInput.dataMaxFilesizeAttr,
-    "data-min-filesize": AppImageInput.dataMinFilesizeAttr,
-    "data-title": AppImageInput.dataTitleAttr,
-    "data-multiple": AppImageInput.dataMultipleAttr
+    "data-label": dataLabelAttr,
+    "required": requiredAttr,
+    "disabled": (element: AppImageInput, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
+    "data-max-filesize": dataMaxFilesizeAttr,
+    "data-min-filesize": dataMinFilesizeAttr,
+    "data-title": dataTitleAttr,
+    "data-multiple": dataMultipleAttr
   }
   static readonly observedAttributes = <[attributeKey]>Object.keys(AppImageInput.observedAttributesMap);
 
@@ -40,58 +72,14 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     await this.validate();
   }
 
-  //Attributes
-
-  private static dataLabelAttr(element: AppImageInput, value: string | null | undefined): void
-  {
-    if (value == null || value.trim() == "")
-    {
-      logNoValueError("label", element.outerHTML);
-      value = ""
-    }
-    element.shadowRoot.querySelector("label")!.innerText = value;
-    element.shadowRoot.querySelector("img")!.alt = value;
-  }
-
-  private static dataMultipleAttr(element: AppImageInput, value: string | null | undefined): void
-  {
-    element.shadowRoot.querySelector("input")!.multiple = value == "";
-  }
-
-  private static disabledAttr(element: AppImageInput, value: string | null | undefined): void
-  {
-    const disabled = element.hasDisabledFieldset || value == "";
-    const input = element.shadowRoot.querySelector("input")!;
-    input.disabled = disabled;
-    element.internals.ariaDisabled = disabled ? "" : null;
-  }
-
-  private static dataMaxFilesizeAttr(_element: AppImageInput, _value: string | null | undefined): void
-  {
-  }
-
-  private static dataMinFilesizeAttr(_element: AppImageInput, _value: string | null | undefined): void
-  {
-  }
-
-  private static dataTitleAttr(element: AppImageInput, value: string | null | undefined): void
-  {
-    element.shadowRoot.querySelector("img")!.title = value ?? "";
-  }
-
-  private static requiredAttr(element: AppImageInput, value: string | null | undefined): void
-  {
-    element.shadowRoot.querySelector("input")!.required = value == "";
-  }
-
   get label(): string
   {
-    return this.dataset["label"] ?? "";
+    return this.getAttribute("data-label") ?? "";
   }
 
   set label(value: string)
   {
-    this.dataset["label"] = value;
+    this.setAttribute("data-label", value)
   }
 
   private innerFiles: { file: File, url: string }[] = [];
@@ -108,37 +96,21 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   get multiple(): boolean
   {
-    const value = this.dataset["multiple"];
+    const value = this.getAttribute("data-multiple");
     return value == ""
   }
 
   set multiple(value: boolean)
   {
-    const button = this.shadowRoot.querySelector<AppButton>("app-button")!;
     if (!value)
     {
-      button.innerText = this.texts.clearImage;
-      delete this.dataset["multiple"];
+      this.removeAttribute("data-multiple");
+      return;
     }
-    else
-    {
-      button.innerText = this.texts.clearImages;
-      this.dataset["multiple"] = "";
-    }
+    this.setAttribute("data-multiple", "");
   }
 
-  private internalHasDisabledFieldset: boolean = false;
-
-  get hasDisabledFieldset(): boolean
-  {
-    return this.internalHasDisabledFieldset;
-  }
-
-  set hasDisabledFieldset(value: boolean)
-  {
-    this.internalHasDisabledFieldset = value;
-    AppImageInput.disabledAttr(this, this.getAttribute("disabled"))
-  }
+  private hasDisabledFieldset: boolean = false;
 
   get disabled(): boolean
   {
@@ -155,30 +127,34 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   get maxFilesize(): Kilobyte | null
   {
-    const attribute = this.dataset["maxFilesize"];
+    const attribute = this.getAttribute("data-max-filesize");
     return attribute ? Kilobyte.fromNumber(Number(attribute)) : null;
   }
 
   set maxFilesize(value: Kilobyte | null)
   {
     if (value == null)
-      delete this.dataset["maxFilesize"]
-    else
-      this.dataset["maxFilesize"] = value.toString()
+    {
+      this.removeAttribute("max-file-size");
+      return;
+    }
+    this.setAttribute("data-max-filesize", value.toNumber().toString())
   }
 
   get minFilesize(): Kilobyte | null
   {
-    const attribute = this.dataset["minFilesize"];
+    const attribute = this.getAttribute("data-min-filesize");
     return attribute ? Kilobyte.fromNumber(Number(attribute)) : null;
   }
 
   set minFilesize(value: Kilobyte | null)
   {
     if (value == null)
-      delete this.dataset["minFilesize"]
-    else
-      this.dataset["minFilesize"] = value.toString()
+    {
+      this.removeAttribute("data-min-filesize");
+      return;
+    }
+    this.setAttribute("data-min-filesize", value.toNumber().toString());
   }
 
   get required(): boolean
@@ -190,45 +166,52 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   set required(value: boolean)
   {
     if (value)
+    {
       this.setAttribute("required", "")
-    else
-      this.removeAttribute("required");
+      return;
+    }
+    this.removeAttribute("required");
   }
 
-  get imageTitle(): string
+  get imageTitle(): string | null
   {
-    return this.dataset["title"] ?? "";
+    return this.getAttribute("data-title");
   }
 
-  set imageTitle(value: string)
+  set imageTitle(value: string | null)
   {
-    this.dataset["title"] = value;
+    if (value)
+    {
+      this.setAttribute("data-title", value);
+      return;
+    }
+    this.removeAttribute("data-title");
   }
 
-  #src: string | undefined;
+  private internalSrc: string | undefined;
+
   get src(): string | undefined
   {
-    return this.#src;
+    return this.internalSrc;
   }
 
   set src(value: string | undefined)
   {
     if (!value)
       throw Error("Src has to be set");
-    this.#src = value;
-    this.shadowRoot.querySelector("img")!.src = value;
+    this.internalSrc = value;
+    this.elements.image.src = value;
   }
 
   async connectedCallback(): Promise<void>
   {
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input, image, clearImage} = this.elements;
     input.addEventListener("change", (e) => this.onInputChange(e));
-    const image = this.shadowRoot.querySelector("img")!;
     this.label = this.label || "";
 
     image.alt = this.label;
-    this.multiple = this.dataset["multiple"] == ""
-    this.shadowRoot.querySelector("label")!.innerText = this.label;
+    this.multiple = this.getAttribute("data-multiple") == ""
+    this.elements.label.innerText = this.label;
     if (this.imageTitle)
       image.title = this.imageTitle;
 
@@ -242,16 +225,22 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       if (e.key === "Enter")
         input.click();
     });
-    const button: AppButton = this.shadowRoot.querySelector("app-button")!
-    button.addEventListener("click", () =>
+    clearImage.addEventListener("click", () =>
     {
       this.files = [];
       image.src = this.defaultSrc;
     });
+
+    handleFieldset(this, (value: boolean) =>
+    {
+      this.hasDisabledFieldset = value;
+      disabledAttr(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+    });
+
     await this.setupValidation();
   }
 
-  private readonly defaultSrc = "/assets/img/Image_Input_Placeholder.svg";
+  private readonly defaultSrc: string;
 
   constructor()
   {
@@ -260,6 +249,27 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
+    this.elements = mapSelectors<AppImageInputElements>(this.shadowRoot, AppImageInput.elementSelectors);
+    this.defaultSrc = this.elements.image.src;
+    this.texts.addListener("clearImage", (value) =>
+    {
+      if (this.multiple)
+        return;
+
+      this.elements.clearImage.innerText = value;
+    });
+    this.texts.addListener("clearImages", (value) =>
+    {
+      if (!this.multiple)
+        return;
+
+      this.elements.clearImage.innerText = value;
+    });
+
+    this.texts.addListener("required", (value) =>
+    {
+      this.elements.label.setAttribute("data-text-required", value);
+    });
   }
 
   attach = attach_delegates;
@@ -274,40 +284,37 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   async setupValidation(): Promise<void>
   {
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     input.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
   async validate(): Promise<void>
   {
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input, image} = this.elements;
     await this.setValidity(input);
     this.internals.setValidity({});
     input.setCustomValidity("");
     const error = this.errors.entries().next().value;
     if (error)
     {
-      const img = this.shadowRoot.querySelector("img")!;
-      this.internals.setValidity({[error[0]]: true}, error[1](), img);
+      this.internals.setValidity({[error[0]]: true}, error[1](), image);
       input.setCustomValidity(error[1]())
     }
     this.setCustomError = (): void =>
     {
     };
-    if (this.interacted)
+    if (!this.interacted)
+      return;
+
+    if (!input.checkValidity())
     {
-      if (!input.checkValidity())
-      {
-        this.dataset["invalid"] = "";
-        input.dataset["invalid"] = ""
-      }
-      else
-      {
-        delete this.dataset["invalid"];
-        delete input.dataset["invalid"]
-      }
+      this.setAttribute("data-invalid", "");
+      input.setAttribute("data-invalid", "");
+      return;
     }
+    this.removeAttribute("data-invalid");
+    input.removeAttribute("data-invalid");
   }
 
   private interacted: boolean = false;
@@ -319,7 +326,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   async validateAndReport(): Promise<void>
   {
     await this.validate();
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     const error = this.errors.entries().next().value;
     if (error)
       input.setCustomValidity(error[1]());
@@ -330,52 +337,11 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   {
     this.internals.setFormValue(input.value);
     this.errors = new Map();
-    this.setMaxFileSize(input);
-    this.setMinFileSize(input);
-    this.setValueMissing(input);
-    this.setUnsupportedType(input);
+    setMaxFileSize(this);
+    setMinFileSize(this);
+    setValueMissing(this);
+    setUnsupportedType(this);
     this.setCustomError(input);
-  }
-
-  setUnsupportedType(input: HTMLInputElement): void
-  {
-    if (!unsupportedImageType(input))
-      return;
-
-    this.errors.set("customError", () => `Unsupported image type`);
-  }
-
-  setMaxFileSize(input: HTMLInputElement): void
-  {
-    const max = this.maxFilesize;
-    if (!fileTooBig(input, max))
-      return;
-    const fileSizes = [...input.files!].map(x => (x.size / 1000).toString() + " kB").join(", ");
-    this.errors.set("customError", () => `Input requires files to be at most ${max} kB. Current sizes: [${fileSizes}]`);
-  }
-
-  setMinFileSize(input: HTMLInputElement): void
-  {
-    const min = this.minFilesize;
-
-    if (!fileTooSmall(input, min))
-      return;
-
-    const fileSizes = [...input.files!].map(x => (x.size / 1000).toString() + " kB").join(", ");
-    this.errors.set("customError", () => `Input requires files to be at least ${min} kB. Current sizes: [${fileSizes}]`);
-  }
-
-  setValueMissing(input: HTMLInputElement): void
-  {
-    if (!this.isRequired() || !valueMissing(input))
-      return;
-
-    this.errors.set("valueMissing", () => "No value given");
-  }
-
-  isRequired(): boolean
-  {
-    return this.getAttribute("required") === "";
   }
 
   render(): void
@@ -390,7 +356,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 
   async valid(): Promise<boolean>
   {
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     await this.setValidity(input);
     return this.errors.size === 0;
   }
@@ -403,12 +369,10 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     this.files = [];
     if (!this.multiple)
     {
+      const {image} = this.elements;
       const file = files[files.length - 1]!;
-      if (!file.file.type.includes("image"))
-        this.shadowRoot.querySelector("img")!.src = this.defaultSrc;
-      else
-        this.shadowRoot.querySelector("img")!.src = file.url!;
-      this.#src = file.url;
+      image.src = file.file.type.includes("image") ? file.url : this.defaultSrc
+      this.internalSrc = file.url;
     }
     if (await this.valid())
     {
@@ -427,44 +391,3 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
 }
 
 AppImageInput.define();
-
-function unsupportedImageType(input: HTMLInputElement): boolean
-{
-  for (const file of input.files!)
-  {
-    if (!file.type.includes("image"))
-      return true;
-  }
-  return false;
-}
-
-function fileTooBig(input: HTMLInputElement, max: Kilobyte | undefined | null): boolean
-{
-  if (!max)
-    return false;
-
-  for (const file of input.files!)
-  {
-    if (Kilobyte.fromByte(file.size).more(max))
-      return true;
-  }
-  return false;
-}
-
-function fileTooSmall(input: HTMLInputElement, min: Kilobyte | undefined | null): boolean
-{
-  if (!min)
-    return false;
-
-  for (const file of input.files!)
-  {
-    if (Kilobyte.fromByte(file.size).less(min))
-      return true;
-  }
-  return false;
-}
-
-function valueMissing(input: HTMLInputElement): boolean
-{
-  return input.files!.length === 0;
-}

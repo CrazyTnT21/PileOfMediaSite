@@ -144,6 +144,7 @@ li {
 .burger-items {
   display: flex;
   width: calc(100% - .6rem);
+  font-size: 1.12rem;
   flex-direction: column;
   justify-items: stretch;
 
@@ -156,6 +157,7 @@ li {
 .items {
   display: flex;
   gap: .12rem;
+  font-size: 1.12rem;
 
   & li {
     display: flex;

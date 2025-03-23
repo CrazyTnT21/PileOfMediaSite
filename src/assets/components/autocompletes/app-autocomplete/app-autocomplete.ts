@@ -1,9 +1,19 @@
-import {AppInput} from "../../inputs/app-input/app-input";
+import {AppInput, AppInputElements, appInputTexts} from "../../inputs/app-input/app-input";
 import {ValueChangeEvent} from "./value-change-event";
 import {SelectedAddedEvent} from "./selected-added-event";
 import {SelectedRemovedEvent} from "./selected-removed-event";
 import html from "./app-autocomplete.html" with {type: "inline"};
 import css from "./app-autocomplete.css" with {type: "inline"};
+import {mapSelectors} from "../../../dom";
+import {Observer} from "../../../observer";
+import {templateString, SurroundedString} from "../../inputs/common";
+
+export type AppAutoCompleteElements = AppInputElements & { selected: HTMLUListElement, items: HTMLDataListElement };
+export const appAutoCompleteTexts = {
+  ...appInputTexts,
+  itemNotFound: templateString<SurroundedString<"{value}">>(`Item '{value}' was not found`),
+  ItemAlreadySelected: templateString<SurroundedString<"{value}">>(`'{value}' has already been selected`)
+}
 
 export class AppAutocomplete<T = { id: number, value: any, label?: string }> extends AppInput
 {
@@ -12,14 +22,23 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   private internalItems: T[] = [];
   private internalItem: T | undefined | null;
   private selectedItems: T[] = [];
+  override readonly elements: AppAutoCompleteElements;
+  protected static override readonly elementSelectors = {
+    ...AppInput.elementSelectors,
+    selected: "#selected",
+    items: "#items"
+  }
+
+  override readonly texts = new Observer(appAutoCompleteTexts);
 
   constructor()
   {
-    super()
+    super();
+    this.elements = mapSelectors<AppAutoCompleteElements>(this.shadowRoot, AppAutocomplete.elementSelectors);
     this.itemsGenerator = this.loadItems();
   }
 
-  #search: T[] = [];
+  protected internalSearch: T[] = [];
 
   override get value(): T | undefined | null
   {
@@ -56,7 +75,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   addItem(item: T): void
   {
     this.items.push(item);
-    this.#addOptions([item]);
+    this.addOptions([item]);
   }
 
   removeItem(item: T): void
@@ -80,14 +99,14 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   {
     this.selectedItems = items;
 
-    const selected: HTMLUListElement = this.shadowRoot.querySelector("#selected")!;
+    const {selected} = this.elements;
     selected.innerHTML = "";
     this.pushSelected(selected, items);
   }
 
   addSelected(value: T): void
   {
-    const selected: HTMLUListElement = this.shadowRoot.querySelector("#selected")!;
+    const {selected} = this.elements;
     this.pushSelected(selected, [value]);
     this.shadowRoot.dispatchEvent(new SelectedAddedEvent<T>({composed: true, detail: value}));
   }
@@ -98,7 +117,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
     const index = this.selectedItems.findIndex(x => this.itemId(x) === id);
     this.selectedItems.splice(index, 1);
-    const selected = this.shadowRoot.querySelector("#selected")!;
+    const {selected} = this.elements;
     const children = selected.children;
     for (let i = children.length - 1; i >= 0; i--)
     {
@@ -142,7 +161,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       button.addEventListener("click", async () =>
       {
         this.removeSelected(item);
-        const input = this.shadowRoot.querySelector("input")!;
+        const {input} = this.elements;
         await this.search(input.value);
         this.shadowRoot.dispatchEvent(new SelectedRemovedEvent({composed: true, detail: item}));
       });
@@ -163,12 +182,12 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   findSearch(item: T): T | undefined
   {
     const id = this.itemId(item);
-    return this.#search.find(x => this.itemId(x) === id);
+    return this.internalSearch.find(x => this.itemId(x) === id);
   }
 
   findSearchValue(value: string): T | undefined
   {
-    return this.findSameValue(value, this.#search);
+    return this.findSameValue(value, this.internalSearch);
   }
 
   private findSameValue(value: string, items: T[]): T | undefined
@@ -196,7 +215,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   override async onValueSet(event: Event): Promise<void>
   {
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     await this.search(input.value);
     await super.onValueSet(event);
     await this.valueChange(input);
@@ -244,8 +263,8 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   override async connectedCallback(): Promise<void>
   {
     await super.connectedCallback();
-    const input = this.shadowRoot.querySelector("input")!;
-    const value = this.dataset["value"];
+    const {input} = this.elements;
+    const value = this.getAttribute("data-value");
     if (value != undefined)
       input.value = value;
 
@@ -260,20 +279,20 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   createOptions(items: T[]): void
   {
-    const datalist: HTMLDataListElement = this.shadowRoot.querySelector("#items")!;
+    const {items: datalist} = this.elements;
 
     datalist.innerHTML = "";
 
-    this.#pushOptions(datalist, items);
+    this.pushOptions(datalist, items);
   }
 
-  #addOptions(items: T[]): void
+  protected addOptions(items: T[]): void
   {
-    const datalist: HTMLDataListElement = this.shadowRoot.querySelector("#items")!;
-    this.#pushOptions(datalist, items);
+    const {items: datalist} = this.elements;
+    this.pushOptions(datalist, items);
   }
 
-  #pushOptions(datalist: HTMLDataListElement, items: T[]): void
+  protected pushOptions(datalist: HTMLDataListElement, items: T[]): void
   {
     for (const item of items)
     {
@@ -300,18 +319,18 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       const found = this.findSelectedValue(value);
       if (found)
       {
-        this.errors.set("customError", () => `Item '${value}' has already been selected`);
+        this.errors.set("customError", () => this.texts.get("ItemAlreadySelected").replace("{value}", value));
         return;
       }
     }
 
     if (!this.findValue(value) && !this.findSearchValue(value))
-      this.errors.set("customError", () => `Item '${value}' was not found`);
+      this.errors.set("customError", () => this.texts.get("itemNotFound").replace("{value}", value));
   }
 
   isMultiple(): boolean
   {
-    return this.dataset["multiple"] === "";
+    return this.getAttribute("data-multiple") == "";
   }
 
   async firstOpen(): Promise<void>
@@ -334,7 +353,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     }
 
     const search: T[] = (await this.searchItems(value).next()).value;
-    this.#search = search;
+    this.internalSearch = search;
     this.cachedSearch.set(value, search);
     this.createOptions(search.filter((x) => !this.findSelected(x)));
   }
@@ -344,7 +363,11 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     yield [...this.children].map(x =>
     {
       const element = <HTMLOptionElement>x;
-      return {id: Number(element.dataset["id"]), value: element.value ?? element.innerText, label: element.label}
+      return {
+        id: Number(element.getAttribute("data-id")),
+        value: element.value ?? element.innerText,
+        label: element.label
+      }
     }) as T[];
   }
 
@@ -372,6 +395,13 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   {
     return (<any>item)["id"];
   }
+
+  public static override define(): void
+  {
+    if (customElements.get("app-autocomplete"))
+      return;
+    customElements.define("app-autocomplete", AppAutocomplete);
+  }
 }
 
-customElements.define("app-autocomplete", AppAutocomplete);
+AppAutocomplete.define();

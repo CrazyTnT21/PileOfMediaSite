@@ -1,4 +1,4 @@
 {
-  "/user/user.html": "/user/[^\\./]+?/?$",
+  "/user.html": "/users/[^\\./]+?/?$",
   "/books/book.html": "/books/[^\\./]+?/?$"
 }

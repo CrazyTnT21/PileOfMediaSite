@@ -4,46 +4,56 @@ import {ApplyStyleSheet} from "../apply-style-sheet";
 import {StyleCSS} from "../style-css";
 import {applyStyleSheet, attach} from "../defaults";
 import {AppButton} from "../app-button/app-button";
+import {mapSelectors} from "../../dom";
 
 type attributeKey = keyof typeof AppTab["observedAttributesMap"];
+
+export type AppTabElements = {
+  headers: HTMLDivElement,
+  contents: HTMLDivElement,
+};
 
 export class AppTab extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   private readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
 
+  readonly elements: AppTabElements;
+  protected static readonly elementSelectors: { [key in keyof AppTab["elements"]]: string } = {
+    headers: "#headers",
+    contents: "#contents"
+  }
   private static readonly observedAttributesMap = {}
   static readonly observedAttributes = <[attributeKey]>Object.keys(AppTab.observedAttributesMap);
 
   async connectedCallback(): Promise<void>
   {
     const children = <HTMLElement[]><unknown>this.children;
-    const headers = this.shadowRoot.querySelector("#headers")!;
-    const contents = this.shadowRoot.querySelector("#contents")!;
+    const {headers, contents} = this.elements;
     if (children.length == 0)
       return;
     for (const child of children)
     {
       const button = new AppButton();
       button.innerText = child.slot ?? "";
-      button.dataset["name"] = child.slot ?? "";
+      button.setAttribute("data-name", child.slot ?? "")
       const slot = document.createElement("slot");
       slot.name = child.slot ?? "";
       slot.hidden = true;
       button.addEventListener("click", () =>
       {
         const previousHeader: AppButton = this.shadowRoot.querySelector("[data-selected]")!;
-        const previousContent: HTMLElement = this.shadowRoot.querySelector(`slot[name="${previousHeader.dataset["name"]}"]`)!
+        const previousContent: HTMLElement = this.shadowRoot.querySelector(`slot[name="${previousHeader.getAttribute("name")}"]`)!
         previousContent.hidden = true;
-        delete previousHeader.dataset["selected"];
+        previousHeader.removeAttribute("data-selected");
         slot.hidden = false;
-        button.dataset["selected"] = "";
+        button.setAttribute("data-selected", "")
       });
 
       headers.append(button);
       contents.append(slot);
     }
-    (<HTMLElement>headers.firstElementChild!).dataset["selected"] = "";
+    (<HTMLElement>headers.firstElementChild!).setAttribute("data-selected", "");
     (<HTMLElement>contents.firstElementChild).hidden = false;
   }
 
@@ -54,6 +64,7 @@ export class AppTab extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
+    this.elements = mapSelectors<AppTabElements>(this.shadowRoot, AppTab.elementSelectors);
   }
 
   attach = attach;
@@ -73,6 +84,13 @@ export class AppTab extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     return css;
   }
+
+  public static define(): void
+  {
+    if (customElements.get("app-tab"))
+      return;
+    customElements.define("app-tab", AppTab);
+  }
 }
 
-customElements.define("app-tab", AppTab);
+AppTab.define();

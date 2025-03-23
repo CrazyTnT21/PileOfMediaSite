@@ -1,9 +1,7 @@
 import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
-import {API_URL} from "../../scripts/modules";
 import {Character} from "../../openapi/character";
-import createClient from "openapi-fetch";
-import {paths} from "pileofmedia-openapi";
 import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
+import {apiClient} from "../../openapi/client";
 
 export class AppCharacterAutocomplete extends AppAutocomplete<Character>
 {
@@ -15,13 +13,12 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
 
   override async* searchItems(value: string): AsyncGenerator<Character[]>
   {
-    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const {data, error} = await client.GET("/characters/name/{name}", {
+      const {data, error} = await apiClient.GET("/characters/name/{name}", {
         params: {
           path: {name: value},
           query: {page, count},
@@ -41,13 +38,12 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
 
   override async* loadItems(): AsyncGenerator<Character[]>
   {
-    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const {data, error} = await client.GET("/characters", {
+      const {data, error} = await apiClient.GET("/characters", {
         params: {
           query: {page, count},
           header: {...acceptLanguageHeader()}
@@ -74,6 +70,13 @@ export class AppCharacterAutocomplete extends AppAutocomplete<Character>
   {
     return item.id;
   }
+
+  public static override define(): void
+  {
+    if (customElements.get("app-character-autocomplete"))
+      return;
+    customElements.define("app-character-autocomplete", AppCharacterAutocomplete);
+  }
 }
 
-customElements.define("app-character-autocomplete", AppCharacterAutocomplete);
+AppCharacterAutocomplete.define();

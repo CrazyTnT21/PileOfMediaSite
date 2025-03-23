@@ -10,7 +10,6 @@
 :host {
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 .09rem 0 var(--card-border-color--);
   padding: .3rem;
   border-radius: .09rem;
   background-color: var(--card-background-color--);
@@ -32,13 +31,15 @@ img {
 }
 
 a {
+  box-shadow: 0 0 .09rem 0 var(--card-border-color--);
+  padding: .3rem;
   text-decoration: none;
   display: flex;
   flex: 1;
   flex-direction: column;
 }
 
-a:hover, a:focus {
+a[href]:hover, a:focus {
   slot[name='title'] {
     color: var(--card-color-hover--);
   }

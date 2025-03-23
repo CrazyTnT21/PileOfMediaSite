@@ -33,7 +33,7 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
     yield this.#items;
   }
 
-  public static define(): void
+  public static override define(): void
   {
     if (customElements.get("app-language-autocomplete"))
       return;
@@ -41,9 +41,9 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
   }
 }
 
-AppLanguageAutocomplete.define();
-
 function getLanguageAndCode(language: Language): { label: Language, value: LanguageCode }
 {
   return {label: language, value: getLanguageCode(language)}
 }
+
+AppLanguageAutocomplete.define();

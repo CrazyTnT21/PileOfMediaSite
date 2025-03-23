@@ -1,3 +1,5 @@
+export type AttributeValue = string | null;
+
 export function observeFieldset(fieldset: HTMLFieldSetElement, node: Node, callback: (disabled: boolean) => void): void
 {
   const observer = new MutationObserver((mutationList, observer) =>
@@ -20,27 +22,22 @@ export function findParentFieldset(node: Node): HTMLFieldSetElement | null
   for (const fieldset of fieldsetElements)
   {
     if (fieldset.contains(node))
-    {
       return fieldset;
-    }
   }
   return null;
 }
 
-export function handleFieldset(item: Node & {
-  set hasDisabledFieldset(value: boolean),
-}): void
+export function handleFieldset(item: Node, setDisabledFieldsetStatus: (value: boolean) => void): void
 {
   const parentFieldset = findParentFieldset(item);
   if (parentFieldset)
   {
     if (parentFieldset.disabled)
-    {
-      item.hasDisabledFieldset = true;
-    }
+      setDisabledFieldsetStatus(true);
+
     observeFieldset(parentFieldset, item, disabled =>
     {
-      item.hasDisabledFieldset = disabled
+      setDisabledFieldsetStatus(disabled);
     });
   }
 }
@@ -74,3 +71,10 @@ export function formData<T>(...values: ([(keyof T) & string, "serialize"] | [str
     return formData;
   }
 }
+
+export function templateString<T extends string>(text: string): T
+{
+  return text as T;
+}
+
+export type SurroundedString<T extends string | number | bigint | boolean | null | undefined> = `${string}${T}${string}`;

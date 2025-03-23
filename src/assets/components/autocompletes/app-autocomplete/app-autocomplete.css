@@ -18,10 +18,14 @@ li {
 
 #selected {
   display: inline-flex;
-  flex-wrap: wrap;
-  padding-top: .3rem;
   gap: .12rem;
+  flex-wrap: wrap;
+
+  > * {
+    margin-top: .3rem;
+  }
 }
+
 
 button {
   font-size: .75em;

@@ -110,4 +110,9 @@ export class Megabyte
   {
     return this.value > other.value
   }
+
+  toString(): string
+  {
+    return `${this.toNumber()} mB`
+  }
 }

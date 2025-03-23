@@ -1,95 +1,68 @@
 import {applyStyleSheet, attach_delegates} from "../../defaults";
-import {logNoValueError, tooLong, tooShort, valueMissing} from "../validation/validation";
 import {ApplyStyleSheet} from "../../apply-style-sheet";
 import {StyleCSS} from "../../style-css";
-import {handleFieldset} from "../common";
+import {AttributeValue, handleFieldset, SurroundedString, templateString} from "../common";
 import {ValueSetEvent} from "./value-set-event";
 import html from "./app-input.html" with {type: "inline"};
 import css from "./app-input.css" with {type: "inline"};
+import {mapSelectors} from "../../../dom";
+import {dataLabelAttr, disabledAttr, maxLengthAttr, minlengthAttr, placeholderAttr, requiredAttr} from "./attributes";
+import {setMaxLength, setMinLength, setValueMissing} from "./validation";
+import {Observer} from "../../../observer";
 
 type attributeKey = keyof typeof AppInput["observedAttributesMap"];
 
+export type AppInputElements = {
+  input: HTMLInputElement,
+  label: HTMLLabelElement,
+};
+export const appInputTexts = {
+  required: "Required",
+  inputMinValidation: templateString<`${SurroundedString<"{min}">}{currentLength}${string}`>("Input only allows a maximum of {min} characters. Current length: {currentLength}"),
+  inputMaxValidation: templateString<`${SurroundedString<"{max}">}{currentLength}${string}`>("Input requires at least {min} characters. Current length: {currentLength}")
+};
+
 export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
+  readonly elements: AppInputElements;
+  protected static readonly elementSelectors: { [key in keyof AppInput["elements"]]: string } = {
+    input: "input",
+    label: "label",
+  }
+  readonly texts = new Observer(appInputTexts);
+
   static readonly formAssociated = true;
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
   private readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
 
-  private static readonly observedAttributesMap = {
-    "data-label": AppInput.dataLabelAttr,
-    "required": AppInput.requiredAttr,
-    "disabled": AppInput.disabledAttr,
-    "maxlength": AppInput.maxLengthAttr,
-    "minlength": AppInput.minlengthAttr,
-    "placeholder": AppInput.placeholderAttr
+  protected static readonly observedAttributesMap = {
+    "data-label": dataLabelAttr,
+    "required": requiredAttr,
+    "disabled": (element: AppInput, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
+    "maxlength": maxLengthAttr,
+    "minlength": minlengthAttr,
+    "placeholder": placeholderAttr,
   }
   static readonly observedAttributes = <[attributeKey]>Object.keys(AppInput.observedAttributesMap);
 
-  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: string, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
   {
     const callback = AppInput.observedAttributesMap[name as attributeKey]!;
     callback(this, newValue);
     await this.validate();
-  }
-
-  //Attributes
-
-  private static dataLabelAttr(element: AppInput, value: string | null | undefined): void
-  {
-    if (value == null || value.trim() == "")
-    {
-      logNoValueError("label", element.outerHTML);
-      value = ""
-    }
-    element.shadowRoot.querySelector("label")!.innerText = value;
-  }
-
-  private static placeholderAttr(element: AppInput, value: string | null | undefined): void
-  {
-    element.shadowRoot.querySelector("input")!.placeholder = value ?? "";
-  }
-
-  private static disabledAttr(element: AppInput, value: string | null | undefined): void
-  {
-    const disabled = element.hasDisabledFieldset || value == "";
-    const input = element.shadowRoot.querySelector("input")!;
-    input.disabled = disabled;
-    element.internals.ariaDisabled = disabled ? "" : null;
-  }
-
-  private static maxLengthAttr(element: AppInput, value: string | null | undefined): void
-  {
-    const input = element.shadowRoot.querySelector("input")!;
-    if (value == null)
-      input.removeAttribute("maxlength");
-    else
-      input.setAttribute("maxlength", value);
-  }
-
-  private static minlengthAttr(element: AppInput, value: string | null | undefined): void
-  {
-    const input = element.shadowRoot.querySelector("input")!;
-    if (value == null)
-      input.removeAttribute("minlength");
-    else
-      input.setAttribute("minlength", value);
-  }
-
-  private static requiredAttr(element: AppInput, value: string | null | undefined): void
-  {
-    element.shadowRoot.querySelector("input")!.required = value == "";
+    this.texts.get("required")
   }
 
   get label(): string
   {
-    return this.dataset["label"] ?? "";
+    return this.getAttribute("data-label") ?? "";
   }
 
   set label(value: string)
   {
-    this.dataset["label"] = value;
+    this.setAttribute("data-label", value)
   }
 
   get required(): boolean
@@ -149,7 +122,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   get value(): any
   {
-    return this.shadowRoot.querySelector("input")!.value;
+    return this.elements.input.value;
   }
 
   set value(value: string | null | undefined)
@@ -157,29 +130,19 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     if (value == null)
       value = "";
 
-    this.shadowRoot.querySelector("input")!.value = value;
+    const {input} = this.elements;
+    input.value = value;
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
-  private internalHasDisabledFieldset: boolean = false;
+  private hasDisabledFieldset: boolean = false;
 
-  get hasDisabledFieldset(): boolean
-  {
-    return this.internalHasDisabledFieldset;
-  }
-
-  set hasDisabledFieldset(value: boolean)
-  {
-    this.internalHasDisabledFieldset = value;
-    AppInput.disabledAttr(this, this.getAttribute("disabled"))
-  }
-
-  get placeholder(): string | null | undefined
+  get placeholder(): string | null
   {
     return this.getAttribute("placeholder")
   }
 
-  set placeholder(value: string | null | undefined)
+  set placeholder(value: string | null)
   {
     if (value == null)
       this.removeAttribute("placeholder");
@@ -191,19 +154,35 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     this.label = this.label || "";
     this.disabled = this.getAttribute("disabled") == "";
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     input.addEventListener("change", (e) => this.onInputChange(e));
     input.placeholder = this.placeholder ?? "";
-    handleFieldset(this);
+    this.handleInitialValueAttribute();
+
+    handleFieldset(this, (value: boolean) =>
+    {
+      this.hasDisabledFieldset = value;
+      disabledAttr(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+    });
+
     await this.setupValidation();
   }
 
-  async onValueSet(_event: Event): Promise<void>
+  private handleInitialValueAttribute(): void
+  {
+    let valueAttribute = this.getAttribute("value");
+    if (valueAttribute == null)
+      valueAttribute = "";
+    const {input} = this.elements;
+    input.value = valueAttribute;
+  }
+
+  protected async onValueSet(_event: Event): Promise<void>
   {
     await this.validate();
   }
 
-  async onInputChange(_event: Event): Promise<void>
+  protected async onInputChange(_event: Event): Promise<void>
   {
     this.interacted = true;
     await this.validateAndReport();
@@ -217,6 +196,12 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.render();
     this.applyStyleSheet();
     this.addEventListener(ValueSetEvent.type, (e) => this.onValueSet(e));
+    this.elements = mapSelectors<AppInputElements>(this.shadowRoot, AppInput.elementSelectors);
+
+    this.texts.addListener("required", (value) =>
+    {
+      this.elements.label.setAttribute("data-text-required", value);
+    });
   }
 
   attach = attach_delegates;
@@ -231,14 +216,14 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   async setupValidation(): Promise<void>
   {
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     input.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
   async validate(): Promise<void>
   {
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     await this.setValidity(input);
     this.internals.setValidity({});
     input.setCustomValidity("");
@@ -251,19 +236,18 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.setCustomError = (): void =>
     {
     };
-    if (this.interacted)
-    {
-      if (!input.checkValidity())
-      {
-        this.dataset["invalid"] = "";
-        input.dataset["invalid"] = ""
-      }
-      else
-      {
-        delete this.dataset["invalid"];
-        delete input.dataset["invalid"]
-      }
+    if (!this.interacted)
+      return;
 
+    if (!input.checkValidity())
+    {
+      this.setAttribute("data-invalid", "");
+      input.setAttribute("data-invalid", "");
+    }
+    else
+    {
+      this.removeAttribute("data-invalid");
+      input.removeAttribute("data-invalid");
     }
   }
 
@@ -272,7 +256,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   async validateAndReport(): Promise<void>
   {
     await this.validate();
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     const error = this.errors.entries().next().value;
     if (error)
       input.setCustomValidity(error[1]());
@@ -283,50 +267,17 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     this.internals.setFormValue(input.value);
     this.errors = new Map();
-    this.setValueMissing(input);
-    this.setMinLength(input);
-    this.setMaxLength(input);
+    setValueMissing(this, input);
+    setMinLength(this, input);
+    setMaxLength(this, input);
     this.setCustomError(input);
   }
 
   async valid(): Promise<boolean>
   {
-    const input = this.shadowRoot.querySelector("input")!;
+    const {input} = this.elements;
     await this.setValidity(input);
     return this.errors.size == 0;
-  }
-
-  setValueMissing(input: HTMLInputElement): void
-  {
-    if (this.isRequired() && valueMissing(input))
-    {
-      this.errors.set("valueMissing", () => "No value given");
-    }
-  }
-
-  isRequired(): boolean
-  {
-    return this.getAttribute("required") === "";
-  }
-
-  setMinLength(input: HTMLInputElement): void
-  {
-    const min = this.getAttribute("minlength");
-
-    if (tooShort(input, min ? Number(min) : null))
-    {
-      this.errors.set("tooShort", () => `Input requires at least ${min} characters. Current length: ${input.value.length}`);
-    }
-  }
-
-  setMaxLength(input: HTMLInputElement): void
-  {
-    const max = this.getAttribute("maxlength");
-
-    if (tooLong(input, max ? Number(max) : null))
-    {
-      this.errors.set("tooLong", () => `Input only allows a maximum of ${max} characters. Current length: ${input.value.length}`);
-    }
   }
 
   setCustomError(_input: HTMLInputElement): void
@@ -342,6 +293,13 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     return css;
   }
+
+  public static define(): void
+  {
+    if (customElements.get("app-input"))
+      return;
+    customElements.define("app-input", AppInput);
+  }
 }
 
-customElements.define("app-input", AppInput);
+AppInput.define();

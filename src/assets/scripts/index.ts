@@ -1,11 +1,8 @@
-import createClient from "openapi-fetch";
-import {components, paths} from "pileofmedia-openapi";
-import {API_URL} from "./modules";
+import {components} from "pileofmedia-openapi";
 import {Config, getTranslatedField, logError} from "../classes/config";
 import {AppCard} from "../components/app-card/app-card";
 import {collect_ok, Err, Ok, Result} from "../result/result";
-
-const client = createClient<paths>({baseUrl: API_URL});
+import {apiClient} from "../openapi/client";
 
 function createBookCard(x: components["schemas"]["Book"]): AppCard
 {
@@ -34,7 +31,7 @@ if (error)
 //TODO All Media & Sort
 async function append(id: string, page: number): Promise<Result<void, Error>>
 {
-  const {data, error} = await client.GET("/books", {params: {...queryParam(page, 12)}});
+  const {data, error} = await apiClient.GET("/books", {params: {...queryParam(page, 12)}});
 
   if (!data)
     return new Err(new Error(error));

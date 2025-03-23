@@ -22,19 +22,26 @@
   display: flex;
   flex: 1;
   flex-wrap: wrap;
+  overflow-x: scroll;
 }
 
 #headers {
   display: flex;
   flex: 1 1 100%;
-  flex-wrap: wrap;
   box-shadow: 0 .2rem solid var(--tab-border-color--);
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  margin-bottom: .3rem;
 
   app-button {
     flex: 1;
     --button-background-color: transparent;
     box-shadow: 0 .2rem var(--tab-border-color--);
     margin-bottom: .2rem;
+  }
+
+  ::part(button) {
+    padding: .6rem;
   }
 
   ::part(button) {

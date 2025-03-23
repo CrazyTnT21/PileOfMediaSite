@@ -110,4 +110,9 @@ export class Kilobyte
   {
     return this.value > other.value
   }
+
+  toString(): string
+  {
+    return `${this.toNumber()} kB`
+  }
 }

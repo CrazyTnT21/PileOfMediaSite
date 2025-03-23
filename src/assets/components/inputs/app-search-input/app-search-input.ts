@@ -1,17 +1,27 @@
-import {AppInput} from "../app-input/app-input";
+import {AppInput, AppInputElements} from "../app-input/app-input";
 import {StyleCSS} from "../../style-css";
 import {SearchEvent} from "./search-event";
 import html from "./app-search-input.html" with {type: "inline"};
 import css from "./app-search-input.css" with {type: "inline"};
+import {mapSelectors} from "../../../dom";
+import {AppButton} from "../../app-button/app-button";
+
+export type AppSearchInputElements = AppInputElements & { searchButton: AppButton };
 
 export class AppSearchInput extends AppInput implements StyleCSS
 {
+  override readonly elements: AppSearchInputElements;
+  protected static override readonly elementSelectors = {
+    ...AppInput.elementSelectors,
+    searchButton: "app-button",
+  }
+
   override async connectedCallback(): Promise<void>
   {
     this.label = this.label || "Search";
     await super.connectedCallback();
-    const input = this.shadowRoot.querySelector("input")!;
-    this.shadowRoot.querySelector("app-button")!.addEventListener("click", () =>
+    const {searchButton, input} = this.elements;
+    searchButton.addEventListener("click", () =>
     {
       input.focus();
       this.shadowRoot.dispatchEvent(new SearchEvent({composed: true, detail: input.value}));
@@ -30,7 +40,8 @@ export class AppSearchInput extends AppInput implements StyleCSS
   constructor()
   {
     super();
-    this.shadowRoot.querySelector("input")!.type = "search";
+    this.elements = mapSelectors<AppSearchInputElements>(this.shadowRoot, AppSearchInput.elementSelectors);
+    this.elements.input.type = "search";
   }
 
   override render(): void
@@ -43,7 +54,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
     return super.styleCSS() + css;
   }
 
-  public static define(): void
+  public static override define(): void
   {
     if (customElements.get("app-search-input"))
       return;

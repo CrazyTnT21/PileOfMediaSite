@@ -7,7 +7,7 @@ if (jsonScheme && jsonScheme != "{}")
   const colorScheme: ColorScheme = JSON.parse(jsonScheme);
   const colorStyle = colorScheme.style;
   const keys = <(keyof ColorStyle)[]>Object.keys(colorScheme.style);
-  document.documentElement.dataset["colorScheme"] = colorScheme.name;
+  document.documentElement.setAttribute("data-color-scheme",colorScheme.name);
   for (const key of keys)
     document.documentElement.style.setProperty("--" + key, colorStyle[key] ? colorStyle[key]!.toString() : null);
 }

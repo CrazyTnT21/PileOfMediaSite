@@ -8,6 +8,18 @@ import {AppSearchInput} from "../inputs/app-search-input/app-search-input";
 import {SearchEvent} from "../inputs/app-search-input/search-event";
 import html from "./app-header.html" with {type: "inline"}
 import css from "./app-header.css" with {type: "inline"}
+import {mapSelectors} from "../../dom";
+
+export type AppHeaderElements = {
+  burger: HTMLDetailsElement,
+  user: HTMLDetailsElement,
+  logoutButton: AppButton,
+  userDropdown: HTMLUListElement,
+  profilePicture: HTMLImageElement,
+  profileLink: HTMLAnchorElement,
+  searchInput: AppSearchInput,
+  navigationItems: HTMLUListElement
+};
 
 export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
@@ -15,18 +27,36 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   override shadowRoot: ShadowRoot;
 
+  readonly elements: AppHeaderElements;
+  protected static readonly elementSelectors: { [key in keyof AppHeader["elements"]]: string } = {
+    burger: "#burger",
+    user: "#user",
+    logoutButton: "#logout-button",
+    userDropdown: "#user-dropdown",
+    profilePicture: "#profile-picture",
+    profileLink: "#profile-link",
+    searchInput: "app-search-input",
+    navigationItems: ".items"
+  }
+
   async connectedCallback(): Promise<void>
   {
-    const burger: HTMLDetailsElement = this.shadowRoot.querySelector("#burger")!;
-    const user: HTMLDetailsElement = this.shadowRoot.querySelector("#user")!;
+    const {burger, user, logoutButton} = this.elements;
     burger.addEventListener("click", () => user.open = false);
     user.addEventListener("click", () => burger.open = false);
 
-    const items = <HTMLLIElement[]>[...this.shadowRoot.querySelectorAll(".items > li")];
+    const items = <HTMLLIElement[]>[...this.elements.navigationItems.children];
     this.copyToHamburger(items);
-    const logoutButton: AppButton = this.shadowRoot.querySelector("#logout > app-button")!;
     logoutButton.addEventListener("click", () => this.account = null);
     this.loadAccount();
+  }
+
+  get account(): LoginReturn | null
+  {
+    const data = localStorage.getItem("account");
+    if (!data)
+      return null;
+    return JSON.parse(data);
   }
 
   set account(value: LoginReturn | null)
@@ -43,30 +73,30 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   loadAccount(): void
   {
     const localAccount = localStorage.getItem("account");
-    const dropDownItems = [...this.shadowRoot.querySelector("#user-dropdown")!.children]
-    dropDownItems.forEach(x =>
+    const userDropdown = [...this.elements.userDropdown.children];
+    userDropdown.forEach(x =>
     {
       const element = (<HTMLElement>x);
 
-      element.hidden = element.dataset["default"] != "";
+      element.hidden = element.getAttribute("data-default") != "";
 
       if (localAccount)
       {
-        if (element.dataset["login"] == "")
+        if (element.getAttribute("data-login") == "")
           element.hidden = false
       }
       else
       {
-        if (element.dataset["logout"] == "")
+        if (element.getAttribute("data-logout") == "")
           element.hidden = false;
       }
     });
-    const profilePicture: HTMLImageElement = this.shadowRoot.querySelector("#profile-picture")!;
+    const {profilePicture} = this.elements;
     if (localAccount)
     {
       const user: LoginReturn["user"] = JSON.parse(localAccount).user;
-      const profileLink: HTMLAnchorElement = this.shadowRoot.querySelector("#profile-link")!;
-      profileLink.href = `/user/${user.name}`;
+      const {profileLink} = this.elements;
+      profileLink.href = `/users/${user.name}`;
       if (user.profile_picture)
       {
         user.profile_picture.versions.sort((x: ImageData, y: ImageData) => x.width * x.height - y.width * y.height);
@@ -86,7 +116,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     {
       ul.append(item);
     }
-    this.shadowRoot.querySelector("#burger")!.appendChild(ul);
+    this.elements.burger.appendChild(ul);
   }
 
   constructor()
@@ -94,7 +124,14 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     super();
     this.shadowRoot = this.attach();
     this.render();
+    this.elements = mapSelectors<AppHeaderElements>(this.shadowRoot, AppHeader.elementSelectors);
     this.applyStyleSheet();
+
+    this.elements.searchInput.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>
+    {
+      const emptySearch = e.detail!.trim().length == 0;
+      window.location.href = emptySearch ? "/search" : "/search?q=" + e.detail!;
+    })
   }
 
   attach = attach;
@@ -104,11 +141,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   render(): void
   {
     this.shadowRoot.innerHTML = html;
-    this.shadowRoot.querySelector("app-search-input")!.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>
-    {
-      const emptySearch = e.detail!.trim().length == 0;
-      window.location.href = emptySearch ? "/search" : "/search?q=" + e.detail!;
-    })
   }
 
   styleCSS(): string

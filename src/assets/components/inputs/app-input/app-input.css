@@ -93,7 +93,9 @@ label {
 
 :host([required]) {
   label::after {
-    content: "*";
+    content: " (" attr(data-text-required) ")";
+    font-size: .78rem;
+    vertical-align: top;
     color: var(--input-invalid-color--);
   }
 }
@@ -129,7 +131,7 @@ input[disabled]::placeholder {
   }
 
   label {
-    color: var(--textarea-label-color-disabled--)
+    color: var(--input-label-color-disabled--)
   }
 
   label:not([x]) {

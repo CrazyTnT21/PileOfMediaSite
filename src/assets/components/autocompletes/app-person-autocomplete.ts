@@ -1,9 +1,7 @@
 import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
-import {API_URL} from "../../scripts/modules";
 import {Person} from "../../openapi/person";
-import createClient from "openapi-fetch";
-import {paths} from "pileofmedia-openapi";
 import {acceptLanguageHeader, logError} from "../../classes/config";
+import {apiClient} from "../../openapi/client";
 
 export class AppPersonAutocomplete extends AppAutocomplete<Person>
 {
@@ -15,13 +13,12 @@ export class AppPersonAutocomplete extends AppAutocomplete<Person>
 
   override async* searchItems(value: string): AsyncGenerator<Person[]>
   {
-    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const {data, error} = await client.GET("/people/name/{name}", {
+      const {data, error} = await apiClient.GET("/people/name/{name}", {
         params: {
           path: {name: value},
           query: {page, count},
@@ -41,13 +38,12 @@ export class AppPersonAutocomplete extends AppAutocomplete<Person>
 
   override async* loadItems(): AsyncGenerator<Person[]>
   {
-    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const {data, error} = await client.GET("/people", {
+      const {data, error} = await apiClient.GET("/people", {
         params: {
           query: {page, count},
           header: {...acceptLanguageHeader()}
@@ -73,6 +69,13 @@ export class AppPersonAutocomplete extends AppAutocomplete<Person>
   {
     return item.id;
   }
+
+  public static override define(): void
+  {
+    if (customElements.get("app-person-autocomplete"))
+      return;
+    customElements.define("app-person-autocomplete", AppPersonAutocomplete);
+  }
 }
 
-customElements.define("app-person-autocomplete", AppPersonAutocomplete);
+AppPersonAutocomplete.define();

@@ -22,7 +22,7 @@ export class Config
     return new Config();
   })();
 
-  static preferredLanguages: [LanguageCode,...LanguageCode[]] = [LanguageCode.EN];
+  static preferredLanguages: [LanguageCode, ...LanguageCode[]] = [LanguageCode.EN];
 
   private static readonly translations = new Map();
 
@@ -71,12 +71,12 @@ export function acceptLanguageHeader(): { "Accept-Language": string }
   return {"Accept-Language": Config.preferredLanguages.join(",")}
 }
 
-type translation = {
+export type translationItem = {
   translations: { translations: { [p: string]: any } }
 };
-type translatedField<T extends translation> = T["translations"]["translations"][""];
+type translatedField<T extends translationItem> = T["translations"]["translations"][""];
 
-export function getTranslatedField<T extends translation>(item: T): {
+export function getTranslatedField<T extends translationItem>(item: T): {
   language: LanguageCode,
   translation: translatedField<T>
 }

@@ -3,18 +3,32 @@ import {ApplyStyleSheet} from "../apply-style-sheet";
 import {StyleCSS} from "../style-css";
 import html from "./app-card.html" with {type: "inline"}
 import css from "./app-card.css" with {type: "inline"}
+import {mapSelectors} from "../../dom";
+import {dataAltAttr, dataLink, dataSrcSetAttr, dataTitleAttr} from "./attributes";
 
 type attributeKey = keyof typeof AppCard["observedAttributesMap"];
+
+export type AppCardElements = {
+  image: HTMLImageElement,
+  anchor: HTMLAnchorElement,
+  titleSlot: HTMLSlotElement
+};
 
 export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   override shadowRoot: ShadowRoot;
+  readonly elements: AppCardElements;
+  protected static readonly elementSelectors: { [key in keyof AppCard["elements"]]: string } = {
+    image: "img",
+    anchor: "a",
+    titleSlot: "[name='title']"
+  }
 
   private static readonly observedAttributesMap = {
-    "data-srcset": AppCard.dataSrcSetAttr,
-    "data-alt": AppCard.dataAltAttr,
-    "data-title": AppCard.dataTitleAttr,
-    "data-link": AppCard.dataLink
+    "data-srcset": dataSrcSetAttr,
+    "data-alt": dataAltAttr,
+    "data-title": dataTitleAttr,
+    "data-link": dataLink
   }
   static readonly observedAttributes = <[attributeKey]>Object.keys(AppCard.observedAttributesMap);
 
@@ -22,15 +36,6 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     const callback = AppCard.observedAttributesMap[name as attributeKey]!;
     callback(this, newValue);
-  }
-
-  private static dataSrcSetAttr(element: AppCard, value: string | null | undefined): void
-  {
-    const image = element.shadowRoot.querySelector("img")!;
-    if (value == null)
-      image.removeAttribute("srcset");
-    else
-      image.setAttribute("srcset", value);
   }
 
   get srcSet(): string | null
@@ -41,19 +46,13 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
   set srcSet(value: string | null)
   {
     if (value == null)
-      this.removeAttribute("data-srcset")
-    else
-      this.setAttribute("data-srcset", value);
+    {
+      this.removeAttribute("data-srcset");
+      return;
+    }
+    this.setAttribute("data-srcset", value);
   }
 
-  private static dataAltAttr(element: AppCard, value: string | null | undefined): void
-  {
-    const image = element.shadowRoot.querySelector("img")!;
-    if (value == null)
-      image.removeAttribute("alt");
-    else
-      image.setAttribute("alt", value);
-  }
 
   get alt(): string | null
   {
@@ -63,19 +62,13 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
   set alt(value: string | null)
   {
     if (value == null)
-      this.removeAttribute("data-alt")
-    else
-      this.setAttribute("data-alt", value);
+    {
+      this.removeAttribute("data-alt");
+      return;
+    }
+    this.setAttribute("data-alt", value);
   }
 
-  private static dataLink(element: AppCard, value: string | null | undefined): void
-  {
-    const anchor = element.shadowRoot.querySelector("a")!;
-    if (value == null)
-      anchor.removeAttribute("href");
-    else
-      anchor.setAttribute("href", value);
-  }
 
   get link(): string | null
   {
@@ -85,16 +78,11 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
   set link(value: string | null)
   {
     if (value == null)
-      this.removeAttribute("data-link")
-    else
-      this.setAttribute("data-link", value);
-  }
-
-  private static dataTitleAttr(element: AppCard, value: string | null | undefined): void
-  {
-    const titleSlot: HTMLSlotElement = element.shadowRoot.querySelector("[name='title']")!;
-    value = value ?? "";
-    titleSlot.innerText = value;
+    {
+      this.removeAttribute("data-link");
+      return;
+    }
+    this.setAttribute("data-link", value);
   }
 
   get titleText(): string | null
@@ -105,9 +93,11 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
   set titleText(value: string | null)
   {
     if (value == null)
-      this.removeAttribute("data-title")
-    else
-      this.setAttribute("data-title", value);
+    {
+      this.removeAttribute("data-title");
+      return;
+    }
+    this.setAttribute("data-title", value);
   }
 
   constructor()
@@ -116,6 +106,7 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.shadowRoot = this.attach();
     this.render();
     this.applyStyleSheet();
+    this.elements = mapSelectors<AppCardElements>(this.shadowRoot, AppCard.elementSelectors);
   }
 
   attach = attach;

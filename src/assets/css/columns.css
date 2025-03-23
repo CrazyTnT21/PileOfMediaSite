@@ -24,7 +24,6 @@
   flex: 0 0 auto;
   align-content: flex-start;
   box-sizing: border-box;
-  transition: width linear 150ms;
 }
 
 .col-12 {
@@ -93,7 +92,6 @@
     flex: 0 0 auto;
     align-content: flex-start;
     box-sizing: border-box;
-    transition: width linear 150ms;
   }
 
   .col-l-12 {
@@ -163,7 +161,6 @@
     flex: 0 0 auto;
     align-content: flex-start;
     box-sizing: border-box;
-    transition: width linear 150ms;
   }
 
   .col-m-12 {
@@ -233,7 +230,6 @@
     flex: 0 0 auto;
     align-content: flex-start;
     box-sizing: border-box;
-    transition: width linear 150ms;
   }
 
   .col-s-12 {

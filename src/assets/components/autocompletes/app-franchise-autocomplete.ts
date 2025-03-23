@@ -1,9 +1,7 @@
 import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
-import {API_URL} from "../../scripts/modules";
 import {Franchise} from "../../openapi/franchise";
-import createClient from "openapi-fetch";
-import {paths} from "pileofmedia-openapi";
 import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
+import {apiClient} from "../../openapi/client";
 
 export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
 {
@@ -15,13 +13,12 @@ export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
 
   override async* searchItems(value: string): AsyncGenerator<Franchise[]>
   {
-    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const {data, error} = await client.GET("/franchises/name/{name}", {
+      const {data, error} = await apiClient.GET("/franchises/name/{name}", {
         params: {
           path: {name: value},
           query: {page, count},
@@ -41,13 +38,12 @@ export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
 
   override async* loadItems(): AsyncGenerator<Franchise[]>
   {
-    const client = createClient<paths>({baseUrl: API_URL});
     let page = 0;
     const count = 50;
     let total = 51;
     while (page * count < total)
     {
-      const {data, error} = await client.GET("/franchises", {
+      const {data, error} = await apiClient.GET("/franchises", {
         params: {
           query: {page, count},
           header: {...acceptLanguageHeader()}
@@ -74,6 +70,13 @@ export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
   {
     return item.id;
   }
+
+  public static override define(): void
+  {
+    if (customElements.get("app-franchise-autocomplete"))
+      return;
+    customElements.define("app-franchise-autocomplete", AppFranchiseAutocomplete);
+  }
 }
 
-customElements.define("app-franchise-autocomplete", AppFranchiseAutocomplete);
+AppFranchiseAutocomplete.define();

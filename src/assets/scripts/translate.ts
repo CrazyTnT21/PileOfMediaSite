@@ -9,7 +9,7 @@ Config.translation().then(translation =>
 {
   for (const element of elements)
   {
-    const translated = element.dataset["translate"]!;
+    const translated = element.getAttribute("data-translate")!;
     if (translated in translation)
       element.innerText = translation[<keyof Translation>translated]!;
     else

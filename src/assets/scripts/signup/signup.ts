@@ -1,10 +1,8 @@
-import {API_URL} from "../modules";
 import {AppInput} from "../../components/inputs/app-input/app-input";
 import {AppPasswordInput} from "../../components/inputs/app-password-input/app-password-input";
 import {AppHeader} from "../../components/app-header/app-header";
-import createClient from "openapi-fetch";
-import {paths} from "pileofmedia-openapi";
 import {formData} from "../../components/inputs/common";
+import {apiClient} from "../../openapi/client";
 
 document.querySelector("form")!.addEventListener("submit", async e =>
 {
@@ -14,9 +12,9 @@ document.querySelector("form")!.addEventListener("submit", async e =>
   const userNameInput: AppInput = document.querySelector("#username")!;
   const emailInput: AppInput = document.querySelector("#email")!;
   const passwordInput: AppPasswordInput = document.querySelector("#password")!;
-  const client = createClient<paths>({baseUrl: API_URL});
 
-  const response = await client.POST("/accounts/register", {
+
+  const response = await apiClient.POST("/accounts/register", {
     body: {
       account: {
         email: emailInput.value,
