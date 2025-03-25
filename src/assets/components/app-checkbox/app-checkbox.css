@@ -1,0 +1,91 @@
+:host {
+  --brightness-change--: 20;
+
+  --checkbox-background-color--: var(--checkbox-background-color, white);
+  --checkbox-background-color-disabled--: hsl(from var(--checkbox-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) / 2));
+
+  --checkbox-accent-color--: var(--checkbox-accent-color, auto);
+  --checkbox-accent-color-hover--: hsl(from var(--checkbox-accent-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) / 2));
+
+  --checkbox-border-color--: var(--checkbox-border-color, gray);
+
+  --checkbox-label-color--: var(--checkbox-label-color, black);
+  --checkbox-label-color-disabled--: hsl(from var(--checkbox-label-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * 2));
+
+  --checkbox-border-color-hover--: hsl(from var(--checkbox-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+  --checkbox-border-color-disabled--: hsl(from var(--checkbox-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * -.5));
+
+  --checkbox-outline-color--: var(--checkbox-outline-color, Highlight);
+}
+
+:host {
+  display: inline-flex;
+  padding: .3rem;
+}
+
+label {
+  color: var(--checkbox-label-color--);
+  align-self: center;
+  display: flex;
+}
+
+.overlay {
+  opacity: 0;
+  margin: .3rem;
+  border-radius: .12rem;
+  width: .9rem;
+  height: .9rem;
+  border: 1px solid var(--checkbox-border-color--);
+  background-color: var(--checkbox-background-color--);
+  position: absolute;
+  pointer-events: none;
+}
+
+#input {
+  display: flex;
+  margin: .3rem;
+  background-color: var(--checkbox-background-color--);
+  border: var(--checkbox-border-color--) .06rem solid;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--checkbox-accent-color--);
+
+  :focus-visible& {
+    outline: var(--checkbox-outline-color--) .12rem solid;
+  }
+
+  :hover&,
+  :focus& {
+    accent-color: var(--checkbox-accent-color-hover--);
+    transition: border-color ease 50ms;
+
+    + .overlay {
+      border-color: var(--checkbox-border-color-hover--);
+    }
+  }
+
+  :not(:checked)& {
+    opacity: 0;
+
+    :focus-visible& {
+      + .overlay {
+        outline: var(--checkbox-outline-color--) 2px solid;
+      }
+    }
+
+    + .overlay {
+      opacity: 100;
+    }
+  }
+
+  [disabled]& {
+    + .overlay {
+      background-color: var(--checkbox-background-color-disabled--);
+      border-color: var(--checkbox-border-color-disabled--);
+    }
+
+    ~ label {
+      color: var(--checkbox-label-color-disabled--)
+    }
+  }
+}

@@ -9,6 +9,7 @@
   --input-color: var(--app-text-1);
   --input-outline-color: var(--app-outline);
   --input-label-color: var(--app-text-2);
+  --input-invalid-color: var(--app-negative);
 
   --textarea-background-color: var(--app-input-background-color);
 
@@ -39,13 +40,17 @@
   --tab-color: var(--app-text-1);
   --tab-color-hover: var(--app-color-2);
   --tab-border-color: var(--app-color-1);
-  --tab-border-color-hover: var(--app-color-2);
-  --tab-outline-color: var(--app-outline);
+  --tab-outline-color: var(--app-link);
 
   --card-background-color: var(--app-background-1);
   --card-color: var(--app-text-1);
   --card-underline-color: var(--app-link);
-  --card-border-color: var(app-color-1);
+  --card-border-color: var(--app-color-1);
+
+  --checkbox-label-color: var(--app-text-1);
+  --checkbox-background-color: var(--app-input-background-color);
+  --checkbox-border-color: var(--app-color-2);
+  --checkbox-outline-color: var(--app-outline);
 }
 
 /*noinspection DuplicatedCode*/
@@ -104,7 +109,7 @@
     --app-outline: highlight;
     --app-visited: #c76fff;
     --app-link: #4182e6;
-    --app-negative: #c80f0f;
+    --app-negative: #ff3434;
     --app-positive: #16aa15;
     --app-negative-text: hsl(0 0% 95%);
     --app-positive-text: hsl(0 0% 95%);
@@ -162,7 +167,7 @@
 
   --app-outline: highlight;
   --app-visited: #c76fff;
-  --app-negative: #c80f0f;
+  --app-negative: #ff3434;
   --app-positive: #16aa15;
   --app-negative-text: hsl(0 0% 95%);
   --app-positive-text: hsl(0 0% 95%);
