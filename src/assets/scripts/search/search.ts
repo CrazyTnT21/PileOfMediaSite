@@ -13,7 +13,7 @@ input.addEventListener(SearchEvent.type, async (e: CustomEventInit<string>) =>
   const searchValue = e.detail;
   if (!searchValue)
     return;
-  clearLists();
+  clearList();
   await search(searchValue)
 
 })
@@ -34,8 +34,8 @@ async function search(value: string): Promise<void>
 async function* searchBooks(value: string): AsyncGenerator<Book[]>
 {
   let page = 0;
-  const count = 10;
-  let total = 11;
+  const count = 15;
+  let total = 16;
   while (page * count < total)
   {
     const {data, error} = await apiClient.GET("/books/title/{title}", {
@@ -60,21 +60,43 @@ async function* searchBooks(value: string): AsyncGenerator<Book[]>
 
 function loadBooks(items: Book[]): void
 {
-  const booksUl: HTMLUListElement = document.querySelector("#books")!;
+  const booksUl: HTMLUListElement = document.querySelector("#items")!;
   for (const book of items)
   {
-    const {translation} = getTranslatedField(book);
+    const {translation, language} = getTranslatedField(book);
     const li = document.createElement("li");
-    const anchor = document.createElement("a");
+    //language=HTML
+    li.innerHTML = `
+      <a class="col-12 pad border bigger">
+        <img class="small-din-4" alt="" src="">
+        <div class="col column pad-left">
+          <div class="underscore-any" data-id="title"></div>
+          <div class="col-12">
+            <span data-id="type">Book</span>
+            <span class="rating" data-id="rating"></span>
+          </div>
+        </div>
+      </a>
+    `;
+    const anchor = li.querySelector("a")!;
+    const text: HTMLDivElement = li.querySelector("[data-id='title']")!;
+    const image = li.querySelector("img")!;
     anchor.href = `/books/${book.slug}`;
-    anchor.innerText = translation.title;
-    li.append(anchor);
+    text.innerText = translation.title;
+    anchor.lang = language.toLowerCase();
+    if (book.statistic.rating?.score)
+    {
+      const rating: HTMLDivElement = li.querySelector("[data-id='rating']")!;
+      rating.setAttribute("data-rating", "");
+      rating.innerText = book.statistic.rating.score.toString()
+    }
+    image.srcset = translation.cover.versions.map(x => `${x.uri} ${x.width}w`).join(",");
     booksUl.append(li);
   }
 }
 
-function clearLists(): void
+function clearList(): void
 {
-  const booksUl: HTMLUListElement = document.querySelector("#books")!;
+  const booksUl: HTMLUListElement = document.querySelector("#items")!;
   booksUl.innerHTML = "";
 }

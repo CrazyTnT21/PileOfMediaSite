@@ -1,3 +1,6 @@
+@import "/assets/components/app-header/app-header-icons.css";
+@import "/assets/components/app-header/app-header-search/app-header-search.css";
+
 :host {
   --header-background-color--: var(--header-background-color, white);
   --header-color--: var(--header-color, black);
@@ -5,6 +8,7 @@
   --header-color-hover--: hsl(from var(--header-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
   --header-border-color--: var(--header-border-color, lightgray);
   --header-logout-button-background-color--: var(--header-logout-button-background-color, #c80f0f);
+  --header-link-color--: var(--header-link-color, #4385e4);
 
   --header-logout-button-color--: var(--header-logout-button-color, white);
   --header-logout-button-color-hover--: hsl(from var(--header-logout-button-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * 5));
@@ -41,11 +45,6 @@
   padding: .3rem;
 }
 
-app-search-input {
-  display: flex;
-  min-width: 0;
-  margin-left: auto;
-}
 
 .center {
   display: flex;
@@ -161,7 +160,6 @@ li {
 
   & li {
     display: flex;
-    /*flex: 1;*/
 
     a {
       display: flex;
@@ -271,10 +269,6 @@ details {
   #burger {
     display: none;
   }
-
-  app-search-input {
-    max-width: 400px;
-  }
 }
 
 [hidden] {
@@ -303,9 +297,6 @@ details {
   }
 }
 
-.movie-icon::before {
-  content: "theaters";
-}
 
 .icon::before, [class$='-icon'] {
   font-family: "Material Symbols Outlined", serif;
@@ -337,53 +328,4 @@ details {
   * {
     color: var(--header-logout-button-color-hover--);
   }
-}
-
-
-.book-icon::before {
-  content: "book_2";
-}
-
-.graphic-novel-icon::before {
-  content: "menu_book";
-}
-
-.show-icon::before {
-  content: "tv";
-}
-
-.game-icon::before {
-  content: "videogame_asset";
-}
-
-.profile-icon::before {
-  content: "person";
-}
-
-.friends-icon::before {
-  content: "group";
-}
-
-.comment-icon::before {
-  content: "comment";
-}
-
-.comment-icon::before {
-  content: "comment";
-}
-
-.review-icon::before {
-  content: "reviews";
-}
-
-.settings-icon::before {
-  content: "settings";
-}
-
-.login-icon::before {
-  content: "login";
-}
-
-.logout-icon::before {
-  content: "logout";
 }

@@ -10,13 +10,13 @@ type Identifier = `${string | number | bigint}.${number}`;
  * {
  *  element.innerText = value;
  * });
- * console.log(element.innerText); // Prints "Required"
+ * console.info(element.innerText); // Prints "Required"
  * item.set("required","Needed");
- * console.log(element.innerText); // Prints "Needed"
+ * console.info(element.innerText); // Prints "Needed"
  * item.removeListener(identifier);
  *
  * item.set("required","Required");
- * console.log(element.innerText); // Still prints "Needed"
+ * console.info(element.innerText); // Still prints "Needed"
  */
 export class Observer<T extends object>
 {

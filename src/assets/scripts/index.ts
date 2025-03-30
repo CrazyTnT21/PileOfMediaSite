@@ -3,6 +3,7 @@ import {Config, getTranslatedField, logError} from "../classes/config";
 import {AppCard} from "../components/app-card/app-card";
 import {collect_ok, Err, Ok, Result} from "../result/result";
 import {apiClient} from "../openapi/client";
+import {queryParam} from "../components/inputs/common";
 
 function createBookCard(x: components["schemas"]["Book"]): AppCard
 {
@@ -12,7 +13,7 @@ function createBookCard(x: components["schemas"]["Book"]): AppCard
   const card = new AppCard();
   card.srcSet = translation.cover.versions.map(x => `${x.uri} ${x.width}w`).join(",");
   card.titleText = translation.title;
-  card.alt = `${translation.title} cover`
+  card.alt = `${translation.title}`
   card.link = `/books/${x.slug}`;
   const publishedText = x.published ? Config.dateFormatter.format(new Date(x.published)) : ""
   const scoreText = statistic.rating.score ? `<span class="icon" style="font-size: 1rem">star</span> ` + statistic.rating.score.toString() : "";
@@ -44,11 +45,4 @@ async function append(id: string, page: number): Promise<Result<void, Error>>
     document.querySelector(id)!.append(li);
   }
   return new Ok(undefined)
-}
-
-function queryParam<Page extends number, Count extends number>(page: Page, count: Count): {
-  query: { page: Page, count: Count }
-}
-{
-  return {query: {page, count}}
 }

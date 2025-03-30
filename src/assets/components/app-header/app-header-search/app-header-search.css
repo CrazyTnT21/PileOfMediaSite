@@ -1,0 +1,149 @@
+app-search-input {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+}
+
+#search-dropdown {
+  height: 0;
+  margin: 0.6rem .3rem -.6rem;
+
+  z-index: 1;
+}
+
+.search-box {
+  display: flex;
+  min-width: 0;
+  margin-left: auto;
+  flex: 1;
+  flex-direction: column;
+
+  .dropdown-container {
+    background-color: var(--header-background-color--);
+    border-radius: .12rem;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: .3rem;
+
+    ul {
+      flex-direction: column;
+    }
+
+    ul, li {
+      display: flex;
+      flex: 1;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .dropdown-container {
+    left: .3rem;
+    right: .3rem;
+    position: absolute;
+  }
+}
+
+@media (min-width: 701px) {
+  .inside {
+    width: 100%;
+  }
+
+  app-search-input {
+    max-width: 400px;
+  }
+
+  .search-box {
+    max-width: 400px;
+  }
+}
+
+.title {
+  flex: 1 1 100%;
+}
+
+#search-elements {
+  max-height: 20rem;
+  overflow-y: scroll;
+
+  li {
+    border-radius: .12rem;
+  }
+}
+
+.search-item {
+  border: 1px solid var(--header-border-color--);
+  width: 100%;
+  padding: .3rem;
+
+  display: flex;
+
+  &:hover, &:focus {
+    .title {
+      text-decoration: underline var(--header-link-color--) .12rem;
+    }
+
+    * {
+      color: var(--header-color-hover--);
+    }
+  }
+}
+
+.text-container {
+  padding: .3rem;
+  display: flex;
+  flex-wrap: wrap;
+
+  .type {
+    color: var(--header-color-hover--);
+    font-size: .9rem;
+  }
+}
+
+#search-dropdown {
+  display: none
+}
+
+.search-box:focus-within {
+  #search-dropdown[data-total] {
+    display: initial;
+  }
+}
+
+.search-image {
+  border-radius: .12rem;
+  aspect-ratio: 1 / 1.41421;
+  height: 3rem;
+  object-fit: cover;
+}
+
+.type {
+  display: flex;
+  align-self: center;
+}
+
+.rating {
+  display: flex;
+  font-size: .9rem;
+  color: var(--header-color-hover--);
+  align-self: center;
+}
+
+.rating[data-rating]::before {
+  font-size: .9rem;
+  font-family: "Material Symbols Outlined", serif;
+  line-height: 1;
+  text-transform: none;
+  display: flex;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
+  content: "star";
+  align-self: center;
+}
+
+

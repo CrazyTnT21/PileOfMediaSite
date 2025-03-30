@@ -200,3 +200,43 @@ p {
   color: var(--input-label-color--);
   font-size: 1.5rem;
 }
+
+.small-din-4 {
+  height: 3.6rem;
+  border-radius: .12rem;
+  aspect-ratio: 1 / 1.41421;
+  object-fit: contain;
+}
+
+.rating[data-rating]::before {
+  font-family: "Material Symbols Outlined", serif;
+  line-height: 1;
+  text-transform: none;
+  font-size: 1.2rem;
+  display: flex;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
+  content: "star";
+  align-self: center;
+}
+
+.rating {
+  display: flex;
+  font-size: 1.2rem;
+  color: var(--header-color-hover--);
+  align-self: center;
+}
+
+.border {
+  border-radius: .12rem;
+  margin: .06rem;
+  box-shadow: 0 0 .12rem var(--app-color-2, lightgray);
+}
+
+.bigger {
+  font-size: 1.2rem;
+}

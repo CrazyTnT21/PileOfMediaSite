@@ -25,8 +25,10 @@ export type AppInputElements = {
 };
 export const appInputTexts = {
   required: "Required",
-  inputMinValidation: templateString<`${SurroundedString<"{min}">}{currentLength}${string}`>("Input only allows a maximum of {min} characters. Current length: {currentLength}"),
-  inputMaxValidation: templateString<`${SurroundedString<"{max}">}{currentLength}${string}`>("Input requires at least {min} characters. Current length: {currentLength}")
+  inputMinValidation: templateString<`${SurroundedString<"{min}">}{currentLength}${string}`>
+  ("Input requires at least {min} characters. Current length: {currentLength}"),
+  inputMaxValidation: templateString<`${SurroundedString<"{max}">}{currentLength}${string}`>
+  ("Input only allows a maximum of {min} characters. Current length: {currentLength}"),
 };
 
 export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS

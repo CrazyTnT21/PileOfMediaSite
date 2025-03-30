@@ -14,7 +14,22 @@
     <li><a href="/games"><span class="game-icon" part="icon"></span>Games</a></li>
   </ul>
 </nav>
-<app-search-input></app-search-input>
+<div class="search-box">
+  <app-search-input></app-search-input>
+  <div id="search-dropdown">
+    <div class="dropdown-container">
+      <div>
+        <span>Showing</span>
+        <span id="max-results">0</span>
+        <span>Of</span>
+        <span id="results">0</span>
+        <span>Results</span>
+      </div>
+      <ul id="search-elements" tabindex="0"></ul>
+    </div>
+  </div>
+</div>
+<!--</div>-->
 <details id="user">
   <summary>
     <img id="profile-picture" src="/assets/img/User_Placeholder.svg" alt="Profile"/>

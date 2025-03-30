@@ -1,0 +1,52 @@
+
+.movie-icon::before {
+  content: "theaters";
+}
+
+.book-icon::before {
+  content: "book_2";
+}
+
+.graphic-novel-icon::before {
+  content: "menu_book";
+}
+
+.show-icon::before {
+  content: "tv";
+}
+
+.game-icon::before {
+  content: "videogame_asset";
+}
+
+.profile-icon::before {
+  content: "person";
+}
+
+.friends-icon::before {
+  content: "group";
+}
+
+.comment-icon::before {
+  content: "comment";
+}
+
+.comment-icon::before {
+  content: "comment";
+}
+
+.review-icon::before {
+  content: "reviews";
+}
+
+.settings-icon::before {
+  content: "settings";
+}
+
+.login-icon::before {
+  content: "login";
+}
+
+.logout-icon::before {
+  content: "logout";
+}

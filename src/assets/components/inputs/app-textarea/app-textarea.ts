@@ -32,9 +32,9 @@ export type AppTextAreaElements = {
 export const appTextAreaTexts = {
   required: "Required",
   textareaMinValidation: templateString<`${string}{min}${string}{currentLength}${string}`>
-  ("Textarea only allows a maximum of {min} characters. Current length: {currentLength}"),
+  ("Textarea requires at least {max} characters. Current length: {currentLength}"),
   textareaMaxValidation: templateString<`${string}{max}${string}{currentLength}${string}`>
-  ("Textarea requires at least {max} characters. Current length: {currentLength}")
+  ("Textarea only allows a maximum of {min} characters. Current length: {currentLength}")
 };
 
 export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCSS

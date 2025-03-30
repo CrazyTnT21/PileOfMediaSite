@@ -51,6 +51,7 @@
   --checkbox-background-color: var(--app-input-background-color);
   --checkbox-border-color: var(--app-color-2);
   --checkbox-outline-color: var(--app-outline);
+  --header-link-color: var(--app-link);
 }
 
 /*noinspection DuplicatedCode*/
@@ -184,6 +185,9 @@ a:link, a:visited {
 
 a:hover, a:focus {
   > .underscore {
+    text-decoration: underline var(--app-link) .12rem;
+  }
+  .underscore-any {
     text-decoration: underline var(--app-link) .12rem;
   }
 }

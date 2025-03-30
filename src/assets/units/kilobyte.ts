@@ -18,7 +18,7 @@ export class Kilobyte
    * const kilobyte: Kilobyte = Kilobyte.fromMegabyte(megabyte);
    * const result = kilobyte.toByte() == value;
    * //prints true
-   * console.log(result);
+   * console.info(result);
    */
   static fromMegabyte(value: Megabyte): Kilobyte
   {
@@ -33,7 +33,7 @@ export class Kilobyte
    * const megabyte: Megabyte = kilobyte.toMegabyte();
    * const result = megabyte.toByte() == value;
    * //prints true
-   * console.log(result);
+   * console.info(result);
    */
   toMegabyte(): Megabyte
   {
@@ -47,7 +47,7 @@ export class Kilobyte
    * const kilobyte: Kilobyte = Kilobyte.fromByte(value);
    * const result = kilobyte.toByte() == value;
    * //prints true
-   * console.log(result);
+   * console.info(result);
    */
   static fromByte(byte: Byte): Kilobyte
   {
@@ -61,7 +61,7 @@ export class Kilobyte
    * const kilobyte: Kilobyte = Kilobyte.fromNumber(value);
    * const result = kilobyte.toByte() == value * 1000;
    * //prints true
-   * console.log(result);
+   * console.info(result);
    */
   static fromNumber(byte: number): Kilobyte
   {
@@ -75,7 +75,7 @@ export class Kilobyte
    * const kilobyte: Kilobyte = Kilobyte.fromByte(value);
    * const result = kilobyte.toByte() == value;
    * //prints true
-   * console.log(result);
+   * console.info(result);
    */
   toByte(): Byte
   {
@@ -89,7 +89,7 @@ export class Kilobyte
    * const kilobyte: Kilobyte = Kilobyte.fromByte(value * 1000);
    * const result = kilobyte.toNumber() == value;
    * //prints true
-   * console.log(result);
+   * console.info(result);
    */
   toNumber(): number
   {

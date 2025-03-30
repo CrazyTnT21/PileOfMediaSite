@@ -56,7 +56,7 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   set alt(value: string | null)
   {
-    setOrRemoveAttribute(this, "data-srcset", value);
+    setOrRemoveAttribute(this, "data-alt", value);
   }
 
   get link(): string | null

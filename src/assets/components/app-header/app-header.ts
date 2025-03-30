@@ -5,10 +5,10 @@ import {LoginReturn} from "../../openapi/login-return";
 import {ImageData} from "../../openapi/image-data";
 import {AppButton} from "../app-button/app-button";
 import {AppSearchInput} from "../inputs/app-search-input/app-search-input";
-import {SearchEvent} from "../inputs/app-search-input/search-event";
 import html from "./app-header.html" with {type: "inline"}
 import css from "./app-header.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
+import {AppHeaderSearch} from "./app-header-search/app-header-search";
 
 export type AppHeaderElements = {
   burger: HTMLDetailsElement,
@@ -18,7 +18,11 @@ export type AppHeaderElements = {
   profilePicture: HTMLImageElement,
   profileLink: HTMLAnchorElement,
   searchInput: AppSearchInput,
-  navigationItems: HTMLUListElement
+  navigationItems: HTMLUListElement,
+  searchElements: HTMLUListElement,
+  searchResultsNumber: HTMLSpanElement,
+  searchDropdown: HTMLDivElement,
+  maxResults: HTMLSpanElement
 };
 
 export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
@@ -26,6 +30,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   private loginData: LoginReturn | undefined | null;
 
   override shadowRoot: ShadowRoot;
+  private readonly searchDropdown: AppHeaderSearch;
 
   readonly elements: AppHeaderElements;
   protected static readonly elementSelectors: { [key in keyof AppHeader["elements"]]: string } = {
@@ -36,14 +41,29 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     profilePicture: "#profile-picture",
     profileLink: "#profile-link",
     searchInput: "app-search-input",
-    navigationItems: ".items"
+    navigationItems: ".items",
+    searchElements: "#search-elements",
+    searchResultsNumber: "#results",
+    searchDropdown: "#search-dropdown",
+    maxResults: "#max-results"
   }
 
   async connectedCallback(): Promise<void>
   {
     const {burger, user, logoutButton} = this.elements;
-    burger.addEventListener("click", () => user.open = false);
-    user.addEventListener("click", () => burger.open = false);
+    burger.addEventListener("focusout", (e) =>
+    {
+      if (burger.contains(<HTMLElement | null>e.relatedTarget))
+        return;
+      burger.open = false
+    });
+
+    user.addEventListener("focusout", (e) =>
+    {
+      if (user.contains(<HTMLElement | null>e.relatedTarget))
+        return;
+      user.open = false
+    });
 
     const items = <HTMLLIElement[]>[...this.elements.navigationItems.children];
     this.copyToHamburger(items);
@@ -126,12 +146,9 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.render();
     this.elements = mapSelectors<AppHeaderElements>(this.shadowRoot, AppHeader.elementSelectors);
     this.applyStyleSheet();
-
-    this.elements.searchInput.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>
-    {
-      const emptySearch = e.detail!.trim().length == 0;
-      window.location.href = emptySearch ? "/search" : "/search?q=" + e.detail!;
-    })
+    const {searchElements, searchDropdown, maxResults, searchResultsNumber, searchInput} = this.elements;
+    this.searchDropdown = new AppHeaderSearch(searchDropdown, searchElements, maxResults, searchResultsNumber, searchInput);
+    this.searchDropdown.setupSearch(this.shadowRoot)
   }
 
   attach = attach;

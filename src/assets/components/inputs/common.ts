@@ -98,3 +98,10 @@ export function setOrRemoveBooleanAttribute(element: HTMLElement, attribute: str
   }
   element.removeAttribute(attribute);
 }
+
+export function queryParam<Page extends number, Count extends number>(page: Page, count: Count): {
+  query: { page: Page, count: Count }
+}
+{
+  return {query: {page, count}}
+}
