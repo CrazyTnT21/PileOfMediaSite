@@ -67,6 +67,11 @@ export class Observer<T extends object>
     const [key, number] = identifier.split(".");
     this.listeners.get(<keyof T>key)!.delete(Number(number!))
   }
+
+  object(): T
+  {
+    return this.item;
+  }
 }
 
 type Callback<T, K extends keyof T = any> = (value: T[K], previousValue: T[K]) => void;

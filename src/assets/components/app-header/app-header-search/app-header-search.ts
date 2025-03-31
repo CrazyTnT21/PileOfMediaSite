@@ -38,14 +38,14 @@ export class AppHeaderSearch
   async search(value: string): Promise<Result<void, Error>>
   {
     this.currentSearch = value;
-    const title = value;
-    const cached = this.cachedSearch.get(title);
+    value = value.toLowerCase();
+    const cached = this.cachedSearch.get(value);
     if (cached)
     {
       this.setItems(cached.items, cached.total);
       return new Ok(undefined);
     }
-    if (!title)
+    if (!value)
     {
       this.setItems([], 0);
       return new Ok(undefined);
@@ -61,7 +61,7 @@ export class AppHeaderSearch
     }
     this.previousRequestTime = new Date();
 
-    const {ok: books, error: booksError} = await this.searchBooks(title);
+    const {ok: books, error: booksError} = await this.searchBooks(value);
     if (booksError != null)
       return new Err(booksError);
 
