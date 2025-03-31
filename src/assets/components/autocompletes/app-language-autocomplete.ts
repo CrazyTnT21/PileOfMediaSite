@@ -1,36 +1,38 @@
-import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
+import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {getLanguageCode, Language, LanguageCode} from "../../classes/language";
+import {Observer} from "../../observer";
 
-export type LanguageLabel = { id: number, value: LanguageCode, label: Language };
+export type LanguageLabel = { value: LanguageCode, label: Language };
+
+export const AppLanguageAutocompleteTexts = {
+  ...appAutocompleteTexts,
+  language: "Language"
+}
 
 export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
 {
-  override set value(value: LanguageLabel | null | undefined)
-  {
-    super.value = value;
-  }
+  override readonly texts = new Observer(AppLanguageAutocompleteTexts);
 
   override async connectedCallback(): Promise<void>
   {
-    this.label = this.label || "Language";
+    this.label = this.label || this.texts.get("language");
     await super.connectedCallback();
   }
 
-  readonly #items = [
-    {id: 1, ...getLanguageAndCode(Language.EN)},
-    {id: 2, ...getLanguageAndCode(Language.DE)},
-    {id: 3, ...getLanguageAndCode(Language.ES)},
-    {id: 4, ...getLanguageAndCode(Language.JA)},
-  ];
+  constructor()
+  {
+    super();
+    this.texts.addListener("language", (value) => this.label = value);
+  }
 
   override async* searchItems(): AsyncGenerator<LanguageLabel[]>
   {
-    yield this.#items;
+    yield items();
   }
 
   override async* loadItems(): AsyncGenerator<LanguageLabel[]>
   {
-    yield this.#items;
+    yield items();
   }
 
   public static override define(): void
@@ -41,9 +43,19 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
   }
 }
 
-function getLanguageAndCode(language: Language): { label: Language, value: LanguageCode }
+function getLanguageAndCode(language: Language): LanguageLabel
 {
   return {label: language, value: getLanguageCode(language)}
+}
+
+function items(): LanguageLabel[]
+{
+  return [
+    {...getLanguageAndCode(Language.EN)},
+    {...getLanguageAndCode(Language.DE)},
+    {...getLanguageAndCode(Language.ES)},
+    {...getLanguageAndCode(Language.JA)},
+  ]
 }
 
 AppLanguageAutocomplete.define();

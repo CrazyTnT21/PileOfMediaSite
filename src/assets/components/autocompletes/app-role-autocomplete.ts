@@ -1,14 +1,27 @@
-import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
+import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {Role} from "../../openapi/role";
 import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
 import {apiClient} from "../../openapi/client";
+import {Observer} from "../../observer";
+
+export const AppRoleAutocompleteTexts = {
+  ...appAutocompleteTexts,
+  role: "Role"
+}
 
 export class AppRoleAutocomplete extends AppAutocomplete<Role>
 {
+  override readonly texts = new Observer(AppRoleAutocompleteTexts);
+
   override async connectedCallback(): Promise<void>
   {
-    this.label = this.label || "Role";
+    this.label = this.label || this.texts.get("role");
     await super.connectedCallback();
+  }
+  constructor()
+  {
+    super();
+    this.texts.addListener("role", (value) => this.label = value);
   }
 
   override async* searchItems(value: string): AsyncGenerator<Role[]>
@@ -60,15 +73,15 @@ export class AppRoleAutocomplete extends AppAutocomplete<Role>
     }
   }
 
-  override itemValue(item: Role): string
+  override itemValue(item: Role): number
+  {
+    return item.id;
+  }
+
+  override itemLabel(item: Role): string
   {
     const {translation} = getTranslatedField(item);
     return translation.name;
-  }
-
-  override itemId(item: Role): number
-  {
-    return item.id;
   }
 
   public static override define(): void

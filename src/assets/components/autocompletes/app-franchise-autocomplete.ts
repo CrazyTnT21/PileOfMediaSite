@@ -1,14 +1,28 @@
-import {AppAutocomplete} from "./app-autocomplete/app-autocomplete";
+import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {Franchise} from "../../openapi/franchise";
 import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
 import {apiClient} from "../../openapi/client";
+import {Observer} from "../../observer";
+
+export const AppFranchiseAutocompleteTexts = {
+  ...appAutocompleteTexts,
+  franchise: "Franchise"
+}
 
 export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
 {
+  override readonly texts = new Observer(AppFranchiseAutocompleteTexts);
+
   override async connectedCallback(): Promise<void>
   {
-    this.label = this.label || "Franchise";
+    this.label = this.label || this.texts.get("franchise");
     await super.connectedCallback();
+  }
+
+  constructor()
+  {
+    super();
+    this.texts.addListener("franchise", (value) => this.label = value);
   }
 
   override async* searchItems(value: string): AsyncGenerator<Franchise[]>
@@ -60,15 +74,15 @@ export class AppFranchiseAutocomplete extends AppAutocomplete<Franchise>
     }
   }
 
-  override itemValue(item: Franchise): string
-  {
-    const {translation} = getTranslatedField(item);
-    return translation.name
-  }
-
-  override itemId(item: Franchise): number
+  override itemValue(item: Franchise): number
   {
     return item.id;
+  }
+
+  override itemLabel(item: Franchise): string
+  {
+    const {translation} = getTranslatedField(item);
+    return translation.name;
   }
 
   public static override define(): void

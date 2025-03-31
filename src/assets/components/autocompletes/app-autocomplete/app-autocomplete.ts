@@ -9,13 +9,13 @@ import {Observer} from "../../../observer";
 import {templateString, SurroundedString} from "../../inputs/common";
 
 export type AppAutoCompleteElements = AppInputElements & { selected: HTMLUListElement, items: HTMLDataListElement };
-export const appAutoCompleteTexts = {
+export const appAutocompleteTexts = {
   ...appInputTexts,
   itemNotFound: templateString<SurroundedString<"{value}">>(`Item '{value}' was not found`),
   ItemAlreadySelected: templateString<SurroundedString<"{value}">>(`'{value}' has already been selected`)
 }
 
-export class AppAutocomplete<T = { id: number, value: any, label?: string }> extends AppInput
+export class AppAutocomplete<T = { value: any, label?: string }> extends AppInput
 {
   private readonly itemsGenerator: AsyncGenerator<T[], T[], T[]>;
   private readonly cachedSearch: Map<string, T[]> = new Map();
@@ -29,7 +29,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     items: "#items"
   }
 
-  override readonly texts = new Observer(appAutoCompleteTexts);
+  override readonly texts = new Observer(appAutocompleteTexts);
 
   constructor()
   {
@@ -80,14 +80,15 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   removeItem(item: T): void
   {
-    const index = this.items.findIndex(x => this.itemId(x) === this.itemId(item));
+    const value = this.itemValue(item);
+    const index = this.items.findIndex(x => this.itemValue(x) === value);
     this.items.splice(index, 1);
   }
 
   findItem(item: T): T | undefined
   {
-    const id = this.itemId(item);
-    return this.items.find(x => this.itemId(x) === id);
+    const id = this.itemValue(item);
+    return this.items.find(x => this.itemValue(x) === id);
   }
 
   get selected(): T[]
@@ -113,9 +114,9 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   removeSelected(item: T): void
   {
-    const id = this.itemId(item);
+    const id = this.itemValue(item);
 
-    const index = this.selectedItems.findIndex(x => this.itemId(x) === id);
+    const index = this.selectedItems.findIndex(x => this.itemValue(x) === id);
     this.selectedItems.splice(index, 1);
     const {selected} = this.elements;
     const children = selected.children;
@@ -152,7 +153,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
       const li = document.createElement("li");
       const data = document.createElement("data");
       li.append(data);
-      data.value = this.itemId(item).toString();
+      data.value = this.itemValue(item).toString();
       selected.append(li);
       const button = document.createElement("button");
       data.append(button);
@@ -170,8 +171,8 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   findSelected(item: T): T | undefined
   {
-    const id = this.itemId(item);
-    return this.selected.find(x => this.itemId(x) === id);
+    const id = this.itemValue(item);
+    return this.selected.find(x => this.itemValue(x) === id);
   }
 
   findSelectedValue(value: string): T | undefined
@@ -181,8 +182,8 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
 
   findSearch(item: T): T | undefined
   {
-    const id = this.itemId(item);
-    return this.internalSearch.find(x => this.itemId(x) === id);
+    const id = this.itemValue(item);
+    return this.internalSearch.find(x => this.itemValue(x) === id);
   }
 
   findSearchValue(value: string): T | undefined
@@ -296,13 +297,12 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   {
     for (const item of items)
     {
-      const data = document.createElement("data");
-      data.value = this.itemId(item).toString();
       const option = document.createElement("option");
-      data.append(option);
-      option.innerText = this.itemLabel(item) ?? this.itemValue(item);
-      option.value = this.itemValue(item);
-      datalist.append(data);
+      const data = document.createElement("data");
+      data.value = this.itemValue(item).toString();
+      data.innerText = this.itemLabel(item) ?? this.itemValue(item);
+      option.append(data);
+      datalist.append(option);
     }
   }
 
@@ -364,9 +364,8 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     {
       const element = <HTMLOptionElement>x;
       return {
-        id: Number(element.getAttribute("data-id")),
-        value: element.value ?? element.innerText,
-        label: element.label
+        value: element.value || element.innerText,
+        label: element.label || null
       }
     }) as T[];
   }
@@ -381,7 +380,7 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
     return super.styleCSS() + css;
   }
 
-  itemLabel(item: T): string
+  itemLabel(item: T): string | null
   {
     return (<any>item)["label"];
   }
@@ -389,11 +388,6 @@ export class AppAutocomplete<T = { id: number, value: any, label?: string }> ext
   itemValue(item: T): any
   {
     return (<any>item)["value"];
-  }
-
-  itemId(item: T): number
-  {
-    return (<any>item)["id"];
   }
 
   public static override define(): void
