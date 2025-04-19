@@ -16,8 +16,10 @@
   --textarea-color: var(--app-text-1);
   --textarea-outline-color: var(--app-outline);
   --textarea-label-color: var(--app-text-2);
+  --textarea-invalid-color: var(--app-negative);
 
   --image-input-background-color: var(--app-background-1);
+  --image-input-invalid-color: var(--app-negative);
 
   --image-input-color: var(--app-text-1);
   --image-input-outline-color: var(--app-outline);
@@ -187,6 +189,7 @@ a:hover, a:focus {
   > .underscore {
     text-decoration: underline var(--app-link) .12rem;
   }
+
   .underscore-any {
     text-decoration: underline var(--app-link) .12rem;
   }

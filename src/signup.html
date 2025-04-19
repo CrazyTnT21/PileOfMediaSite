@@ -15,20 +15,23 @@
 <app-header></app-header>
 <main class="column center-align pad">
   <form class="pad login login-box">
-    <h1 class="col-12 center">Sign up</h1>
+    <h1 class="col-12 center" data-translate="signup">Sign up</h1>
     <fieldset id="input-fieldset" class="login-border">
       <div class="col-12 center pad">
-        <app-input required maxLength="50" id="username" data-label="Username"></app-input>
+        <app-input required maxLength="50" id="username" data-label="Username"
+                   data-translate-attributes="data-label;username"></app-input>
       </div>
       <div class="col-12 center pad">
-        <app-email-input required maxLength="254" id="email" data-label="Email"></app-email-input>
+        <app-email-input required maxLength="254" id="email" data-label="Email"
+                         data-translate-attributes="data-label;email"></app-email-input>
       </div>
       <div class="col-12 center pad">
         <app-password-input required maxLength="255" id="password" class="col-12" data-type="password"
+                            data-translate-attributes="data-label;password"
                             data-label="Password"></app-password-input>
       </div>
       <div class="col-12 pad">
-        <app-button class="login-button col-12">Sign up</app-button>
+        <app-button class="login-button col-12" data-translate="signup">Sign up</app-button>
       </div>
     </fieldset>
   </form>

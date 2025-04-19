@@ -29,11 +29,11 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
     "disabled": (element: AppButton, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
     "type": typeAttr,
   }
-  static readonly observedAttributes = <[attributeKey]>Object.keys(AppButton.observedAttributesMap);
+  static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
 
-  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    const callback = AppButton.observedAttributesMap[name as attributeKey]!;
+    const callback = AppButton.observedAttributesMap[name];
     callback(this, newValue);
   }
 
@@ -71,8 +71,8 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
     else
       this.type = "submit";
     button.type = this.type;
-    slot.addEventListener("click", () => button.click());
-    button.addEventListener("click", e =>
+
+    slot.addEventListener("click", e =>
     {
       const button = <HTMLButtonElement>e.target;
       if (button.type == "submit" && this.internals.form)

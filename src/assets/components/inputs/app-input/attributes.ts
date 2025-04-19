@@ -1,8 +1,8 @@
 import {logNoValueError} from "../validation/validation";
 import {AppInput} from "./app-input";
-import {setOrRemoveAttribute} from "../common";
+import {AttributeValue, setOrRemoveAttribute} from "../common";
 
-export function dataLabelAttr(element: AppInput, value: string | null | undefined): void
+export function dataLabelAttr(element: AppInput, value: AttributeValue): void
 {
   if (value == null || value.trim() == "")
   {

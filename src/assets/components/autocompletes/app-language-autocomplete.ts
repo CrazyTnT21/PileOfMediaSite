@@ -1,6 +1,9 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {getLanguageCode, Language, LanguageCode} from "../../classes/language";
 import {Observer} from "../../observer";
+import {dataLabelAttr} from "./app-language-autocomplete/attributes";
+import {AppInput} from "../inputs/app-input/app-input";
+import {AttributeValue} from "../inputs/common";
 
 export type LanguageLabel = { value: LanguageCode, label: Language };
 
@@ -12,17 +15,19 @@ export const AppLanguageAutocompleteTexts = {
 export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
 {
   override readonly texts = new Observer(AppLanguageAutocompleteTexts);
-
-  override async connectedCallback(): Promise<void>
-  {
-    this.label = this.label || this.texts.get("language");
-    await super.connectedCallback();
-  }
+  static override observedAttributesMap = {
+    ...AppAutocomplete.observedAttributesMap,
+    "data-label": (element: AppInput, v: AttributeValue): void => dataLabelAttr(element as AppLanguageAutocomplete, v),
+  };
 
   constructor()
   {
     super();
-    this.texts.addListener("language", (value) => this.label = value);
+    this.texts.addListener("language", () =>
+    {
+      if (!this.getAttribute("data-label"))
+        this.label = "";
+    });
   }
 
   override async* searchItems(): AsyncGenerator<LanguageLabel[]>

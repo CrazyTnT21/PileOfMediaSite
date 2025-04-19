@@ -56,6 +56,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     image: "img",
     clearImage: "app-button"
   }
+
   static readonly formAssociated = true;
   private readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
@@ -71,11 +72,11 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
     "data-title": dataTitleAttr,
     "data-multiple": dataMultipleAttr
   }
-  static readonly observedAttributes = <[attributeKey]>Object.keys(AppImageInput.observedAttributesMap);
+  static readonly observedAttributes = Object.keys(AppImageInput.observedAttributesMap);
 
-  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    const callback = AppImageInput.observedAttributesMap[name as attributeKey]!;
+    const callback = AppImageInput.observedAttributesMap[name];
     callback(this, newValue);
     await this.validate();
   }

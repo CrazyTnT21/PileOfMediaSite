@@ -31,20 +31,20 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
     "data-title": dataTitleAttr,
     "data-link": dataLink
   }
-  static readonly observedAttributes = <[attributeKey]>Object.keys(AppCard.observedAttributesMap);
+  static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
 
-  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    const callback = AppCard.observedAttributesMap[name as attributeKey]!;
+    const callback = AppCard.observedAttributesMap[name];
     callback(this, newValue);
   }
 
-  get srcSet(): string | null
+  get srcset(): string | null
   {
     return this.getAttribute("data-srcset")
   }
 
-  set srcSet(value: string | null)
+  set srcset(value: string | null)
   {
     setOrRemoveAttribute(this, "data-srcset", value);
   }

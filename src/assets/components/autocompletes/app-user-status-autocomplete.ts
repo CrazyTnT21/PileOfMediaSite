@@ -20,7 +20,7 @@ export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
     "Ongoing": "Ongoing",
     "Paused": "Paused",
     "Finished": "Finished"
-  })
+  });
 
   override async connectedCallback(): Promise<void>
   {

@@ -18,24 +18,27 @@
   <form>
     <div class="col-12">
       <div class="col-3">
-        <app-image-input required data-label="Cover" data-title="Upload Cover" data-label="Cover"></app-image-input>
+        <app-image-input required data-label="Cover"
+                         data-translate-attributes="data-title;uploadCover,data-label;cover"
+                         data-title="Upload Cover" data-label="Cover"></app-image-input>
         <app-language-autocomplete class="col-12"></app-language-autocomplete>
       </div>
       <div class="col-4">
         <div class="col-12">
-          <app-input required data-label="Title"></app-input>
+          <app-input required data-label="Title" data-translate-attributes="data-label;title"></app-input>
         </div>
         <div class="col-12">
-          <app-textarea data-label="Description"></app-textarea>
+          <app-textarea data-label="Description" data-translate-attributes="data-label;description"></app-textarea>
         </div>
         <div class="col-12">
-          <app-number-input data-label="Chapters"></app-number-input>
-          <app-number-input data-label="Pages"></app-number-input>
-          <app-number-input data-label="Words"></app-number-input>
+          <app-number-input data-label="Chapters" data-translate-attributes="data-label;chapters"></app-number-input>
+          <app-number-input data-label="Pages" data-translate-attributes="data-label;pages"></app-number-input>
+          <app-number-input data-label="Words" data-translate-attributes="data-label;words"></app-number-input>
         </div>
-        <app-input type="number" data-label="Score"></app-input>
+        <app-input type="number" data-label="Score" data-translate-attributes="data-label;score"></app-input>
         <div class="col-12">
-          <app-date-input type="number" data-label="Published"></app-date-input>
+          <app-date-input type="number" data-label="Published"
+                          data-translate-attributes="data-label;published"></app-date-input>
         </div>
 
       </div>

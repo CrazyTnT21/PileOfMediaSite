@@ -3,8 +3,8 @@ import {apiClient} from "../../../openapi/client";
 import {acceptLanguageHeader, getTranslatedField, logError} from "../../../classes/config";
 import {queryParam} from "../../inputs/common";
 import {SearchEvent} from "../../inputs/app-search-input/search-event";
-import {AppSearchInput} from "../../inputs/app-search-input/app-search-input";
 import searchHTML from "../app-header-search/app-header-search-item.html" with {type: "inline"}
+import {AppHeader} from "../app-header";
 
 type SearchItem = {
   title: string,
@@ -17,22 +17,14 @@ type SearchItem = {
 
 export class AppHeaderSearch
 {
-  private readonly searchDropdown: HTMLElement;
-  private readonly searchElements: HTMLElement;
-  private readonly maxResults: HTMLElement;
-  private readonly searchResultsNumber: HTMLElement;
-  private readonly searchInput: AppSearchInput;
+  private readonly header: AppHeader;
   private readonly cachedSearch: Map<string, { items: SearchItem[], total: number }> = new Map();
   private currentSearch: string | undefined;
   private previousRequestTime: Date = new Date();
 
-  constructor(searchDropdown: HTMLElement, searchElements: HTMLElement, maxResults: HTMLElement, searchResultsNumber: HTMLElement, searchInput: AppSearchInput)
+  constructor(header: AppHeader)
   {
-    this.searchDropdown = searchDropdown;
-    this.searchElements = searchElements;
-    this.maxResults = maxResults;
-    this.searchResultsNumber = searchResultsNumber;
-    this.searchInput = searchInput;
+    this.header = header;
   }
 
   async search(value: string): Promise<Result<void, Error>>
@@ -104,14 +96,17 @@ export class AppHeaderSearch
 
   private setItems(items: SearchItem[], total: number): void
   {
-    this.searchElements.innerHTML = "";
-    this.searchDropdown.setAttribute("data-total", total.toString());
-    this.maxResults.innerText = items.length.toString();
-    this.searchResultsNumber.innerText = total.toString();
+    const {searchElements, searchDropdown, showingResults} = this.header.elements;
+    searchElements.innerHTML = "";
+    searchDropdown.setAttribute("data-total", total.toString());
+    showingResults.innerText = this.header.texts
+        .get("showingResults")
+        .replace("{count}", items.length.toString())
+        .replace("{total}", total.toString())
     for (const item of items)
     {
       const liElement = this.addItem(item);
-      this.searchElements.appendChild(liElement);
+      searchElements.appendChild(liElement);
     }
   }
 
@@ -144,7 +139,7 @@ export class AppHeaderSearch
 
   setupSearch(shadowRoot: ShadowRoot): void
   {
-    const {searchInput, searchElements} = this;
+    const {searchInput, searchElements} = this.header.elements;
     searchInput.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>
     {
       const emptySearch = e.detail!.trim().length == 0;
@@ -165,7 +160,7 @@ export class AppHeaderSearch
       return;
 
     event.preventDefault();
-    const {searchElements} = this;
+    const {searchElements} = this.header.elements;
 
     const currentFocus = shadowRoot.activeElement!;
     const currentFocusParent = currentFocus.parentElement!;

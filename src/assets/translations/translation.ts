@@ -1,5 +1,8 @@
+import {SurroundedString} from "../components/inputs/common";
+
 export type Translation =
     {
+      theme?: string;
       themes?: string;
       genre?: string;
       genres?: string;
@@ -23,7 +26,7 @@ export type Translation =
       booksTitle?: string;
       book?: string;
       bookTitle?: string;
-      bookTitleTemplate?: `${string}{title}${string}`;
+      bookTitleTemplate?: SurroundedString<"{title}">;
       addBook?: string;
       addBookTitle?: string;
       addMovie?: string;
@@ -53,4 +56,38 @@ export type Translation =
       foryou?: string;
       topTitle?: string;
       top?: string;
+      inputMinTextLengthValidation?: `${SurroundedString<"{min}">}{currentLength}${string}`;
+      inputMaxTextLengthValidation?: `${SurroundedString<"{max}">}{currentLength}${string}`;
+      required?: string;
+      imageInputMinSizesValidation?: `${SurroundedString<"{min}">}{fileSizes}${string}`;
+      imageInputMaxSizesValidation?: `${SurroundedString<"{max}">}{fileSizes}${string}`;
+      valueMissing?: string;
+      unsupportedImageType?: string;
+      clearImage?: string;
+      clearImages?: string;
+      autocompleteItemNotFound?: SurroundedString<"{value}">,
+      autocompleteItemAlreadySelected?: SurroundedString<"{value}">,
+      language?: string;
+      uploadCover?: string;
+      graphicNovel?: string;
+      graphicNovels?: string;
+      game?: string;
+      games?: string;
+      show?: string;
+      shows?: string;
+      search?: string;
+      headerShowingResults?: string;
+      profile?: string;
+      friends?: string;
+      reviews?: string;
+      settings?: string;
+      preferences?: string;
+      logout?: string;
+      login?: string;
+      signup?: string;
+      newest?: string;
+      highestRated?: string;
+      favorite?: string;
+      forgotPassword?: string;
+      noAccount?: string;
     }

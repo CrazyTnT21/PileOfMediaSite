@@ -6,7 +6,7 @@ export function setValueMissing(element: AppTextArea, textarea: HTMLTextAreaElem
   if (!isRequired(element) || !valueMissing(textarea))
     return;
 
-  element.errors.set("valueMissing", () => "No value given");
+  element.errors.set("valueMissing", () => element.texts.get("valueMissing"));
 }
 
 export function isRequired(element: AppTextArea): boolean

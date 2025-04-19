@@ -11,7 +11,7 @@ function createBookCard(x: components["schemas"]["Book"]): AppCard
   const {translation} = getTranslatedField(x);
 
   const card = new AppCard();
-  card.srcSet = translation.cover.versions.map(x => `${x.uri} ${x.width}w`).join(",");
+  card.srcset = translation.cover.versions.map(x => `${x.uri} ${x.width}w`).join(",");
   card.titleText = translation.title;
   card.alt = `${translation.title}`
   card.link = `/books/${x.slug}`;

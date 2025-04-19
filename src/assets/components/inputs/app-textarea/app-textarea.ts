@@ -31,10 +31,11 @@ export type AppTextAreaElements = {
 };
 export const appTextAreaTexts = {
   required: "Required",
+  valueMissing: "No value given",
   textareaMinValidation: templateString<`${string}{min}${string}{currentLength}${string}`>
   ("Textarea requires at least {max} characters. Current length: {currentLength}"),
   textareaMaxValidation: templateString<`${string}{max}${string}{currentLength}${string}`>
-  ("Textarea only allows a maximum of {min} characters. Current length: {currentLength}")
+  ("Textarea only allows a maximum of '{max}' characters. Current length: {currentLength}")
 };
 
 export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCSS
@@ -60,11 +61,11 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     "placeholder": placeholderAttr,
     "rows": rowsAttr
   }
-  static readonly observedAttributes = <[attributeKey]>Object.keys(AppTextArea.observedAttributesMap);
+  static readonly observedAttributes = Object.keys(AppTextArea.observedAttributesMap);
 
-  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    const callback = AppTextArea.observedAttributesMap[name as attributeKey]!;
+    const callback = AppTextArea.observedAttributesMap[name];
     callback(this, newValue);
     await this.validate();
   }
@@ -194,6 +195,8 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
     this.render();
     this.applyStyleSheet();
     this.elements = mapSelectors<AppTextAreaElements>(this.shadowRoot, AppTextArea.elementSelectors);
+
+    this.texts.addListener("required", (value) => this.elements.label.setAttribute("data-text-required", value));
   }
 
   attach = attach_delegates;

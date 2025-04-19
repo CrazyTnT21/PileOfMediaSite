@@ -6,7 +6,7 @@ export function setValueMissing(element: AppInput, input: HTMLInputElement): voi
   if (!isRequired(element) || !valueMissing(input))
     return;
 
-  element.errors.set("valueMissing", () => "No value given");
+  element.errors.set("valueMissing", () => element.texts.get("valueMissing"));
 }
 
 export function isRequired(element: AppInput): boolean

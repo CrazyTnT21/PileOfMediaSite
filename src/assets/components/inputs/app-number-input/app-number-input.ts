@@ -1,8 +1,16 @@
 import {AppInput} from "../app-input/app-input";
 import css from "./app-number-input.css" with {type: "inline"};
+import {setOrRemoveAttribute} from "../common";
 
 export class AppNumberInput extends AppInput
 {
+  protected static override readonly observedAttributesMap = {
+    ...AppInput.observedAttributesMap,
+    "min": minAttr,
+    "max": maxAttr,
+  }
+  static override readonly observedAttributes = Object.keys(AppNumberInput.observedAttributesMap);
+
   constructor()
   {
     super();
@@ -41,3 +49,16 @@ export class AppNumberInput extends AppInput
 }
 
 AppNumberInput.define();
+
+
+function minAttr(element: AppNumberInput, value: string | null | undefined): void
+{
+  const {input} = element.elements;
+  setOrRemoveAttribute(input, "min", value);
+}
+
+function maxAttr(element: AppNumberInput, value: string | null | undefined): void
+{
+  const {input} = element.elements;
+  setOrRemoveAttribute(input, "max", value);
+}

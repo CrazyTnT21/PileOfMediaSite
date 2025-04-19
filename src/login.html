@@ -15,30 +15,31 @@
 <app-header></app-header>
 <main class="column center-align pad">
   <form class="pad login login-box">
-    <h1 class="col-12 center">Log in</h1>
+    <h1 class="col-12 center" data-translate="login">Log in</h1>
     <fieldset id="input-fieldset" class="login-border">
       <div class="col-12 center pad">
-        <app-email-input required id="email" data-label="Email"></app-email-input>
+        <app-email-input required id="email" data-label="Email"
+                         data-translate-attributes="data-label;email"></app-email-input>
       </div>
       <div class="col-12 center pad">
-        <app-password-input required id="password" class="col-12" data-type="password"
+        <app-password-input required id="password" class="col-12" data-type="password" data-translate-attributes="data-label;password"
                             data-label="Password"></app-password-input>
       </div>
       <div class="col-12 pad">
-        <app-button class="login-button col-12">Log in</app-button>
+        <app-button class="login-button col-12" data-translate="login">Log in</app-button>
       </div>
     </fieldset>
   </form>
   <div class="col-12 pad login-box">
     <!--TODO: Forgot password-->
     <div class="col-6">
-      <a class="underscore-text" href="/signup">Forgot password?</a>
+      <a class="underscore-text" href="/signup" data-translate="forgotPassword">Forgot password?</a>
     </div>
     <div class="col-6">
-      <div class="col-12">
+      <div class="col-12" data-translate="noAccount">
         Don't have an account?
       </div>
-      <a class=" underscore-text" href="/signup">Sign up</a>
+      <a class=" underscore-text" href="/signup" data-translate="login">Sign up</a>
     </div>
   </div>
 </main>

@@ -3,7 +3,7 @@ FROM node:21-alpine
 WORKDIR /app
 
 RUN apk add --no-cache openssl
-RUN tr -dc a-ZA-Z0-9 < /dev/urandom | head -c 64 > password.txt
+RUN tr -dc a-zA-Z0-9 < /dev/urandom | head -c 64 > password.txt
 RUN openssl req -x509 -newkey rsa:4096 -keyout nginx.key -out nginx.pem -passout file:password.txt -sha256 -days 365 -nodes -subj "/"
 
 RUN mkdir build

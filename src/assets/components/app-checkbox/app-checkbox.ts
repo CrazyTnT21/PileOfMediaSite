@@ -33,11 +33,11 @@ export class AppCheckbox extends HTMLElement implements ApplyStyleSheet, StyleCS
     "data-label": dataLabelAttr,
     "disabled": (element: AppCheckbox, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
   }
-  static readonly observedAttributes = <[attributeKey]>Object.keys(AppCheckbox.observedAttributesMap);
+  static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
 
-  async attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    const callback = AppCheckbox.observedAttributesMap[name as attributeKey]!;
+    const callback = AppCheckbox.observedAttributesMap[name];
     callback(this, newValue);
   }
 

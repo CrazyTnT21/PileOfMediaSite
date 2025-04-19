@@ -43,7 +43,7 @@ export class AppTab extends HTMLElement implements ApplyStyleSheet, StyleCSS
       button.addEventListener("click", () =>
       {
         const previousHeader: AppButton = this.shadowRoot.querySelector("[data-selected]")!;
-        const previousContent: HTMLElement = this.shadowRoot.querySelector(`slot[name="${previousHeader.getAttribute("name")}"]`)!
+        const previousContent: HTMLElement = this.shadowRoot.querySelector(`slot[name="${previousHeader.getAttribute("data-name")}"]`)!
         previousContent.hidden = true;
         previousHeader.removeAttribute("data-selected");
         slot.hidden = false;

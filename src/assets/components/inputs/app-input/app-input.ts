@@ -25,10 +25,11 @@ export type AppInputElements = {
 };
 export const appInputTexts = {
   required: "Required",
+  valueMissing: "No value given",
   inputMinValidation: templateString<`${SurroundedString<"{min}">}{currentLength}${string}`>
-  ("Input requires at least {min} characters. Current length: {currentLength}"),
+  ("Input requires at least '{min}' characters. Current length: {currentLength}"),
   inputMaxValidation: templateString<`${SurroundedString<"{max}">}{currentLength}${string}`>
-  ("Input only allows a maximum of {min} characters. Current length: {currentLength}"),
+  ("Input only allows a maximum of '{max}' characters. Current length: {currentLength}"),
 };
 
 export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
@@ -54,14 +55,16 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     "minlength": minlengthAttr,
     "placeholder": placeholderAttr,
   }
-  static readonly observedAttributes = <[attributeKey]>Object.keys(AppInput.observedAttributesMap);
+  static readonly observedAttributes = Object.keys(AppInput.observedAttributesMap);
 
-  async attributeChangedCallback(name: string, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
+  async attributeChangedCallback(name: attributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
   {
-    const callback = AppInput.observedAttributesMap[name as attributeKey]!;
+    if (!("observedAttributesMap" in this.constructor))
+      return;
+
+    const callback = (<typeof AppInput.observedAttributesMap>this.constructor["observedAttributesMap"])[name];
     callback(this, newValue);
     await this.validate();
-    this.texts.get("required")
   }
 
   get label(): string

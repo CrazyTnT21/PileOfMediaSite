@@ -83,7 +83,9 @@ label {
 
 :host([required]) {
   label::after {
-    content: "*";
+    content: " (" attr(data-text-required) ")";
+    font-size: .78rem;
+    vertical-align: top;
     color: var(--textarea-invalid-color--);
   }
 }

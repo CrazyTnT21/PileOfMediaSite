@@ -15,7 +15,10 @@ export function mapSelectors<Elements>(element: ParentNode, selectors: { [key in
   for (const key of keys)
   {
     if (selectors[key])
-      Object.defineProperty(result, key, {value: element.querySelector(selectors[key])!});
+    {
+      const elements = element.querySelectorAll(selectors[key]);
+      Object.defineProperty(result, key, {value: elements.length > 1 ? [...elements] : elements[0]});
+    }
   }
   return <{ [key in keyof Elements]: Elements[key] }>result;
 }

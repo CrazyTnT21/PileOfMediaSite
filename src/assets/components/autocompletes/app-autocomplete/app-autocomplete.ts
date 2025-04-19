@@ -12,7 +12,7 @@ export type AppAutoCompleteElements = AppInputElements & { selected: HTMLUListEl
 export const appAutocompleteTexts = {
   ...appInputTexts,
   itemNotFound: templateString<SurroundedString<"{value}">>(`Item '{value}' was not found`),
-  ItemAlreadySelected: templateString<SurroundedString<"{value}">>(`'{value}' has already been selected`)
+  itemAlreadySelected: templateString<SurroundedString<"{value}">>(`'{value}' has already been selected`)
 }
 
 export class AppAutocomplete<T = { value: any, label?: string }> extends AppInput
@@ -265,9 +265,8 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
   {
     await super.connectedCallback();
     const {input} = this.elements;
-    const value = this.getAttribute("data-value");
-    if (value != undefined)
-      input.value = value;
+    // TODO Initial value, single item loading
+    // const value = this.getAttribute("value");
 
     input.addEventListener("input", (e) => this.onInputInput(<InputEvent>e));
     input.addEventListener("focus", (e) => this.onInputFocus(e), {once: true})
@@ -319,7 +318,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
       const found = this.findSelectedValue(value);
       if (found)
       {
-        this.errors.set("customError", () => this.texts.get("ItemAlreadySelected").replace("{value}", value));
+        this.errors.set("customError", () => this.texts.get("itemAlreadySelected").replace("{value}", value));
         return;
       }
     }

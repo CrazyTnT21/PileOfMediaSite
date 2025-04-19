@@ -7,23 +7,19 @@
 </a>
 <nav>
   <ul class="items">
-    <li><a href="/graphicnovels"><span class="graphic-novel-icon" part="icon"></span>Graphic novels</a></li>
-    <li><a href="/books"><span class="book-icon" part="icon"></span>Books</a></li>
-    <li><a href="/movies"><span class="movie-icon" part="icon"></span>Movies</a></li>
-    <li><a href="/shows"><span class="show-icon" part="icon"></span>Shows</a></li>
-    <li><a href="/games"><span class="game-icon" part="icon"></span>Games</a></li>
+    <li><a href="/graphicnovels"><span class="graphic-novel-icon" part="icon"></span><span
+            data-id="graphic-novels-text">Graphic novels</span></a></li>
+    <li><a href="/books"><span class="book-icon" part="icon"></span><span data-id="books-text">Books</span></a></li>
+    <li><a href="/movies"><span class="movie-icon" part="icon"></span><span data-id="movies-text">Movies</span></a></li>
+    <li><a href="/shows"><span class="show-icon" part="icon"></span><span data-id="shows-text">Shows</span></a></li>
+    <li><a href="/games"><span class="game-icon" part="icon"></span><span data-id="games-text">Games</span></a></li>
   </ul>
 </nav>
 <div class="search-box">
   <app-search-input></app-search-input>
   <div id="search-dropdown">
     <div class="dropdown-container">
-      <div>
-        <span>Showing</span>
-        <span id="max-results">0</span>
-        <span>Of</span>
-        <span id="results">0</span>
-        <span>Results</span>
+      <div id="showing-results">
       </div>
       <ul id="search-elements" tabindex="0"></ul>
     </div>
@@ -36,27 +32,33 @@
   </summary>
   <ul id="user-dropdown">
     <li data-login>
-      <a id="profile-link" href="/users/user"><span class="profile-icon" part="icon"></span>Profile</a>
+      <a id="profile-link" href="/users/user"><span class="profile-icon" part="icon"></span><span id="profile-text">Profile</span></a>
     </li>
-    <li data-login><a href="/users/about/friends"><span class="friends-icon" part="icon"></span>Friends</a></li>
+    <li data-login><a href="/users/about/friends"><span class="friends-icon" part="icon"></span><span id="friends-text">Friends</span></a>
+    </li>
     <li data-login>
-      <a href="/users/about/comments"><span class="comment-icon" part="icon"></span>Comments</a>
+      <a href="/users/about/comments"><span class="comment-icon" part="icon"></span><span
+              id="comments-text">Comments</span></a>
     </li>
-    <li data-login><a href="/users/about/reviews"><span class="review-icon" part="icon"></span>Reviews</a></li>
-    <li data-default><a href="/users/about/settings"><span class="settings-icon" part="icon"></span>Settings</a>
+    <li data-login><a href="/users/about/reviews"><span class="review-icon" part="icon"></span><span id="reviews-text">Reviews</span></a>
+    </li>
+    <li data-default><a href="/users/about/settings"><span class="settings-icon" part="icon"></span><span
+            id="settings-text">Settings</span></a>
     </li>
     <li data-default>
-      <a href="/users/about/preferences"><span class="settings-icon" part="icon"></span>Preferences</a>
+      <a href="/users/about/preferences"><span class="settings-icon" part="icon"></span><span id="preferences-text">Preferences</span></a>
     </li>
     <li data-login id="logout">
       <app-button id="logout-button" class="logout" exportparts="button,button: logout-button">
-        <span class="center"><span class="logout-icon" part="icon, logout-icon"></span>Logout</span>
+        <span class="center"><span class="logout-icon" part="icon, logout-icon"></span><span
+                id="logout-text">Logout</span></span>
       </app-button>
     </li>
-    <li data-logout id="login"><a href="/login"><span class="login-icon" part="icon"></span>Log in</a>
+    <li data-logout id="login"><a href="/login"><span class="login-icon" part="icon"></span><span
+            id="login-text">Log in</span></a>
     </li>
     <li data-logout id="signup">
-      <a href="/signup"><span class="login-icon" part="icon"></span>Sign up</a>
+      <a href="/signup"><span class="login-icon" part="icon"></span><span id="signup-text">Sign up</span></a>
     </li>
   </ul>
 </details>

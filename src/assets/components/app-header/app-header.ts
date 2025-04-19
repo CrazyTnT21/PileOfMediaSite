@@ -9,6 +9,8 @@ import html from "./app-header.html" with {type: "inline"}
 import css from "./app-header.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
 import {AppHeaderSearch} from "./app-header-search/app-header-search";
+import {Observer} from "../../observer";
+import {SurroundedString, templateString} from "../inputs/common";
 
 export type AppHeaderElements = {
   burger: HTMLDetailsElement,
@@ -20,13 +22,44 @@ export type AppHeaderElements = {
   searchInput: AppSearchInput,
   navigationItems: HTMLUListElement,
   searchElements: HTMLUListElement,
-  searchResultsNumber: HTMLSpanElement,
   searchDropdown: HTMLDivElement,
-  maxResults: HTMLSpanElement
+  graphicNovelsText: [HTMLSpanElement, HTMLSpanElement],
+  gamesText: [HTMLSpanElement, HTMLSpanElement],
+  moviesText: [HTMLSpanElement, HTMLSpanElement],
+  showsText: [HTMLSpanElement, HTMLSpanElement],
+  booksText: [HTMLSpanElement, HTMLSpanElement],
+  profileText: HTMLSpanElement,
+  friendsText: HTMLSpanElement,
+  reviewsText: HTMLSpanElement,
+  settingsText: HTMLSpanElement,
+  preferencesText: HTMLSpanElement,
+  commentsText: HTMLSpanElement,
+  logoutText: HTMLSpanElement,
+  loginText: HTMLSpanElement,
+  signupText: HTMLSpanElement,
+  showingResults: HTMLDivElement
+};
+export const appHeaderTexts = {
+  graphicNovels: "Graphic novels",
+  books: "Books",
+  movies: "Movies",
+  shows: "Shows",
+  games: "Games",
+  profile: "Profile",
+  friends: "Friends",
+  reviews: "Reviews",
+  settings: "Settings",
+  preferences: "Preferences",
+  comments: "Comments",
+  logout: "Logout",
+  login: "Log in",
+  signup: "Sign up",
+  showingResults: templateString<`${SurroundedString<"{count}">}${SurroundedString<"{total}">}`>("Showing {count} of {total} results")
 };
 
 export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
+  readonly texts = new Observer(appHeaderTexts);
   private loginData: LoginReturn | undefined | null;
 
   override shadowRoot: ShadowRoot;
@@ -43,9 +76,22 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     searchInput: "app-search-input",
     navigationItems: ".items",
     searchElements: "#search-elements",
-    searchResultsNumber: "#results",
     searchDropdown: "#search-dropdown",
-    maxResults: "#max-results"
+    graphicNovelsText: "[data-id=graphic-novels-text]",
+    gamesText: "[data-id=games-text]",
+    moviesText: "[data-id=movies-text]",
+    showsText: "[data-id=shows-text]",
+    booksText: "[data-id=books-text]",
+    showingResults: "#showing-results",
+    profileText: "#profile-text",
+    friendsText: "#friends-text",
+    reviewsText: "#reviews-text",
+    settingsText: "#settings-text",
+    preferencesText: "#preferences-text",
+    commentsText: "#comments-text",
+    logoutText: "#logout-text",
+    loginText: "#login-text",
+    signupText: "#signup-text"
   }
 
   async connectedCallback(): Promise<void>
@@ -65,8 +111,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       user.open = false
     });
 
-    const items = <HTMLLIElement[]>[...this.elements.navigationItems.children];
-    this.copyToHamburger(items);
     logoutButton.addEventListener("click", () => this.account = null);
     this.loadAccount();
   }
@@ -111,6 +155,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
           element.hidden = false;
       }
     });
+
     const {profilePicture} = this.elements;
     if (localAccount)
     {
@@ -136,7 +181,8 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     {
       ul.append(item);
     }
-    this.elements.burger.appendChild(ul);
+    const burger: AppHeaderElements["burger"] = this.shadowRoot.querySelector(AppHeader.elementSelectors.burger)!;
+    burger.appendChild(ul);
   }
 
   constructor()
@@ -146,18 +192,61 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.render();
     this.elements = mapSelectors<AppHeaderElements>(this.shadowRoot, AppHeader.elementSelectors);
     this.applyStyleSheet();
-    const {searchElements, searchDropdown, maxResults, searchResultsNumber, searchInput} = this.elements;
-    this.searchDropdown = new AppHeaderSearch(searchDropdown, searchElements, maxResults, searchResultsNumber, searchInput);
-    this.searchDropdown.setupSearch(this.shadowRoot)
+    this.searchDropdown = new AppHeaderSearch(this);
+    this.searchDropdown.setupSearch(this.shadowRoot);
+    this.matchAllLabelTexts([
+      ["graphicNovels", this.elements.graphicNovelsText],
+      ["games", this.elements.gamesText],
+      ["books", this.elements.booksText],
+      ["movies", this.elements.moviesText],
+      ["shows", this.elements.showsText],
+      ["profile", this.elements.profileText],
+      ["friends", this.elements.friendsText],
+      ["reviews", this.elements.reviewsText],
+      ["settings", this.elements.settingsText],
+      ["preferences", this.elements.preferencesText],
+      ["comments", this.elements.commentsText],
+      ["logout", this.elements.logoutText],
+      ["login", this.elements.loginText],
+      ["signup", this.elements.signupText],
+    ]);
+  }
+
+  private matchAllLabelTexts(labels: [keyof typeof appHeaderTexts, HTMLElement | HTMLElement[]][]): void
+  {
+    for (const label of labels)
+    {
+      if (Array.isArray(label[1]))
+      {
+        for (const element of label[1])
+        {
+          this.matchLabelText(label[0], element);
+        }
+      }
+      else
+      {
+        this.matchLabelText(label[0], label[1]);
+      }
+    }
+  }
+
+  private matchLabelText(key: keyof typeof appHeaderTexts, element: HTMLElement): void
+  {
+    this.texts.addListener(key, (value) =>
+    {
+      element.innerText = value
+    });
   }
 
   attach = attach;
   applyStyleSheet = applyStyleSheet;
-  placeholderImageUrl = "/assets/img/User_Placeholder.svg";
+  readonly placeholderImageUrl = "/assets/img/User_Placeholder.svg";
 
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    const items = <HTMLLIElement[]>[...this.shadowRoot.querySelector(AppHeader.elementSelectors.navigationItems)!.children];
+    this.copyToHamburger(items);
   }
 
   styleCSS(): string
