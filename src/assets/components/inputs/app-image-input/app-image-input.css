@@ -24,34 +24,34 @@
 }
 
 img {
-  border-radius: .3rem;
+  border-radius: 6px;
   display: inline-flex;
   max-width: 100%;
   max-height: 100%;
   aspect-ratio: 1 / 1.41421;
   object-fit: contain;
-  border: .06rem solid var(--image-input-border-color--);
+  border: 1px solid var(--image-input-border-color--);
   flex: 1;
 }
 
 label {
   position: absolute;
   color: var(--image-input-color--);
-  margin: 0 0 0 .3rem;
+  margin: 0 0 0 6px;
   transform: translateY(-60%);
   background: linear-gradient(180deg, transparent 0 0.44rem, var(--image-input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
   transition: transform ease 50ms;
 }
 
 :host {
-  padding: .3rem;
-  margin-top: .12rem;
+  padding: 6px;
+  margin-top: 3px;
   display: inline-flex;
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;
   flex-direction: column;
-  gap: .3rem
+  gap: 6px
 }
 
 :host([required]) {
@@ -78,7 +78,7 @@ input[data-invalid] + img:hover {
 }
 
 img:focus-visible {
-  outline: var(--image-input-outline-color--) .12rem solid;
+  outline: var(--image-input-outline-color--) 3px solid;
 }
 
 :host([disabled]) > img {

@@ -18,7 +18,7 @@
   --input-invalid-color-hover--: hsl(from var(--input-invalid-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --input-outline-color--: var(--input-outline-color, Highlight);
-  --input-padding--: var(--input-padding, 5px);
+  --input-padding--: var(--input-padding, 6px);
 }
 
 * {
@@ -26,9 +26,10 @@
 }
 
 :host {
-  padding: 5px;
+  padding: 3px;
   display: inline-flex;
-  margin-top: 2px;
+  margin-top: .3rem;
+  margin-bottom: .3rem;
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;
@@ -37,7 +38,7 @@
 .input {
   background-color: var(--input-background-color--);
   display: inline-flex;
-  border-radius: 5px;
+  border-radius: 6px;
   border-width: 1px;
   border-style: solid;
   border-color: var(--input-border-color--);
@@ -45,7 +46,7 @@
 }
 
 .input:focus-visible {
-  outline: var(--input-outline-color--) 2px solid;
+  outline: var(--input-outline-color--) 3px solid;
 }
 
 .input:hover,
@@ -80,7 +81,7 @@ label {
   cursor: default;
   color: var(--input-color--);
   font-size: 1em;
-  margin: 0 0 0 5px;
+  margin: 0 0 0 6px;
   transform: translateY(-60%);
   background: linear-gradient(180deg, transparent 0 0.44rem, var(--input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
 
@@ -119,7 +120,7 @@ input[disabled]::placeholder {
   min-height: 0;
   min-width: 0;
   flex-wrap: wrap;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 1.10em;
 }
 
@@ -135,6 +136,6 @@ input[disabled]::placeholder {
   }
 
   label:not([x]) {
-    background: linear-gradient(180deg, transparent 0 7px, var(--input-background-color-disabled--) 7px 15px, transparent 15px 100%);
+    background: linear-gradient(180deg, transparent 0 6px, var(--input-background-color-disabled--) 6px 15px, transparent 15px 100%);
   }
 }

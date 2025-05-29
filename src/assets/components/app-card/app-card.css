@@ -10,8 +10,8 @@
 :host {
   display: flex;
   flex-direction: column;
-  padding: .3rem;
-  border-radius: .09rem;
+  padding: 6px;
+  border-radius: 1px;
   background-color: var(--card-background-color--);
   max-width: 100%;
   overflow: hidden;
@@ -23,7 +23,7 @@
 }
 
 img {
-  border-radius: .3rem;
+  border-radius: 6px;
   max-height: 100%;
   max-width: 100%;
   object-fit: contain;
@@ -31,8 +31,8 @@ img {
 }
 
 a {
-  box-shadow: 0 0 .09rem 0 var(--card-border-color--);
-  padding: .3rem;
+  box-shadow: 0 0 1px 0 var(--card-border-color--);
+  padding: 6px;
   text-decoration: none;
   display: flex;
   flex: 1;
@@ -51,5 +51,5 @@ a[href]:hover, a:focus {
 
 #image {
   min-height: 50%;
-  margin-bottom: .3rem;
+  margin-bottom: 6px;
 }

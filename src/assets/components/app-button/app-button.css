@@ -21,11 +21,11 @@
 }
 
 button {
-  border-radius: 5px;
+  border-radius: 6px;
   display: inline-flex;
   color: var(--button-color--);
   flex: 1 1 100%;
-  padding: .3rem;
+  padding: 6px;
   justify-content: center;
   border: 0;
   background-color: var(--button-background-color--);
@@ -33,7 +33,7 @@ button {
 }
 
 button:focus-visible {
-  outline: var(--button-outline-color--) 2px solid;
+  outline: var(--button-outline-color--) 3px solid;
 }
 
 button:hover, button:focus {

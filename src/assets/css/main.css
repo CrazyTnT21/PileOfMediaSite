@@ -34,47 +34,47 @@ img {
 }
 
 .pad {
-  padding: 0.3rem;
+  padding: 6px;
 }
 
 .pad-left {
-  padding-left: 0.3rem;
+  padding-left: 6px;
 }
 
 .pad-right {
-  padding-right: 0.3rem;
+  padding-right: 6px;
 }
 
 .pad-top {
-  padding-top: 0.3rem;
+  padding-top: 6px;
 }
 
 .pad-bottom {
-  padding-bottom: 0.3rem;
+  padding-bottom: 6px;
 }
 
 .mar {
-  margin: .3rem;
+  margin: 6px;
 }
 
 .mar-left {
-  margin-left: 0.3rem;
+  margin-left: 6px;
 }
 
 .mar-right {
-  margin-right: 0.3rem;
+  margin-right: 6px;
 }
 
 .mar-top {
-  margin-top: 0.3rem;
+  margin-top: 6px;
 }
 
 .mar-bottom {
-  margin-bottom: 0.3rem;
+  margin-bottom: 6px;
 }
 
 .small-text {
-  font-size: 10px;
+  font-size: 9px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -87,12 +87,12 @@ h1, h2, h3, h4, h5, h6 {
 
 app-header:not(:defined) {
   display: block;
-  margin: .3rem;
+  margin: 6px;
   background-color: var(--header-background-color);
 }
 
 app-header {
-  height: 3rem;
+  /*height: 2rem;*/
 }
 
 .placeholder {
@@ -102,9 +102,9 @@ app-header {
 
 .placeholder > * {
   display: flex;
-  padding: 5px;
+  padding: 6px;
   border: 1px solid;
-  border-radius: 5px;
+  border-radius: 6px;
   vertical-align: middle;
 }
 
@@ -140,9 +140,9 @@ app-header {
 }
 
 .login {
-  margin: 5px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px var(--app-background-4, lightgray);
+  margin: 6px;
+  border-radius: 6px;
+  box-shadow: 0 0 6px var(--app-background-4, lightgray);
 }
 
 .login-box {
@@ -152,7 +152,7 @@ app-header {
 .login-border {
   border: none;
   margin: 0;
-  padding: 5px;
+  padding: 6px;
 }
 
 a, ::part(a) {
@@ -170,11 +170,11 @@ a, ::part(a) {
 }
 
 .gap {
-  gap: 0.6rem;
+  gap: 9px;
 }
 
 .search {
-  --input-padding: 10px;
+  --input-padding: 9px;
 }
 
 p {
@@ -203,7 +203,7 @@ p {
 
 .small-din-4 {
   height: 3.6rem;
-  border-radius: .12rem;
+  border-radius: 3px;
   aspect-ratio: 1 / 1.41421;
   object-fit: contain;
 }
@@ -232,9 +232,9 @@ p {
 }
 
 .border {
-  border-radius: .12rem;
-  margin: .06rem;
-  box-shadow: 0 0 .12rem var(--app-color-2, lightgray);
+  border-radius: 3px;
+  margin: 1px;
+  box-shadow: 0 0 3px var(--app-color-2, lightgray);
 }
 
 .bigger {

@@ -31,7 +31,7 @@ input {
 }
 
 #outline:has(input:focus-visible) {
-  outline: solid 2px var(--input-outline-color--);
+  outline: solid 3px var(--input-outline-color--);
 }
 
 #outline:hover {

@@ -20,7 +20,7 @@
 
 :host {
   display: inline-flex;
-  padding: .3rem;
+  padding: 6px;
 }
 
 label {
@@ -31,8 +31,8 @@ label {
 
 .overlay {
   opacity: 0;
-  margin: .3rem;
-  border-radius: .12rem;
+  margin: 6px;
+  border-radius: 3px;
   width: .9rem;
   height: .9rem;
   border: 1px solid var(--checkbox-border-color--);
@@ -43,15 +43,15 @@ label {
 
 #input {
   display: flex;
-  margin: .3rem;
+  margin: 6px;
   background-color: var(--checkbox-background-color--);
-  border: var(--checkbox-border-color--) .06rem solid;
+  border: var(--checkbox-border-color--) 1px solid;
   width: 1rem;
   height: 1rem;
   accent-color: var(--checkbox-accent-color--);
 
   :focus-visible& {
-    outline: var(--checkbox-outline-color--) .12rem solid;
+    outline: var(--checkbox-outline-color--) 3px solid;
   }
 
   :hover&,
@@ -69,7 +69,7 @@ label {
 
     :focus-visible& {
       + .overlay {
-        outline: var(--checkbox-outline-color--) 2px solid;
+        outline: var(--checkbox-outline-color--) 3px solid;
       }
     }
 

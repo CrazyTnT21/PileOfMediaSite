@@ -18,7 +18,7 @@
   --textarea-invalid-color-hover--: hsl(from var(--textarea-invalid-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --textarea-outline-color--: var(--textarea-outline-color, Highlight);
-  --textarea-padding--: var(--textarea-padding, 5px);
+  --textarea-padding--: var(--textarea-padding, 6px);
 }
 
 * {
@@ -28,7 +28,7 @@
 .textarea {
   background-color: var(--textarea-background-color--);
   display: inline-flex;
-  border-radius: 5px;
+  border-radius: 6px;
   border-width: 1px;
   border-style: solid;
   border-color: var(--textarea-border-color--);
@@ -36,7 +36,7 @@
 }
 
 .textarea:focus {
-  outline: var(--textarea-outline-color--) 2px solid;
+  outline: var(--textarea-outline-color--) 3px solid;
 }
 
 .textarea:hover,
@@ -70,7 +70,7 @@ label {
   cursor: default;
   color: var(--textarea-color--);
   font-size: 1em;
-  margin: 0 0 0 5px;
+  margin: 0 0 0 6px;
   transform: translateY(-60%);
   background: linear-gradient(180deg, transparent 0 0.44rem, var(--textarea-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
 
@@ -95,9 +95,10 @@ textarea[disabled]::placeholder {
 }
 
 :host {
-  padding: 5px;
+  padding: 3px;
   display: inline-flex;
-  margin-top: 2px;
+  margin-top: .3rem;
+  margin-bottom: .3rem;
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;
@@ -118,7 +119,7 @@ textarea[disabled]::placeholder {
   min-height: 0;
   min-width: 0;
   flex-wrap: wrap;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 1.10em;
   resize: none;
 }
@@ -135,6 +136,6 @@ textarea[disabled]::placeholder {
   }
 
   label:not([x]) {
-    background: linear-gradient(180deg, transparent 0 7px, var(--textarea-background-color-disabled--) 7px 15px, transparent 15px 100%);
+    background: linear-gradient(180deg, transparent 0 6px, var(--textarea-background-color-disabled--) 6px 15px, transparent 15px 100%);
   }
 }
