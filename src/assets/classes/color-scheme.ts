@@ -27,6 +27,9 @@ export class ColorStyle
   app_background_3: string | undefined;
   app_background_4: string | undefined;
 
+  app_foreground_1: string | undefined;
+  app_foreground_2: string | undefined;
+
   app_color_1: string | undefined;
   app_color_2: string | undefined;
 
@@ -34,7 +37,6 @@ export class ColorStyle
   app_text_2: string | undefined;
   app_text_3: string | undefined;
 
-  app_input_background_color: string | undefined;
   app_button_background_color: string | undefined;
 
   app_outline: string | undefined;
@@ -77,7 +79,7 @@ export function loadColorScheme(): void
   const colorStyle = colorScheme.style;
   const keys = <(keyof ColorStyle)[]>Object.keys(new ColorStyle()).map(x => x.replaceAll("_", "-"));
 
-  document.documentElement.setAttribute("data-color-scheme",colorScheme.name);
+  document.documentElement.setAttribute("data-color-scheme", colorScheme.name);
   for (const key of keys)
   {
     document.documentElement.style.setProperty("--" + key, colorStyle[key] ? colorStyle[key]!.toString() : null);

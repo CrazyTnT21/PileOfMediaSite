@@ -4,14 +4,13 @@
   --card-color--: var(--card-color, black);
   --card-underline-color--: var(--card-underline-color, Highlight);
   --card-color-hover--: hsl(from var(--card-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
-  --card-border-color--: var(--card-border-color, lightgray);
 }
 
 :host {
   display: flex;
   flex-direction: column;
-  padding: 6px;
-  border-radius: 1px;
+  padding: 3px;
+  border-radius: 3px;
   background-color: var(--card-background-color--);
   max-width: 100%;
   overflow: hidden;
@@ -31,8 +30,7 @@ img {
 }
 
 a {
-  box-shadow: 0 0 1px 0 var(--card-border-color--);
-  padding: 6px;
+  padding: 3px;
   text-decoration: none;
   display: flex;
   flex: 1;

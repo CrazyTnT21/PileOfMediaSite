@@ -15,11 +15,10 @@
 }
 
 #inner {
-  padding-left: .3rem;
-  padding-right: .3rem;
+  padding-left: .6rem;
+  padding-right: .6rem;
   display: flex;
   margin: 6px;
-  box-shadow: 0 0 1px 0 var(--header-border-color--);
   border-radius: 3px;
   gap: 3px;
   align-items: center;
@@ -91,11 +90,10 @@ li {
 
   ul {
     transform: translateX(calc(-100% + 2.1rem + 9px));
-    box-shadow: 0 0 1px 0 var(--header-border-color--);
     background-color: var(--header-background-color--);
     z-index: 1;
     position: absolute;
-    border-radius: 1px;
+    border-radius: 3px;
     padding: 6px;
     margin-top: 18px;
     display: inline-flex;
@@ -136,16 +134,15 @@ li {
 
 .burger-items {
   display: flex;
-  width: calc(100% - .3rem - 3px);
+  width: calc(100% - .6rem - 3px);
   font-size: 1.12rem;
   flex-direction: column;
   justify-items: stretch;
 
-  box-shadow: 0 0 1px 0 var(--header-border-color--);
-  border-radius: 1px;
+  border-radius: 3px;
   margin-top: 15px;
   flex: 1;
-  margin-left: -.3rem;
+  margin-left: -.6rem;
 }
 
 .items {

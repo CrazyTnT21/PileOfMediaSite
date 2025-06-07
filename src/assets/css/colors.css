@@ -4,14 +4,14 @@
   --button-color: var(--app-button-color);
   --button-outline-color: var(--app-outline);
 
-  --input-background-color: var(--app-input-background-color);
+  --input-background-color: var(--app-foreground-2);
 
   --input-color: var(--app-text-1);
   --input-outline-color: var(--app-outline);
   --input-label-color: var(--app-text-2);
   --input-invalid-color: var(--app-negative);
 
-  --textarea-background-color: var(--app-input-background-color);
+  --textarea-background-color: var(--app-foreground-2);
 
   --textarea-color: var(--app-text-1);
   --textarea-outline-color: var(--app-outline);
@@ -24,7 +24,7 @@
   --image-input-color: var(--app-text-1);
   --image-input-outline-color: var(--app-outline);
 
-  --header-background-color: var(--app-background-1);
+  --header-background-color: var(--app-foreground-2);
 
   --header-color: var(--app-text-1);
   --header-color-hover: var(--app-color-2);
@@ -44,13 +44,12 @@
   --tab-border-color: var(--app-color-1);
   --tab-outline-color: var(--app-link);
 
-  --card-background-color: var(--app-background-1);
+  --card-background-color: var(--app-foreground-2);
   --card-color: var(--app-text-1);
   --card-underline-color: var(--app-link);
-  --card-border-color: var(--app-color-1);
 
   --checkbox-label-color: var(--app-text-1);
-  --checkbox-background-color: var(--app-input-background-color);
+  --checkbox-background-color: var(--app-foreground-2);
   --checkbox-border-color: var(--app-color-2);
   --checkbox-outline-color: var(--app-outline);
   --header-link-color: var(--app-link);
@@ -59,121 +58,121 @@
 /*noinspection DuplicatedCode*/
 @media (prefers-color-scheme: light) {
   :root {
-    --app-background-1: hsl(0 0% 100%);
-    --app-background-2: hsl(0 0% 95%);
-    --app-background-3: hsl(0 0% 90%);
-    --app-background-4: hsl(0 0% 85%);
+    --app-background-1: hsl(0 0% 93%);
+    --app-background-2: hsl(0 0% 90%);
+    --app-background-3: hsl(0 0% 87%);
+    --app-background-4: hsl(0 0% 84%);
+
+    --app-foreground-1: hsl(0 0% 96%);
+    --app-foreground-2: hsl(0 0% 99%);
 
     --app-color-1: hsl(0 0% 30%);
     --app-color-2: hsl(0 0% 60%);
 
-    --app-text-1: hsl(0 0% 10%);
-    --app-text-2: hsl(0 0% 25%);
-    --app-text-3: hsl(0 0% 40%);
+    --app-text-1: hsl(0 0% 9%);
+    --app-text-2: hsl(0 0% 24%);
+    --app-text-3: hsl(0 0% 39%);
 
-    --app-input-color: hsl(0 0% 95%);
-    --app-button-color: hsl(0 0% 95%);
-
-    --app-input-text: hsl(0 0% 5%);
-    --app-button-text: hsl(0 0% 95%);
+    --app-button-background-color: hsl(208, 76%, 37%);
+    --app-button-color: hsl(0 0% 96%);
 
     --app-outline: highlight;
     --app-link: #4385e4;
     --app-visited: #842fb6;
     --app-negative: #c80f0f;
     --app-positive: #16aa15;
-    --app-negative-text: hsl(0 0% 95%);
-    --app-positive-text: hsl(0 0% 95%);
+    --app-negative-text: hsl(0 0% 96%);
+    --app-positive-text: hsl(0 0% 96%);
   }
 }
 
 /*noinspection DuplicatedCode*/
 @media (prefers-color-scheme: dark) {
   :root {
-    --app-background-1: hsl(0 0% 15%);
-    --app-background-2: hsl(0 0% 20%);
-    --app-background-3: hsl(0 0% 25%);
-    --app-background-4: hsl(0 0% 30%);
+    --app-background-1: hsl(0 0% 9%);
+    --app-background-2: hsl(0 0% 12%);
+    --app-background-3: hsl(0 0% 15%);
+    --app-background-4: hsl(0 0% 18%);
 
-    --app-color-1: hsl(0 0% 70%);
-    --app-color-2: hsl(0 0% 40%);
+    --app-foreground-1: hsl(0 0% 15%);
+    --app-foreground-2: hsl(0 0% 18%);
+
+    --app-color-1: hsl(0 0% 69%);
+    --app-color-2: hsl(0 0% 39%);
 
     --app-text-1: hsl(0 0% 90%);
-    --app-text-2: hsl(0 0% 80%);
-    --app-text-3: hsl(0 0% 65%);
+    --app-text-2: hsl(0 0% 81%);
+    --app-text-3: hsl(0 0% 66%);
 
-
-    --app-input-background-color: hsl(0 0% 20%);
     --app-button-background-color: hsl(208, 76%, 37%);
-
-    --app-input-color: hsl(0 0% 95%);
-    --app-button-color: hsl(0 0% 95%);
+    --app-button-color: hsl(0 0% 96%);
 
     --app-outline: highlight;
     --app-visited: #c76fff;
     --app-link: #4182e6;
     --app-negative: #ff3434;
     --app-positive: #16aa15;
-    --app-negative-text: hsl(0 0% 95%);
-    --app-positive-text: hsl(0 0% 95%);
+    --app-negative-text: hsl(0 0% 96%);
+    --app-positive-text: hsl(0 0% 96%);
   }
 }
 
 /*noinspection DuplicatedCode*/
 :root[data-color-scheme="light"] {
-  --app-background-1: hsl(0 0% 100%);
-  --app-background-2: hsl(0 0% 95%);
-  --app-background-3: hsl(0 0% 90%);
-  --app-background-4: hsl(0 0% 85%);
+  --app-background-1: hsl(0 0% 93%);
+  --app-background-2: hsl(0 0% 90%);
+  --app-background-3: hsl(0 0% 87%);
+  --app-background-4: hsl(0 0% 84%);
+
+  --app-foreground-1: hsl(0 0% 96%);
+  --app-foreground-2: hsl(0 0% 99%);
 
   --app-color-1: hsl(0 0% 30%);
   --app-color-2: hsl(0 0% 60%);
 
-  --app-text-1: hsl(0 0% 10%);
-  --app-text-2: hsl(0 0% 25%);
-  --app-text-3: hsl(0 0% 40%);
+  --app-text-1: hsl(0 0% 9%);
+  --app-text-2: hsl(0 0% 24%);
+  --app-text-3: hsl(0 0% 39%);
 
-
-  --app-input-background-color: hsl(0 0% 100%);
   --app-button-background-color: hsl(208 50% 46.5%);
-
-  --app-input-color: hsl(0 0% 95%);
-  --app-button-color: hsl(0 0% 95%);
+  --app-button-color: hsl(0 0% 96%);
 
   --app-outline: highlight;
+  --app-link: #4385e4;
   --app-visited: #842fb6;
   --app-negative: #c80f0f;
   --app-positive: #16aa15;
-  --app-negative-text: hsl(0 0% 95%);
-  --app-positive-text: hsl(0 0% 95%);
+  --app-negative-text: hsl(0 0% 96%);
+  --app-positive-text: hsl(0 0% 96%);
 }
 
 /*noinspection DuplicatedCode*/
 :root[data-color-scheme="dark"] {
-  --app-background-1: hsl(0 0% 15%);
-  --app-background-2: hsl(0 0% 20%);
-  --app-background-3: hsl(0 0% 25%);
-  --app-background-4: hsl(0 0% 30%);
+  --app-background-1: hsl(0 0% 9%);
+  --app-background-2: hsl(0 0% 12%);
+  --app-background-3: hsl(0 0% 15%);
+  --app-background-4: hsl(0 0% 18%);
 
-  --app-color-1: hsl(0 0% 70%);
-  --app-color-2: hsl(0 0% 40%);
+  --app-foreground-1: hsl(0 0% 15%);
+  --app-foreground-2: hsl(0 0% 18%);
+
+  --app-color-1: hsl(0 0% 69%);
+  --app-color-2: hsl(0 0% 39%);
 
   --app-text-1: hsl(0 0% 90%);
-  --app-text-2: hsl(0 0% 80%);
-  --app-text-3: hsl(0 0% 65%);
+  --app-text-2: hsl(0 0% 81%);
+  --app-text-3: hsl(0 0% 66%);
 
-  --app-input-background-color: hsl(0 0% 20%);
   --app-button-background-color: hsl(208, 76%, 37%);
-
-  --app-input-color: hsl(0 0% 95%);
-  --app-button-color: hsl(0 0% 95%);
+  --app-button-color: hsl(0 0% 96%);
 
   --app-outline: highlight;
   --app-visited: #c76fff;
+  --app-link: #4182e6;
   --app-negative: #ff3434;
   --app-positive: #16aa15;
-  --app-negative-text: hsl(0 0% 95%);
-  --app-positive-text: hsl(0 0% 95%);
+  --app-negative-text: hsl(0 0% 96%);
+  --app-positive-text: hsl(0 0% 96%);
 }
 
 html {
