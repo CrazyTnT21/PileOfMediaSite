@@ -18,7 +18,7 @@ export function createBuildSettings(options)
     splitting: true,
     format: "esm",
     plugins: [
-      inlinePlugin(options),
+      inlinePlugin(options, SRC_DIR),
       esbuildPluginTsc({
         force: true,
       }),

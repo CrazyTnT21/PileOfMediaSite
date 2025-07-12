@@ -1,4 +1,4 @@
-import * as esbuild from 'esbuild';
+import esbuild from 'esbuild';
 import {createBuildSettings} from './common.js';
 import * as fs from "node:fs"
 

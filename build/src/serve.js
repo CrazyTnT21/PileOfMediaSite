@@ -6,14 +6,15 @@ import * as path from "node:path";
 import httpProxy from "http-proxy";
 import * as glob from "glob";
 
+// noinspection SpellCheckingInspection
 const settings = createBuildSettings({
   sourcemap: true,
   write: false,
+  outdir: "src"
 });
-settings.outdir = "src";
 
 let ctx = await esbuild.context(settings);
-let buildOutput = await ctx.rebuild();
+let buildFiles = await ctx.rebuild().then(x => x.outputFiles);
 let lastError;
 const result = fs.promises.watch(settings.outdir, {recursive: true});
 (async () =>
@@ -27,7 +28,7 @@ const result = fs.promises.watch(settings.outdir, {recursive: true});
         settings.entryPoints = glob.sync("src/**/*", {nodir: true});
         ctx = await esbuild.context(settings);
       }
-      buildOutput = await ctx.rebuild();
+      buildFiles = await ctx.rebuild().then(x => x.outputFiles);
       if (lastError)
       {
         lastError = null;
@@ -128,15 +129,14 @@ function processRequest(request, src)
 {
   const filePath = path.join(src, request.url).split("?")[0];
 
-  if (request.headers.accept?.includes("text/html"))
+  if (!request.headers.accept?.includes("text/html"))
   {
-    return getFile(filePath.replace(/\/$/, "") + ".html") ??
-        getFile(path.join(filePath, "index.html")) ??
-        getFile(filePath) ??
-        getFile(path.join(src, "404.html"))
+    return getFile(filePath) ?? {statusCode: 404, data: null, headers: {}};
   }
-
-  return getFile(filePath) ?? {statusCode: 404, data: null, headers: {}};
+  return getFile(filePath.replace(/\/$/, "") + ".html") ??
+      getFile(path.join(filePath, "index.html")) ??
+      getFile(filePath) ??
+      getFile(path.join(src, "404.html"))
 }
 
 function last(items)
@@ -146,7 +146,7 @@ function last(items)
 
 export function getFile(filePath)
 {
-  const find = buildOutput.outputFiles.find(x => x.path === filePath);
+  const find = buildFiles.find(x => x.path === filePath);
   if (!find)
     return null;
   const extension = last(filePath.split("."));

@@ -10,7 +10,6 @@ RUN mkdir build
 COPY build/package*.json ./build/
 COPY package*.json ./
 RUN npm install
-RUN cd build && npm install
 COPY . .
 RUN node locations.js
 RUN npm run build
