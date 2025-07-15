@@ -31,6 +31,7 @@ img {
   aspect-ratio: 1 / 1.41421;
   object-fit: contain;
   border: 1px solid var(--image-input-border-color--);
+  background-color: var(--image-input-background-color--);
   flex: 1;
 }
 
@@ -38,8 +39,8 @@ label {
   position: absolute;
   color: var(--image-input-color--);
   margin: 0 0 0 6px;
-  transform: translateY(-60%);
-  background: linear-gradient(180deg, transparent 0 0.44rem, var(--image-input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
+  transform: translateY(-55%);
+  background: linear-gradient(180deg, transparent 0 0.04rem, var(--image-input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
   transition: transform ease 50ms;
 }
 
@@ -88,6 +89,6 @@ img:focus-visible {
 :host([disabled]) {
   label {
     content: "*";
-    background: linear-gradient(180deg, transparent 0 0.44rem, var(--image-input-background-color-disabled--) 0.44rem 0.9rem, transparent 0.9rem 100%);
+    background: linear-gradient(180deg, transparent 0 0.04rem, var(--image-input-background-color-disabled--) 0.44rem 0.9rem, transparent 0.9rem 100%);
   }
 }

@@ -36,7 +36,17 @@ export function disabledAttr(element: AppImageInput, value: string | null | unde
   const disabled = hasDisabledFieldset || value == "";
   const input = element.elements.input;
   input.disabled = disabled;
-  internals.ariaDisabled = disabled ? "" : null;
+
+  if (disabled)
+  {
+    internals.ariaDisabled = "";
+    internals.states.add("disabled")
+  }
+  else
+  {
+    internals.ariaDisabled = null;
+    internals.states.delete("disabled")
+  }
 }
 
 export function dataLabelAttr(element: AppImageInput, value: string | null | undefined): void

@@ -84,7 +84,7 @@ export type Translation =
       preferences?: string;
       logout?: string;
       login?: string;
-      signup?: string;
+      signUp?: string;
       newest?: string;
       highestRated?: string;
       favorite?: string;

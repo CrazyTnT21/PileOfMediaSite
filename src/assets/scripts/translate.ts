@@ -69,7 +69,7 @@ function setHeaderTexts(element: AppHeader, translation: Translation): void
   setIfExists(element, "preferences", translation.preferences);
   setIfExists(element, "logout", translation.logout);
   setIfExists(element, "login", translation.login);
-  setIfExists(element, "signup", translation.signup);
+  setIfExists(element, "signup", translation.signUp);
   setIfExists(element, "showingResults", translation.headerShowingResults);
   setSearchInputText(element.elements.searchInput, translation);
 }

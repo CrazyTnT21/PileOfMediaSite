@@ -64,21 +64,13 @@ label {
   cursor: text;
 }
 
-.parent:has(textarea:focus) > label,
-.parent:has(textarea:not(textarea:placeholder-shown)) > label,
-.parent:has(textarea:not([placeholder=""])) > label {
+label {
   cursor: default;
   color: var(--textarea-color--);
   font-size: 1em;
   margin: 0 0 0 6px;
-  transform: translateY(-60%);
-  background: linear-gradient(180deg, transparent 0 0.44rem, var(--textarea-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
-
-  transition: transform ease 50ms;
-}
-
-.parent:has(textarea:focus) > label {
-  background: linear-gradient(180deg, transparent 0 0.44rem, var(--textarea-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
+  transform: translateY(-55%);
+  background: linear-gradient(180deg, transparent 0 0.04rem, var(--textarea-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
 }
 
 :host([required]) {
@@ -124,8 +116,8 @@ textarea[disabled]::placeholder {
   resize: none;
 }
 
-:host([disabled]) {
-  .textarea {
+:host(:state(disabled)) {
+  .textarea, .control {
     background-color: var(--textarea-background-color-disabled--);
     color: var(--textarea-color-disabled--);
     border-color: var(--textarea-border-color-disabled--);

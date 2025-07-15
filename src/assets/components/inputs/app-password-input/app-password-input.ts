@@ -1,9 +1,11 @@
 import {AppInput, AppInputElements} from "../app-input/app-input";
 import {StyleCSS} from "../../style-css";
-import html from "./app-number-input.html" with {type: "inline"};
-import css from "./app-number-input.css" with {type: "inline"};
+import html from "./app-password-input.html" with {type: "inline"};
+import css from "./app-password-input.css" with {type: "inline"};
 import {AppButton} from "../../app-button/app-button";
 import {mapSelectors} from "../../../dom";
+import {AttributeValue} from "../common";
+import {disabledAttr} from "./attributes";
 
 export type AppPasswordInputElements = AppInputElements & { passwordButton: AppButton, eyeIcon: HTMLSpanElement };
 
@@ -14,6 +16,12 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     ...AppInput.elementSelectors,
     passwordButton: "app-button",
     eyeIcon: "#eye-icon"
+  }
+  //TODO: as conversion
+  protected static override readonly observedAttributesMap = {
+    ...AppInput.observedAttributesMap,
+    "disabled": (element: AppInput, value: AttributeValue): void =>
+        disabledAttr(element as AppPasswordInput, value, (element as AppPasswordInput).internals, (element as AppPasswordInput).hasDisabledFieldset),
   }
 
   override async connectedCallback(): Promise<void>

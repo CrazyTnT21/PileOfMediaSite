@@ -75,21 +75,13 @@ label {
   cursor: text;
 }
 
-.parent:has(input:focus) > label,
-.parent:has(input:not(input:placeholder-shown)) > label,
-.parent:has(input:not([placeholder=""])) > label {
+label {
   cursor: default;
   color: var(--input-color--);
   font-size: 1em;
   margin: 0 0 0 6px;
-  transform: translateY(-60%);
-  background: linear-gradient(180deg, transparent 0 0.44rem, var(--input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
-
-  transition: transform ease 50ms;
-}
-
-.parent:has(input:focus) > label {
-  background: linear-gradient(180deg, transparent 0 0.44rem, var(--input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
+  transform: translateY(-55%);
+  background: linear-gradient(180deg, transparent 0 0.04rem, var(--input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
 }
 
 :host([required]) {
@@ -124,8 +116,8 @@ input[disabled]::placeholder {
   font-size: 1.10em;
 }
 
-:host([disabled]) {
-  .input {
+:host(:state(disabled)) {
+  .input, .control {
     background-color: var(--input-background-color-disabled--);
     color: var(--input-color-disabled--);
     border-color: var(--input-border-color-disabled--);

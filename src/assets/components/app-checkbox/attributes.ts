@@ -16,5 +16,15 @@ export function disabledAttr(element: AppCheckbox, value: string | null | undefi
   const {input} = element.elements;
   const disabled = hasDisabledFieldset || value == "";
   input.disabled = disabled;
-  internals.ariaDisabled = disabled ? "" : null;
+
+  if (disabled)
+  {
+    internals.ariaDisabled = "";
+    internals.states.add("disabled")
+  }
+  else
+  {
+    internals.ariaDisabled = null;
+    internals.states.delete("disabled")
+  }
 }

@@ -22,7 +22,17 @@ export function disabledAttr(element: AppInput, value: string | null | undefined
   const disabled = hasDisabledFieldset || value == "";
   const {input} = element.elements;
   input.disabled = disabled;
-  internals.ariaDisabled = disabled ? "" : null;
+
+  if (disabled)
+  {
+    internals.ariaDisabled = "";
+    internals.states.add("disabled")
+  }
+  else
+  {
+    internals.ariaDisabled = null;
+    internals.states.delete("disabled")
+  }
 }
 
 export function maxLengthAttr(element: AppInput, value: string | null | undefined): void

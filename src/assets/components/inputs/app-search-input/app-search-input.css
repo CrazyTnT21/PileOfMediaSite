@@ -58,3 +58,9 @@ app-button {
 #outline:has(input[data-invalid]) {
   border-color: var(--input-invalid-color--);
 }
+
+:host(:state(disabled)) {
+  [class$='-icon']::before {
+    color: var(--input-color-disabled--);
+  }
+}

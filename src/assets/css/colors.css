@@ -18,7 +18,7 @@
   --textarea-label-color: var(--app-text-2);
   --textarea-invalid-color: var(--app-negative);
 
-  --image-input-background-color: var(--app-background-1);
+  --image-input-background-color: var(--app-foreground-2);
   --image-input-invalid-color: var(--app-negative);
 
   --image-input-color: var(--app-text-1);
@@ -58,10 +58,10 @@
 /*noinspection DuplicatedCode*/
 @media (prefers-color-scheme: light) {
   :root {
-    --app-background-1: hsl(0 0% 93%);
-    --app-background-2: hsl(0 0% 90%);
-    --app-background-3: hsl(0 0% 87%);
-    --app-background-4: hsl(0 0% 84%);
+    --app-background-1: hsl(0 0% 90%);
+    --app-background-2: hsl(0 0% 87%);
+    --app-background-3: hsl(0 0% 84%);
+    --app-background-4: hsl(0 0% 81%);
 
     --app-foreground-1: hsl(0 0% 96%);
     --app-foreground-2: hsl(0 0% 99%);
@@ -119,10 +119,10 @@
 
 /*noinspection DuplicatedCode*/
 :root[data-color-scheme="light"] {
-  --app-background-1: hsl(0 0% 93%);
-  --app-background-2: hsl(0 0% 90%);
-  --app-background-3: hsl(0 0% 87%);
-  --app-background-4: hsl(0 0% 84%);
+  --app-background-1: hsl(0 0% 90%);
+  --app-background-2: hsl(0 0% 87%);
+  --app-background-3: hsl(0 0% 84%);
+  --app-background-4: hsl(0 0% 81%);
 
   --app-foreground-1: hsl(0 0% 96%);
   --app-foreground-2: hsl(0 0% 99%);

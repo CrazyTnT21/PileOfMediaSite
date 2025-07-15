@@ -64,7 +64,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
 
   connectedCallback(): void
   {
-    const {button, slot} = this.elements;
+    const {button} = this.elements;
     const type = this.getAttribute("type");
     if (type && ["submit", "button", "reset"].includes(type))
       this.type = type as "submit" | "button" | "reset";
@@ -72,7 +72,7 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
       this.type = "submit";
     button.type = this.type;
 
-    slot.addEventListener("click", e =>
+    this.addEventListener("click", e =>
     {
       const button = <HTMLButtonElement>e.target;
       if (button.type == "submit" && this.internals.form)

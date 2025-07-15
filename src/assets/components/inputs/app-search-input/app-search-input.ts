@@ -8,7 +8,7 @@ import {AppButton} from "../../app-button/app-button";
 import {Observer} from "../../../observer";
 import {AppAutocomplete} from "../../autocompletes/app-autocomplete/app-autocomplete";
 import {AttributeValue} from "../common";
-import {dataLabelAttr} from "./attributes";
+import {dataLabelAttr, disabledAttr} from "./attributes";
 
 export type AppSearchInputElements = AppInputElements & { searchButton: AppButton };
 export const appSearchInputTexts = {
@@ -25,9 +25,12 @@ export class AppSearchInput extends AppInput implements StyleCSS
     ...AppInput.elementSelectors,
     searchButton: "app-button",
   }
+  //TODO: as conversion
   static override observedAttributesMap = {
     ...AppAutocomplete.observedAttributesMap,
     "data-label": (element: AppInput, v: AttributeValue): void => dataLabelAttr(element as AppSearchInput, v),
+    "disabled": (element: AppInput, value: AttributeValue): void =>
+        disabledAttr(element as AppSearchInput, value, (element as AppSearchInput).internals, (element as AppSearchInput).hasDisabledFieldset),
   };
 
   override async connectedCallback(): Promise<void>
@@ -36,7 +39,6 @@ export class AppSearchInput extends AppInput implements StyleCSS
     const {searchButton, input} = this.elements;
     searchButton.addEventListener("click", () =>
     {
-      input.focus();
       this.shadowRoot.dispatchEvent(new SearchEvent({composed: true, detail: input.value}));
     });
     input.addEventListener("search", () => this.shadowRoot.dispatchEvent(new SearchEvent({

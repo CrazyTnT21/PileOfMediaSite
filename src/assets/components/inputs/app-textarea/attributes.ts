@@ -22,7 +22,17 @@ export function disabledAttr(element: AppTextArea, value: string | null | undefi
   const disabled = hasDisabledFieldset || value == "";
   const {textarea} = element.elements;
   textarea.disabled = disabled;
-  internals.ariaDisabled = disabled ? "" : null;
+
+  if (disabled)
+  {
+    internals.ariaDisabled = "";
+    internals.states.add("disabled");
+  }
+  else
+  {
+    internals.ariaDisabled = null;
+    internals.states.delete("disabled")
+  }
 }
 
 export function maxLengthAttr(element: AppTextArea, value: string | null | undefined): void

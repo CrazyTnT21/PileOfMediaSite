@@ -44,7 +44,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   static readonly formAssociated = true;
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  private readonly internals: ElementInternals;
+  protected readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
 
   protected static readonly observedAttributesMap = {
@@ -135,7 +135,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
-  private hasDisabledFieldset: boolean = false;
+  protected hasDisabledFieldset: boolean = false;
 
   get placeholder(): string | null
   {
@@ -159,7 +159,8 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
     handleFieldset(this, (value: boolean) =>
     {
       this.hasDisabledFieldset = value;
-      disabledAttr(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+      //TODO: as conversion
+      (this.constructor as typeof AppInput)["observedAttributesMap"]["disabled"](this, this.getAttribute("disabled"))
     });
 
     await this.setupValidation();
