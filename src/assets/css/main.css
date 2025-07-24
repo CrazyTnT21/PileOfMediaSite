@@ -89,10 +89,8 @@ app-header:not(:defined) {
   display: block;
   margin: 6px;
   background-color: var(--header-background-color);
-}
-
-app-header {
-  /*height: 2rem;*/
+  height: 3.3rem;
+  border-radius: 6px;
 }
 
 .placeholder {
@@ -143,6 +141,7 @@ app-header {
   margin: 6px;
   border-radius: 6px;
   box-shadow: 0 0 6px var(--app-background-4, lightgray);
+  background-color: var(--app-foreground-1)
 }
 
 .login-box {
@@ -239,4 +238,8 @@ p {
 
 .bigger {
   font-size: 1.2rem;
+}
+
+.round {
+  border-radius: 6px;
 }

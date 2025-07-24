@@ -16,7 +16,6 @@ export type AppHeaderElements = {
   burger: HTMLDetailsElement,
   user: HTMLDetailsElement,
   logoutButton: AppButton,
-  userDropdown: HTMLUListElement,
   profilePicture: HTMLImageElement,
   profileLink: HTMLAnchorElement,
   searchInput: AppSearchInput,
@@ -36,8 +35,10 @@ export type AppHeaderElements = {
   commentsText: HTMLSpanElement,
   logoutText: HTMLSpanElement,
   loginText: HTMLSpanElement,
-  signupText: HTMLSpanElement,
-  showingResults: HTMLDivElement
+  settingsIcon: HTMLSpanElement,
+  showingResults: HTMLDivElement,
+  loginLink: HTMLAnchorElement
+  settings: HTMLDetailsElement,
 };
 export const appHeaderTexts = {
   graphicNovels: "Graphic novels",
@@ -53,14 +54,12 @@ export const appHeaderTexts = {
   comments: "Comments",
   logout: "Logout",
   login: "Log in",
-  signup: "Sign up",
   showingResults: templateString<`${SurroundedString<"{count}">}${SurroundedString<"{total}">}`>("Showing {count} of {total} results")
 };
 
 export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
 {
   readonly texts = new Observer(appHeaderTexts);
-  private loginData: LoginReturn | undefined | null;
 
   override shadowRoot: ShadowRoot;
   private readonly searchDropdown: AppHeaderSearch;
@@ -70,11 +69,10 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     burger: "#burger",
     user: "#user",
     logoutButton: "#logout-button",
-    userDropdown: "#user-dropdown",
     profilePicture: "#profile-picture",
     profileLink: "#profile-link",
     searchInput: "app-search-input",
-    navigationItems: ".items",
+    navigationItems: "#items",
     searchElements: "#search-elements",
     searchDropdown: "#search-dropdown",
     graphicNovelsText: "[data-id=graphic-novels-text]",
@@ -91,24 +89,34 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     commentsText: "#comments-text",
     logoutText: "#logout-text",
     loginText: "#login-text",
-    signupText: "#signup-text"
+    loginLink: "#login",
+    settings: "#settings",
+    settingsIcon: "#settings-icon",
   }
 
   async connectedCallback(): Promise<void>
   {
-    const {burger, user, logoutButton} = this.elements;
+    const {burger, user, logoutButton, settings} = this.elements;
+
     burger.addEventListener("focusout", (e) =>
     {
       if (burger.contains(<HTMLElement | null>e.relatedTarget))
         return;
-      burger.open = false
+      burger.open = false;
     });
 
     user.addEventListener("focusout", (e) =>
     {
       if (user.contains(<HTMLElement | null>e.relatedTarget))
         return;
-      user.open = false
+      user.open = false;
+    });
+
+    settings.addEventListener("focusout", (e) =>
+    {
+      if (settings.contains(<HTMLElement | null>e.relatedTarget))
+        return;
+      settings.open = false;
     });
 
     logoutButton.addEventListener("click", () => this.account = null);
@@ -130,31 +138,14 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     else
       localStorage.setItem("account", JSON.stringify(value));
 
-    this.loginData = value;
     this.loadAccount();
   }
 
   loadAccount(): void
   {
     const localAccount = localStorage.getItem("account");
-    const userDropdown = [...this.elements.userDropdown.children];
-    userDropdown.forEach(x =>
-    {
-      const element = (<HTMLElement>x);
-
-      element.hidden = element.getAttribute("data-default") != "";
-
-      if (localAccount)
-      {
-        if (element.getAttribute("data-login") == "")
-          element.hidden = false
-      }
-      else
-      {
-        if (element.getAttribute("data-logout") == "")
-          element.hidden = false;
-      }
-    });
+    this.elements.loginLink.hidden = !!localAccount;
+    this.elements.user.hidden = !localAccount;
 
     const {profilePicture} = this.elements;
     if (localAccount)
@@ -208,8 +199,8 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
       ["comments", this.elements.commentsText],
       ["logout", this.elements.logoutText],
       ["login", this.elements.loginText],
-      ["signup", this.elements.signupText],
     ]);
+    this.texts.addListener("settings", (value) => this.elements.settingsIcon.title = value);
   }
 
   private matchAllLabelTexts(labels: [keyof typeof appHeaderTexts, HTMLElement | HTMLElement[]][]): void

@@ -45,7 +45,7 @@ app-search-input {
   }
 }
 
-@media (min-width: 44.01rem) {
+@media (min-width: 45.01rem) {
   .inside {
     width: 100%;
   }

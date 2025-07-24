@@ -1,5 +1,5 @@
-<div id="inner">
-  <details id="burger">
+<div id="header">
+  <details class="overlay icon-list list-divided" id="burger">
     <summary class="icon">
     </summary>
   </details>
@@ -7,14 +7,37 @@
     <img src="/assets/img/Logo_Placeholder.png" alt="Logo"/>
   </a>
   <nav>
-    <ul class="items">
-      <li><a href="/graphicnovels"><span class="graphic-novel-icon" part="icon"></span><span
-              data-id="graphic-novels-text">Graphic novels</span></a></li>
-      <li><a href="/books"><span class="book-icon" part="icon"></span><span data-id="books-text">Books</span></a></li>
-      <li><a href="/movies"><span class="movie-icon" part="icon"></span><span data-id="movies-text">Movies</span></a>
+    <ul id="items" class="items">
+      <li>
+        <a href="/graphicnovels">
+          <span class="graphic-novel-icon"></span>
+          <span data-id="graphic-novels-text">Graphic novels</span>
+        </a>
       </li>
-      <li><a href="/shows"><span class="show-icon" part="icon"></span><span data-id="shows-text">Shows</span></a></li>
-      <li><a href="/games"><span class="game-icon" part="icon"></span><span data-id="games-text">Games</span></a></li>
+      <li>
+        <a href="/books">
+          <span class="book-icon"></span>
+          <span data-id="books-text">Books</span>
+        </a>
+      </li>
+      <li>
+        <a href="/movies">
+          <span class="movie-icon"></span>
+          <span data-id="movies-text">Movies</span>
+        </a>
+      </li>
+      <li>
+        <a href="/shows">
+          <span class="show-icon"></span>
+          <span data-id="shows-text">Shows</span>
+        </a>
+      </li>
+      <li>
+        <a href="/games">
+          <span class="game-icon"></span>
+          <span data-id="games-text">Games</span>
+        </a>
+      </li>
     </ul>
   </nav>
   <div class="search-box">
@@ -27,42 +50,65 @@
       </div>
     </div>
   </div>
-  <!--</div>-->
-  <details id="user">
+  <details class="overlay icon-list list-divided" id="user">
     <summary>
       <img id="profile-picture" src="/assets/img/User_Placeholder.svg" alt="Profile"/>
     </summary>
-    <ul id="user-dropdown">
-      <li data-login>
-        <a id="profile-link" href="/users/user"><span class="profile-icon" part="icon"></span><span id="profile-text">Profile</span></a>
+    <ul class="list-divided">
+      <li>
+        <a id="profile-link" href="/users/user">
+          <span class="profile-icon"></span>
+          <span id="profile-text">Profile</span>
+        </a>
       </li>
-      <li data-login><a href="/users/about/friends"><span class="friends-icon" part="icon"></span><span
-              id="friends-text">Friends</span></a>
+      <li>
+        <a href="/users/about/friends">
+          <span class="friends-icon"></span>
+          <span id="friends-text">Friends</span></a>
       </li>
-      <li data-login>
-        <a href="/users/about/comments"><span class="comment-icon" part="icon"></span><span
-                id="comments-text">Comments</span></a>
+      <li>
+        <a href="/users/about/comments">
+          <span class="comment-icon"></span>
+          <span id="comments-text">Comments</span>
+        </a>
       </li>
-      <li data-login><a href="/users/about/reviews"><span class="review-icon" part="icon"></span><span
-              id="reviews-text">Reviews</span></a>
+      <li>
+        <a href="/users/about/reviews">
+          <span class="review-icon"></span>
+          <span id="reviews-text">Reviews</span>
+        </a>
       </li>
-      <li data-default><a href="/users/about/settings"><span class="settings-icon" part="icon"></span><span
-              id="settings-text">Settings</span></a>
-      </li>
-      <li data-default>
-        <a href="/users/about/preferences"><span class="settings-icon" part="icon"></span><span id="preferences-text">Preferences</span></a>
-      </li>
-      <li data-login id="logout">
-        <app-button id="logout-button" class="logout" exportparts="button,button: logout-button">
-        <span class="center"><span class="logout-icon" part="icon, logout-icon"></span><span
-                id="logout-text">Logout</span></span>
+      <li id="logout">
+        <app-button id="logout-button">
+        <span>
+          <span class="logout-icon"></span>
+          <span id="logout-text">Logout</span>
+        </span>
         </app-button>
       </li>
-      <li data-logout id="login"><a href="/login"><span class="login-icon" part="icon"></span><span
-              id="login-text">Log in</span></a>
+    </ul>
+  </details>
+  <div id="login">
+    <a href="/login" class="login-link">
+      <span class="login-icon"></span>
+      <span id="login-text">Log in</span>
+    </a>
+  </div>
+  <details class="overlay icon-list list-divided" id="settings">
+    <summary class="icon" title="Settings">
+    </summary>
+    <ul class="list-divided">
+      <li>
+        <a href="/users/about/settings">
+          <span id="settings-icon" class="settings-icon"></span>
+          <span id="settings-text">Settings</span>
+        </a>
       </li>
-      <li data-logout id="signup">
-        <a href="/signup"><span class="login-icon" part="icon"></span><span id="signup-text">Sign up</span></a>
+      <li>
+        <a href="/users/about/preferences">
+          <span class="settings-icon"></span>
+          <span id="preferences-text">Preferences</span>
+        </a>
       </li>
     </ul>
   </details>

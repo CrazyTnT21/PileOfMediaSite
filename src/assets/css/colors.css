@@ -28,6 +28,7 @@
 
   --header-color: var(--app-text-1);
   --header-color-hover: var(--app-color-2);
+  --header-outline-color: var(--app-outline);
 
   --header-border-color: var(--app-color-2);
 
@@ -201,4 +202,16 @@ a:hover, a:focus {
 .login {
   --button-background-color: var(--app-positive);
   --button-color: var(--app-positive-text);
+}
+
+.foreground-1 {
+  background-color: var(--app-foreground-1);
+}
+
+.foreground-2 {
+  background-color: var(--app-foreground-2);
+}
+
+*:focus-visible {
+  outline: var(--app-outline) 3px solid;
 }
