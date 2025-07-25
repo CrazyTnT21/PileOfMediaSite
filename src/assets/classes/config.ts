@@ -1,6 +1,6 @@
 import {Translation} from "../translations/translation";
 import {get} from "../scripts/http";
-import {LanguageCode} from "./language";
+import {type LanguageCode, LanguageCodes} from "./language";
 
 export class Config
 {
@@ -22,7 +22,7 @@ export class Config
     return new Config();
   })();
 
-  static preferredLanguages: [LanguageCode, ...LanguageCode[]] = [LanguageCode.EN];
+  static preferredLanguages: [LanguageCode, ...LanguageCode[]] = [LanguageCodes.EN];
 
   private static readonly translations = new Map();
 
@@ -49,10 +49,10 @@ export class Config
       }
     }
 
-    if (!Config.translations.has(LanguageCode.EN))
-      Config.translations.set(LanguageCode.EN, await get(getTranslationUri(LanguageCode.EN)))
+    if (!Config.translations.has(LanguageCodes.EN))
+      Config.translations.set(LanguageCodes.EN, await get(getTranslationUri(LanguageCodes.EN)))
 
-    return Config.translations.get(LanguageCode.EN);
+    return Config.translations.get(LanguageCodes.EN);
   }
 }
 

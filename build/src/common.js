@@ -1,6 +1,5 @@
 import esbuildPluginTsc from "esbuild-plugin-tsc";
 import htmlPlugin from "./plugins/html-plugin.js";
-import woff2Plugin from "./plugins/woff2-plugin.js";
 import {absolutePathPlugin} from "./plugins/absolute-path-plugin.js";
 import inlinePlugin from "./plugins/inline-plugin.js";
 import path from "node:path";
@@ -23,7 +22,6 @@ export function createBuildSettings(options)
         force: true,
       }),
       htmlPlugin(),
-      woff2Plugin(),
       absolutePathPlugin(),
     ],
     loader: {
@@ -35,6 +33,7 @@ export function createBuildSettings(options)
       ".webmanifest": "copy",
       ".json": "copy",
       ".txt": "copy",
+      ".woff2": "copy"
     },
     ...options,
   };

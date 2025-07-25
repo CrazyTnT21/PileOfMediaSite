@@ -1,11 +1,11 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
-import {getLanguageCode, Language, LanguageCode} from "../../classes/language";
+import {LanguageCode, LanguageText, LanguageTexts} from "../../classes/language";
 import {Observer} from "../../observer";
 import {dataLabelAttr} from "./app-language-autocomplete/attributes";
 import {AppInput} from "../inputs/app-input/app-input";
 import {AttributeValue} from "../inputs/common";
 
-export type LanguageLabel = { value: LanguageCode, label: Language };
+export type LanguageLabel = { value: LanguageCode, label: LanguageText };
 
 export const AppLanguageAutocompleteTexts = {
   ...appAutocompleteTexts,
@@ -48,19 +48,9 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
   }
 }
 
-function getLanguageAndCode(language: Language): LanguageLabel
-{
-  return {label: language, value: getLanguageCode(language)}
-}
-
 function items(): LanguageLabel[]
 {
-  return [
-    {...getLanguageAndCode(Language.EN)},
-    {...getLanguageAndCode(Language.DE)},
-    {...getLanguageAndCode(Language.ES)},
-    {...getLanguageAndCode(Language.JA)},
-  ]
+  return (<LanguageCode[]>Object.keys(LanguageTexts)).map(x => ({value: x, label: LanguageTexts[x]}))
 }
 
 AppLanguageAutocomplete.define();

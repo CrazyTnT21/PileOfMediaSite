@@ -1,5 +1,4 @@
 import {Config} from "../classes/config";
-import {getLanguageTag} from "../classes/language";
 import {Translation} from "../translations/translation";
 import {AppInput} from "assets/components/inputs/app-input/app-input";
 import {Observer} from "../observer";
@@ -12,12 +11,13 @@ import {AppHeader} from "../components/app-header/app-header";
 import {AppSearchInput} from "../components/inputs/app-search-input/app-search-input";
 import {AppEmailInput} from "../components/inputs/app-email-input/app-email-input";
 import {AppPasswordInput} from "../components/inputs/app-password-input/app-password-input";
+import {LanguageCodes} from "../classes/language";
 
 async function main(): Promise<void>
 {
   const elements = <NodeListOf<HTMLElement>>document.querySelectorAll("[data-translate]");
   const language = Config.preferredLanguages[0];
-  document.querySelector("html")!.lang = getLanguageTag(language);
+  document.querySelector("html")!.lang = LanguageCodes[language].toLowerCase();
   const translation = await Config.translation();
   for (const element of elements)
   {
