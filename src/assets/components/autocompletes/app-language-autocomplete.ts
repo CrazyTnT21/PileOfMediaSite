@@ -1,18 +1,17 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
-import {LanguageCode, LanguageText, LanguageTexts} from "../../classes/language";
+import {LanguageCode, LanguageTexts} from "../../classes/language";
 import {Observer} from "../../observer";
 import {dataLabelAttr} from "./app-language-autocomplete/attributes";
 import {AppInput} from "../inputs/app-input/app-input";
 import {AttributeValue} from "../inputs/common";
-
-export type LanguageLabel = { value: LanguageCode, label: LanguageText };
+import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 export const AppLanguageAutocompleteTexts = {
   ...appAutocompleteTexts,
   language: "Language"
 }
 
-export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
+export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
 {
   override readonly texts = new Observer(AppLanguageAutocompleteTexts);
   static override observedAttributesMap = {
@@ -30,14 +29,23 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
     });
   }
 
-  override async* searchItems(): AsyncGenerator<LanguageLabel[]>
+  override async* searchItems(): AsyncGenerator<LanguageCode[]>
   {
     yield items();
   }
 
-  override async* loadItems(): AsyncGenerator<LanguageLabel[]>
+  override async* loadItems(): AsyncGenerator<LanguageCode[]>
   {
     yield items();
+  }
+  override itemValue(item: LanguageCode): any
+  {
+    return item;
+  }
+
+  override itemLabel(item: LanguageCode): string | null
+  {
+    return LanguageTexts[item];
   }
 
   public static override define(): void
@@ -46,11 +54,12 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageLabel>
       return;
     customElements.define("app-language-autocomplete", AppLanguageAutocomplete);
   }
+
 }
 
-function items(): LanguageLabel[]
+function items(): LanguageCode[]
 {
-  return (<LanguageCode[]>Object.keys(LanguageTexts)).map(x => ({value: x, label: LanguageTexts[x]}))
+  return unsafeObjectKeys(LanguageTexts);
 }
 
 AppLanguageAutocomplete.define();

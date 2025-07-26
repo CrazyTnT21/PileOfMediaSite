@@ -79,7 +79,7 @@ function setLanguageAutocompleteTexts(element: AppLanguageAutocomplete, translat
   setAutocompleteTexts(element, translation);
 }
 
-function setAutocompleteTexts(element: AppAutocomplete, translation: Translation): void
+function setAutocompleteTexts(element: AppAutocomplete<any>, translation: Translation): void
 {
   setIfExists(element, "itemAlreadySelected", translation.autocompleteItemAlreadySelected);
   setIfExists(element, "itemNotFound", translation.autocompleteItemNotFound);

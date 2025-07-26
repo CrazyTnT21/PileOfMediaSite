@@ -1,3 +1,5 @@
+import {unsafeObjectKeys} from "../unsafe-object-keys";
+
 export class ColorScheme
 {
   name: string;
@@ -60,7 +62,7 @@ export function removeColorScheme(): void
 export function saveColorScheme(value: ColorScheme): void
 {
   const style: any = {};
-  const keys = <(keyof ColorStyle)[]>Object.keys(value.style);
+  const keys = unsafeObjectKeys(value.style);
 
   for (const key of keys)
     style[key.replaceAll("_", "-")] = value.style[key];

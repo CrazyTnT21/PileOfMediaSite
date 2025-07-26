@@ -1,3 +1,5 @@
+import {unsafeObjectKeys} from "../unsafe-object-keys";
+
 export const LanguageTexts = {
   EN: "English",
   DE: "Deutsch",
@@ -8,7 +10,7 @@ export const LanguageTexts = {
   KO: "한국인",
 } as const;
 
-const keys = <LanguageCode[]>Object.keys(LanguageTexts);
+const keys = unsafeObjectKeys(LanguageTexts);
 export const LanguageCodes = keys.reduce((previousValue, currentValue) =>
 {
   Object.defineProperty(previousValue, currentValue, {value: currentValue, configurable: false});

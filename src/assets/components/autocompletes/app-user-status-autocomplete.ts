@@ -1,6 +1,7 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {UserStatus} from "../../openapi/user-status";
 import {Observer} from "../../observer";
+import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 export const appUserStatusAutocompleteTexts = {
   ...appAutocompleteTexts,
@@ -40,12 +41,12 @@ export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
 
   override async* searchItems(): AsyncGenerator<UserStatus[]>
   {
-    yield items(this.valueMapping.object());
+    yield unsafeObjectKeys(this.valueMapping.object());
   }
 
   override async* loadItems(): AsyncGenerator<UserStatus[]>
   {
-    yield items(this.valueMapping.object());
+    yield unsafeObjectKeys(this.valueMapping.object());
   }
 
   private matchLabelText(key: UserStatus, textKey: keyof typeof appUserStatusAutocompleteTexts): void
@@ -93,11 +94,6 @@ export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
         )
         .filter(x => x)[0] ?? null;
   }
-}
-
-function items(mapping: { [key: string]: string }): UserStatus[]
-{
-  return Object.keys(mapping) as UserStatus[];
 }
 
 AppUserStatusAutocomplete.define();

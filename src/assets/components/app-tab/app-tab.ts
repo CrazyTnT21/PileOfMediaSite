@@ -5,8 +5,7 @@ import {StyleCSS} from "../style-css";
 import {applyStyleSheet, attach} from "../defaults";
 import {AppButton} from "../app-button/app-button";
 import {mapSelectors} from "../../dom";
-
-type attributeKey = keyof typeof AppTab["observedAttributesMap"];
+import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 export type AppTabElements = {
   headers: HTMLDivElement,
@@ -24,7 +23,7 @@ export class AppTab extends HTMLElement implements ApplyStyleSheet, StyleCSS
     contents: "#contents"
   }
   private static readonly observedAttributesMap = {}
-  static readonly observedAttributes = <[attributeKey]>Object.keys(AppTab.observedAttributesMap);
+  static readonly observedAttributes = unsafeObjectKeys(AppTab.observedAttributesMap);
 
   async connectedCallback(): Promise<void>
   {

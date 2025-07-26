@@ -1,3 +1,5 @@
+import {unsafeObjectKeys} from "./unsafe-object-keys";
+
 /**
  * Maps selectors to their corresponding Element
  * @example
@@ -11,7 +13,7 @@
 export function mapSelectors<Elements>(element: ParentNode, selectors: { [key in keyof Elements]: string }): { [key in keyof Elements]: Elements[key] }
 {
   const result = {};
-  const keys = <(keyof typeof selectors)[]>Object.keys(selectors);
+  const keys = unsafeObjectKeys(selectors);
   for (const key of keys)
   {
     if (selectors[key])

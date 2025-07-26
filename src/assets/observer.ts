@@ -1,3 +1,5 @@
+import {unsafeObjectKeys} from "./unsafe-object-keys";
+
 type Identifier = `${string | number | bigint}.${number}`;
 
 /**
@@ -26,7 +28,7 @@ export class Observer<T extends object>
   constructor(item: T)
   {
     this.item = item;
-    const keys = <(keyof T)[]>Object.keys(item);
+    const keys = unsafeObjectKeys(item);
     const map = new Map();
     for (const key of keys)
     {
