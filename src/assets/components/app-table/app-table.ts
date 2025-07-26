@@ -1,10 +1,9 @@
 import {attach, applyStyleSheet} from "../defaults";
-import {ApplyStyleSheet} from "../apply-style-sheet";
 import {StyleCSS} from "../style-css";
 import html from "./app-table.html" with {type: "inline"};
 import css from "./app-table.css" with {type: "inline"};
 
-export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppTable<T> extends HTMLElement implements StyleCSS
 {
   override shadowRoot: ShadowRoot;
 
@@ -68,8 +67,8 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
   createRowElement(column: Column<T>, item: T): HTMLTableCellElement
   {
     const element = column.type === ColumnType.Image
-      ? document.createElement("img")
-      : document.createElement("div");
+        ? document.createElement("img")
+        : document.createElement("div");
 
     this.setInnerHTML(column, element, item);
 
@@ -145,10 +144,10 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
   connectedCallback(): void
   {
     this.shadowRoot.querySelector("#next")!.addEventListener("click", () =>
-      this.shadowRoot.dispatchEvent(this.#nextEvent));
+        this.shadowRoot.dispatchEvent(this.#nextEvent));
 
     this.shadowRoot.querySelector("#back")!.addEventListener("click", () =>
-      this.shadowRoot.dispatchEvent(this.#backEvent));
+        this.shadowRoot.dispatchEvent(this.#backEvent));
 
     this.shadowRoot.querySelector("caption")!.innerText = this.caption;
   }
@@ -156,17 +155,14 @@ export class AppTable<T> extends HTMLElement implements ApplyStyleSheet, StyleCS
   constructor()
   {
     super();
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attach(this);
     this.render();
-    this.applyStyleSheet();
   }
-
-  attach = attach;
-  applyStyleSheet = applyStyleSheet;
 
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

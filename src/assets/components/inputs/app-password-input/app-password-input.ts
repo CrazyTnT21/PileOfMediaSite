@@ -6,6 +6,7 @@ import {AppButton} from "../../app-button/app-button";
 import {mapSelectors} from "../../../dom";
 import {AttributeValue} from "../common";
 import {disabledAttr} from "./attributes";
+import {applyStyleSheet} from "../../defaults";
 
 export type AppPasswordInputElements = AppInputElements & { passwordButton: AppButton, eyeIcon: HTMLSpanElement };
 
@@ -55,6 +56,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   override render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   override styleCSS(): string

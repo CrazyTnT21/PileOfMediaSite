@@ -1,5 +1,4 @@
 import {applyStyleSheet, attach} from "../defaults";
-import {ApplyStyleSheet} from "../apply-style-sheet";
 import {StyleCSS} from "../style-css";
 import {LoginReturn} from "../../openapi/login-return";
 import {ImageData} from "../../openapi/image-data";
@@ -57,7 +56,7 @@ export const appHeaderTexts = {
   showingResults: templateString<`${SurroundedString<"{count}">}${SurroundedString<"{total}">}`>("Showing {count} of {total} results")
 };
 
-export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppHeader extends HTMLElement implements StyleCSS
 {
   readonly texts = new Observer(appHeaderTexts);
 
@@ -179,10 +178,9 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
   constructor()
   {
     super();
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attach(this);
     this.render();
     this.elements = mapSelectors<AppHeaderElements>(this.shadowRoot, AppHeader.elementSelectors);
-    this.applyStyleSheet();
     this.searchDropdown = new AppHeaderSearch(this);
     this.searchDropdown.setupSearch(this.shadowRoot);
     this.matchAllLabelTexts([
@@ -229,8 +227,6 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     });
   }
 
-  attach = attach;
-  applyStyleSheet = applyStyleSheet;
   readonly placeholderImageUrl = "/assets/img/User_Placeholder.svg";
 
   render(): void
@@ -238,6 +234,7 @@ export class AppHeader extends HTMLElement implements ApplyStyleSheet, StyleCSS
     this.shadowRoot.innerHTML = html;
     const items = <HTMLLIElement[]>[...this.shadowRoot.querySelector(AppHeader.elementSelectors.navigationItems)!.children];
     this.copyToHamburger(items);
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

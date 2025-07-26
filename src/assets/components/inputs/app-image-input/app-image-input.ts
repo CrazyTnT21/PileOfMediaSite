@@ -1,5 +1,4 @@
-import {applyStyleSheet, attach_delegates} from "../../defaults";
-import {ApplyStyleSheet} from "../../apply-style-sheet";
+import {applyStyleSheet, attachDelegates} from "../../defaults";
 import {StyleCSS} from "../../style-css";
 import {UploadEvent} from "./upload-event";
 import html from "./app-image-input.html" with {type: "inline"};
@@ -46,7 +45,7 @@ export const appImageInputTexts = {
   required: "Required",
 };
 
-export class AppImageInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppImageInput extends HTMLElement implements StyleCSS
 {
   readonly texts = new Observer(appImageInputTexts);
   readonly elements: AppImageInputElements;
@@ -227,9 +226,8 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   {
     super();
     this.internals = this.attachInternals();
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attachDelegates(this);
     this.render();
-    this.applyStyleSheet();
     this.elements = mapSelectors<AppImageInputElements>(this.shadowRoot, AppImageInput.elementSelectors);
     this.defaultSrc = this.elements.image.src;
     this.texts.addListener("clearImage", (value) =>
@@ -252,9 +250,6 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
       this.elements.label.setAttribute("data-text-required", value);
     });
   }
-
-  attach = attach_delegates;
-  applyStyleSheet = applyStyleSheet;
 
   async onInputChange(event: Event): Promise<void>
   {
@@ -323,6 +318,7 @@ export class AppImageInput extends HTMLElement implements ApplyStyleSheet, Style
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

@@ -1,5 +1,4 @@
-import {applyStyleSheet, attach_delegates} from "../../defaults";
-import {ApplyStyleSheet} from "../../apply-style-sheet";
+import {applyStyleSheet, attachDelegates} from "../../defaults";
 import {StyleCSS} from "../../style-css";
 import {
   AttributeValue,
@@ -38,7 +37,7 @@ export const appTextAreaTexts = {
   ("Textarea only allows a maximum of '{max}' characters. Current length: {currentLength}")
 };
 
-export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppTextArea extends HTMLElement implements StyleCSS
 {
   static readonly formAssociated = true;
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
@@ -191,16 +190,12 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
 
     this.internals = this.attachInternals();
     this.internals.role = "textarea";
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attachDelegates(this);
     this.render();
-    this.applyStyleSheet();
     this.elements = mapSelectors<AppTextAreaElements>(this.shadowRoot, AppTextArea.elementSelectors);
 
     this.texts.addListener("required", (value) => this.elements.label.setAttribute("data-text-required", value));
   }
-
-  attach = attach_delegates;
-  applyStyleSheet = applyStyleSheet;
 
   async setupValidation(): Promise<void>
   {
@@ -262,6 +257,7 @@ export class AppTextArea extends HTMLElement implements ApplyStyleSheet, StyleCS
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

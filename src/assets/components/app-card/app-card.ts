@@ -1,5 +1,4 @@
 import {applyStyleSheet, attach} from "../defaults";
-import {ApplyStyleSheet} from "../apply-style-sheet";
 import {StyleCSS} from "../style-css";
 import html from "./app-card.html" with {type: "inline"}
 import css from "./app-card.css" with {type: "inline"}
@@ -15,7 +14,7 @@ export type AppCardElements = {
   titleSlot: HTMLSlotElement
 };
 
-export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppCard extends HTMLElement implements StyleCSS
 {
   override shadowRoot: ShadowRoot;
   readonly elements: AppCardElements;
@@ -82,18 +81,15 @@ export class AppCard extends HTMLElement implements ApplyStyleSheet, StyleCSS
   constructor()
   {
     super();
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attach(this);
     this.render();
-    this.applyStyleSheet();
     this.elements = mapSelectors<AppCardElements>(this.shadowRoot, AppCard.elementSelectors);
   }
-
-  attach = attach;
-  applyStyleSheet = applyStyleSheet;
 
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

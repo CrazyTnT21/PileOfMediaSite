@@ -1,6 +1,5 @@
-import {applyStyleSheet, attach_delegates} from "../defaults";
+import {applyStyleSheet, attachDelegates} from "../defaults";
 import {StyleCSS} from "../style-css";
-import {ApplyStyleSheet} from "../apply-style-sheet";
 import {AttributeValue, handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import html from "./app-button.html" with {type: "inline"};
 import css from "./app-button.css" with {type: "inline"};
@@ -14,7 +13,7 @@ export type AppButtonElements = {
   slot: HTMLSlotElement
 };
 
-export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppButton extends HTMLElement implements StyleCSS
 {
   readonly elements: AppButtonElements;
   protected static readonly elementSelectors: { [key in keyof AppButton["elements"]]: string } = {
@@ -93,18 +92,15 @@ export class AppButton extends HTMLElement implements ApplyStyleSheet, StyleCSS
     super();
     this.internals = this.attachInternals();
     this.internals.role = "button";
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attachDelegates(this);
     this.render();
-    this.applyStyleSheet();
     this.elements = mapSelectors<AppButtonElements>(this.shadowRoot, AppButton.elementSelectors);
   }
-
-  attach = attach_delegates;
-  applyStyleSheet = applyStyleSheet;
 
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

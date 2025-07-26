@@ -9,6 +9,7 @@ import {Observer} from "../../../observer";
 import {AppAutocomplete} from "../../autocompletes/app-autocomplete/app-autocomplete";
 import {AttributeValue} from "../common";
 import {dataLabelAttr, disabledAttr} from "./attributes";
+import {applyStyleSheet} from "../../defaults";
 
 export type AppSearchInputElements = AppInputElements & { searchButton: AppButton };
 export const appSearchInputTexts = {
@@ -67,6 +68,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
   override render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   override styleCSS(): string

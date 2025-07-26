@@ -1,10 +1,9 @@
 import html from "./app-checkbox.html" with {type: "inline"};
 import css from "./app-checkbox.css" with {type: "inline"};
-import {ApplyStyleSheet} from "../apply-style-sheet";
 import {StyleCSS} from "../style-css";
 import {ValueSetEvent} from "../inputs/app-input/value-set-event";
 import {AttributeValue, handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
-import {applyStyleSheet, attach_delegates} from "../defaults";
+import {applyStyleSheet, attachDelegates} from "../defaults";
 import {dataLabelAttr, disabledAttr} from "./attributes";
 import {mapSelectors} from "../../dom";
 
@@ -14,7 +13,7 @@ export type AppCheckboxElements = {
   label: HTMLLabelElement
 };
 
-export class AppCheckbox extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppCheckbox extends HTMLElement implements StyleCSS
 {
   readonly elements: AppCheckboxElements;
   protected static readonly elementSelectors: { [key in keyof AppCheckbox["elements"]]: string } = {
@@ -96,14 +95,10 @@ export class AppCheckbox extends HTMLElement implements ApplyStyleSheet, StyleCS
   {
     super();
     this.internals = this.setupInternals();
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attachDelegates(this);
     this.render();
-    this.applyStyleSheet();
     this.elements = mapSelectors<AppCheckboxElements>(this.shadowRoot, AppCheckbox.elementSelectors);
   }
-
-  attach = attach_delegates;
-  applyStyleSheet = applyStyleSheet;
 
   setupInternals(): ElementInternals
   {
@@ -112,10 +107,10 @@ export class AppCheckbox extends HTMLElement implements ApplyStyleSheet, StyleCS
     return internals;
   }
 
-
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

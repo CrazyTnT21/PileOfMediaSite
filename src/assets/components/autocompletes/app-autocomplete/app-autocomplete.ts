@@ -7,6 +7,7 @@ import css from "./app-autocomplete.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
 import {Observer} from "../../../observer";
 import {templateString, SurroundedString} from "../../inputs/common";
+import {applyStyleSheet} from "../../defaults";
 
 export type AppAutoCompleteElements = AppInputElements & { selected: HTMLUListElement, items: HTMLDataListElement };
 export const appAutocompleteTexts = {
@@ -275,6 +276,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
   override render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   createOptions(items: T[]): void

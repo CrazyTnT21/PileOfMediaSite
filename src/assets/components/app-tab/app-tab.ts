@@ -1,6 +1,5 @@
 import html from "./app-tab.html" with {type: "inline"};
 import css from "./app-tab.css" with {type: "inline"};
-import {ApplyStyleSheet} from "../apply-style-sheet";
 import {StyleCSS} from "../style-css";
 import {applyStyleSheet, attach} from "../defaults";
 import {AppButton} from "../app-button/app-button";
@@ -12,7 +11,7 @@ export type AppTabElements = {
   contents: HTMLDivElement,
 };
 
-export class AppTab extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppTab extends HTMLElement implements StyleCSS
 {
   private readonly internals: ElementInternals;
   override shadowRoot: ShadowRoot;
@@ -60,15 +59,10 @@ export class AppTab extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     super();
     this.internals = this.setupInternals();
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attach(this);
     this.render();
-    this.applyStyleSheet();
     this.elements = mapSelectors<AppTabElements>(this.shadowRoot, AppTab.elementSelectors);
   }
-
-  attach = attach;
-  applyStyleSheet = applyStyleSheet;
-
   setupInternals(): ElementInternals
   {
     return this.attachInternals();
@@ -77,6 +71,7 @@ export class AppTab extends HTMLElement implements ApplyStyleSheet, StyleCSS
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

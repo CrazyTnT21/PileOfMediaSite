@@ -108,7 +108,6 @@ function setEmailInputTexts(element: AppEmailInput, translation: Translation): v
   setInputTexts(element, translation);
 }
 
-
 function setPasswordInputText(element: AppPasswordInput, translation: Translation): void
 {
   setInputTexts(element, translation);

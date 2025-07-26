@@ -1,5 +1,4 @@
-import {applyStyleSheet, attach_delegates} from "../../defaults";
-import {ApplyStyleSheet} from "../../apply-style-sheet";
+import {applyStyleSheet, attachDelegates} from "../../defaults";
 import {StyleCSS} from "../../style-css";
 import {
   AttributeValue,
@@ -32,7 +31,7 @@ export const appInputTexts = {
   ("Input only allows a maximum of '{max}' characters. Current length: {currentLength}"),
 };
 
-export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
+export class AppInput extends HTMLElement implements StyleCSS
 {
   readonly elements: AppInputElements;
   protected static readonly elementSelectors: { [key in keyof AppInput["elements"]]: string } = {
@@ -190,9 +189,8 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   {
     super();
     this.internals = this.setupInternals();
-    this.shadowRoot = this.attach();
+    this.shadowRoot = attachDelegates(this);
     this.render();
-    this.applyStyleSheet();
     this.addEventListener(ValueSetEvent.type, (e) => this.onValueSet(e));
     this.elements = mapSelectors<AppInputElements>(this.shadowRoot, AppInput.elementSelectors);
 
@@ -201,9 +199,6 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
       this.elements.label.setAttribute("data-text-required", value);
     });
   }
-
-  attach = attach_delegates;
-  applyStyleSheet = applyStyleSheet;
 
   setupInternals(): ElementInternals
   {
@@ -278,6 +273,7 @@ export class AppInput extends HTMLElement implements ApplyStyleSheet, StyleCSS
   render(): void
   {
     this.shadowRoot.innerHTML = html;
+    applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
   styleCSS(): string

@@ -135,8 +135,6 @@ export class AppHeaderSearch
 
     return li;
   }
-
-
   setupSearch(shadowRoot: ShadowRoot): void
   {
     const {searchInput, searchElements} = this.header.elements;
