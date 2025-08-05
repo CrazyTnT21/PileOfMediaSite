@@ -14,7 +14,6 @@
 
 :host {
   display: inline-flex;
-  background-color: var(--button-background-color--);
   border-radius: 6px;
 }
 

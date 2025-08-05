@@ -1,0 +1,33 @@
+.search {
+  --input-padding: 9px;
+}
+
+.small-din-4 {
+  height: 3.6rem;
+  border-radius: 6px;
+  aspect-ratio: 1 / 1.41421;
+  object-fit: contain;
+}
+
+.rating[data-rating]::before {
+  font-family: "Material Symbols Outlined", serif;
+  line-height: 1;
+  text-transform: none;
+  font-size: 1.2rem;
+  display: flex;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
+  content: "star";
+  align-self: center;
+}
+
+.rating {
+  display: flex;
+  font-size: 1.2rem;
+  color: var(--app-text-1);
+  align-self: center;
+}

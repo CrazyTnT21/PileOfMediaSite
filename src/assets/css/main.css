@@ -93,19 +93,6 @@ app-header:not(:defined) {
   border-radius: 6px;
 }
 
-.placeholder {
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.placeholder > * {
-  display: flex;
-  padding: 6px;
-  border: 1px solid;
-  border-radius: 6px;
-  vertical-align: middle;
-}
-
 .center {
   display: flex;
   justify-content: center;
@@ -114,44 +101,6 @@ app-header:not(:defined) {
 .center-align {
   display: flex;
   align-items: center;
-}
-
-@media (min-width: 900px) {
-  .center-l {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 900px) {
-  .center-m {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 500px) {
-  .center-s {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-.login {
-  margin: 6px;
-  border-radius: 6px;
-  box-shadow: 0 0 6px var(--app-background-4, lightgray);
-  background-color: var(--app-foreground-1)
-}
-
-.login-box {
-  max-width: 500px;
-}
-
-.login-border {
-  border: none;
-  margin: 0;
-  padding: 6px;
 }
 
 a, ::part(a) {
@@ -172,17 +121,8 @@ a, ::part(a) {
   gap: 9px;
 }
 
-.search {
-  --input-padding: 9px;
-}
-
 p {
   margin: 0;
-}
-
-.din-4 {
-  aspect-ratio: 1 / 1.41421;
-  object-fit: contain;
 }
 
 .icon {
@@ -198,36 +138,6 @@ p {
   text-rendering: optimizeLegibility;
   color: var(--input-label-color--);
   font-size: 1.5rem;
-}
-
-.small-din-4 {
-  height: 3.6rem;
-  border-radius: 3px;
-  aspect-ratio: 1 / 1.41421;
-  object-fit: contain;
-}
-
-.rating[data-rating]::before {
-  font-family: "Material Symbols Outlined", serif;
-  line-height: 1;
-  text-transform: none;
-  font-size: 1.2rem;
-  display: flex;
-  white-space: nowrap;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: "liga";
-  content: "star";
-  align-self: center;
-}
-
-.rating {
-  display: flex;
-  font-size: 1.2rem;
-  color: var(--header-color-hover--);
-  align-self: center;
 }
 
 .border {

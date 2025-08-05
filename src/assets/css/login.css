@@ -1,0 +1,16 @@
+.login {
+  margin: 6px;
+  border-radius: 6px;
+  box-shadow: 0 0 6px var(--app-background-4, lightgray);
+  background-color: var(--app-foreground-1)
+}
+
+.login-box {
+  max-width: 500px;
+}
+
+.login-border {
+  border: none;
+  margin: 0;
+  padding: 6px;
+}

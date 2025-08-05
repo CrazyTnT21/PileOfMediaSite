@@ -145,6 +145,7 @@ summary {
     justify-content: center;
     height: 2.1rem;
     width: 2.1rem;
+    border-radius: 50%;
   }
 
   > .icon::before {
@@ -181,6 +182,7 @@ summary {
     justify-content: center;
     height: 2.1rem;
     width: 2.1rem;
+    border-radius: 50%;
   }
 
   .icon::before {
@@ -231,10 +233,20 @@ summary {
 .login-link {
   display: flex;
   align-items: center;
-
+  font-size: .9rem;
   padding: 6px;
   border: 1px solid var(--header-border-color--);
-  border-radius: 6px;
+  border-radius: 18px;
+}
+
+.background-hover:hover {
+  color: var(--header-color-hover--);
+
+  * {
+    color: var(--header-color-hover--);
+  }
+
+  background-color: hsl(from var(--header-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) / 10));
 }
 
 [hidden] {

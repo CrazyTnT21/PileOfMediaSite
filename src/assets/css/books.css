@@ -1,0 +1,12 @@
+.placeholder {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.placeholder > * {
+  display: flex;
+  padding: 6px;
+  border: 1px solid;
+  border-radius: 6px;
+  vertical-align: middle;
+}

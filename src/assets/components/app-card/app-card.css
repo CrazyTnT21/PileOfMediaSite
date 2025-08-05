@@ -9,8 +9,8 @@
 :host {
   display: flex;
   flex-direction: column;
-  padding: 3px;
-  border-radius: 3px;
+  padding: 6px;
+  border-radius: 6px;
   background-color: var(--card-background-color--);
   max-width: 100%;
   overflow: hidden;

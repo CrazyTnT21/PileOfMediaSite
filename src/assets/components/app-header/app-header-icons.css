@@ -56,10 +56,6 @@
   content: "settings";
 }
 
-.login-icon::before {
-  content: "login";
-}
-
 .logout-icon::before {
   content: "logout";
 }
