@@ -10,7 +10,7 @@ import html from "./app-textarea.html" with {type: "inline"};
 import css from "./app-textarea.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
 import {
-  dataLabelAttribute,
+  labelAttribute,
   disabledAttribute,
   maxLengthAttribute,
   minlengthAttribute,
@@ -52,7 +52,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   override shadowRoot: ShadowRoot;
 
   private static readonly observedAttributesMap = {
-    "data-label": dataLabelAttribute,
+    "label": labelAttribute,
     "required": requiredAttribute,
     "disabled": (element: AppTextArea, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
     "maxlength": maxLengthAttribute,
@@ -71,12 +71,12 @@ export class AppTextArea extends HTMLElement implements StyleCSS
 
   get label(): string
   {
-    return this.getAttribute("data-label") ?? "";
+    return this.getAttribute("label") ?? "";
   }
 
   set label(value: string)
   {
-    this.setAttribute("data-label", value)
+    this.setAttribute("label", value)
   }
 
   @mapBooleanAttribute("required")

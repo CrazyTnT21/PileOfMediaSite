@@ -1,7 +1,7 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {LanguageCode, LanguageTexts} from "../../classes/language";
 import {Observer} from "../../observer";
-import {dataLabelAttribute} from "./app-language-autocomplete/attributes";
+import {labelAttribute} from "./app-language-autocomplete/attributes";
 import {AppInput} from "../inputs/app-input/app-input";
 import {AttributeValue} from "../inputs/common";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
@@ -16,7 +16,7 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
   override readonly texts = new Observer(AppLanguageAutocompleteTexts);
   static override observedAttributesMap = {
     ...AppAutocomplete.observedAttributesMap,
-    "data-label": (element: AppInput, v: AttributeValue): void => dataLabelAttribute(element as AppLanguageAutocomplete, v),
+    "label": (element: AppInput, v: AttributeValue): void => labelAttribute(element as AppLanguageAutocomplete, v),
   };
 
   constructor()
@@ -24,7 +24,7 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
     super();
     this.texts.addListener("language", () =>
     {
-      if (!this.getAttribute("data-label"))
+      if (!this.getAttribute("label"))
         this.label = "";
     });
   }

@@ -1,7 +1,7 @@
 import {logNoValueError} from "../inputs/validation/validation";
 import {AppCheckbox} from "./app-checkbox";
 
-export function dataLabelAttribute(element: AppCheckbox, value: string | null | undefined): void
+export function labelAttribute(element: AppCheckbox, value: string | null | undefined): void
 {
   if (value == null || value.trim() == "")
   {

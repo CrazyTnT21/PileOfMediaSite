@@ -3,7 +3,7 @@ import {StyleCSS} from "../style-css";
 import html from "./app-card.html" with {type: "inline"}
 import css from "./app-card.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
-import {dataAltAttribute, dataLink, dataSrcSetAttribute, dataTitleAttribute} from "./attributes";
+import {coverAltAttribute, hrefAttribute, srcsetAttribute, itemTitleAttribute} from "./attributes";
 import {mapStringAttribute} from "../inputs/map-boolean-attribute";
 
 type attributeKey = keyof typeof AppCard["observedAttributesMap"];
@@ -25,10 +25,10 @@ export class AppCard extends HTMLElement implements StyleCSS
   }
 
   private static readonly observedAttributesMap = {
-    "data-srcset": dataSrcSetAttribute,
-    "data-alt": dataAltAttribute,
-    "data-title": dataTitleAttribute,
-    "data-link": dataLink
+    "srcset": srcsetAttribute,
+    "cover-alt": coverAltAttribute,
+    "item-title": itemTitleAttribute,
+    "href": hrefAttribute
   }
   static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
 
@@ -38,17 +38,17 @@ export class AppCard extends HTMLElement implements StyleCSS
     callback(this, newValue);
   }
 
-  @mapStringAttribute("data-srcset")
+  @mapStringAttribute("srcset")
   accessor srcset: string | null | undefined;
 
-  @mapStringAttribute("data-alt")
-  accessor alt: string | null | undefined;
+  @mapStringAttribute("cover-alt")
+  accessor coverAlt: string | null | undefined;
 
-  @mapStringAttribute("data-link")
-  accessor link: string | null | undefined;
+  @mapStringAttribute("href")
+  accessor href: string | null | undefined;
 
-  @mapStringAttribute("data-title")
-  accessor titleText: string | null | undefined;
+  @mapStringAttribute("item-title")
+  accessor itemTitle: string | null | undefined;
 
   constructor()
   {

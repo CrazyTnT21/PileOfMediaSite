@@ -8,7 +8,7 @@ import {AppButton} from "../../app-button/app-button";
 import {Observer} from "../../../observer";
 import {AppAutocomplete} from "../../autocompletes/app-autocomplete/app-autocomplete";
 import {AttributeValue} from "../common";
-import {dataLabelAttribute, disabledAttribute} from "./attributes";
+import {labelAttribute, disabledAttribute} from "./attributes";
 import {applyStyleSheet} from "../../defaults";
 
 export type AppSearchInputElements = AppInputElements & { searchButton: AppButton };
@@ -29,7 +29,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
   //TODO: as conversion
   static override observedAttributesMap = {
     ...AppAutocomplete.observedAttributesMap,
-    "data-label": (element: AppInput, v: AttributeValue): void => dataLabelAttribute(element as AppSearchInput, v),
+    "label": (element: AppInput, v: AttributeValue): void => labelAttribute(element as AppSearchInput, v),
     "disabled": (element: AppInput, value: AttributeValue): void =>
       disabledAttribute(element as AppSearchInput, value, (element as AppSearchInput).internals, (element as AppSearchInput).hasDisabledFieldset),
   };
@@ -60,7 +60,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
     this.elements.input.type = "search";
     this.texts.addListener("search", () =>
     {
-      if (!this.getAttribute("data-label"))
+      if (!this.getAttribute("label"))
         this.label = "";
     });
   }

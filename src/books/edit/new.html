@@ -18,27 +18,27 @@
   <form>
     <div class="col-12">
       <div class="col-3">
-        <app-image-input required data-label="Cover"
-                         data-translate-attributes="data-title;uploadCover,data-label;cover"
-                         data-title="Upload Cover" data-label="Cover"></app-image-input>
+        <app-image-input required label="Cover"
+                         data-translate-attributes="image-title;uploadCover,label;cover"
+                         image-title="Upload Cover" label="Cover"></app-image-input>
         <app-language-autocomplete class="col-12"></app-language-autocomplete>
       </div>
       <div class="col-4">
         <div class="col-12">
-          <app-input required data-label="Title" data-translate-attributes="data-label;title"></app-input>
+          <app-input required label="Title" data-translate-attributes="label;title"></app-input>
         </div>
         <div class="col-12">
-          <app-textarea data-label="Description" data-translate-attributes="data-label;description"></app-textarea>
+          <app-textarea label="Description" data-translate-attributes="label;description"></app-textarea>
         </div>
         <div class="col-12">
-          <app-number-input data-label="Chapters" data-translate-attributes="data-label;chapters"></app-number-input>
-          <app-number-input data-label="Pages" data-translate-attributes="data-label;pages"></app-number-input>
-          <app-number-input data-label="Words" data-translate-attributes="data-label;words"></app-number-input>
+          <app-number-input label="Chapters" data-translate-attributes="label;chapters"></app-number-input>
+          <app-number-input label="Pages" data-translate-attributes="label;pages"></app-number-input>
+          <app-number-input label="Words" data-translate-attributes="label;words"></app-number-input>
         </div>
-        <app-input type="number" data-label="Score" data-translate-attributes="data-label;score"></app-input>
+        <app-number-input label="Score" data-translate-attributes="label;score"></app-number-input>
         <div class="col-12">
-          <app-date-input type="number" data-label="Published"
-                          data-translate-attributes="data-label;published"></app-date-input>
+          <app-date-input label="Published"
+                          data-translate-attributes="label;published"></app-date-input>
         </div>
 
       </div>

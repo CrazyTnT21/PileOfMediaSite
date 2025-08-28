@@ -6,8 +6,10 @@ import html from "./app-autocomplete.html" with {type: "inline"};
 import css from "./app-autocomplete.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
 import {Observer} from "../../../observer";
-import {templateString, SurroundedString} from "../../inputs/common";
+import {templateString, SurroundedString, AttributeValue} from "../../inputs/common";
 import {applyStyleSheet} from "../../defaults";
+import {mapBooleanAttribute} from "../../inputs/map-boolean-attribute";
+import {multiple} from "./attributes";
 
 export type AppAutoCompleteElements = AppInputElements & { selected: HTMLUListElement, items: HTMLDataListElement };
 export const appAutocompleteTexts = {
@@ -15,6 +17,7 @@ export const appAutocompleteTexts = {
   itemNotFound: templateString<SurroundedString<"{value}">>(`Item '{value}' was not found`),
   itemAlreadySelected: templateString<SurroundedString<"{value}">>(`'{value}' has already been selected`)
 }
+type attributeKey = keyof typeof AppAutocomplete["observedAttributesMap"];
 
 export class AppAutocomplete<T = { value: any, label?: string }> extends AppInput
 {
@@ -29,6 +32,20 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     selected: "#selected",
     items: "#items"
   }
+  //TODO: as conversion
+  static override observedAttributesMap = {
+    ...AppInput.observedAttributesMap,
+    "multiple": (element: AppInput, v: AttributeValue): void => multiple(element as AppAutocomplete, v),
+  };
+
+  override async attributeChangedCallback(name: attributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
+  {
+    //TODO as conversion
+    return super.attributeChangedCallback(name as keyof typeof AppInput["observedAttributesMap"], _oldValue, newValue);
+  }
+
+  @mapBooleanAttribute("multiple")
+  accessor multiple: boolean = null!;
 
   override readonly texts = new Observer(appAutocompleteTexts);
 
@@ -238,7 +255,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     const item = this.findValue(value) ?? this.findSearchValue(value);
     this.internalItem = item;
 
-    if (this.isMultiple() && item)
+    if (this.multiple && item)
     {
       if (!this.findSelected(item))
         this.addSelected(item);
@@ -315,7 +332,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
 
     const value = input.value.toLowerCase().trim();
 
-    if (this.isMultiple())
+    if (this.multiple)
     {
       const found = this.findSelectedValue(value);
       if (found)
@@ -327,11 +344,6 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
 
     if (!this.findValue(value) && !this.findSearchValue(value))
       this.errors.set("customError", () => this.texts.get("itemNotFound").replace("{value}", value));
-  }
-
-  isMultiple(): boolean
-  {
-    return this.getAttribute("data-multiple") == "";
   }
 
   async firstOpen(): Promise<void>

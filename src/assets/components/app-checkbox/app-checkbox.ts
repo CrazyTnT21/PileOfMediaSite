@@ -4,7 +4,7 @@ import {StyleCSS} from "../style-css";
 import {ValueSetEvent} from "../inputs/app-input/value-set-event";
 import {AttributeValue, handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import {applyStyleSheet, attachDelegates} from "../defaults";
-import {dataLabelAttribute, disabledAttribute} from "./attributes";
+import {labelAttribute, disabledAttribute} from "./attributes";
 import {mapSelectors} from "../../dom";
 
 type attributeKey = keyof typeof AppCheckbox["observedAttributesMap"];
@@ -29,7 +29,7 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
   private interacted: boolean = false;
 
   private static readonly observedAttributesMap = {
-    "data-label": dataLabelAttribute,
+    "label": labelAttribute,
     "disabled": (element: AppCheckbox, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
   }
   static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
@@ -42,12 +42,12 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
 
   get label(): string
   {
-    return this.getAttribute("data-label") ?? "";
+    return this.getAttribute("label") ?? "";
   }
 
   set label(value: string)
   {
-    this.setAttribute("data-label", value);
+    this.setAttribute("label", value);
   }
 
   get disabled(): boolean

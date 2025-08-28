@@ -1,6 +1,6 @@
 import {AppSearchInput} from "./app-search-input";
 
-export function dataLabelAttribute(element: AppSearchInput, value: string | null | undefined): void
+export function labelAttribute(element: AppSearchInput, value: string | null | undefined): void
 {
   if (value == null || value.trim() == "")
     value = element.texts.get("search");

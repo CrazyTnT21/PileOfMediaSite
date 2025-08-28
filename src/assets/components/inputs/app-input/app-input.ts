@@ -12,7 +12,7 @@ import html from "./app-input.html" with {type: "inline"};
 import css from "./app-input.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
 import {
-  dataLabelAttribute,
+  labelAttribute,
   disabledAttribute,
   maxLengthAttribute,
   minlengthAttribute,
@@ -54,7 +54,7 @@ export class AppInput extends HTMLElement implements StyleCSS
   override shadowRoot: ShadowRoot;
 
   protected static readonly observedAttributesMap = {
-    "data-label": dataLabelAttribute,
+    "label": labelAttribute,
     "required": requiredAttribute,
     "disabled": (element: AppInput, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
     "maxlength": maxLengthAttribute,
@@ -75,12 +75,12 @@ export class AppInput extends HTMLElement implements StyleCSS
 
   get label(): string
   {
-    return this.getAttribute("data-label") ?? "";
+    return this.getAttribute("label") ?? "";
   }
 
   set label(value: string)
   {
-    this.setAttribute("data-label", value)
+    this.setAttribute("label", value)
   }
 
   @mapBooleanAttribute("required")

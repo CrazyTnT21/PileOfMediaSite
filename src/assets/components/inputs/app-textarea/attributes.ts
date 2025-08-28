@@ -2,7 +2,7 @@ import {logNoValueError} from "../validation/validation";
 import {AppTextArea} from "./app-textarea";
 import {setOrRemoveAttribute} from "../common";
 
-export function dataLabelAttribute(element: AppTextArea, value: string | null | undefined): void
+export function labelAttribute(element: AppTextArea, value: string | null | undefined): void
 {
   if (value == null || value.trim() == "")
   {

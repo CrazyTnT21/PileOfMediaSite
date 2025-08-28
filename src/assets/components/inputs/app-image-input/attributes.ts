@@ -1,15 +1,15 @@
 import {AppImageInput} from "./app-image-input";
 import {logNoValueError} from "../validation/validation";
 
-export function dataMaxFilesizeAttribute(_element: AppImageInput, _value: string | null | undefined): void
+export function maxFilesizeAttribute(_element: AppImageInput, _value: string | null | undefined): void
 {
 }
 
-export function dataMinFilesizeAttribute(_element: AppImageInput, _value: string | null | undefined): void
+export function minFilesizeAttribute(_element: AppImageInput, _value: string | null | undefined): void
 {
 }
 
-export function dataTitleAttribute(element: AppImageInput, value: string | null | undefined): void
+export function imageTitleAttribute(element: AppImageInput, value: string | null | undefined): void
 {
   element.elements.image.title = value ?? "";
 }
@@ -20,7 +20,7 @@ export function requiredAttribute(element: AppImageInput, value: string | null |
   element.elements.input.required = value == "";
 }
 
-export function dataMultipleAttribute(element: AppImageInput, value: string | null | undefined): void
+export function multipleAttribute(element: AppImageInput, value: string | null | undefined): void
 {
   const multiple = value == "";
   element.elements.input.multiple = multiple;
@@ -49,7 +49,7 @@ export function disabledAttribute(element: AppImageInput, value: string | null |
   }
 }
 
-export function dataLabelAttribute(element: AppImageInput, value: string | null | undefined): void
+export function labelAttribute(element: AppImageInput, value: string | null | undefined): void
 {
   if (value == null || value.trim() == "")
   {
