@@ -1,6 +1,6 @@
 import {AppPasswordInput} from "./app-password-input";
 
-export function disabledAttr(element: AppPasswordInput, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
+export function disabledAttribute(element: AppPasswordInput, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
 {
   const disabled = hasDisabledFieldset || value == "";
   const {input} = element.elements;

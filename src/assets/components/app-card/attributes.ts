@@ -1,19 +1,19 @@
 import {AppCard} from "./app-card";
 import {setOrRemoveAttribute} from "../inputs/common";
 
-export function dataSrcSetAttr(element: AppCard, value: string | null | undefined): void
+export function dataSrcSetAttribute(element: AppCard, value: string | null | undefined): void
 {
   const {image} = element.elements;
   setOrRemoveAttribute(image, "srcset", value);
 }
 
-export function dataAltAttr(element: AppCard, value: string | null | undefined): void
+export function dataAltAttribute(element: AppCard, value: string | null | undefined): void
 {
   const {image} = element.elements;
   setOrRemoveAttribute(image, "alt", value);
 }
 
-export function dataTitleAttr(element: AppCard, value: string | null | undefined): void
+export function dataTitleAttribute(element: AppCard, value: string | null | undefined): void
 {
   const {titleSlot} = element.elements;
   value = value ?? "";

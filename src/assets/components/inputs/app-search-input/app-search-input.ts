@@ -8,7 +8,7 @@ import {AppButton} from "../../app-button/app-button";
 import {Observer} from "../../../observer";
 import {AppAutocomplete} from "../../autocompletes/app-autocomplete/app-autocomplete";
 import {AttributeValue} from "../common";
-import {dataLabelAttr, disabledAttr} from "./attributes";
+import {dataLabelAttribute, disabledAttribute} from "./attributes";
 import {applyStyleSheet} from "../../defaults";
 
 export type AppSearchInputElements = AppInputElements & { searchButton: AppButton };
@@ -29,9 +29,9 @@ export class AppSearchInput extends AppInput implements StyleCSS
   //TODO: as conversion
   static override observedAttributesMap = {
     ...AppAutocomplete.observedAttributesMap,
-    "data-label": (element: AppInput, v: AttributeValue): void => dataLabelAttr(element as AppSearchInput, v),
+    "data-label": (element: AppInput, v: AttributeValue): void => dataLabelAttribute(element as AppSearchInput, v),
     "disabled": (element: AppInput, value: AttributeValue): void =>
-        disabledAttr(element as AppSearchInput, value, (element as AppSearchInput).internals, (element as AppSearchInput).hasDisabledFieldset),
+      disabledAttribute(element as AppSearchInput, value, (element as AppSearchInput).internals, (element as AppSearchInput).hasDisabledFieldset),
   };
 
   override async connectedCallback(): Promise<void>

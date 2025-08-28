@@ -2,7 +2,7 @@ import {logNoValueError} from "../validation/validation";
 import {AppTextArea} from "./app-textarea";
 import {setOrRemoveAttribute} from "../common";
 
-export function dataLabelAttr(element: AppTextArea, value: string | null | undefined): void
+export function dataLabelAttribute(element: AppTextArea, value: string | null | undefined): void
 {
   if (value == null || value.trim() == "")
   {
@@ -12,12 +12,12 @@ export function dataLabelAttr(element: AppTextArea, value: string | null | undef
   element.elements.label.innerText = value;
 }
 
-export function placeholderAttr(element: AppTextArea, value: string | null | undefined): void
+export function placeholderAttribute(element: AppTextArea, value: string | null | undefined): void
 {
   element.elements.textarea.placeholder = value ?? "";
 }
 
-export function disabledAttr(element: AppTextArea, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
+export function disabledAttribute(element: AppTextArea, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
 {
   const disabled = hasDisabledFieldset || value == "";
   const {textarea} = element.elements;
@@ -35,25 +35,25 @@ export function disabledAttr(element: AppTextArea, value: string | null | undefi
   }
 }
 
-export function maxLengthAttr(element: AppTextArea, value: string | null | undefined): void
+export function maxLengthAttribute(element: AppTextArea, value: string | null | undefined): void
 {
   const {textarea} = element.elements;
   setOrRemoveAttribute(textarea, "maxlength", value);
 }
 
-export function minlengthAttr(element: AppTextArea, value: string | null | undefined): void
+export function minlengthAttribute(element: AppTextArea, value: string | null | undefined): void
 {
   const {textarea} = element.elements;
   setOrRemoveAttribute(textarea, "minlength", value);
 }
 
-export function requiredAttr(element: AppTextArea, value: string | null | undefined): void
+export function requiredAttribute(element: AppTextArea, value: string | null | undefined): void
 {
   element.elements.textarea.required = value == "";
   element.elements.label.setAttribute("data-text-required", element.texts.get("required"));
 }
 
-export function rowsAttr(element: AppTextArea, value: string | null | undefined): void
+export function rowsAttribute(element: AppTextArea, value: string | null | undefined): void
 {
   const {textarea} = element.elements;
   setOrRemoveAttribute(textarea, "rows", value);

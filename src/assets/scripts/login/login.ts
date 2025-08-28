@@ -22,24 +22,20 @@ document.querySelector("form")!.addEventListener("submit", async e =>
   {
     fieldset.disabled = false;
     const oldError = emailInput.setCustomError;
-    let input: AppInput;
-    //TODO: Replace with enum error
-    if (response.error.includes("password"))
-      input = passwordInput;
-    else
-      input = emailInput;
 
-    input.setCustomError = (): void =>
+    passwordInput.setCustomError = (): void =>
     {
-      input.errors.set("customError", () => response.error);
+      passwordInput.errors.set("customError", () => response.error);
     };
 
-    await input.validateAndReport();
-    input.setCustomError = oldError;
+    await passwordInput.validateAndReport();
+    passwordInput.setCustomError = oldError;
 
     return;
   }
+  //TODO: mapSelectors
   (<AppHeader>document.querySelector("app-header")).account = response.data!;
+  //TODO: replace with pre existing element that has [hidden] toggled
   const successLoginDiv = document.createElement("div");
   successLoginDiv.innerHTML = `<div class="pad">Successfully logged in! <a href="${document.referrer}">Return to previous page</a></div>`;
   document.querySelector("form")!.append(successLoginDiv)

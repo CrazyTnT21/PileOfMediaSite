@@ -4,7 +4,7 @@ import {AttributeValue, handleFieldset, setOrRemoveBooleanAttribute} from "../in
 import html from "./app-button.html" with {type: "inline"};
 import css from "./app-button.css" with {type: "inline"};
 import {mapSelectors} from "../../dom";
-import {disabledAttr, typeAttr} from "./attributes";
+import {disabledAttribute, typeAttribute} from "./attributes";
 
 type attributeKey = keyof typeof AppButton["observedAttributesMap"];
 
@@ -25,8 +25,8 @@ export class AppButton extends HTMLElement implements StyleCSS
   override shadowRoot: ShadowRoot;
 
   private static readonly observedAttributesMap = {
-    "disabled": (element: AppButton, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
-    "type": typeAttr,
+    "disabled": (element: AppButton, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
+    "type": typeAttribute,
   }
   static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
 
@@ -83,7 +83,7 @@ export class AppButton extends HTMLElement implements StyleCSS
     handleFieldset(this, (value: boolean) =>
     {
       this.hasDisabledFieldset = value;
-      disabledAttr(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+      disabledAttribute(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
     });
   }
 

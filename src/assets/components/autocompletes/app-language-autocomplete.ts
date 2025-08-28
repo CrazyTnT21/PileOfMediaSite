@@ -1,7 +1,7 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {LanguageCode, LanguageTexts} from "../../classes/language";
 import {Observer} from "../../observer";
-import {dataLabelAttr} from "./app-language-autocomplete/attributes";
+import {dataLabelAttribute} from "./app-language-autocomplete/attributes";
 import {AppInput} from "../inputs/app-input/app-input";
 import {AttributeValue} from "../inputs/common";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
@@ -16,7 +16,7 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
   override readonly texts = new Observer(AppLanguageAutocompleteTexts);
   static override observedAttributesMap = {
     ...AppAutocomplete.observedAttributesMap,
-    "data-label": (element: AppInput, v: AttributeValue): void => dataLabelAttr(element as AppLanguageAutocomplete, v),
+    "data-label": (element: AppInput, v: AttributeValue): void => dataLabelAttribute(element as AppLanguageAutocomplete, v),
   };
 
   constructor()
@@ -38,6 +38,7 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
   {
     yield items();
   }
+
   override itemValue(item: LanguageCode): any
   {
     return item;

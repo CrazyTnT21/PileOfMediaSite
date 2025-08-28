@@ -5,7 +5,7 @@ import css from "./app-password-input.css" with {type: "inline"};
 import {AppButton} from "../../app-button/app-button";
 import {mapSelectors} from "../../../dom";
 import {AttributeValue} from "../common";
-import {disabledAttr} from "./attributes";
+import {disabledAttribute} from "./attributes";
 import {applyStyleSheet} from "../../defaults";
 
 export type AppPasswordInputElements = AppInputElements & { passwordButton: AppButton, eyeIcon: HTMLSpanElement };
@@ -22,7 +22,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   protected static override readonly observedAttributesMap = {
     ...AppInput.observedAttributesMap,
     "disabled": (element: AppInput, value: AttributeValue): void =>
-        disabledAttr(element as AppPasswordInput, value, (element as AppPasswordInput).internals, (element as AppPasswordInput).hasDisabledFieldset),
+      disabledAttribute(element as AppPasswordInput, value, (element as AppPasswordInput).internals, (element as AppPasswordInput).hasDisabledFieldset),
   }
 
   override async connectedCallback(): Promise<void>

@@ -3,7 +3,6 @@ import {StyleCSS} from "../../style-css";
 import {
   AttributeValue,
   handleFieldset,
-  setOrRemoveAttribute,
   setOrRemoveBooleanAttribute,
   SurroundedString,
   templateString
@@ -12,9 +11,17 @@ import {ValueSetEvent} from "./value-set-event";
 import html from "./app-input.html" with {type: "inline"};
 import css from "./app-input.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
-import {dataLabelAttr, disabledAttr, maxLengthAttr, minlengthAttr, placeholderAttr, requiredAttr} from "./attributes";
+import {
+  dataLabelAttribute,
+  disabledAttribute,
+  maxLengthAttribute,
+  minlengthAttribute,
+  placeholderAttribute,
+  requiredAttribute
+} from "./attributes";
 import {setMaxLength, setMinLength, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
+import {mapBooleanAttribute, mapNumberAttribute, mapStringAttribute} from "../map-boolean-attribute";
 
 type attributeKey = keyof typeof AppInput["observedAttributesMap"];
 
@@ -47,12 +54,12 @@ export class AppInput extends HTMLElement implements StyleCSS
   override shadowRoot: ShadowRoot;
 
   protected static readonly observedAttributesMap = {
-    "data-label": dataLabelAttr,
-    "required": requiredAttr,
-    "disabled": (element: AppInput, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
-    "maxlength": maxLengthAttr,
-    "minlength": minlengthAttr,
-    "placeholder": placeholderAttr,
+    "data-label": dataLabelAttribute,
+    "required": requiredAttribute,
+    "disabled": (element: AppInput, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
+    "maxlength": maxLengthAttribute,
+    "minlength": minlengthAttribute,
+    "placeholder": placeholderAttribute,
   }
   static readonly observedAttributes = Object.keys(AppInput.observedAttributesMap);
 
@@ -76,16 +83,8 @@ export class AppInput extends HTMLElement implements StyleCSS
     this.setAttribute("data-label", value)
   }
 
-  get required(): boolean
-  {
-    const attribute = this.getAttribute("required");
-    return attribute ? attribute == "" : false;
-  }
-
-  set required(value: boolean)
-  {
-    setOrRemoveBooleanAttribute(this, "required", value);
-  }
+  @mapBooleanAttribute("required")
+  accessor required: boolean = null!;
 
   get disabled(): boolean
   {
@@ -97,27 +96,11 @@ export class AppInput extends HTMLElement implements StyleCSS
     setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
-  get minLength(): number | null
-  {
-    const attribute = this.getAttribute("minlength");
-    return attribute ? Number(attribute) : null;
-  }
+  @mapNumberAttribute("minlength")
+  accessor minLength: number | null | undefined;
 
-  set minLength(value: number | null)
-  {
-    setOrRemoveAttribute(this, "minlength", value?.toString());
-  }
-
-  get maxLength(): number | null
-  {
-    const attribute = this.getAttribute("maxlength");
-    return attribute ? Number(attribute) : null;
-  }
-
-  set maxLength(value: number | null)
-  {
-    setOrRemoveAttribute(this, "maxlength", value?.toString());
-  }
+  @mapNumberAttribute("maxlength")
+  accessor maxLength: number | null | undefined;
 
   get value(): any
   {
@@ -136,15 +119,8 @@ export class AppInput extends HTMLElement implements StyleCSS
 
   protected hasDisabledFieldset: boolean = false;
 
-  get placeholder(): string | null
-  {
-    return this.getAttribute("placeholder")
-  }
-
-  set placeholder(value: string | null)
-  {
-    setOrRemoveAttribute(this, "placeholder", value);
-  }
+  @mapStringAttribute("placeholder")
+  accessor placeholder: string | null | undefined;
 
   async connectedCallback(): Promise<void>
   {

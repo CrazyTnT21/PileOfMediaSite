@@ -3,8 +3,8 @@ import {StyleCSS} from "../style-css";
 import html from "./app-card.html" with {type: "inline"}
 import css from "./app-card.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
-import {dataAltAttr, dataLink, dataSrcSetAttr, dataTitleAttr} from "./attributes";
-import {setOrRemoveAttribute} from "../inputs/common";
+import {dataAltAttribute, dataLink, dataSrcSetAttribute, dataTitleAttribute} from "./attributes";
+import {mapStringAttribute} from "../inputs/map-boolean-attribute";
 
 type attributeKey = keyof typeof AppCard["observedAttributesMap"];
 
@@ -25,9 +25,9 @@ export class AppCard extends HTMLElement implements StyleCSS
   }
 
   private static readonly observedAttributesMap = {
-    "data-srcset": dataSrcSetAttr,
-    "data-alt": dataAltAttr,
-    "data-title": dataTitleAttr,
+    "data-srcset": dataSrcSetAttribute,
+    "data-alt": dataAltAttribute,
+    "data-title": dataTitleAttribute,
     "data-link": dataLink
   }
   static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
@@ -38,45 +38,17 @@ export class AppCard extends HTMLElement implements StyleCSS
     callback(this, newValue);
   }
 
-  get srcset(): string | null
-  {
-    return this.getAttribute("data-srcset")
-  }
+  @mapStringAttribute("data-srcset")
+  accessor srcset: string | null | undefined;
 
-  set srcset(value: string | null)
-  {
-    setOrRemoveAttribute(this, "data-srcset", value);
-  }
+  @mapStringAttribute("data-alt")
+  accessor alt: string | null | undefined;
 
-  get alt(): string | null
-  {
-    return this.getAttribute("data-alt")
-  }
+  @mapStringAttribute("data-link")
+  accessor link: string | null | undefined;
 
-  set alt(value: string | null)
-  {
-    setOrRemoveAttribute(this, "data-alt", value);
-  }
-
-  get link(): string | null
-  {
-    return this.getAttribute("data-link")
-  }
-
-  set link(value: string | null)
-  {
-    setOrRemoveAttribute(this, "data-link", value);
-  }
-
-  get titleText(): string | null
-  {
-    return this.getAttribute("data-title")
-  }
-
-  set titleText(value: string | null)
-  {
-    setOrRemoveAttribute(this, "data-title", value);
-  }
+  @mapStringAttribute("data-title")
+  accessor titleText: string | null | undefined;
 
   constructor()
   {

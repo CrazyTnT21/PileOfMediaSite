@@ -1,6 +1,6 @@
 import {AppSearchInput} from "./app-search-input";
 
-export function dataLabelAttr(element: AppSearchInput, value: string | null | undefined): void
+export function dataLabelAttribute(element: AppSearchInput, value: string | null | undefined): void
 {
   if (value == null || value.trim() == "")
     value = element.texts.get("search");
@@ -8,7 +8,7 @@ export function dataLabelAttr(element: AppSearchInput, value: string | null | un
   element.elements.label.innerText = value;
 }
 
-export function disabledAttr(element: AppSearchInput, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
+export function disabledAttribute(element: AppSearchInput, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
 {
   const disabled = hasDisabledFieldset || value == "";
   const {input} = element.elements;

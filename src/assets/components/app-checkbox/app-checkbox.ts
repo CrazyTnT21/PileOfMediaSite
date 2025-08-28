@@ -4,7 +4,7 @@ import {StyleCSS} from "../style-css";
 import {ValueSetEvent} from "../inputs/app-input/value-set-event";
 import {AttributeValue, handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import {applyStyleSheet, attachDelegates} from "../defaults";
-import {dataLabelAttr, disabledAttr} from "./attributes";
+import {dataLabelAttribute, disabledAttribute} from "./attributes";
 import {mapSelectors} from "../../dom";
 
 type attributeKey = keyof typeof AppCheckbox["observedAttributesMap"];
@@ -29,8 +29,8 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
   private interacted: boolean = false;
 
   private static readonly observedAttributesMap = {
-    "data-label": dataLabelAttr,
-    "disabled": (element: AppCheckbox, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
+    "data-label": dataLabelAttribute,
+    "disabled": (element: AppCheckbox, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
   }
   static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
 
@@ -82,7 +82,7 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     handleFieldset(this, (value: boolean) =>
     {
       this.hasDisabledFieldset = value;
-      disabledAttr(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+      disabledAttribute(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
     });
   }
 

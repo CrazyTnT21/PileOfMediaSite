@@ -7,12 +7,12 @@ import {Kilobyte} from "../../../units/kilobyte";
 import {AppButton} from "../../app-button/app-button";
 import {mapSelectors} from "../../../dom";
 import {
-  dataLabelAttr,
-  dataMaxFilesizeAttr,
-  dataMinFilesizeAttr,
-  dataMultipleAttr,
-  dataTitleAttr, disabledAttr,
-  requiredAttr
+  dataLabelAttribute,
+  dataMaxFilesizeAttribute,
+  dataMinFilesizeAttribute,
+  dataMultipleAttribute,
+  dataTitleAttribute, disabledAttribute,
+  requiredAttribute
 } from "./attributes";
 import {
   AttributeValue,
@@ -24,6 +24,7 @@ import {
 } from "../common";
 import {setMaxFileSize, setMinFileSize, setUnsupportedType, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
+import {mapBooleanAttribute, mapStringAttribute} from "../map-boolean-attribute";
 
 type attributeKey = keyof typeof AppImageInput["observedAttributesMap"];
 
@@ -63,13 +64,13 @@ export class AppImageInput extends HTMLElement implements StyleCSS
   errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
   private static readonly observedAttributesMap = {
-    "data-label": dataLabelAttr,
-    "required": requiredAttr,
-    "disabled": (element: AppImageInput, value: AttributeValue): void => disabledAttr(element, value, element.internals, element.hasDisabledFieldset),
-    "data-max-filesize": dataMaxFilesizeAttr,
-    "data-min-filesize": dataMinFilesizeAttr,
-    "data-title": dataTitleAttr,
-    "data-multiple": dataMultipleAttr
+    "data-label": dataLabelAttribute,
+    "required": requiredAttribute,
+    "disabled": (element: AppImageInput, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
+    "data-max-filesize": dataMaxFilesizeAttribute,
+    "data-min-filesize": dataMinFilesizeAttribute,
+    "data-title": dataTitleAttribute,
+    "data-multiple": dataMultipleAttribute
   }
   static readonly observedAttributes = Object.keys(AppImageInput.observedAttributesMap);
 
@@ -102,16 +103,8 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     this.innerFiles = value;
   }
 
-  get multiple(): boolean
-  {
-    const value = this.getAttribute("data-multiple");
-    return value == "";
-  }
-
-  set multiple(value: boolean)
-  {
-    setOrRemoveBooleanAttribute(this, "data-multiple", value);
-  }
+  @mapBooleanAttribute("data-multiple")
+  accessor multiple: boolean = null!;
 
   private hasDisabledFieldset: boolean = false;
 
@@ -147,26 +140,11 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     setOrRemoveAttribute(this, "data-min-filesize", value?.toNumber().toString());
   }
 
-  get required(): boolean
-  {
-    const attribute = this.getAttribute("required");
-    return attribute ? attribute == "" : false;
-  }
+  @mapBooleanAttribute("required")
+  accessor required: boolean = null!;
 
-  set required(value: boolean)
-  {
-    setOrRemoveBooleanAttribute(this, "required", value);
-  }
-
-  get imageTitle(): string | null
-  {
-    return this.getAttribute("data-title");
-  }
-
-  set imageTitle(value: string | null)
-  {
-    setOrRemoveAttribute(this, "data-title", value);
-  }
+  @mapStringAttribute("data-title")
+  accessor imageTitle: string | null | undefined;
 
   private internalSrc: string | undefined;
 
@@ -214,7 +192,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     handleFieldset(this, (value: boolean) =>
     {
       this.hasDisabledFieldset = value;
-      disabledAttr(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+      disabledAttribute(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
     });
 
     await this.setupValidation();
