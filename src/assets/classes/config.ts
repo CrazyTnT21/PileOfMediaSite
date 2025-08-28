@@ -71,14 +71,14 @@ export function acceptLanguageHeader(): { "Accept-Language": string }
   return {"Accept-Language": Config.preferredLanguages.join(",")}
 }
 
-export type translationItem = {
+export type TranslationItem = {
   translations: { translations: { [p: string]: any } }
 };
-type translatedField<T extends translationItem> = T["translations"]["translations"][""];
+type TranslatedField<T extends TranslationItem> = T["translations"]["translations"][""];
 
-export function getTranslatedField<T extends translationItem>(item: T): {
+export function getTranslatedField<T extends TranslationItem>(item: T): {
   language: LanguageCode,
-  translation: translatedField<T>
+  translation: TranslatedField<T>
 }
 {
   for (const language of Config.preferredLanguages)

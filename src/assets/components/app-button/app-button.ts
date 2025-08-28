@@ -6,7 +6,7 @@ import css from "./app-button.css" with {type: "inline"};
 import {mapSelectors} from "../../dom";
 import {disabledAttribute, typeAttribute} from "./attributes";
 
-type attributeKey = keyof typeof AppButton["observedAttributesMap"];
+type AttributeKey = keyof typeof AppButton["observedAttributesMap"];
 
 export type AppButtonElements = {
   button: HTMLButtonElement,
@@ -30,7 +30,7 @@ export class AppButton extends HTMLElement implements StyleCSS
   }
   static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
 
-  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppButton.observedAttributesMap[name];
     callback(this, newValue);
@@ -50,10 +50,7 @@ export class AppButton extends HTMLElement implements StyleCSS
 
   get type(): "button" | "submit" | "reset"
   {
-    const attribute = this.getAttribute("type");
-    if (attribute && ["button", "submit", "reset"].includes(attribute))
-      return attribute as "button" | "reset" | "submit";
-    return "submit";
+    return this.elements.button.type
   }
 
   set type(value: "button" | "submit" | "reset")
@@ -63,14 +60,6 @@ export class AppButton extends HTMLElement implements StyleCSS
 
   connectedCallback(): void
   {
-    const {button} = this.elements;
-    const type = this.getAttribute("type");
-    if (type && ["submit", "button", "reset"].includes(type))
-      this.type = type as "submit" | "button" | "reset";
-    else
-      this.type = "submit";
-    button.type = this.type;
-
     this.addEventListener("click", e =>
     {
       const button = <HTMLButtonElement>e.target;

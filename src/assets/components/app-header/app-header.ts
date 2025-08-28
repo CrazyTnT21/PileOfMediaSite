@@ -9,7 +9,7 @@ import css from "./app-header.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
 import {AppHeaderSearch} from "./app-header-search/app-header-search";
 import {Observer} from "../../observer";
-import {SurroundedString, templateString} from "../inputs/common";
+import {IncludesString, templateString} from "../inputs/common";
 
 export type AppHeaderElements = {
   burger: HTMLDetailsElement,
@@ -53,7 +53,7 @@ export const appHeaderTexts = {
   comments: "Comments",
   logout: "Logout",
   login: "Log in",
-  showingResults: templateString<`${SurroundedString<"{count}">}${SurroundedString<"{total}">}`>("Showing {count} of {total} results")
+  showingResults: templateString<IncludesString<["{count}", "{total}"]>>("Showing {count} of {total} results")
 };
 
 export class AppHeader extends HTMLElement implements StyleCSS
@@ -203,18 +203,16 @@ export class AppHeader extends HTMLElement implements StyleCSS
 
   private matchAllLabelTexts(labels: [keyof typeof appHeaderTexts, HTMLElement | HTMLElement[]][]): void
   {
-    for (const label of labels)
+    for (const [key, elements] of labels)
     {
-      if (Array.isArray(label[1]))
+      if (!Array.isArray(elements))
       {
-        for (const element of label[1])
-        {
-          this.matchLabelText(label[0], element);
-        }
+        this.matchLabelText(key, elements);
+        continue;
       }
-      else
+      for (const element of elements)
       {
-        this.matchLabelText(label[0], label[1]);
+        this.matchLabelText(key, element);
       }
     }
   }

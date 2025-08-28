@@ -21,5 +21,9 @@ export function disabledAttribute(element: AppButton, value: string | null | und
 export function typeAttribute(element: AppButton, value: string | null | undefined): void
 {
   const {button} = element.elements;
-  button.type = value as "button" | "reset" | "submit";
+  const validType = value && ["submit", "button", "reset"].includes(value);
+  if (validType)
+    button.type = value as "button" | "submit" | "reset"
+  else
+    button.type = "submit";
 }

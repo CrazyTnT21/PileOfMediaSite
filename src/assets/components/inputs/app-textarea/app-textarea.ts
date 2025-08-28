@@ -23,7 +23,7 @@ import {Observer} from "../../../observer";
 import {ValueSetEvent} from "../app-input/value-set-event";
 import {mapBooleanAttribute, mapNumberAttribute, mapStringAttribute} from "../map-boolean-attribute";
 
-type attributeKey = keyof typeof AppTextArea["observedAttributesMap"];
+type AttributeKey = keyof typeof AppTextArea["observedAttributesMap"];
 export type AppTextAreaElements = {
   textarea: HTMLTextAreaElement,
   label: HTMLLabelElement,
@@ -62,7 +62,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   }
   static readonly observedAttributes = Object.keys(AppTextArea.observedAttributesMap);
 
-  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppTextArea.observedAttributesMap[name];
     callback(this, newValue);

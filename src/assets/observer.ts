@@ -27,6 +27,7 @@ export class Observer<T extends object>
 
   constructor(item: T)
   {
+    item = {...item};
     this.item = item;
     const keys = unsafeObjectKeys(item);
     const map = new Map();
@@ -48,7 +49,7 @@ export class Observer<T extends object>
     }
   }
 
-  get<K extends keyof T>(key: K,): T[K]
+  get<K extends keyof T>(key: K): T[K]
   {
     return this.item[key];
   }

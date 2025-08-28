@@ -17,16 +17,16 @@ import {
 import {
   AttributeValue,
   handleFieldset,
+  IncludesString,
   setOrRemoveAttribute,
   setOrRemoveBooleanAttribute,
-  SurroundedString,
   templateString
 } from "../common";
 import {setMaxFileSize, setMinFileSize, setUnsupportedType, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
 import {mapBooleanAttribute, mapStringAttribute} from "../map-boolean-attribute";
 
-type attributeKey = keyof typeof AppImageInput["observedAttributesMap"];
+type AttributeKey = keyof typeof AppImageInput["observedAttributesMap"];
 
 export type AppImageInputElements = {
   input: HTMLInputElement,
@@ -37,9 +37,9 @@ export type AppImageInputElements = {
 export const appImageInputTexts = {
   clearImage: "Clear image",
   clearImages: "Clear images",
-  inputMinValidation: templateString<`${SurroundedString<"{min}">}{fileSizes}${string}`>
+  inputMinValidation: templateString<IncludesString<["{min}", "{fileSizes}"]>>
   ("Input requires files to be at least {min} kB. Current sizes: [{fileSizes}]"),
-  inputMaxValidation: templateString<`${SurroundedString<"{max}">}{fileSizes}${string}`>
+  inputMaxValidation: templateString<IncludesString<["{max}", "{fileSizes}"]>>
   ("Input requires files to be at most {max} kB. Current sizes: [{fileSizes}]"),
   valueMissing: "No value given",
   unsupportedImageType: "Unsupported image type",
@@ -74,7 +74,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
   }
   static readonly observedAttributes = Object.keys(AppImageInput.observedAttributesMap);
 
-  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppImageInput.observedAttributesMap[name];
     callback(this, newValue);
@@ -168,7 +168,6 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     this.label = this.label || "";
 
     image.alt = this.label;
-    this.multiple = this.getAttribute("multiple") == ""
     this.elements.label.innerText = this.label;
     if (this.imageTitle)
       image.title = this.imageTitle;

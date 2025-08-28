@@ -4,7 +4,7 @@ import {
   AttributeValue,
   handleFieldset,
   setOrRemoveBooleanAttribute,
-  SurroundedString,
+  IncludesString,
   templateString
 } from "../common";
 import {ValueSetEvent} from "./value-set-event";
@@ -23,7 +23,7 @@ import {setMaxLength, setMinLength, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
 import {mapBooleanAttribute, mapNumberAttribute, mapStringAttribute} from "../map-boolean-attribute";
 
-type attributeKey = keyof typeof AppInput["observedAttributesMap"];
+type AttributeKey = keyof typeof AppInput["observedAttributesMap"];
 
 export type AppInputElements = {
   input: HTMLInputElement,
@@ -32,9 +32,9 @@ export type AppInputElements = {
 export const appInputTexts = {
   required: "Required",
   valueMissing: "No value given",
-  inputMinValidation: templateString<`${SurroundedString<"{min}">}{currentLength}${string}`>
+  inputMinValidation: templateString<IncludesString<["{min}", "{currentLength}"]>>
   ("Input requires at least '{min}' characters. Current length: {currentLength}"),
-  inputMaxValidation: templateString<`${SurroundedString<"{max}">}{currentLength}${string}`>
+  inputMaxValidation: templateString<IncludesString<["{max}", "{currentLength}"]>>
   ("Input only allows a maximum of '{max}' characters. Current length: {currentLength}"),
 };
 
@@ -63,7 +63,7 @@ export class AppInput extends HTMLElement implements StyleCSS
   }
   static readonly observedAttributes = Object.keys(AppInput.observedAttributesMap);
 
-  async attributeChangedCallback(name: attributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
+  async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
   {
     if (!("observedAttributesMap" in this.constructor))
       return;

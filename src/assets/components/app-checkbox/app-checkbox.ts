@@ -7,7 +7,7 @@ import {applyStyleSheet, attachDelegates} from "../defaults";
 import {labelAttribute, disabledAttribute} from "./attributes";
 import {mapSelectors} from "../../dom";
 
-type attributeKey = keyof typeof AppCheckbox["observedAttributesMap"];
+type AttributeKey = keyof typeof AppCheckbox["observedAttributesMap"];
 export type AppCheckboxElements = {
   input: HTMLInputElement,
   label: HTMLLabelElement
@@ -34,7 +34,7 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
   }
   static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
 
-  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppCheckbox.observedAttributesMap[name];
     callback(this, newValue);

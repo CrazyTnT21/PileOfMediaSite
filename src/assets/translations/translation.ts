@@ -1,4 +1,4 @@
-import {SurroundedString} from "../components/inputs/common";
+import {IncludesString} from "../components/inputs/common";
 
 export type Translation =
     {
@@ -26,7 +26,7 @@ export type Translation =
       booksTitle?: string;
       book?: string;
       bookTitle?: string;
-      bookTitleTemplate?: SurroundedString<"{title}">;
+      bookTitleTemplate?: IncludesString<"{title}">;
       addBook?: string;
       addBookTitle?: string;
       addMovie?: string;
@@ -56,17 +56,17 @@ export type Translation =
       foryou?: string;
       topTitle?: string;
       top?: string;
-      inputMinTextLengthValidation?: `${SurroundedString<"{min}">}{currentLength}${string}`;
-      inputMaxTextLengthValidation?: `${SurroundedString<"{max}">}{currentLength}${string}`;
+      inputMinTextLengthValidation?: IncludesString<["{min}","{currentLength}"]>;
+      inputMaxTextLengthValidation?: IncludesString<["{max}","{currentLength}"]>;
       required?: string;
-      imageInputMinSizesValidation?: `${SurroundedString<"{min}">}{fileSizes}${string}`;
-      imageInputMaxSizesValidation?: `${SurroundedString<"{max}">}{fileSizes}${string}`;
+      imageInputMinSizesValidation?:  IncludesString<["{min}","{fileSizes}"]>;
+      imageInputMaxSizesValidation?:  IncludesString<["{min}","{fileSizes}"]>;
       valueMissing?: string;
       unsupportedImageType?: string;
       clearImage?: string;
       clearImages?: string;
-      autocompleteItemNotFound?: SurroundedString<"{value}">,
-      autocompleteItemAlreadySelected?: SurroundedString<"{value}">,
+      autocompleteItemNotFound?: IncludesString<"{value}">,
+      autocompleteItemAlreadySelected?: IncludesString<"{value}">,
       language?: string;
       uploadCover?: string;
       graphicNovel?: string;

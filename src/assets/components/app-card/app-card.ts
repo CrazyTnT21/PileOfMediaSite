@@ -6,7 +6,7 @@ import {mapSelectors} from "../../dom";
 import {coverAltAttribute, hrefAttribute, srcsetAttribute, itemTitleAttribute} from "./attributes";
 import {mapStringAttribute} from "../inputs/map-boolean-attribute";
 
-type attributeKey = keyof typeof AppCard["observedAttributesMap"];
+type AttributeKey = keyof typeof AppCard["observedAttributesMap"];
 
 export type AppCardElements = {
   image: HTMLImageElement,
@@ -32,7 +32,7 @@ export class AppCard extends HTMLElement implements StyleCSS
   }
   static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
 
-  async attributeChangedCallback(name: attributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppCard.observedAttributesMap[name];
     callback(this, newValue);

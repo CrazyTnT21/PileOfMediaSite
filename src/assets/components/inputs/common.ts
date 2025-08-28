@@ -77,7 +77,12 @@ export function templateString<T extends string>(text: string): T
   return text as T;
 }
 
-export type SurroundedString<T extends string | number | bigint | boolean | null | undefined> = `${string}${T}${string}`;
+type TemplateValue = string | number | bigint | boolean | null | undefined;
+export type IncludesString<T> = T extends TemplateValue[]
+  ? `${string}${TemplateValue}${string}`
+  : T extends TemplateValue
+    ? `${string}${T}${string}`
+    : never;
 
 export function setOrRemoveAttribute(element: HTMLElement, attribute: string, value: string | null | undefined): void
 {

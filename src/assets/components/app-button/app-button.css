@@ -37,7 +37,7 @@ button:focus-visible {
   outline: var(--button-outline-color--) 3px solid;
 }
 
-button:hover, button:focus {
+button:hover, button:focus-visible {
   background-color: var(--button-background-color-hover--);
   color: var(--button-color-hover--);
 }

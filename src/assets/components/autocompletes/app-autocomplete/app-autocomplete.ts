@@ -6,7 +6,8 @@ import html from "./app-autocomplete.html" with {type: "inline"};
 import css from "./app-autocomplete.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
 import {Observer} from "../../../observer";
-import {templateString, SurroundedString, AttributeValue} from "../../inputs/common";
+import {AttributeValue} from "../../inputs/common";
+import {templateString, IncludesString} from "../../inputs/common";
 import {applyStyleSheet} from "../../defaults";
 import {mapBooleanAttribute} from "../../inputs/map-boolean-attribute";
 import {multiple} from "./attributes";
@@ -14,10 +15,10 @@ import {multiple} from "./attributes";
 export type AppAutoCompleteElements = AppInputElements & { selected: HTMLUListElement, items: HTMLDataListElement };
 export const appAutocompleteTexts = {
   ...appInputTexts,
-  itemNotFound: templateString<SurroundedString<"{value}">>(`Item '{value}' was not found`),
-  itemAlreadySelected: templateString<SurroundedString<"{value}">>(`'{value}' has already been selected`)
+  itemNotFound: templateString<IncludesString<"{value}">>(`Item '{value}' was not found`),
+  itemAlreadySelected: templateString<IncludesString<"{value}">>(`'{value}' has already been selected`)
 }
-type attributeKey = keyof typeof AppAutocomplete["observedAttributesMap"];
+type AttributeKey = keyof typeof AppAutocomplete["observedAttributesMap"];
 
 export class AppAutocomplete<T = { value: any, label?: string }> extends AppInput
 {
@@ -38,7 +39,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     "multiple": (element: AppInput, v: AttributeValue): void => multiple(element as AppAutocomplete, v),
   };
 
-  override async attributeChangedCallback(name: attributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
+  override async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
   {
     //TODO as conversion
     return super.attributeChangedCallback(name as keyof typeof AppInput["observedAttributesMap"], _oldValue, newValue);

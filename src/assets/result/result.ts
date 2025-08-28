@@ -98,8 +98,8 @@ export function collect_ok<T, E, Original extends [...Result<T, E>[]]>(...result
   return new Ok(oks) as Result<MappedTuple<T, Original>, E>
 }
 
-type sameSizeTuple<FirstTuple extends [...any], SecondTuple extends [...any]> = FirstTuple["length"] extends SecondTuple["length"] ? true : false;
-type InnerMappedTuple<T, Original extends [...any], Tuple extends [...T[]]> = sameSizeTuple<Original, Tuple> extends true ? Tuple : InnerMappedTuple<T, Original, [T, ...Tuple]>
+type SameSizeTuple<FirstTuple extends [...any], SecondTuple extends [...any]> = FirstTuple["length"] extends SecondTuple["length"] ? true : false;
+type InnerMappedTuple<T, Original extends [...any], Tuple extends [...T[]]> = SameSizeTuple<Original, Tuple> extends true ? Tuple : InnerMappedTuple<T, Original, [T, ...Tuple]>
 type MappedTuple<T, Original extends [...any]> = IsTuple<Original> extends true ? InnerMappedTuple<T, Original, []> : T[]
 
 type IsTuple<T> = T extends [any, ...any] ? true : false
