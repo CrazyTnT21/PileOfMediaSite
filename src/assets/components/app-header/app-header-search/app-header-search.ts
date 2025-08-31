@@ -22,12 +22,12 @@ export class AppHeaderSearch
   private currentSearch: string | undefined;
   private previousRequestTime: Date = new Date();
 
-  constructor(header: AppHeader)
+  public constructor(header: AppHeader)
   {
     this.header = header;
   }
 
-  async search(value: string): Promise<Result<void, Error>>
+  public async search(value: string): Promise<Result<void, Error>>
   {
     this.currentSearch = value;
     value = value.toLowerCase();
@@ -135,7 +135,8 @@ export class AppHeaderSearch
 
     return li;
   }
-  setupSearch(shadowRoot: ShadowRoot): void
+
+  public setupSearch(shadowRoot: ShadowRoot): void
   {
     const {searchInput, searchElements} = this.header.elements;
     searchInput.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>

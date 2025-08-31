@@ -1,8 +1,8 @@
 export class SelectedRemovedEvent<T> extends CustomEvent<T>
 {
-  static type: string = "selectedRemoved";
+  public static readonly type = "selectedRemoved";
 
-  constructor(eventInitDict?: CustomEventInit<T>)
+  public constructor(eventInitDict?: CustomEventInit<T>)
   {
     super(SelectedRemovedEvent.type, eventInitDict);
   }

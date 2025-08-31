@@ -40,18 +40,18 @@ export const appInputTexts = {
 
 export class AppInput extends HTMLElement implements StyleCSS
 {
-  readonly elements: AppInputElements;
+  public readonly elements: AppInputElements;
   protected static readonly elementSelectors: { [key in keyof AppInput["elements"]]: string } = {
     input: "input",
     label: "label",
   }
-  readonly texts = new Observer(appInputTexts);
+  public readonly texts = new Observer(appInputTexts);
 
-  static readonly formAssociated = true;
-  errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+  public static readonly formAssociated = true;
+  protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
   protected readonly internals: ElementInternals;
-  override shadowRoot: ShadowRoot;
+  public override shadowRoot: ShadowRoot;
 
   protected static readonly observedAttributesMap = {
     "label": labelAttribute,
@@ -61,9 +61,9 @@ export class AppInput extends HTMLElement implements StyleCSS
     "minlength": minlengthAttribute,
     "placeholder": placeholderAttribute,
   }
-  static readonly observedAttributes = Object.keys(AppInput.observedAttributesMap);
+  public static readonly observedAttributes = Object.keys(AppInput.observedAttributesMap);
 
-  async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
   {
     if (!("observedAttributesMap" in this.constructor))
       return;
@@ -73,41 +73,41 @@ export class AppInput extends HTMLElement implements StyleCSS
     await this.validate();
   }
 
-  get label(): string
+  public get label(): string
   {
     return this.getAttribute("label") ?? "";
   }
 
-  set label(value: string)
+  public set label(value: string)
   {
     this.setAttribute("label", value)
   }
 
   @mapBooleanAttribute("required")
-  accessor required: boolean = null!;
+  public accessor required: boolean = null!;
 
-  get disabled(): boolean
+  public get disabled(): boolean
   {
     return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
   }
 
-  set disabled(value: boolean)
+  public set disabled(value: boolean)
   {
     setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
   @mapNumberAttribute("minlength")
-  accessor minLength: number | null | undefined;
+  public accessor minLength: number | null | undefined;
 
   @mapNumberAttribute("maxlength")
-  accessor maxLength: number | null | undefined;
+  public accessor maxLength: number | null | undefined;
 
-  get value(): any
+  public get value(): any
   {
     return this.elements.input.value;
   }
 
-  set value(value: string | null | undefined)
+  public set value(value: string | null | undefined)
   {
     if (value == null)
       value = "";
@@ -120,9 +120,9 @@ export class AppInput extends HTMLElement implements StyleCSS
   protected hasDisabledFieldset: boolean = false;
 
   @mapStringAttribute("placeholder")
-  accessor placeholder: string | null | undefined;
+  public accessor placeholder: string | null | undefined;
 
-  async connectedCallback(): Promise<void>
+  protected async connectedCallback(): Promise<void>
   {
     this.label = this.label || "";
     this.disabled = this.getAttribute("disabled") == "";
@@ -161,7 +161,7 @@ export class AppInput extends HTMLElement implements StyleCSS
     await this.validateAndReport();
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.internals = this.setupInternals();
@@ -176,21 +176,21 @@ export class AppInput extends HTMLElement implements StyleCSS
     });
   }
 
-  setupInternals(): ElementInternals
+  protected setupInternals(): ElementInternals
   {
     const internals = this.attachInternals();
     internals.role = "textbox";
     return internals;
   }
 
-  async setupValidation(): Promise<void>
+  protected async setupValidation(): Promise<void>
   {
     const {input} = this.elements;
     input.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
-  async validate(): Promise<void>
+  public async validate(): Promise<void>
   {
     const {input} = this.elements;
     await this.setValidity(input);
@@ -215,7 +215,7 @@ export class AppInput extends HTMLElement implements StyleCSS
 
   private interacted: boolean = false;
 
-  async validateAndReport(): Promise<void>
+  public async validateAndReport(): Promise<void>
   {
     await this.validate();
     const {input} = this.elements;
@@ -225,7 +225,7 @@ export class AppInput extends HTMLElement implements StyleCSS
     this.internals.reportValidity();
   }
 
-  async setValidity(input: HTMLInputElement): Promise<void>
+  protected async setValidity(input: HTMLInputElement): Promise<void>
   {
     this.internals.setFormValue(input.value);
     this.errors = new Map();
@@ -235,24 +235,24 @@ export class AppInput extends HTMLElement implements StyleCSS
     this.setCustomError(input);
   }
 
-  async valid(): Promise<boolean>
+  public async valid(): Promise<boolean>
   {
     const {input} = this.elements;
     await this.setValidity(input);
     return this.errors.size == 0;
   }
 
-  setCustomError(_input: HTMLInputElement): void
+  public setCustomError(_input: HTMLInputElement): void
   {
   }
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }

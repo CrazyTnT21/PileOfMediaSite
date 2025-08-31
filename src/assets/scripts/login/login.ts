@@ -18,19 +18,10 @@ document.querySelector("form")!.addEventListener("submit", async e =>
     }
   });
   passwordInput.value = null;
+  //TODO
   if (response.error != undefined)
   {
     fieldset.disabled = false;
-    const oldError = emailInput.setCustomError;
-
-    passwordInput.setCustomError = (): void =>
-    {
-      passwordInput.errors.set("customError", () => response.error);
-    };
-
-    await passwordInput.validateAndReport();
-    passwordInput.setCustomError = oldError;
-
     return;
   }
   //TODO: mapSelectors

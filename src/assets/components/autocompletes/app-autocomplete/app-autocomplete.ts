@@ -27,30 +27,30 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
   private internalItems: T[] = [];
   private internalItem: T | undefined | null;
   private selectedItems: T[] = [];
-  override readonly elements: AppAutoCompleteElements;
+  public override readonly elements: AppAutoCompleteElements;
   protected static override readonly elementSelectors = {
     ...AppInput.elementSelectors,
     selected: "#selected",
     items: "#items"
   }
   //TODO: as conversion
-  static override observedAttributesMap = {
+  protected static override readonly observedAttributesMap = {
     ...AppInput.observedAttributesMap,
     "multiple": (element: AppInput, v: AttributeValue): void => multiple(element as AppAutocomplete, v),
   };
 
-  override async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
+  protected override async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
   {
     //TODO as conversion
     return super.attributeChangedCallback(name as keyof typeof AppInput["observedAttributesMap"], _oldValue, newValue);
   }
 
   @mapBooleanAttribute("multiple")
-  accessor multiple: boolean = null!;
+  public accessor multiple: boolean = null!;
 
-  override readonly texts = new Observer(appAutocompleteTexts);
+  public override readonly texts = new Observer(appAutocompleteTexts);
 
-  constructor()
+  public constructor()
   {
     super();
     this.elements = mapSelectors<AppAutoCompleteElements>(this.shadowRoot, AppAutocomplete.elementSelectors);
@@ -59,12 +59,12 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
 
   protected internalSearch: T[] = [];
 
-  override get value(): T | undefined | null
+  public override get value(): T | undefined | null
   {
     return this.internalItem;
   }
 
-  override set value(value: T | undefined | null)
+  public override set value(value: T | undefined | null)
   {
     this.internalItem = value;
     if (value == null)
@@ -75,47 +75,47 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     super.value = this.itemLabel(value) ?? this.itemValue(value);
   }
 
-  findValue(value: string): T | undefined
+  public findValue(value: string): T | undefined
   {
     return this.findSameValue(value, this.items);
   }
 
-  get items(): T[]
+  public get items(): T[]
   {
     return this.internalItems;
   }
 
-  set items(items: T[])
+  public set items(items: T[])
   {
     this.internalItems = items;
     this.createOptions(this.internalItems);
   }
 
-  addItem(item: T): void
+  public addItem(item: T): void
   {
     this.items.push(item);
     this.addOptions([item]);
   }
 
-  removeItem(item: T): void
+  public removeItem(item: T): void
   {
     const value = this.itemValue(item);
     const index = this.items.findIndex(x => this.itemValue(x) === value);
     this.items.splice(index, 1);
   }
 
-  findItem(item: T): T | undefined
+  public findItem(item: T): T | undefined
   {
     const id = this.itemValue(item);
     return this.items.find(x => this.itemValue(x) === id);
   }
 
-  get selected(): T[]
+  public get selected(): T[]
   {
     return this.selectedItems;
   }
 
-  set selected(items: T[])
+  public set selected(items: T[])
   {
     this.selectedItems = items;
 
@@ -124,14 +124,14 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     this.pushSelected(selected, items);
   }
 
-  addSelected(value: T): void
+  public addSelected(value: T): void
   {
     const {selected} = this.elements;
     this.pushSelected(selected, [value]);
     this.shadowRoot.dispatchEvent(new SelectedAddedEvent<T>({composed: true, detail: value}));
   }
 
-  removeSelected(item: T): void
+  public removeSelected(item: T): void
   {
     const id = this.itemValue(item);
 
@@ -188,24 +188,24 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     }
   }
 
-  findSelected(item: T): T | undefined
+  public findSelected(item: T): T | undefined
   {
     const id = this.itemValue(item);
     return this.selected.find(x => this.itemValue(x) === id);
   }
 
-  findSelectedValue(value: string): T | undefined
+  public findSelectedValue(value: string): T | undefined
   {
     return this.findSameValue(value, this.selected);
   }
 
-  findSearch(item: T): T | undefined
+  public findSearch(item: T): T | undefined
   {
     const id = this.itemValue(item);
     return this.internalSearch.find(x => this.itemValue(x) === id);
   }
 
-  findSearchValue(value: string): T | undefined
+  public findSearchValue(value: string): T | undefined
   {
     return this.findSameValue(value, this.internalSearch);
   }
@@ -226,14 +226,14 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     });
   }
 
-  override async onInputChange(event: Event): Promise<void>
+  protected override async onInputChange(event: Event): Promise<void>
   {
     const input = <HTMLInputElement>event.target;
     await super.onInputChange(event);
     await this.valueChange(input);
   }
 
-  override async onValueSet(event: Event): Promise<void>
+  protected override async onValueSet(event: Event): Promise<void>
   {
     const {input} = this.elements;
     await this.search(input.value);
@@ -241,7 +241,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     await this.valueChange(input);
   }
 
-  async valueChange(input: HTMLInputElement): Promise<void>
+  protected async valueChange(input: HTMLInputElement): Promise<void>
   {
     if (!await this.valid())
       return;
@@ -269,18 +269,18 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     this.shadowRoot.dispatchEvent(new ValueChangeEvent<T>(eventInitDict));
   }
 
-  async onInputInput(event: InputEvent): Promise<void>
+  protected async onInputInput(event: InputEvent): Promise<void>
   {
     if (event.inputType !== "insertReplacementText")
       await this.search((<HTMLInputElement>event.target).value);
   }
 
-  async onInputFocus(_event: FocusEvent): Promise<void>
+  protected async onInputFocus(_event: FocusEvent): Promise<void>
   {
     await this.firstOpen();
   }
 
-  override async connectedCallback(): Promise<void>
+  protected override async connectedCallback(): Promise<void>
   {
     await super.connectedCallback();
     const {input} = this.elements;
@@ -291,13 +291,13 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     input.addEventListener("focus", (e) => this.onInputFocus(e), {once: true})
   }
 
-  override render(): void
+  protected override render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  createOptions(items: T[]): void
+  protected createOptions(items: T[]): void
   {
     const {items: datalist} = this.elements;
 
@@ -325,7 +325,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     }
   }
 
-  override async setValidity(input: HTMLInputElement): Promise<void>
+  protected override async setValidity(input: HTMLInputElement): Promise<void>
   {
     await super.setValidity(input);
     if (!input.value)
@@ -347,13 +347,13 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
       this.errors.set("customError", () => this.texts.get("itemNotFound").replace("{value}", value));
   }
 
-  async firstOpen(): Promise<void>
+  protected async firstOpen(): Promise<void>
   {
     this.items.push(...(await this.itemsGenerator.next()).value);
     this.createOptions(this.items.filter((x) => !this.findSelected(x)));
   }
 
-  async search(value: string): Promise<void>
+  public async search(value: string): Promise<void>
   {
     if (value === "")
     {
@@ -372,7 +372,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     this.createOptions(search.filter((x) => !this.findSelected(x)));
   }
 
-  async* loadItems(): AsyncGenerator<T[]>
+  protected async* loadItems(): AsyncGenerator<T[]>
   {
     yield [...this.children].map(x =>
     {
@@ -384,22 +384,22 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     }) as T[];
   }
 
-  async* searchItems(_value: string): AsyncGenerator<T[]>
+  public async* searchItems(_value: string): AsyncGenerator<T[]>
   {
     yield this.items;
   }
 
-  override styleCSS(): string
+  public override styleCSS(): string
   {
     return super.styleCSS() + css;
   }
 
-  itemLabel(item: T): string | null
+  public itemLabel(item: T): string | null
   {
     return (<any>item)["label"];
   }
 
-  itemValue(item: T): any
+  public itemValue(item: T): any
   {
     return (<any>item)["value"];
   }

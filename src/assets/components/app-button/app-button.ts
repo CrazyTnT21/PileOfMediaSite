@@ -15,50 +15,50 @@ export type AppButtonElements = {
 
 export class AppButton extends HTMLElement implements StyleCSS
 {
-  readonly elements: AppButtonElements;
+  public readonly elements: AppButtonElements;
   protected static readonly elementSelectors: { [key in keyof AppButton["elements"]]: string } = {
     button: "button",
     slot: "slot"
   }
-  static readonly formAssociated = true;
+  public static readonly formAssociated = true;
   private readonly internals: ElementInternals;
-  override shadowRoot: ShadowRoot;
+  public override shadowRoot: ShadowRoot;
 
-  private static readonly observedAttributesMap = {
+  protected static readonly observedAttributesMap = {
     "disabled": (element: AppButton, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
     "type": typeAttribute,
   }
-  static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
+  public static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
 
-  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppButton.observedAttributesMap[name];
     callback(this, newValue);
   }
 
-  get disabled(): boolean
+  public get disabled(): boolean
   {
     return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
   }
 
-  set disabled(value: boolean)
+  public set disabled(value: boolean)
   {
     setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
   private hasDisabledFieldset: boolean = false;
 
-  get type(): "button" | "submit" | "reset"
+  public get type(): "button" | "submit" | "reset"
   {
     return this.elements.button.type
   }
 
-  set type(value: "button" | "submit" | "reset")
+  public set type(value: "button" | "submit" | "reset")
   {
     this.setAttribute("type", value);
   }
 
-  connectedCallback(): void
+  protected connectedCallback(): void
   {
     this.addEventListener("click", e =>
     {
@@ -76,7 +76,7 @@ export class AppButton extends HTMLElement implements StyleCSS
     });
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.internals = this.attachInternals();
@@ -86,13 +86,13 @@ export class AppButton extends HTMLElement implements StyleCSS
     this.elements = mapSelectors<AppButtonElements>(this.shadowRoot, AppButton.elementSelectors);
   }
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }

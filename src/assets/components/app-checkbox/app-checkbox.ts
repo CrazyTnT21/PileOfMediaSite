@@ -15,57 +15,57 @@ export type AppCheckboxElements = {
 
 export class AppCheckbox extends HTMLElement implements StyleCSS
 {
-  readonly elements: AppCheckboxElements;
+  public readonly elements: AppCheckboxElements;
   protected static readonly elementSelectors: { [key in keyof AppCheckbox["elements"]]: string } = {
     input: "input",
     label: "label",
   }
-  static readonly formAssociated = true;
-  errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+  public static readonly formAssociated = true;
+  protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
   private readonly internals: ElementInternals;
-  override shadowRoot: ShadowRoot;
+  public override shadowRoot: ShadowRoot;
 
   private interacted: boolean = false;
 
-  private static readonly observedAttributesMap = {
+  protected static readonly observedAttributesMap = {
     "label": labelAttribute,
     "disabled": (element: AppCheckbox, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
   }
-  static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
+  public static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
 
-  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppCheckbox.observedAttributesMap[name];
     callback(this, newValue);
   }
 
-  get label(): string
+  public get label(): string
   {
     return this.getAttribute("label") ?? "";
   }
 
-  set label(value: string)
+  public set label(value: string)
   {
     this.setAttribute("label", value);
   }
 
-  get disabled(): boolean
+  public get disabled(): boolean
   {
     return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
   }
 
-  set disabled(value: boolean)
+  public set disabled(value: boolean)
   {
     setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
-  get checked(): boolean
+  public get checked(): boolean
   {
     return this.elements.input.checked;
   }
 
-  set checked(value: boolean)
+  public set checked(value: boolean)
   {
     this.elements.input.checked = value;
     this.dispatchEvent(new ValueSetEvent({detail: value}));
@@ -73,7 +73,7 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
 
   private hasDisabledFieldset: boolean = false;
 
-  async connectedCallback(): Promise<void>
+  protected async connectedCallback(): Promise<void>
   {
     this.label = this.label || "";
     this.disabled = this.getAttribute("disabled") == "";
@@ -86,12 +86,12 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     });
   }
 
-  async onCheckboxChange(_event: Event): Promise<void>
+  protected async onCheckboxChange(_event: Event): Promise<void>
   {
     this.interacted = true;
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.internals = this.setupInternals();
@@ -100,25 +100,25 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     this.elements = mapSelectors<AppCheckboxElements>(this.shadowRoot, AppCheckbox.elementSelectors);
   }
 
-  setupInternals(): ElementInternals
+  protected setupInternals(): ElementInternals
   {
     const internals = this.attachInternals();
     internals.role = "checkbox";
     return internals;
   }
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }
 
-  static define(): void
+  public static define(): void
   {
     if (customElements.get("app-checkbox"))
       return;

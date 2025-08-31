@@ -11,20 +11,21 @@ export const AppRoleAutocompleteTexts = {
 
 export class AppRoleAutocomplete extends AppAutocomplete<Role>
 {
-  override readonly texts = new Observer(AppRoleAutocompleteTexts);
+  public override readonly texts = new Observer(AppRoleAutocompleteTexts);
 
-  override async connectedCallback(): Promise<void>
+  protected override async connectedCallback(): Promise<void>
   {
     this.label = this.label || this.texts.get("role");
     await super.connectedCallback();
   }
-  constructor()
+
+  public constructor()
   {
     super();
     this.texts.addListener("role", (value) => this.label = value);
   }
 
-  override async* searchItems(value: string): AsyncGenerator<Role[]>
+  public override async* searchItems(value: string): AsyncGenerator<Role[]>
   {
     let page = 0;
     const count = 50;
@@ -49,7 +50,7 @@ export class AppRoleAutocomplete extends AppAutocomplete<Role>
     }
   }
 
-  override async* loadItems(): AsyncGenerator<Role[]>
+  protected override async* loadItems(): AsyncGenerator<Role[]>
   {
     let page = 0;
     const count = 50;
@@ -73,12 +74,12 @@ export class AppRoleAutocomplete extends AppAutocomplete<Role>
     }
   }
 
-  override itemValue(item: Role): number
+  public override itemValue(item: Role): number
   {
     return item.id;
   }
 
-  override itemLabel(item: Role): string
+  public override itemLabel(item: Role): string
   {
     const {translation} = getTranslatedField(item);
     return translation.name;

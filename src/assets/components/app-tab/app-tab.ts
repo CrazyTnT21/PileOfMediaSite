@@ -14,17 +14,17 @@ export type AppTabElements = {
 export class AppTab extends HTMLElement implements StyleCSS
 {
   private readonly internals: ElementInternals;
-  override shadowRoot: ShadowRoot;
+  public override shadowRoot: ShadowRoot;
 
-  readonly elements: AppTabElements;
+  public readonly elements: AppTabElements;
   protected static readonly elementSelectors: { [key in keyof AppTab["elements"]]: string } = {
     headers: "#headers",
     contents: "#contents"
   }
-  private static readonly observedAttributesMap = {}
-  static readonly observedAttributes = unsafeObjectKeys(AppTab.observedAttributesMap);
+  protected static readonly observedAttributesMap = {}
+  public static readonly observedAttributes = unsafeObjectKeys(AppTab.observedAttributesMap);
 
-  async connectedCallback(): Promise<void>
+  protected async connectedCallback(): Promise<void>
   {
     const children = <HTMLElement[]><unknown>this.children;
     const {headers, contents} = this.elements;
@@ -55,7 +55,7 @@ export class AppTab extends HTMLElement implements StyleCSS
     (<HTMLElement>contents.firstElementChild).hidden = false;
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.internals = this.setupInternals();
@@ -63,18 +63,19 @@ export class AppTab extends HTMLElement implements StyleCSS
     this.render();
     this.elements = mapSelectors<AppTabElements>(this.shadowRoot, AppTab.elementSelectors);
   }
-  setupInternals(): ElementInternals
+
+  protected setupInternals(): ElementInternals
   {
     return this.attachInternals();
   }
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }

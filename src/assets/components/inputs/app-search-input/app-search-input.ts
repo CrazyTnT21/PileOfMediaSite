@@ -6,7 +6,6 @@ import css from "./app-search-input.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
 import {AppButton} from "../../app-button/app-button";
 import {Observer} from "../../../observer";
-import {AppAutocomplete} from "../../autocompletes/app-autocomplete/app-autocomplete";
 import {AttributeValue} from "../common";
 import {labelAttribute, disabledAttribute} from "./attributes";
 import {applyStyleSheet} from "../../defaults";
@@ -19,22 +18,22 @@ export const appSearchInputTexts = {
 
 export class AppSearchInput extends AppInput implements StyleCSS
 {
-  override readonly texts = new Observer(appSearchInputTexts);
+  public override readonly texts = new Observer(appSearchInputTexts);
 
-  override readonly elements: AppSearchInputElements;
+  public override readonly elements: AppSearchInputElements;
   protected static override readonly elementSelectors = {
     ...AppInput.elementSelectors,
     searchButton: "app-button",
   }
   //TODO: as conversion
-  static override observedAttributesMap = {
-    ...AppAutocomplete.observedAttributesMap,
+  protected static override observedAttributesMap = {
+    ...AppInput.observedAttributesMap,
     "label": (element: AppInput, v: AttributeValue): void => labelAttribute(element as AppSearchInput, v),
     "disabled": (element: AppInput, value: AttributeValue): void =>
-      disabledAttribute(element as AppSearchInput, value, (element as AppSearchInput).internals, (element as AppSearchInput).hasDisabledFieldset),
+        disabledAttribute(element as AppSearchInput, value, (element as AppSearchInput).internals, (element as AppSearchInput).hasDisabledFieldset),
   };
 
-  override async connectedCallback(): Promise<void>
+  protected override async connectedCallback(): Promise<void>
   {
     await super.connectedCallback();
     const {searchButton, input} = this.elements;
@@ -53,7 +52,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
     });
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.elements = mapSelectors<AppSearchInputElements>(this.shadowRoot, AppSearchInput.elementSelectors);
@@ -65,13 +64,14 @@ export class AppSearchInput extends AppInput implements StyleCSS
     });
   }
 
-  override render(): void
+  protected override render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  override styleCSS(): string
+  //TODO: Private
+  public override styleCSS(): string
   {
     return super.styleCSS() + css;
   }

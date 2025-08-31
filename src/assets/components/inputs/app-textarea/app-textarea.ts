@@ -39,19 +39,20 @@ export const appTextAreaTexts = {
 
 export class AppTextArea extends HTMLElement implements StyleCSS
 {
-  static readonly formAssociated = true;
-  errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+  public static readonly formAssociated = true;
+  protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  readonly elements: AppTextAreaElements;
+  //TODO private
+  public readonly elements: AppTextAreaElements;
   protected static readonly elementSelectors: { [key in keyof AppTextArea["elements"]]: string } = {
     textarea: "textarea",
     label: "label"
   }
-  readonly texts = new Observer(appTextAreaTexts);
+  public readonly texts = new Observer(appTextAreaTexts);
   private readonly internals: ElementInternals;
-  override shadowRoot: ShadowRoot;
+  public override readonly shadowRoot: ShadowRoot;
 
-  private static readonly observedAttributesMap = {
+  protected static readonly observedAttributesMap = {
     "label": labelAttribute,
     "required": requiredAttribute,
     "disabled": (element: AppTextArea, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
@@ -60,49 +61,49 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     "placeholder": placeholderAttribute,
     "rows": rowsAttribute
   }
-  static readonly observedAttributes = Object.keys(AppTextArea.observedAttributesMap);
+  public static readonly observedAttributes = Object.keys(AppTextArea.observedAttributesMap);
 
-  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppTextArea.observedAttributesMap[name];
     callback(this, newValue);
     await this.validate();
   }
 
-  get label(): string
+  public get label(): string
   {
     return this.getAttribute("label") ?? "";
   }
 
-  set label(value: string)
+  public set label(value: string)
   {
     this.setAttribute("label", value)
   }
 
   @mapBooleanAttribute("required")
-  accessor required: boolean = null!;
+  public accessor required: boolean = null!;
 
-  get disabled(): boolean
+  public get disabled(): boolean
   {
     return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
   }
 
-  set disabled(value: boolean)
+  public set disabled(value: boolean)
   {
     setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
 
   @mapNumberAttribute("minlength")
-  accessor minLength: number | null | undefined;
+  public accessor minLength: number | null | undefined;
 
   @mapNumberAttribute("maxlength")
-  accessor maxLength: number | null | undefined;
+  public accessor maxLength: number | null | undefined;
 
   @mapNumberAttribute("rows")
-  accessor rows: number | null | undefined;
+  public accessor rows: number | null | undefined;
 
-  async connectedCallback(): Promise<void>
+  protected async connectedCallback(): Promise<void>
   {
     this.label = this.label || "";
     const {label} = this.elements;
@@ -120,12 +121,12 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     await this.setupValidation();
   }
 
-  get value(): any
+  public get value(): any
   {
     return this.elements.textarea.value;
   }
 
-  set value(value: string | null | undefined)
+  public set value(value: string | null | undefined)
   {
     if (value == null)
       value = "";
@@ -137,15 +138,15 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   private hasDisabledFieldset: boolean = false;
 
   @mapStringAttribute("placeholder")
-  accessor placeholder: string | null | undefined;
+  public accessor placeholder: string | null | undefined;
 
-  async onTextAreaChange(_event: Event): Promise<void>
+  protected async onTextAreaChange(_event: Event): Promise<void>
   {
     this.interacted = true;
     await this.validateAndReport();
   }
 
-  constructor()
+  public constructor()
   {
     super();
 
@@ -158,14 +159,14 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     this.texts.addListener("required", (value) => this.elements.label.setAttribute("data-text-required", value));
   }
 
-  async setupValidation(): Promise<void>
+  protected async setupValidation(): Promise<void>
   {
     const {textarea} = this.elements;
     textarea.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
-  async validate(): Promise<void>
+  public async validate(): Promise<void>
   {
     const {textarea} = this.elements;
     await this.setValidity(textarea);
@@ -190,11 +191,11 @@ export class AppTextArea extends HTMLElement implements StyleCSS
 
   private interacted: boolean = false;
 
-  setCustomError(_input: HTMLTextAreaElement): void
+  public setCustomError(_input: HTMLTextAreaElement): void
   {
   }
 
-  async validateAndReport(): Promise<void>
+  public async validateAndReport(): Promise<void>
   {
     await this.validate();
     const {textarea} = this.elements;
@@ -205,7 +206,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     this.internals.reportValidity();
   }
 
-  async setValidity(input: HTMLTextAreaElement): Promise<void>
+  protected async setValidity(input: HTMLTextAreaElement): Promise<void>
   {
     this.internals.setFormValue(input.value);
     this.errors = new Map();
@@ -215,13 +216,13 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     this.setCustomError(input);
   }
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }

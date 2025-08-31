@@ -1,8 +1,8 @@
 export class ValueChangeEvent<T> extends CustomEvent<T>
 {
-  static type: string = "valueChange";
+  public static readonly type = "valueChange";
 
-  constructor(eventInitDict?: CustomEventInit<T>)
+  public constructor(eventInitDict?: CustomEventInit<T>)
   {
     super(ValueChangeEvent.type, eventInitDict);
   }

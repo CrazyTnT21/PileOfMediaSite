@@ -7,7 +7,8 @@ export function setUnsupportedType(element: AppImageInput): void
   if (!unsupportedImageType(element.elements.input))
     return;
 
-  element.errors.set("customError", () => element.texts.get("unsupportedImageType"));
+  const errors = element["errors"];
+  errors.set("customError", () => element.texts.get("unsupportedImageType"));
 }
 
 export function setMaxFileSize(element: AppImageInput): void
@@ -17,7 +18,8 @@ export function setMaxFileSize(element: AppImageInput): void
   if (!fileTooBig(input, max))
     return;
   const fileSizes = [...input.files!].map(x => Kilobyte.fromByte(x.size).toString()).join(", ");
-  element.errors.set("customError", () => element.texts.get("inputMaxValidation").replace("{max}", max!.toString()).replace("{fileSizes}", fileSizes));
+  const errors = element["errors"];
+  errors.set("customError", () => element.texts.get("inputMaxValidation").replace("{max}", max!.toString()).replace("{fileSizes}", fileSizes));
 }
 
 export function setMinFileSize(element: AppImageInput): void
@@ -29,7 +31,8 @@ export function setMinFileSize(element: AppImageInput): void
     return;
 
   const fileSizes = [...input.files!].map(x => Kilobyte.fromByte(x.size).toString()).join(", ");
-  element.errors.set("customError", () => element.texts.get("inputMinValidation").replace("{min}", min!.toString()).replace("{fileSizes}", fileSizes));
+  const errors = element["errors"];
+  errors.set("customError", () => element.texts.get("inputMinValidation").replace("{min}", min!.toString()).replace("{fileSizes}", fileSizes));
 }
 
 export function setValueMissing(element: AppImageInput): void
@@ -38,7 +41,8 @@ export function setValueMissing(element: AppImageInput): void
   if (!isRequired(element) || !valueMissing(input))
     return;
 
-  element.errors.set("valueMissing", () => element.texts.get("valueMissing"));
+  const errors = element["errors"];
+  errors.set("valueMissing", () => element.texts.get("valueMissing"));
 }
 
 function isRequired(element: AppImageInput): boolean

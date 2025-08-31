@@ -1,8 +1,8 @@
 export class SearchEvent extends CustomEvent<string>
 {
-  static type: string = "valueSearch";
+  public static readonly type = "valueSearch";
 
-  constructor(eventInitDict?: CustomEventInit<string>)
+  public constructor(eventInitDict?: CustomEventInit<string>)
   {
     super(SearchEvent.type, eventInitDict);
   }

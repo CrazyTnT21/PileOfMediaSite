@@ -27,19 +27,10 @@ document.querySelector("form")!.addEventListener("submit", async e =>
     bodySerializer: formData(["account", "serialize"])
   });
   passwordInput.value = null;
+  //TODO
   if (response.error != undefined)
   {
     fieldset.disabled = false;
-    const oldError = emailInput.setCustomError;
-    const input = emailInput;
-
-    input.setCustomError = (): void =>
-    {
-      input.errors.set("customError", () => response.error);
-    };
-
-    await input.validateAndReport();
-    input.setCustomError = oldError;
 
     return;
   }

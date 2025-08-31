@@ -1,8 +1,8 @@
 export class ValueSetEvent<T> extends CustomEvent<T>
 {
-  static type: string = "valueSet";
+  public static readonly type = "valueSet";
 
-  constructor(eventInitDict?: CustomEventInit<T>)
+  public constructor(eventInitDict?: CustomEventInit<T>)
   {
     super(ValueSetEvent.type, eventInitDict);
   }

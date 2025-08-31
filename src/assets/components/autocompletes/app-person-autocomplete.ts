@@ -11,20 +11,21 @@ export const AppPersonAutocompleteTexts = {
 
 export class AppPersonAutocomplete extends AppAutocomplete<Person>
 {
-  override readonly texts = new Observer(AppPersonAutocompleteTexts);
+  public override readonly texts = new Observer(AppPersonAutocompleteTexts);
 
-  override async connectedCallback(): Promise<void>
+  protected override async connectedCallback(): Promise<void>
   {
     this.label = this.label || this.texts.get("person");
     await super.connectedCallback();
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.texts.addListener("person", (value) => this.label = value);
   }
-  override async* searchItems(value: string): AsyncGenerator<Person[]>
+
+  public override async* searchItems(value: string): AsyncGenerator<Person[]>
   {
     let page = 0;
     const count = 50;
@@ -49,7 +50,7 @@ export class AppPersonAutocomplete extends AppAutocomplete<Person>
     }
   }
 
-  override async* loadItems(): AsyncGenerator<Person[]>
+  protected override async* loadItems(): AsyncGenerator<Person[]>
   {
     let page = 0;
     const count = 50;
@@ -72,12 +73,13 @@ export class AppPersonAutocomplete extends AppAutocomplete<Person>
       yield data.items;
     }
   }
-  override itemValue(item: Person): number
+
+  public override itemValue(item: Person): number
   {
     return item.id;
   }
 
-  override itemLabel(item: Person): string
+  public override itemLabel(item: Person): string
   {
     return item.name;
   }

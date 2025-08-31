@@ -48,8 +48,8 @@ export const appImageInputTexts = {
 
 export class AppImageInput extends HTMLElement implements StyleCSS
 {
-  readonly texts = new Observer(appImageInputTexts);
-  readonly elements: AppImageInputElements;
+  public readonly texts = new Observer(appImageInputTexts);
+  public readonly elements: AppImageInputElements;
   protected static readonly elementSelectors: { [key in keyof AppImageInput["elements"]]: string } = {
     input: "input",
     label: "label",
@@ -57,13 +57,13 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     clearImage: "app-button"
   }
 
-  static readonly formAssociated = true;
+  public static readonly formAssociated = true;
   private readonly internals: ElementInternals;
-  override shadowRoot: ShadowRoot;
+  public override shadowRoot: ShadowRoot;
 
-  errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+  protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  private static readonly observedAttributesMap = {
+  protected static readonly observedAttributesMap = {
     "label": labelAttribute,
     "required": requiredAttribute,
     "disabled": (element: AppImageInput, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
@@ -72,88 +72,88 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     "image-title": imageTitleAttribute,
     "multiple": multipleAttribute
   }
-  static readonly observedAttributes = Object.keys(AppImageInput.observedAttributesMap);
+  public static readonly observedAttributes = Object.keys(AppImageInput.observedAttributesMap);
 
-  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppImageInput.observedAttributesMap[name];
     callback(this, newValue);
     await this.validate();
   }
 
-  get label(): string
+  public get label(): string
   {
     return this.getAttribute("label") ?? "";
   }
 
-  set label(value: string)
+  public set label(value: string)
   {
     this.setAttribute("label", value)
   }
 
   private innerFiles: { file: File, url: string }[] = [];
 
-  get files(): { file: File, url: string }[]
+  public get files(): { file: File, url: string }[]
   {
     return this.innerFiles;
   }
 
-  set files(value)
+  public set files(value)
   {
     this.innerFiles = value;
   }
 
   @mapBooleanAttribute("multiple")
-  accessor multiple: boolean = null!;
+  public accessor multiple: boolean = null!;
 
   private hasDisabledFieldset: boolean = false;
 
-  get disabled(): boolean
+  public get disabled(): boolean
   {
     return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
   }
 
-  set disabled(value: boolean)
+  public set disabled(value: boolean)
   {
     setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
-  get maxFilesize(): Kilobyte | null
+  public get maxFilesize(): Kilobyte | null
   {
     const attribute = this.getAttribute("max-filesize");
     return attribute ? Kilobyte.fromNumber(Number(attribute)) : null;
   }
 
-  set maxFilesize(value: Kilobyte | null)
+  public set maxFilesize(value: Kilobyte | null)
   {
     setOrRemoveAttribute(this, "max-file-size", value?.toNumber().toString());
   }
 
-  get minFilesize(): Kilobyte | null
+  public get minFilesize(): Kilobyte | null
   {
     const attribute = this.getAttribute("min-filesize");
     return attribute ? Kilobyte.fromNumber(Number(attribute)) : null;
   }
 
-  set minFilesize(value: Kilobyte | null)
+  public set minFilesize(value: Kilobyte | null)
   {
     setOrRemoveAttribute(this, "min-filesize", value?.toNumber().toString());
   }
 
   @mapBooleanAttribute("required")
-  accessor required: boolean = null!;
+  public accessor required: boolean = null!;
 
   @mapStringAttribute("image-title")
-  accessor imageTitle: string | null | undefined;
+  public accessor imageTitle: string | null | undefined;
 
   private internalSrc: string | undefined;
 
-  get src(): string | undefined
+  public get src(): string | undefined
   {
     return this.internalSrc;
   }
 
-  set src(value: string | undefined)
+  public set src(value: string | undefined)
   {
     if (!value)
       throw Error("Src has to be set");
@@ -161,7 +161,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     this.elements.image.src = value;
   }
 
-  async connectedCallback(): Promise<void>
+  protected async connectedCallback(): Promise<void>
   {
     const {input, image, clearImage} = this.elements;
     input.addEventListener("change", (e) => this.onInputChange(e));
@@ -199,7 +199,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
 
   private readonly defaultSrc: string;
 
-  constructor()
+  public constructor()
   {
     super();
     this.internals = this.attachInternals();
@@ -228,21 +228,21 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     });
   }
 
-  async onInputChange(event: Event): Promise<void>
+  protected async onInputChange(event: Event): Promise<void>
   {
     await this.setImage(<InputEvent>event)
     this.interacted = true;
     await this.validateAndReport();
   }
 
-  async setupValidation(): Promise<void>
+  protected async setupValidation(): Promise<void>
   {
     const {input} = this.elements;
     input.addEventListener("change", () => this.validateAndReport());
     await this.validate();
   }
 
-  async validate(): Promise<void>
+  public async validate(): Promise<void>
   {
     const {input, image} = this.elements;
     await this.setValidity(input);
@@ -267,11 +267,11 @@ export class AppImageInput extends HTMLElement implements StyleCSS
 
   private interacted: boolean = false;
 
-  setCustomError(_input: HTMLInputElement): void
+  public setCustomError(_input: HTMLInputElement): void
   {
   }
 
-  async validateAndReport(): Promise<void>
+  public async validateAndReport(): Promise<void>
   {
     await this.validate();
     const {input} = this.elements;
@@ -281,7 +281,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     this.internals.reportValidity();
   }
 
-  async setValidity(input: HTMLInputElement): Promise<void>
+  protected async setValidity(input: HTMLInputElement): Promise<void>
   {
     this.internals.setFormValue(input.value);
     this.errors = new Map();
@@ -292,25 +292,25 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     this.setCustomError(input);
   }
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }
 
-  async valid(): Promise<boolean>
+  public async valid(): Promise<boolean>
   {
     const {input} = this.elements;
     await this.setValidity(input);
     return this.errors.size === 0;
   }
 
-  async setImage(event: InputEvent): Promise<void>
+  protected async setImage(event: InputEvent): Promise<void>
   {
     const input = (<HTMLInputElement>event.target);
     const files = [...input.files!].map(x => ({file: x, url: URL.createObjectURL(x)}));

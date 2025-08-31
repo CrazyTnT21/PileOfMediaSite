@@ -5,20 +5,20 @@ import css from "./app-table.css" with {type: "inline"};
 
 export class AppTable<T> extends HTMLElement implements StyleCSS
 {
-  override shadowRoot: ShadowRoot;
+  public override shadowRoot: ShadowRoot;
 
-  get caption(): string
+  public get caption(): string
   {
     return this.dataset["caption"] ?? "";
   }
 
-  set caption(value: string)
+  public set caption(value: string)
   {
     this.dataset["caption"] = value;
     this.shadowRoot.querySelector("caption")!.innerText = value;
   }
 
-  set total(value: number)
+  public set total(value: number)
   {
     const tfoot = this.shadowRoot.querySelector("tfoot")!;
 
@@ -28,7 +28,7 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
   }
 
   private _items: T[] = [];
-  set items(items: T[])
+  public set items(items: T[])
   {
     this._items = items;
     this.total = this._items.length;
@@ -41,7 +41,7 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
     }
   }
 
-  createRow(item: T): HTMLTableRowElement
+  public createRow(item: T): HTMLTableRowElement
   {
     const row = document.createElement("tr");
     for (const column of this._columns)
@@ -52,7 +52,7 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
     return row;
   }
 
-  getValue(item: T, keys: string[]): string | null
+  public getValue(item: T, keys: string[]): string | null
   {
     let result: any = item;
     for (const key of keys)
@@ -64,7 +64,7 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
     return result;
   }
 
-  createRowElement(column: Column<T>, item: T): HTMLTableCellElement
+  private createRowElement(column: Column<T>, item: T): HTMLTableCellElement
   {
     const element = column.type === ColumnType.Image
         ? document.createElement("img")
@@ -85,7 +85,7 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
     return data;
   }
 
-  setInnerHTML(column: Column<T>, element: HTMLImageElement | HTMLDivElement, item: T): void
+  private setInnerHTML(column: Column<T>, element: HTMLImageElement | HTMLDivElement, item: T): void
   {
     if (column.formatFn)
     {
@@ -106,18 +106,18 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
     element.innerText = value;
   }
 
-  set nextDisabled(value: boolean)
+  public set nextDisabled(value: boolean)
   {
     (<HTMLButtonElement>this.shadowRoot.querySelector("#next")).disabled = value;
   }
 
-  set backDisabled(value: boolean)
+  public set backDisabled(value: boolean)
   {
     (<HTMLButtonElement>this.shadowRoot.querySelector("#back")).disabled = value;
   }
 
-  _columns: Column<T>[] = [];
-  set columns(columns: Column<T>[])
+  private _columns: Column<T>[] = [];
+  public set columns(columns: Column<T>[])
   {
     this._columns = columns;
 
@@ -141,7 +141,7 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
   readonly #nextEvent = new Event("next", {composed: true});
   readonly #backEvent = new Event("back", {composed: true});
 
-  connectedCallback(): void
+  protected connectedCallback(): void
   {
     this.shadowRoot.querySelector("#next")!.addEventListener("click", () =>
         this.shadowRoot.dispatchEvent(this.#nextEvent));
@@ -152,20 +152,20 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
     this.shadowRoot.querySelector("caption")!.innerText = this.caption;
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.shadowRoot = attach(this);
     this.render();
   }
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }

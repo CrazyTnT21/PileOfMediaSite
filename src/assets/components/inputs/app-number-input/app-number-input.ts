@@ -9,20 +9,20 @@ export class AppNumberInput extends AppInput
     "min": minAttribute,
     "max": maxAttribute,
   }
-  static override readonly observedAttributes = Object.keys(AppNumberInput.observedAttributesMap);
+  public static override readonly observedAttributes = Object.keys(AppNumberInput.observedAttributesMap);
 
-  constructor()
+  public constructor()
   {
     super();
     this.elements.input.type = "number";
   }
 
-  override styleCSS(): string
+  public override styleCSS(): string
   {
     return super.styleCSS() + css;
   }
 
-  override get value(): number | null | undefined
+  public override get value(): number | null | undefined
   {
     const {input} = this.elements;
     const value = input.value || null;
@@ -34,7 +34,7 @@ export class AppNumberInput extends AppInput
     return numberValue;
   }
 
-  override set value(value: number | null | undefined)
+  public override set value(value: number | null | undefined)
   {
     const {input} = this.elements;
     input.value = value?.toString() ?? "";

@@ -2,9 +2,9 @@ export type UploadDetail = { file: File, url: string }[];
 
 export class UploadEvent extends CustomEvent<UploadDetail>
 {
-  static type: string = "upload";
+  public static readonly type = "upload";
 
-  constructor(eventInitDict?: CustomEventInit<UploadDetail>)
+  public constructor(eventInitDict?: CustomEventInit<UploadDetail>)
   {
     super(UploadEvent.type, eventInitDict);
   }

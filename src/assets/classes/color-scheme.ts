@@ -2,8 +2,8 @@ import {unsafeObjectKeys} from "../unsafe-object-keys";
 
 export class ColorScheme
 {
-  name: string;
-  style: ColorStyle;
+  public readonly name: string;
+  public readonly style: ColorStyle;
 
   public constructor(name: string, style: ColorStyle)
   {
@@ -11,12 +11,12 @@ export class ColorScheme
     this.style = style;
   }
 
-  static dark(): ColorScheme
+  public static dark(): ColorScheme
   {
     return new ColorScheme("dark", new ColorStyle());
   }
 
-  static light(): ColorScheme
+  public static light(): ColorScheme
   {
     return new ColorScheme("light", new ColorStyle());
   }
@@ -24,30 +24,30 @@ export class ColorScheme
 
 export class ColorStyle
 {
-  app_background_1: string | undefined;
-  app_background_2: string | undefined;
-  app_background_3: string | undefined;
-  app_background_4: string | undefined;
+  public app_background_1: string | undefined;
+  public app_background_2: string | undefined;
+  public app_background_3: string | undefined;
+  public app_background_4: string | undefined;
 
-  app_foreground_1: string | undefined;
-  app_foreground_2: string | undefined;
+  public app_foreground_1: string | undefined;
+  public app_foreground_2: string | undefined;
 
-  app_color_1: string | undefined;
-  app_color_2: string | undefined;
+  public app_color_1: string | undefined;
+  public app_color_2: string | undefined;
 
-  app_text_1: string | undefined;
-  app_text_2: string | undefined;
-  app_text_3: string | undefined;
+  public app_text_1: string | undefined;
+  public app_text_2: string | undefined;
+  public app_text_3: string | undefined;
 
-  app_button_background_color: string | undefined;
+  public app_button_background_color: string | undefined;
 
-  app_outline: string | undefined;
-  app_link: string | undefined;
-  app_visited: string | undefined;
-  app_negative: string | undefined;
-  app_positive: string | undefined;
-  app_negative_text: string | undefined;
-  app_positive_text: string | undefined;
+  public app_outline: string | undefined;
+  public app_link: string | undefined;
+  public app_visited: string | undefined;
+  public app_negative: string | undefined;
+  public app_positive: string | undefined;
+  public app_negative_text: string | undefined;
+  public app_positive_text: string | undefined;
 }
 
 export function removeColorScheme(): void

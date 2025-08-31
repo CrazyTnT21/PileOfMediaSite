@@ -4,7 +4,7 @@ import {type LanguageCode, LanguageCodes} from "./language";
 
 export class Config
 {
-  static dateFormatter: Intl.DateTimeFormat = ((): Intl.DateTimeFormat =>
+  public static dateFormatter: Intl.DateTimeFormat = ((): Intl.DateTimeFormat =>
   {
     const dateFormat = localStorage.getItem("date-format");
     if (dateFormat)
@@ -14,7 +14,7 @@ export class Config
     return new Intl.DateTimeFormat();
   })()
 
-  static readonly config: Config = ((): Config =>
+  public static readonly config: Config = ((): Config =>
   {
     const config = localStorage.getItem("config");
     if (config)
@@ -22,11 +22,11 @@ export class Config
     return new Config();
   })();
 
-  static preferredLanguages: [LanguageCode, ...LanguageCode[]] = [LanguageCodes.EN];
+  public static preferredLanguages: [LanguageCode, ...LanguageCode[]] = [LanguageCodes.EN];
 
   private static readonly translations = new Map();
 
-  static async translation(): Promise<Translation>
+  public static async translation(): Promise<Translation>
   {
     for (const x of Config.preferredLanguages)
     {

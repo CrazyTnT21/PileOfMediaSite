@@ -16,41 +16,41 @@ export type AppCardElements = {
 
 export class AppCard extends HTMLElement implements StyleCSS
 {
-  override shadowRoot: ShadowRoot;
-  readonly elements: AppCardElements;
+  public override shadowRoot: ShadowRoot;
+  public readonly elements: AppCardElements;
   protected static readonly elementSelectors: { [key in keyof AppCard["elements"]]: string } = {
     image: "img",
     anchor: "a",
     titleSlot: "[name='title']"
   }
 
-  private static readonly observedAttributesMap = {
+  protected static readonly observedAttributesMap = {
     "srcset": srcsetAttribute,
     "cover-alt": coverAltAttribute,
     "item-title": itemTitleAttribute,
     "href": hrefAttribute
   }
-  static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
+  public static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
 
-  async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
     const callback = AppCard.observedAttributesMap[name];
     callback(this, newValue);
   }
 
   @mapStringAttribute("srcset")
-  accessor srcset: string | null | undefined;
+  public accessor srcset: string | null | undefined;
 
   @mapStringAttribute("cover-alt")
-  accessor coverAlt: string | null | undefined;
+  public accessor coverAlt: string | null | undefined;
 
   @mapStringAttribute("href")
-  accessor href: string | null | undefined;
+  public accessor href: string | null | undefined;
 
   @mapStringAttribute("item-title")
-  accessor itemTitle: string | null | undefined;
+  public accessor itemTitle: string | null | undefined;
 
-  constructor()
+  public constructor()
   {
     super();
     this.shadowRoot = attach(this);
@@ -58,13 +58,13 @@ export class AppCard extends HTMLElement implements StyleCSS
     this.elements = mapSelectors<AppCardElements>(this.shadowRoot, AppCard.elementSelectors);
   }
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }

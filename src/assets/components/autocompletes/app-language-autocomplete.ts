@@ -13,13 +13,13 @@ export const AppLanguageAutocompleteTexts = {
 
 export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
 {
-  override readonly texts = new Observer(AppLanguageAutocompleteTexts);
-  static override observedAttributesMap = {
+  public override readonly texts = new Observer(AppLanguageAutocompleteTexts);
+  protected static override observedAttributesMap = {
     ...AppAutocomplete.observedAttributesMap,
     "label": (element: AppInput, v: AttributeValue): void => labelAttribute(element as AppLanguageAutocomplete, v),
   };
 
-  constructor()
+  public constructor()
   {
     super();
     this.texts.addListener("language", () =>
@@ -29,22 +29,22 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
     });
   }
 
-  override async* searchItems(): AsyncGenerator<LanguageCode[]>
+  public override async* searchItems(): AsyncGenerator<LanguageCode[]>
   {
     yield items();
   }
 
-  override async* loadItems(): AsyncGenerator<LanguageCode[]>
+  protected override async* loadItems(): AsyncGenerator<LanguageCode[]>
   {
     yield items();
   }
 
-  override itemValue(item: LanguageCode): any
+  public override itemValue(item: LanguageCode): any
   {
     return item;
   }
 
-  override itemLabel(item: LanguageCode): string | null
+  public override itemLabel(item: LanguageCode): string | null
   {
     return LanguageTexts[item];
   }

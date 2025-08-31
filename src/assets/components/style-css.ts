@@ -1,3 +1,4 @@
-export interface StyleCSS {
+export interface StyleCSS
+{
   styleCSS(): string;
 }

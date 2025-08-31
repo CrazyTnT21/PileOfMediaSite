@@ -58,12 +58,12 @@ export const appHeaderTexts = {
 
 export class AppHeader extends HTMLElement implements StyleCSS
 {
-  readonly texts = new Observer(appHeaderTexts);
+  public readonly texts = new Observer(appHeaderTexts);
 
-  override shadowRoot: ShadowRoot;
+  public override shadowRoot: ShadowRoot;
   private readonly searchDropdown: AppHeaderSearch;
 
-  readonly elements: AppHeaderElements;
+  public readonly elements: AppHeaderElements;
   protected static readonly elementSelectors: { [key in keyof AppHeader["elements"]]: string } = {
     burger: "#burger",
     user: "#user",
@@ -93,7 +93,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
     settingsIcon: "#settings-icon",
   }
 
-  async connectedCallback(): Promise<void>
+  protected async connectedCallback(): Promise<void>
   {
     const {burger, user, logoutButton, settings} = this.elements;
 
@@ -122,7 +122,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
     this.loadAccount();
   }
 
-  get account(): LoginReturn | null
+  public get account(): LoginReturn | null
   {
     const data = localStorage.getItem("account");
     if (!data)
@@ -130,7 +130,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
     return JSON.parse(data);
   }
 
-  set account(value: LoginReturn | null)
+  public set account(value: LoginReturn | null)
   {
     if (value == null)
       localStorage.removeItem("account");
@@ -140,7 +140,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
     this.loadAccount();
   }
 
-  loadAccount(): void
+  private loadAccount(): void
   {
     const localAccount = localStorage.getItem("account");
     this.elements.loginLink.hidden = !!localAccount;
@@ -175,7 +175,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
     burger.appendChild(ul);
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.shadowRoot = attach(this);
@@ -225,9 +225,9 @@ export class AppHeader extends HTMLElement implements StyleCSS
     });
   }
 
-  readonly placeholderImageUrl = "/assets/img/User_Placeholder.svg";
+  private readonly placeholderImageUrl = "/assets/img/User_Placeholder.svg";
 
-  render(): void
+  protected render(): void
   {
     this.shadowRoot.innerHTML = html;
     const items = <HTMLLIElement[]>[...this.shadowRoot.querySelector(AppHeader.elementSelectors.navigationItems)!.children];
@@ -235,7 +235,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  styleCSS(): string
+  public styleCSS(): string
   {
     return css;
   }

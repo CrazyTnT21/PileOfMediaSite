@@ -3,7 +3,7 @@ import {AppInput} from "../app-input/app-input";
 //TODO email max length 254 characters
 export class AppEmailInput extends AppInput
 {
-  constructor()
+  public constructor()
   {
     super();
     this.elements.input.type = "email";

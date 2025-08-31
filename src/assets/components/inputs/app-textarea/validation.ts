@@ -6,7 +6,8 @@ export function setValueMissing(element: AppTextArea, textarea: HTMLTextAreaElem
   if (!isRequired(element) || !valueMissing(textarea))
     return;
 
-  element.errors.set("valueMissing", () => element.texts.get("valueMissing"));
+  const errors = element["errors"];
+  errors.set("valueMissing", () => element.texts.get("valueMissing"));
 }
 
 export function isRequired(element: AppTextArea): boolean
@@ -20,7 +21,8 @@ export function setMinLength(element: AppTextArea, textarea: HTMLTextAreaElement
 
   if (!tooShort(textarea, min ? Number(min) : null))
     return
-  element.errors.set("tooShort", () => element.texts
+  const errors = element["errors"];
+  errors.set("tooShort", () => element.texts
       .get("textareaMinValidation")
       .replace("{min}", min!.toString())
       .replace("{currentLength}", textarea.value.length.toString()));
@@ -33,7 +35,8 @@ export function setMaxLength(element: AppTextArea, textarea: HTMLTextAreaElement
   if (!tooLong(textarea, max ? Number(max) : null))
     return;
 
-  element.errors.set("tooLong", () => element.texts
+  const errors = element["errors"];
+  errors.set("tooLong", () => element.texts
       .get("textareaMaxValidation")
       .replace("{max}", max!.toString())
       .replace("{currentLength}", textarea.value.length.toString()));

@@ -25,7 +25,7 @@ export class Observer<T extends object>
   private readonly item: T;
   private readonly listeners: Map<any, Map<number, Callback<any>>>;
 
-  constructor(item: T)
+  public constructor(item: T)
   {
     item = {...item};
     this.item = item;
@@ -38,7 +38,7 @@ export class Observer<T extends object>
     this.listeners = map;
   }
 
-  set<K extends keyof T>(key: K, value: T[K]): void
+  public set<K extends keyof T>(key: K, value: T[K]): void
   {
     const previousValue = this.item[key];
     this.item[key] = value;
@@ -49,12 +49,12 @@ export class Observer<T extends object>
     }
   }
 
-  get<K extends keyof T>(key: K): T[K]
+  public get<K extends keyof T>(key: K): T[K]
   {
     return this.item[key];
   }
 
-  addListener<K extends keyof T>(key: K, callback: Callback<T, K>): Identifier
+  public addListener<K extends keyof T>(key: K, callback: Callback<T, K>): Identifier
   {
     const array = new Uint32Array(1);
     crypto.getRandomValues(array);
@@ -65,15 +65,15 @@ export class Observer<T extends object>
     return identifier;
   }
 
-  removeListener(identifier: Identifier): void
+  public removeListener(identifier: Identifier): void
   {
     const [key, number] = identifier.split(".");
     this.listeners.get(<keyof T>key)!.delete(Number(number!))
   }
 
-  object(): T
+  public object(): T
   {
-    return this.item;
+    return {...this.item};
   }
 }
 

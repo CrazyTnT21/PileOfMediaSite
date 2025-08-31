@@ -20,7 +20,7 @@ export class Kilobyte
    * //prints true
    * console.info(result);
    */
-  static fromMegabyte(value: Megabyte): Kilobyte
+  public static fromMegabyte(value: Megabyte): Kilobyte
   {
     return Kilobyte.fromByte(value.toByte())
   }
@@ -35,7 +35,7 @@ export class Kilobyte
    * //prints true
    * console.info(result);
    */
-  toMegabyte(): Megabyte
+  public toMegabyte(): Megabyte
   {
     return Megabyte.fromByte(this.value);
   }
@@ -49,7 +49,7 @@ export class Kilobyte
    * //prints true
    * console.info(result);
    */
-  static fromByte(byte: Byte): Kilobyte
+  public static fromByte(byte: Byte): Kilobyte
   {
     return new Kilobyte(byte)
   }
@@ -63,7 +63,7 @@ export class Kilobyte
    * //prints true
    * console.info(result);
    */
-  static fromNumber(byte: number): Kilobyte
+  public static fromNumber(byte: number): Kilobyte
   {
     return new Kilobyte(byte * 1000)
   }
@@ -77,7 +77,7 @@ export class Kilobyte
    * //prints true
    * console.info(result);
    */
-  toByte(): Byte
+  public toByte(): Byte
   {
     return this.value;
   }
@@ -91,27 +91,27 @@ export class Kilobyte
    * //prints true
    * console.info(result);
    */
-  toNumber(): number
+  public toNumber(): number
   {
     return this.value / 1000;
   }
 
-  eq(other: Kilobyte): boolean
+  public eq(other: Kilobyte): boolean
   {
     return other.value == this.value
   }
 
-  less(other: Kilobyte): boolean
+  public less(other: Kilobyte): boolean
   {
     return this.value < other.value
   }
 
-  more(other: Kilobyte): boolean
+  public more(other: Kilobyte): boolean
   {
     return this.value > other.value
   }
 
-  toString(): string
+  public toString(): string
   {
     return `${this.toNumber()} kB`
   }

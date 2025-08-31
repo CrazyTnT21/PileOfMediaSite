@@ -11,20 +11,21 @@ export const AppGenreAutocompleteTexts = {
 
 export class AppGenreAutocomplete extends AppAutocomplete<Genre>
 {
-  override readonly texts = new Observer(AppGenreAutocompleteTexts);
+  public override readonly texts = new Observer(AppGenreAutocompleteTexts);
 
-  override async connectedCallback(): Promise<void>
+  protected override async connectedCallback(): Promise<void>
   {
     this.label = this.label || this.texts.get("genre");
     await super.connectedCallback();
   }
-  constructor()
+
+  public constructor()
   {
     super();
     this.texts.addListener("genre", (value) => this.label = value);
   }
 
-  override async* searchItems(value: string): AsyncGenerator<Genre[]>
+  public override async* searchItems(value: string): AsyncGenerator<Genre[]>
   {
     let page = 0;
     const count = 50;
@@ -49,7 +50,7 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
     }
   }
 
-  override async* loadItems(): AsyncGenerator<Genre[]>
+  protected override async* loadItems(): AsyncGenerator<Genre[]>
   {
     let page = 0;
     const count = 50;
@@ -73,12 +74,12 @@ export class AppGenreAutocomplete extends AppAutocomplete<Genre>
     }
   }
 
-  override itemValue(item: Genre): number
+  public override itemValue(item: Genre): number
   {
     return item.id;
   }
 
-  override itemLabel(item: Genre): string
+  public override itemLabel(item: Genre): string
   {
     const {translation} = getTranslatedField(item);
     return translation.name;

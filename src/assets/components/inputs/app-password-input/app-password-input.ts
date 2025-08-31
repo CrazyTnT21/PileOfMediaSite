@@ -12,7 +12,7 @@ export type AppPasswordInputElements = AppInputElements & { passwordButton: AppB
 
 export class AppPasswordInput extends AppInput implements StyleCSS
 {
-  override readonly elements: AppPasswordInputElements;
+  public override readonly elements: AppPasswordInputElements;
   protected static override readonly elementSelectors = {
     ...AppInput.elementSelectors,
     passwordButton: "app-button",
@@ -22,10 +22,10 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   protected static override readonly observedAttributesMap = {
     ...AppInput.observedAttributesMap,
     "disabled": (element: AppInput, value: AttributeValue): void =>
-      disabledAttribute(element as AppPasswordInput, value, (element as AppPasswordInput).internals, (element as AppPasswordInput).hasDisabledFieldset),
+        disabledAttribute(element as AppPasswordInput, value, (element as AppPasswordInput).internals, (element as AppPasswordInput).hasDisabledFieldset),
   }
 
-  override async connectedCallback(): Promise<void>
+  protected override async connectedCallback(): Promise<void>
   {
     this.label = this.label || "Password";
     await super.connectedCallback();
@@ -46,20 +46,20 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     });
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.elements = mapSelectors<AppPasswordInputElements>(this.shadowRoot, AppPasswordInput.elementSelectors);
     this.elements.input.type = "password";
   }
 
-  override render(): void
+  protected override render(): void
   {
     this.shadowRoot.innerHTML = html;
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  override styleCSS(): string
+  public override styleCSS(): string
   {
     return super.styleCSS() + css;
   }

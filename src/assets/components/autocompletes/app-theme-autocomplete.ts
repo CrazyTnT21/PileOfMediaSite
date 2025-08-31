@@ -11,21 +11,21 @@ export const AppThemeAutocompleteTexts = {
 
 export class AppThemeAutocomplete extends AppAutocomplete<Theme>
 {
-  override readonly texts = new Observer(AppThemeAutocompleteTexts);
+  public override readonly texts = new Observer(AppThemeAutocompleteTexts);
 
-  override async connectedCallback(): Promise<void>
+  protected override async connectedCallback(): Promise<void>
   {
     this.label = this.label || this.texts.get("theme");
     await super.connectedCallback();
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.texts.addListener("theme", (value) => this.label = value);
   }
 
-  override async* searchItems(value: string): AsyncGenerator<Theme[]>
+  public override async* searchItems(value: string): AsyncGenerator<Theme[]>
   {
     let page = 0;
     const count = 50;
@@ -50,7 +50,7 @@ export class AppThemeAutocomplete extends AppAutocomplete<Theme>
     }
   }
 
-  override async* loadItems(): AsyncGenerator<Theme[]>
+  protected override async* loadItems(): AsyncGenerator<Theme[]>
   {
     let page = 0;
     const count = 50;
@@ -74,12 +74,12 @@ export class AppThemeAutocomplete extends AppAutocomplete<Theme>
     }
   }
 
-  override itemValue(item: Theme): number
+  public override itemValue(item: Theme): number
   {
     return item.id;
   }
 
-  override itemLabel(item: Theme): string
+  public override itemLabel(item: Theme): string
   {
     const {translation} = getTranslatedField(item);
     return translation.name;

@@ -14,22 +14,23 @@ export const appUserStatusAutocompleteTexts = {
 
 export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
 {
-  override readonly texts = new Observer(appUserStatusAutocompleteTexts);
+  public override readonly texts = new Observer(appUserStatusAutocompleteTexts);
 
-  readonly valueMapping = new Observer({
+  //TODO translate
+  private readonly valueMapping = new Observer({
     "NotStarted": "Not started",
     "Ongoing": "Ongoing",
     "Paused": "Paused",
     "Finished": "Finished"
   });
 
-  override async connectedCallback(): Promise<void>
+  protected override async connectedCallback(): Promise<void>
   {
     this.label = this.label || this.texts.get("userStatus");
     await super.connectedCallback();
   }
 
-  constructor()
+  public constructor()
   {
     super();
     this.texts.addListener("userStatus", (value) => this.label = value);
@@ -39,12 +40,12 @@ export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
     this.matchLabelText("Finished", "finished");
   }
 
-  override async* searchItems(): AsyncGenerator<UserStatus[]>
+  public override async* searchItems(): AsyncGenerator<UserStatus[]>
   {
     yield unsafeObjectKeys(this.valueMapping.object());
   }
 
-  override async* loadItems(): AsyncGenerator<UserStatus[]>
+  protected override async* loadItems(): AsyncGenerator<UserStatus[]>
   {
     yield unsafeObjectKeys(this.valueMapping.object());
   }
@@ -71,12 +72,12 @@ export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
     customElements.define("app-user-status-autocomplete", AppUserStatusAutocomplete);
   }
 
-  override itemValue(item: UserStatus): any
+  public override itemValue(item: UserStatus): any
   {
     return item;
   }
 
-  override itemLabel(item: UserStatus): string | null
+  public override itemLabel(item: UserStatus): string | null
   {
     return this.valueMapping.get(item);
   }
