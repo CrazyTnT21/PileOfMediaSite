@@ -28,13 +28,11 @@ export class AppButton extends HTMLElement implements StyleCSS
     "disabled": disabledAttribute,
     "type": typeAttribute,
   }
-  public static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
 
-  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
-  {
-    const callback = AppButton.observedAttributesMap[name];
-    callback(this, newValue);
-  }
+  /**
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  public static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
 
   public get disabled(): boolean
   {
@@ -68,6 +66,21 @@ export class AppButton extends HTMLElement implements StyleCSS
     this.setAttribute("type", value);
   }
 
+  public constructor()
+  {
+    super();
+    this.internals = this.attachInternals();
+    this.internals.role = "button";
+    this.shadowRoot = attachDelegates(this);
+    this.render();
+    this.elements = mapSelectors<AppButtonElements>(this.shadowRoot, AppButton.elementSelectors);
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
   protected connectedCallback(): void
   {
     this.addEventListener("click", () =>
@@ -85,14 +98,15 @@ export class AppButton extends HTMLElement implements StyleCSS
     );
   }
 
-  public constructor()
+  /**
+   * Called when attributes are changed, added, removed, or replaced.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    super();
-    this.internals = this.attachInternals();
-    this.internals.role = "button";
-    this.shadowRoot = attachDelegates(this);
-    this.render();
-    this.elements = mapSelectors<AppButtonElements>(this.shadowRoot, AppButton.elementSelectors);
+    const callback = AppButton.observedAttributesMap[name];
+    callback(this, newValue);
   }
 
   protected render(): void

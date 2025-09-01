@@ -13,16 +13,21 @@ export class AppPersonAutocomplete extends AppAutocomplete<Person>
 {
   public override readonly texts = new Observer(AppPersonAutocompleteTexts);
 
-  protected override async connectedCallback(): Promise<void>
-  {
-    this.label = this.label || this.texts.get("person");
-    await super.connectedCallback();
-  }
-
   public constructor()
   {
     super();
     this.texts.addListener("person", (value) => this.label = value);
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
+  protected override async connectedCallback(): Promise<void>
+  {
+    this.label = this.label || this.texts.get("person");
+    await super.connectedCallback();
   }
 
   public override async* searchItems(value: string): AsyncGenerator<Person[]>

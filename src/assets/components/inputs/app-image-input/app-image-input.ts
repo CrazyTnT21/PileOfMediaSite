@@ -56,6 +56,8 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     clearImage: "app-button"
   }
 
+  private interacted: boolean = false;
+
   public static readonly formAssociated = true;
   private readonly internals: ElementInternals;
   public override shadowRoot: ShadowRoot;
@@ -71,14 +73,11 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     "image-title": imageTitleAttribute,
     "multiple": multipleAttribute
   }
-  public static readonly observedAttributes = Object.keys(AppImageInput.observedAttributesMap);
 
-  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
-  {
-    const callback = AppImageInput.observedAttributesMap[name];
-    callback(this, newValue);
-    await this.validate();
-  }
+  /**
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  public static readonly observedAttributes = Object.keys(AppImageInput.observedAttributesMap);
 
   public get label(): string
   {
@@ -170,6 +169,42 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     this.elements.image.src = value;
   }
 
+  private readonly defaultSrc: string;
+
+  public constructor()
+  {
+    super();
+    this.internals = this.attachInternals();
+    this.shadowRoot = attachDelegates(this);
+    this.render();
+    this.elements = mapSelectors<AppImageInputElements>(this.shadowRoot, AppImageInput.elementSelectors);
+    this.defaultSrc = this.elements.image.src;
+    this.texts.addListener("clearImage", (value) =>
+    {
+      if (this.multiple)
+        return;
+
+      this.elements.clearImage.innerText = value;
+    });
+    this.texts.addListener("clearImages", (value) =>
+    {
+      if (!this.multiple)
+        return;
+
+      this.elements.clearImage.innerText = value;
+    });
+
+    this.texts.addListener("required", (value) =>
+    {
+      this.elements.label.setAttribute("data-text-required", value);
+    });
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
   protected async connectedCallback(): Promise<void>
   {
     const {input, image, clearImage} = this.elements;
@@ -205,35 +240,16 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     await this.setupValidation();
   }
 
-  private readonly defaultSrc: string;
-
-  public constructor()
+  /**
+   * Called when attributes are changed, added, removed, or replaced.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
   {
-    super();
-    this.internals = this.attachInternals();
-    this.shadowRoot = attachDelegates(this);
-    this.render();
-    this.elements = mapSelectors<AppImageInputElements>(this.shadowRoot, AppImageInput.elementSelectors);
-    this.defaultSrc = this.elements.image.src;
-    this.texts.addListener("clearImage", (value) =>
-    {
-      if (this.multiple)
-        return;
-
-      this.elements.clearImage.innerText = value;
-    });
-    this.texts.addListener("clearImages", (value) =>
-    {
-      if (!this.multiple)
-        return;
-
-      this.elements.clearImage.innerText = value;
-    });
-
-    this.texts.addListener("required", (value) =>
-    {
-      this.elements.label.setAttribute("data-text-required", value);
-    });
+    const callback = AppImageInput.observedAttributesMap[name];
+    callback(this, newValue);
+    await this.validate();
   }
 
   protected async onInputChange(event: Event): Promise<void>
@@ -272,8 +288,6 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
     setOrRemoveBooleanAttribute(input, "data-invalid", invalid);
   }
-
-  private interacted: boolean = false;
 
   public setCustomError(_input: HTMLInputElement): void
   {

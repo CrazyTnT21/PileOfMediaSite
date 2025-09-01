@@ -40,25 +40,12 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     "multiple": (element: AppInput, v: AttributeValue): void => multiple(element as AppAutocomplete, v),
   };
 
-  protected override async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
-  {
-    //TODO as conversion
-    return super.attributeChangedCallback(name as keyof typeof AppInput["observedAttributesMap"], _oldValue, newValue);
-  }
+  public override readonly texts = new Observer(appAutocompleteTexts);
+
+  protected internalSearch: T[] = [];
 
   @mapBooleanAttribute("multiple")
   public accessor multiple: boolean = null!;
-
-  public override readonly texts = new Observer(appAutocompleteTexts);
-
-  public constructor()
-  {
-    super();
-    this.elements = mapSelectors<AppAutoCompleteElements>(this.shadowRoot, AppAutocomplete.elementSelectors);
-    this.itemsGenerator = this.loadItems();
-  }
-
-  protected internalSearch: T[] = [];
 
   public override get value(): T | undefined | null
   {
@@ -76,11 +63,6 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     super.value = this.itemLabel(value) ?? this.itemValue(value);
   }
 
-  public findValue(value: string): T | undefined
-  {
-    return this.findSameValue(value, this.items);
-  }
-
   public get items(): T[]
   {
     return this.internalItems;
@@ -90,6 +72,59 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
   {
     this.internalItems = items;
     this.createOptions(this.internalItems);
+  }
+
+  public get selected(): T[]
+  {
+    return this.selectedItems;
+  }
+
+  public set selected(items: T[])
+  {
+    this.selectedItems = items;
+
+    const {selected} = this.elements;
+    selected.innerHTML = "";
+    this.pushSelected(selected, items);
+  }
+
+  public constructor()
+  {
+    super();
+    this.elements = mapSelectors<AppAutoCompleteElements>(this.shadowRoot, AppAutocomplete.elementSelectors);
+    this.itemsGenerator = this.loadItems();
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
+  protected override async connectedCallback(): Promise<void>
+  {
+    await super.connectedCallback();
+    const {input} = this.elements;
+    // TODO Initial value, single item loading
+    // const value = this.getAttribute("value");
+
+    input.addEventListener("input", (e) => this.onInputInput(<InputEvent>e));
+    input.addEventListener("focus", (e) => this.onInputFocus(e), {once: true})
+  }
+
+  /**
+   * Called when attributes are changed, added, removed, or replaced.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  protected override async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
+  {
+    //TODO as conversion
+    return super.attributeChangedCallback(name as keyof typeof AppInput["observedAttributesMap"], _oldValue, newValue);
+  }
+
+  public findValue(value: string): T | undefined
+  {
+    return this.findSameValue(value, this.items);
   }
 
   public addItem(item: T): void
@@ -109,20 +144,6 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
   {
     const id = this.itemValue(item);
     return this.items.find(x => this.itemValue(x) === id);
-  }
-
-  public get selected(): T[]
-  {
-    return this.selectedItems;
-  }
-
-  public set selected(items: T[])
-  {
-    this.selectedItems = items;
-
-    const {selected} = this.elements;
-    selected.innerHTML = "";
-    this.pushSelected(selected, items);
   }
 
   public addSelected(value: T): void
@@ -279,17 +300,6 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
   protected async onInputFocus(_event: FocusEvent): Promise<void>
   {
     await this.firstOpen();
-  }
-
-  protected override async connectedCallback(): Promise<void>
-  {
-    await super.connectedCallback();
-    const {input} = this.elements;
-    // TODO Initial value, single item loading
-    // const value = this.getAttribute("value");
-
-    input.addEventListener("input", (e) => this.onInputInput(<InputEvent>e));
-    input.addEventListener("focus", (e) => this.onInputFocus(e), {once: true})
   }
 
   protected override render(): void

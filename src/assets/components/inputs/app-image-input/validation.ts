@@ -1,7 +1,6 @@
 import {Kilobyte} from "../../../units/kilobyte";
 import {AppImageInput} from "./app-image-input";
 
-
 export function setUnsupportedType(element: AppImageInput): void
 {
   if (!unsupportedImageType(element.elements.input))

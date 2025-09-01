@@ -22,8 +22,26 @@ export class AppTab extends HTMLElement implements StyleCSS
     contents: "#contents"
   }
   protected static readonly observedAttributesMap = {}
+
+  /**
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
   public static readonly observedAttributes = unsafeObjectKeys(AppTab.observedAttributesMap);
 
+  public constructor()
+  {
+    super();
+    this.internals = this.setupInternals();
+    this.shadowRoot = attach(this);
+    this.render();
+    this.elements = mapSelectors<AppTabElements>(this.shadowRoot, AppTab.elementSelectors);
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
   protected async connectedCallback(): Promise<void>
   {
     const children = <HTMLElement[]><unknown>this.children;
@@ -53,15 +71,6 @@ export class AppTab extends HTMLElement implements StyleCSS
     }
     (<HTMLElement>headers.firstElementChild!).setAttribute("data-selected", "");
     (<HTMLElement>contents.firstElementChild).hidden = false;
-  }
-
-  public constructor()
-  {
-    super();
-    this.internals = this.setupInternals();
-    this.shadowRoot = attach(this);
-    this.render();
-    this.elements = mapSelectors<AppTabElements>(this.shadowRoot, AppTab.elementSelectors);
   }
 
   protected setupInternals(): ElementInternals

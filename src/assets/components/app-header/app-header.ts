@@ -60,6 +60,8 @@ export class AppHeader extends HTMLElement implements StyleCSS
 {
   public readonly texts = new Observer(appHeaderTexts);
 
+  private readonly placeholderImageUrl = "/assets/img/User_Placeholder.svg";
+
   public override shadowRoot: ShadowRoot;
   private readonly searchDropdown: AppHeaderSearch;
 
@@ -93,6 +95,55 @@ export class AppHeader extends HTMLElement implements StyleCSS
     settingsIcon: "#settings-icon",
   }
 
+  public get account(): LoginReturn | null
+  {
+    const data = localStorage.getItem("account");
+    if (!data)
+      return null;
+    return JSON.parse(data);
+  }
+
+  public set account(value: LoginReturn | null)
+  {
+    if (value == null)
+      localStorage.removeItem("account");
+    else
+      localStorage.setItem("account", JSON.stringify(value));
+
+    this.loadAccount();
+  }
+
+  public constructor()
+  {
+    super();
+    this.shadowRoot = attach(this);
+    this.render();
+    this.elements = mapSelectors<AppHeaderElements>(this.shadowRoot, AppHeader.elementSelectors);
+    this.searchDropdown = new AppHeaderSearch(this);
+    this.searchDropdown.setupSearch(this.shadowRoot);
+    this.matchAllLabelTexts([
+      ["graphicNovels", this.elements.graphicNovelsText],
+      ["games", this.elements.gamesText],
+      ["books", this.elements.booksText],
+      ["movies", this.elements.moviesText],
+      ["shows", this.elements.showsText],
+      ["profile", this.elements.profileText],
+      ["friends", this.elements.friendsText],
+      ["reviews", this.elements.reviewsText],
+      ["settings", this.elements.settingsText],
+      ["preferences", this.elements.preferencesText],
+      ["comments", this.elements.commentsText],
+      ["logout", this.elements.logoutText],
+      ["login", this.elements.loginText],
+    ]);
+    this.texts.addListener("settings", (value) => this.elements.settingsIcon.title = value);
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
   protected async connectedCallback(): Promise<void>
   {
     const {burger, user, logoutButton, settings} = this.elements;
@@ -119,24 +170,6 @@ export class AppHeader extends HTMLElement implements StyleCSS
     });
 
     logoutButton.addEventListener("click", () => this.account = null);
-    this.loadAccount();
-  }
-
-  public get account(): LoginReturn | null
-  {
-    const data = localStorage.getItem("account");
-    if (!data)
-      return null;
-    return JSON.parse(data);
-  }
-
-  public set account(value: LoginReturn | null)
-  {
-    if (value == null)
-      localStorage.removeItem("account");
-    else
-      localStorage.setItem("account", JSON.stringify(value));
-
     this.loadAccount();
   }
 
@@ -175,32 +208,6 @@ export class AppHeader extends HTMLElement implements StyleCSS
     burger.appendChild(ul);
   }
 
-  public constructor()
-  {
-    super();
-    this.shadowRoot = attach(this);
-    this.render();
-    this.elements = mapSelectors<AppHeaderElements>(this.shadowRoot, AppHeader.elementSelectors);
-    this.searchDropdown = new AppHeaderSearch(this);
-    this.searchDropdown.setupSearch(this.shadowRoot);
-    this.matchAllLabelTexts([
-      ["graphicNovels", this.elements.graphicNovelsText],
-      ["games", this.elements.gamesText],
-      ["books", this.elements.booksText],
-      ["movies", this.elements.moviesText],
-      ["shows", this.elements.showsText],
-      ["profile", this.elements.profileText],
-      ["friends", this.elements.friendsText],
-      ["reviews", this.elements.reviewsText],
-      ["settings", this.elements.settingsText],
-      ["preferences", this.elements.preferencesText],
-      ["comments", this.elements.commentsText],
-      ["logout", this.elements.logoutText],
-      ["login", this.elements.loginText],
-    ]);
-    this.texts.addListener("settings", (value) => this.elements.settingsIcon.title = value);
-  }
-
   private matchAllLabelTexts(labels: [keyof typeof appHeaderTexts, HTMLElement | HTMLElement[]][]): void
   {
     for (const [key, elements] of labels)
@@ -224,8 +231,6 @@ export class AppHeader extends HTMLElement implements StyleCSS
       element.innerText = value
     });
   }
-
-  private readonly placeholderImageUrl = "/assets/img/User_Placeholder.svg";
 
   protected render(): void
   {

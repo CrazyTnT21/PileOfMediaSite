@@ -64,6 +64,64 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
     return result;
   }
 
+  public set nextDisabled(value: boolean)
+  {
+    (<HTMLButtonElement>this.shadowRoot.querySelector("#next")).disabled = value;
+  }
+
+  public set backDisabled(value: boolean)
+  {
+    (<HTMLButtonElement>this.shadowRoot.querySelector("#back")).disabled = value;
+  }
+
+  private _columns: Column<T>[] = [];
+  public set columns(columns: Column<T>[])
+  {
+    this._columns = columns;
+
+    const theadElement = this.shadowRoot.querySelector("thead")!.firstElementChild!;
+    theadElement.innerHTML = ``;
+    for (const column of columns)
+    {
+      const columnElement = document.createElement("th");
+      columnElement.classList.add("pad");
+      columnElement.scope = "col";
+      columnElement.innerText = column.display;
+
+      if (column.width)
+        columnElement.style.width = column.width;
+
+      theadElement.append(columnElement);
+    }
+    this.items = this._items;
+  }
+
+  readonly #nextEvent = new Event("next", {composed: true});
+  readonly #backEvent = new Event("back", {composed: true});
+
+  public constructor()
+  {
+    super();
+    this.shadowRoot = attach(this);
+    this.render();
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
+  protected connectedCallback(): void
+  {
+    this.shadowRoot.querySelector("#next")!.addEventListener("click", () =>
+        this.shadowRoot.dispatchEvent(this.#nextEvent));
+
+    this.shadowRoot.querySelector("#back")!.addEventListener("click", () =>
+        this.shadowRoot.dispatchEvent(this.#backEvent));
+
+    this.shadowRoot.querySelector("caption")!.innerText = this.caption;
+  }
+
   private createRowElement(column: Column<T>, item: T): HTMLTableCellElement
   {
     const element = column.type === ColumnType.Image
@@ -104,59 +162,6 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
       return;
     }
     element.innerText = value;
-  }
-
-  public set nextDisabled(value: boolean)
-  {
-    (<HTMLButtonElement>this.shadowRoot.querySelector("#next")).disabled = value;
-  }
-
-  public set backDisabled(value: boolean)
-  {
-    (<HTMLButtonElement>this.shadowRoot.querySelector("#back")).disabled = value;
-  }
-
-  private _columns: Column<T>[] = [];
-  public set columns(columns: Column<T>[])
-  {
-    this._columns = columns;
-
-    const theadElement = this.shadowRoot.querySelector("thead")!.firstElementChild!;
-    theadElement.innerHTML = ``;
-    for (const column of columns)
-    {
-      const columnElement = document.createElement("th");
-      columnElement.classList.add("pad");
-      columnElement.scope = "col";
-      columnElement.innerText = column.display;
-
-      if (column.width)
-        columnElement.style.width = column.width;
-
-      theadElement.append(columnElement);
-    }
-    this.items = this._items;
-  }
-
-  readonly #nextEvent = new Event("next", {composed: true});
-  readonly #backEvent = new Event("back", {composed: true});
-
-  protected connectedCallback(): void
-  {
-    this.shadowRoot.querySelector("#next")!.addEventListener("click", () =>
-        this.shadowRoot.dispatchEvent(this.#nextEvent));
-
-    this.shadowRoot.querySelector("#back")!.addEventListener("click", () =>
-        this.shadowRoot.dispatchEvent(this.#backEvent));
-
-    this.shadowRoot.querySelector("caption")!.innerText = this.caption;
-  }
-
-  public constructor()
-  {
-    super();
-    this.shadowRoot = attach(this);
-    this.render();
   }
 
   protected render(): void

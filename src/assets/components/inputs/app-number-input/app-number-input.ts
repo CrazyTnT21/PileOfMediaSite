@@ -9,6 +9,10 @@ export class AppNumberInput extends AppInput
     "min": minAttribute,
     "max": maxAttribute,
   }
+
+  /**
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
   public static override readonly observedAttributes = Object.keys(AppNumberInput.observedAttributesMap);
 
   public constructor()
@@ -49,7 +53,6 @@ export class AppNumberInput extends AppInput
 }
 
 AppNumberInput.define();
-
 
 function minAttribute(element: AppNumberInput, value: AttributeValue): void
 {

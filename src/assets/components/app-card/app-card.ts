@@ -30,13 +30,11 @@ export class AppCard extends HTMLElement implements StyleCSS
     "item-title": itemTitleAttribute,
     "href": hrefAttribute
   }
-  public static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
 
-  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
-  {
-    const callback = AppCard.observedAttributesMap[name];
-    callback(this, newValue);
-  }
+  /**
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  public static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
 
   @mapStringAttribute("srcset")
   public accessor srcset: string | null | undefined;
@@ -56,6 +54,17 @@ export class AppCard extends HTMLElement implements StyleCSS
     this.shadowRoot = attach(this);
     this.render();
     this.elements = mapSelectors<AppCardElements>(this.shadowRoot, AppCard.elementSelectors);
+  }
+
+  /**
+   * Called when attributes are changed, added, removed, or replaced.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  {
+    const callback = AppCard.observedAttributesMap[name];
+    callback(this, newValue);
   }
 
   protected render(): void

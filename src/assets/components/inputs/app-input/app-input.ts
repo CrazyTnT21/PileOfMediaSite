@@ -66,17 +66,13 @@ export class AppInput extends HTMLElement implements StyleCSS
     "minlength": minlengthAttribute,
     "placeholder": placeholderAttribute,
   }
+
+  private interacted: boolean = false;
+
+  /**
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
   public static readonly observedAttributes = Object.keys(AppInput.observedAttributesMap);
-
-  protected async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
-  {
-    if (!("observedAttributesMap" in this.constructor))
-      return;
-
-    const callback = (<typeof AppInput.observedAttributesMap>this.constructor["observedAttributesMap"])[name];
-    callback(this, newValue);
-    this.updateValidity();
-  }
 
   public get label(): string
   {
@@ -137,6 +133,26 @@ export class AppInput extends HTMLElement implements StyleCSS
   @mapStringAttribute("placeholder")
   public accessor placeholder: string | null | undefined;
 
+  public constructor()
+  {
+    super();
+    this.internals = this.setupInternals();
+    this.shadowRoot = attachDelegates(this);
+    this.render();
+    this.addEventListener(ValueSetEvent.type, (e) => this.onValueSet(e));
+    this.elements = mapSelectors<AppInputElements>(this.shadowRoot, AppInput.elementSelectors);
+
+    this.texts.addListener("required", (value) =>
+    {
+      this.elements.label.setAttribute("data-text-required", value);
+    });
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
   protected async connectedCallback(): Promise<void>
   {
     this.label = this.label || "";
@@ -155,6 +171,21 @@ export class AppInput extends HTMLElement implements StyleCSS
         });
 
     this.setupValidation();
+    this.updateValidity();
+  }
+
+  /**
+   * Called when attributes are changed, added, removed, or replaced.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: AttributeValue, newValue: AttributeValue): Promise<void>
+  {
+    if (!("observedAttributesMap" in this.constructor))
+      return;
+
+    const callback = (<typeof AppInput.observedAttributesMap>this.constructor["observedAttributesMap"])[name];
+    callback(this, newValue);
     this.updateValidity();
   }
 
@@ -178,21 +209,6 @@ export class AppInput extends HTMLElement implements StyleCSS
     this.internals.setFormValue(this.elements.input.value);
     this.updateValidity();
     this.internals.reportValidity()
-  }
-
-  public constructor()
-  {
-    super();
-    this.internals = this.setupInternals();
-    this.shadowRoot = attachDelegates(this);
-    this.render();
-    this.addEventListener(ValueSetEvent.type, (e) => this.onValueSet(e));
-    this.elements = mapSelectors<AppInputElements>(this.shadowRoot, AppInput.elementSelectors);
-
-    this.texts.addListener("required", (value) =>
-    {
-      this.elements.label.setAttribute("data-text-required", value);
-    });
   }
 
   protected setupInternals(): ElementInternals
@@ -262,8 +278,6 @@ export class AppInput extends HTMLElement implements StyleCSS
       }
     }
   }
-
-  private interacted: boolean = false;
 
   public addCustomError(callback: ErrorCallback): ErrorKey
   {

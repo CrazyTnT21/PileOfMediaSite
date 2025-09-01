@@ -60,14 +60,11 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     "placeholder": placeholderAttribute,
     "rows": rowsAttribute
   }
-  public static readonly observedAttributes = Object.keys(AppTextArea.observedAttributesMap);
 
-  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
-  {
-    const callback = AppTextArea.observedAttributesMap[name];
-    callback(this, newValue);
-    await this.validate();
-  }
+  /**
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  public static readonly observedAttributes = Object.keys(AppTextArea.observedAttributesMap);
 
   public get label(): string
   {
@@ -92,7 +89,6 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
-
   @mapNumberAttribute("minlength")
   public accessor minLength: number | null | undefined;
 
@@ -101,23 +97,6 @@ export class AppTextArea extends HTMLElement implements StyleCSS
 
   @mapNumberAttribute("rows")
   public accessor rows: number | null | undefined;
-
-  protected async connectedCallback(): Promise<void>
-  {
-    this.label = this.label || "";
-    const {label} = this.elements;
-    label.innerText = this.label;
-    const {textarea} = this.elements;
-    textarea.addEventListener("change", (e) => this.onTextAreaChange(e));
-    textarea.placeholder = this.placeholder ?? "";
-
-    handleFieldset(this, (fieldSet) => this.parentFieldSet = fieldSet, () =>
-    {
-      disabledAttribute(this, this.getAttribute("disabled"))
-    });
-
-    await this.setupValidation();
-  }
 
   public get value(): any
   {
@@ -165,6 +144,40 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     this.elements = mapSelectors<AppTextAreaElements>(this.shadowRoot, AppTextArea.elementSelectors);
 
     this.texts.addListener("required", (value) => this.elements.label.setAttribute("data-text-required", value));
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
+  protected async connectedCallback(): Promise<void>
+  {
+    this.label = this.label || "";
+    const {label} = this.elements;
+    label.innerText = this.label;
+    const {textarea} = this.elements;
+    textarea.addEventListener("change", (e) => this.onTextAreaChange(e));
+    textarea.placeholder = this.placeholder ?? "";
+
+    handleFieldset(this, (fieldSet) => this.parentFieldSet = fieldSet, () =>
+    {
+      disabledAttribute(this, this.getAttribute("disabled"))
+    });
+
+    await this.setupValidation();
+  }
+
+  /**
+   * Called when attributes are changed, added, removed, or replaced.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  {
+    const callback = AppTextArea.observedAttributesMap[name];
+    callback(this, newValue);
+    await this.validate();
   }
 
   protected async setupValidation(): Promise<void>

@@ -25,6 +25,18 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         disabledAttribute(element as AppPasswordInput, value),
   }
 
+  public constructor()
+  {
+    super();
+    this.elements = mapSelectors<AppPasswordInputElements>(this.shadowRoot, AppPasswordInput.elementSelectors);
+    this.elements.input.type = "password";
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
   protected override async connectedCallback(): Promise<void>
   {
     this.label = this.label || "Password";
@@ -44,13 +56,6 @@ export class AppPasswordInput extends AppInput implements StyleCSS
         eyeIcon.className = "eye-closed-icon";
       }
     });
-  }
-
-  public constructor()
-  {
-    super();
-    this.elements = mapSelectors<AppPasswordInputElements>(this.shadowRoot, AppPasswordInput.elementSelectors);
-    this.elements.input.type = "password";
   }
 
   protected override render(): void

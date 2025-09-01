@@ -26,7 +26,6 @@ const elementSelectors = {
   loginSubmit: "#login-submit"
 }
 
-
 const elements = mapSelectors<Elements>(document, elementSelectors);
 elements.returnLink.href = document.referrer;
 

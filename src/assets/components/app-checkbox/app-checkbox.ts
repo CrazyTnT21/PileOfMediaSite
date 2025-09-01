@@ -28,17 +28,17 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
 
   private interacted: boolean = false;
 
+  private parentFieldSet: HTMLFieldSetElement | null | undefined;
+
   protected static readonly observedAttributesMap = {
     "label": labelAttribute,
     "disabled": disabledAttribute,
   }
-  public static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
 
-  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
-  {
-    const callback = AppCheckbox.observedAttributesMap[name];
-    callback(this, newValue);
-  }
+  /**
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  public static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
 
   public get label(): string
   {
@@ -71,8 +71,6 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
-  private parentFieldSet: HTMLFieldSetElement | null | undefined;
-
   /**
    * If a parent fieldset is disabled, descendant form controls are also disabled.
    *
@@ -83,6 +81,20 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     return Boolean(this.parentFieldSet?.disabled);
   }
 
+  public constructor()
+  {
+    super();
+    this.internals = this.setupInternals();
+    this.shadowRoot = attachDelegates(this);
+    this.render();
+    this.elements = mapSelectors<AppCheckboxElements>(this.shadowRoot, AppCheckbox.elementSelectors);
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
   protected async connectedCallback(): Promise<void>
   {
     this.label = this.label || "";
@@ -96,18 +108,20 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     );
   }
 
+  /**
+   * Called when attributes are changed, added, removed, or replaced.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
+   */
+  protected async attributeChangedCallback(name: AttributeKey, _oldValue: string | null, newValue: string | null): Promise<void>
+  {
+    const callback = AppCheckbox.observedAttributesMap[name];
+    callback(this, newValue);
+  }
+
   protected async onCheckboxChange(_event: Event): Promise<void>
   {
     this.interacted = true;
-  }
-
-  public constructor()
-  {
-    super();
-    this.internals = this.setupInternals();
-    this.shadowRoot = attachDelegates(this);
-    this.render();
-    this.elements = mapSelectors<AppCheckboxElements>(this.shadowRoot, AppCheckbox.elementSelectors);
   }
 
   protected setupInternals(): ElementInternals

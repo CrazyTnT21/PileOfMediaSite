@@ -24,12 +24,6 @@ export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
     "Finished": "Finished"
   });
 
-  protected override async connectedCallback(): Promise<void>
-  {
-    this.label = this.label || this.texts.get("userStatus");
-    await super.connectedCallback();
-  }
-
   public constructor()
   {
     super();
@@ -38,6 +32,17 @@ export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
     this.matchLabelText("Ongoing", "ongoing");
     this.matchLabelText("Paused", "paused");
     this.matchLabelText("Finished", "finished");
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
+  protected override async connectedCallback(): Promise<void>
+  {
+    this.label = this.label || this.texts.get("userStatus");
+    await super.connectedCallback();
   }
 
   public override async* searchItems(): AsyncGenerator<UserStatus[]>

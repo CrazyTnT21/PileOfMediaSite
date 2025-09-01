@@ -32,6 +32,23 @@ export class AppSearchInput extends AppInput implements StyleCSS
     "disabled": (element: AppInput, value: AttributeValue): void => disabledAttribute(element as AppSearchInput, value),
   };
 
+  public constructor()
+  {
+    super();
+    this.elements = mapSelectors<AppSearchInputElements>(this.shadowRoot, AppSearchInput.elementSelectors);
+    this.elements.input.type = "search";
+    this.texts.addListener("search", () =>
+    {
+      if (!this.getAttribute("label"))
+        this.label = "";
+    });
+  }
+
+  /**
+   * Called each time the element is added to the document.
+   *
+   * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#custom_element_lifecycle_callbacks)
+   */
   protected override async connectedCallback(): Promise<void>
   {
     await super.connectedCallback();
@@ -48,18 +65,6 @@ export class AppSearchInput extends AppInput implements StyleCSS
     {
       if (e.key == "Enter")
         this.shadowRoot.dispatchEvent(new SearchEvent({composed: true, detail: input.value}));
-    });
-  }
-
-  public constructor()
-  {
-    super();
-    this.elements = mapSelectors<AppSearchInputElements>(this.shadowRoot, AppSearchInput.elementSelectors);
-    this.elements.input.type = "search";
-    this.texts.addListener("search", () =>
-    {
-      if (!this.getAttribute("label"))
-        this.label = "";
     });
   }
 
