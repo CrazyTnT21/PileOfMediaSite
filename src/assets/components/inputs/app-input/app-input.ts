@@ -5,7 +5,7 @@ import {
   handleFieldset,
   setOrRemoveBooleanAttribute,
   IncludesString,
-  templateString
+  templateString, randomNumber, NonEmptyString
 } from "../common";
 import {ValueSetEvent} from "./value-set-event";
 import html from "./app-input.html" with {type: "inline"};
@@ -22,6 +22,7 @@ import {
 import {setMaxLength, setMinLength, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
 import {mapBooleanAttribute, mapNumberAttribute, mapStringAttribute} from "../map-boolean-attribute";
+import {Err, Result} from "../../../result/result";
 
 type AttributeKey = keyof typeof AppInput["observedAttributesMap"];
 
@@ -31,12 +32,16 @@ export type AppInputElements = {
 };
 export const appInputTexts = {
   required: "Required",
-  valueMissing: "No value given",
+  pleaseFillOutThisInput: "Please fill out this input",
   inputMinValidation: templateString<IncludesString<["{min}", "{currentLength}"]>>
   ("Input requires at least '{min}' characters. Current length: {currentLength}"),
   inputMaxValidation: templateString<IncludesString<["{max}", "{currentLength}"]>>
   ("Input only allows a maximum of '{max}' characters. Current length: {currentLength}"),
 };
+export type ErrorObject = { state: keyof ValidityStateFlags, userMessage: NonEmptyString };
+export type ErrorResult = Result<void, ErrorObject>;
+type ErrorCallback = () => ErrorResult;
+type ErrorKey = number;
 
 export class AppInput extends HTMLElement implements StyleCSS
 {
@@ -48,7 +53,7 @@ export class AppInput extends HTMLElement implements StyleCSS
   public readonly texts = new Observer(appInputTexts);
 
   public static readonly formAssociated = true;
-  protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+  protected errors: Map<number, ErrorCallback> = new Map();
 
   protected readonly internals: ElementInternals;
   public override shadowRoot: ShadowRoot;
@@ -56,7 +61,7 @@ export class AppInput extends HTMLElement implements StyleCSS
   protected static readonly observedAttributesMap = {
     "label": labelAttribute,
     "required": requiredAttribute,
-    "disabled": (element: AppInput, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
+    "disabled": disabledAttribute,
     "maxlength": maxLengthAttribute,
     "minlength": minlengthAttribute,
     "placeholder": placeholderAttribute,
@@ -70,7 +75,7 @@ export class AppInput extends HTMLElement implements StyleCSS
 
     const callback = (<typeof AppInput.observedAttributesMap>this.constructor["observedAttributesMap"])[name];
     callback(this, newValue);
-    await this.validate();
+    this.updateValidity();
   }
 
   public get label(): string
@@ -88,7 +93,7 @@ export class AppInput extends HTMLElement implements StyleCSS
 
   public get disabled(): boolean
   {
-    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
+    return this.getAttribute("disabled") == "" || this.isDisabledByFieldSet;
   }
 
   public set disabled(value: boolean)
@@ -117,7 +122,17 @@ export class AppInput extends HTMLElement implements StyleCSS
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
-  protected hasDisabledFieldset: boolean = false;
+  private parentFieldSet: HTMLFieldSetElement | null | undefined;
+
+  /**
+   * If a parent fieldset is disabled, descendant form controls are also disabled.
+   *
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled#overview)
+   */
+  public get isDisabledByFieldSet(): boolean
+  {
+    return Boolean(this.parentFieldSet?.disabled);
+  }
 
   @mapStringAttribute("placeholder")
   public accessor placeholder: string | null | undefined;
@@ -131,14 +146,16 @@ export class AppInput extends HTMLElement implements StyleCSS
     input.placeholder = this.placeholder ?? "";
     this.handleInitialValueAttribute();
 
-    handleFieldset(this, (value: boolean) =>
-    {
-      this.hasDisabledFieldset = value;
-      //TODO: as conversion
-      (this.constructor as typeof AppInput)["observedAttributesMap"]["disabled"](this, this.getAttribute("disabled"))
-    });
+    handleFieldset(this,
+        (fieldSet) => this.parentFieldSet = fieldSet,
+        () =>
+        {
+          //TODO: as conversion
+          (this.constructor as typeof AppInput)["observedAttributesMap"]["disabled"](this, this.getAttribute("disabled"))
+        });
 
-    await this.setupValidation();
+    this.setupValidation();
+    this.updateValidity();
   }
 
   private handleInitialValueAttribute(): void
@@ -152,13 +169,15 @@ export class AppInput extends HTMLElement implements StyleCSS
 
   protected async onValueSet(_event: Event): Promise<void>
   {
-    await this.validate();
+    this.updateValidity();
   }
 
   protected async onInputChange(_event: Event): Promise<void>
   {
     this.interacted = true;
-    await this.validateAndReport();
+    this.internals.setFormValue(this.elements.input.value);
+    this.updateValidity();
+    this.internals.reportValidity()
   }
 
   public constructor()
@@ -183,67 +202,86 @@ export class AppInput extends HTMLElement implements StyleCSS
     return internals;
   }
 
-  protected async setupValidation(): Promise<void>
+  protected setupValidation(): void
   {
     const {input} = this.elements;
-    input.addEventListener("change", () => this.validateAndReport());
-    await this.validate();
+    this.errors = new Map();
+    this.internals.setFormValue(input.value);
+    this.addCustomError(() => setValueMissing(this, input));
+    this.addCustomError(() => setMinLength(this, input));
+    this.addCustomError(() => setMaxLength(this, input));
   }
 
-  public async validate(): Promise<void>
+  public updateValidity(): void
   {
     const {input} = this.elements;
-    await this.setValidity(input);
     this.internals.setValidity({});
     input.setCustomValidity("");
-    const error = this.errors.entries().next().value;
-    if (error)
+
+    if (!this.internals.willValidate)
     {
-      this.internals.setValidity({[error[0]]: true}, error[1](), input);
-      input.setCustomValidity(error[1]());
+      setOrRemoveBooleanAttribute(this, "data-invalid", false);
+      setOrRemoveBooleanAttribute(input, "data-invalid", false);
+      return;
     }
-    this.setCustomError = (): void =>
+
+    const validityMessages: Map<keyof ValidityStateFlags, string> = new Map();
+    for (const [_, errorEntry] of this.errors)
     {
-    };
+      const {error} = errorEntry();
+      if (error)
+      {
+        validityMessages.set(error.state, error.userMessage);
+      }
+    }
+    this.validateInternalInput(validityMessages);
+
+    const validityStateFlags = Object.fromEntries([...validityMessages].map(([key, _]) => [key, true]))
+    const validityMessage = [...validityMessages.values()].join("\n");
+    this.internals.setValidity(validityStateFlags, validityMessage, input);
+
     if (!this.interacted)
       return;
 
-    const invalid = !input.checkValidity();
+    const invalid = validityMessages.size > 0;
     setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
     setOrRemoveBooleanAttribute(input, "data-invalid", invalid);
   }
 
+  private validateInternalInput(validityMessages: Map<keyof ValidityStateFlags, string>): void
+  {
+    const {input} = this.elements;
+    for (const x in input.validity)
+    {
+      if (x == "valid")
+        return;
+
+      if (input.validity[x as keyof ValidityState])
+      {
+        validityMessages.set(x as keyof ValidityStateFlags, input.validationMessage);
+      }
+    }
+  }
+
   private interacted: boolean = false;
 
-  public async validateAndReport(): Promise<void>
+  public addCustomError(callback: ErrorCallback): ErrorKey
   {
-    await this.validate();
-    const {input} = this.elements;
-    const error = this.errors.entries().next().value;
-    if (error)
-      input.setCustomValidity(error[1]());
-    this.internals.reportValidity();
+    const errorKey = randomNumber();
+    this.errors.set(errorKey, callback);
+    return errorKey
   }
 
-  protected async setValidity(input: HTMLInputElement): Promise<void>
+  public removeCustomError(key: ErrorKey): void
   {
-    this.internals.setFormValue(input.value);
-    this.errors = new Map();
-    setValueMissing(this, input);
-    setMinLength(this, input);
-    setMaxLength(this, input);
-    this.setCustomError(input);
+    this.errors.delete(key);
   }
 
-  public async valid(): Promise<boolean>
+  public setCustomValidity(validity: keyof ValidityStateFlags, message: string): void
   {
-    const {input} = this.elements;
-    await this.setValidity(input);
-    return this.errors.size == 0;
-  }
-
-  public setCustomError(_input: HTMLInputElement): void
-  {
+    const errorKey = this.addCustomError(() => new Err({state: validity, userMessage: message}));
+    this.updateValidity();
+    this.removeCustomError(errorKey);
   }
 
   protected render(): void
@@ -257,6 +295,7 @@ export class AppInput extends HTMLElement implements StyleCSS
     return css;
   }
 
+  //TODO components not defined when loading async module scripts
   public static define(): void
   {
     if (customElements.get("app-input"))

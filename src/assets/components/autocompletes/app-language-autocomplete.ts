@@ -1,5 +1,5 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
-import {LanguageCode, LanguageTexts} from "../../classes/language";
+import {LanguageCode, LanguageTexts} from "../../language";
 import {Observer} from "../../observer";
 import {labelAttribute} from "./app-language-autocomplete/attributes";
 import {AppInput} from "../inputs/app-input/app-input";

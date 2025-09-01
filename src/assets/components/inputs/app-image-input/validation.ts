@@ -42,7 +42,7 @@ export function setValueMissing(element: AppImageInput): void
     return;
 
   const errors = element["errors"];
-  errors.set("valueMissing", () => element.texts.get("valueMissing"));
+  errors.set("valueMissing", () => element.texts.get("pleaseFillOutThisInput"));
 }
 
 function isRequired(element: AppImageInput): boolean

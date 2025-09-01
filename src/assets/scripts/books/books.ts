@@ -1,5 +1,5 @@
 import {AppTable, Column, ColumnType} from "../../components/app-table/app-table";
-import {Config, getTranslatedField, logError} from "../../classes/config";
+import {Config, getTranslatedField, logError} from "../../config";
 import {Book} from "../../openapi/book";
 import {apiClient} from "../../openapi/client";
 

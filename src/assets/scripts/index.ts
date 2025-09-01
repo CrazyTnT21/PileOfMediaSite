@@ -1,5 +1,5 @@
 import {components} from "pileofmedia-openapi";
-import {Config, getTranslatedField, logError} from "../classes/config";
+import {Config, getTranslatedField, logError} from "../config";
 import {AppCard} from "../components/app-card/app-card";
 import {collect_ok, Err, Ok, Result} from "../result/result";
 import {apiClient} from "../openapi/client";

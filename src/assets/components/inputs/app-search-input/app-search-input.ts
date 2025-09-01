@@ -29,8 +29,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
   protected static override observedAttributesMap = {
     ...AppInput.observedAttributesMap,
     "label": (element: AppInput, v: AttributeValue): void => labelAttribute(element as AppSearchInput, v),
-    "disabled": (element: AppInput, value: AttributeValue): void =>
-        disabledAttribute(element as AppSearchInput, value, (element as AppSearchInput).internals, (element as AppSearchInput).hasDisabledFieldset),
+    "disabled": (element: AppInput, value: AttributeValue): void => disabledAttribute(element as AppSearchInput, value),
   };
 
   protected override async connectedCallback(): Promise<void>

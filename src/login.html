@@ -28,10 +28,13 @@
                             label="Password"></app-password-input>
       </div>
       <div class="col-12 pad">
-        <app-button class="login-button col-12" data-translate="login">Log in</app-button>
+        <app-button id="login-submit" class="login-button col-12" data-translate="login">Log in</app-button>
       </div>
     </fieldset>
   </form>
+  <div id="successful-login" hidden>
+    <div class="pad">Successfully logged in! <a id="return-link" href="/">Return to previous page</a></div>
+  </div>
   <div class="col-12 pad login-box">
     <!--TODO: Forgot password-->
     <div class="col-6">
@@ -41,7 +44,7 @@
       <div class="col-12" data-translate="noAccount">
         Don't have an account?
       </div>
-      <a class="underscore-text" href="/signup" data-translate="signUp">Sign up</a>
+      <a class="underscore-text" href="/signup" data-translate="signup">Sign up</a>
     </div>
   </div>
 </main>

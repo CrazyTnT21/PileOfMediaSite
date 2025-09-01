@@ -22,7 +22,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
   protected static override readonly observedAttributesMap = {
     ...AppInput.observedAttributesMap,
     "disabled": (element: AppInput, value: AttributeValue): void =>
-        disabledAttribute(element as AppPasswordInput, value, (element as AppPasswordInput).internals, (element as AppPasswordInput).hasDisabledFieldset),
+        disabledAttribute(element as AppPasswordInput, value),
   }
 
   protected override async connectedCallback(): Promise<void>

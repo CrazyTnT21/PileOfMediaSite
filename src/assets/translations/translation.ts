@@ -56,11 +56,11 @@ export type Translation =
       foryou?: string;
       topTitle?: string;
       top?: string;
-      inputMinTextLengthValidation?: IncludesString<["{min}","{currentLength}"]>;
-      inputMaxTextLengthValidation?: IncludesString<["{max}","{currentLength}"]>;
+      inputMinTextLengthValidation?: IncludesString<["{min}", "{currentLength}"]>;
+      inputMaxTextLengthValidation?: IncludesString<["{max}", "{currentLength}"]>;
       required?: string;
-      imageInputMinSizesValidation?:  IncludesString<["{min}","{fileSizes}"]>;
-      imageInputMaxSizesValidation?:  IncludesString<["{min}","{fileSizes}"]>;
+      imageInputMinSizesValidation?: IncludesString<["{min}", "{fileSizes}"]>;
+      imageInputMaxSizesValidation?: IncludesString<["{min}", "{fileSizes}"]>;
       valueMissing?: string;
       unsupportedImageType?: string;
       clearImage?: string;
@@ -84,10 +84,11 @@ export type Translation =
       preferences?: string;
       logout?: string;
       login?: string;
-      signUp?: string;
+      signup?: string;
       newest?: string;
       highestRated?: string;
       favorite?: string;
       forgotPassword?: string;
       noAccount?: string;
+      pleaseFillOutThisInput?: string;
     }

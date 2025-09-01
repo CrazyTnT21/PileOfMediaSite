@@ -1,4 +1,4 @@
-import {unsafeObjectKeys} from "../unsafe-object-keys";
+import {unsafeObjectKeys} from "./unsafe-object-keys";
 
 export const LanguageTexts = {
   EN: "English",

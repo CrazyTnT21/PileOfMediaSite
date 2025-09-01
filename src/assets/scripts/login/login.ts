@@ -1,33 +1,71 @@
-import {AppInput} from "../../components/inputs/app-input/app-input";
 import {AppPasswordInput} from "../../components/inputs/app-password-input/app-password-input";
 import {AppHeader} from "../../components/app-header/app-header";
 import {apiClient} from "../../openapi/client";
+import {AppEmailInput} from "../../components/inputs/app-email-input/app-email-input";
+import {mapSelectors} from "../../dom";
+import {AppButton} from "../../components/app-button/app-button";
 
-document.querySelector("form")!.addEventListener("submit", async e =>
+type Elements = {
+  email: AppEmailInput
+  password: AppPasswordInput,
+  fieldset: HTMLFieldSetElement,
+  form: HTMLFormElement,
+  header: AppHeader,
+  successfulLogin: HTMLDivElement,
+  returnLink: HTMLAnchorElement,
+  loginSubmit: AppButton
+}
+const elementSelectors = {
+  email: "#email",
+  password: "#password",
+  fieldset: "#input-fieldset",
+  form: "form",
+  header: "app-header",
+  successfulLogin: "#successful-login",
+  returnLink: "#return-link",
+  loginSubmit: "#login-submit"
+}
+
+
+const elements = mapSelectors<Elements>(document, elementSelectors);
+elements.returnLink.href = document.referrer;
+
+elements.form.addEventListener("submit", async e =>
 {
   e.preventDefault();
-  const fieldset: HTMLFieldSetElement = document.querySelector("#input-fieldset")!;
-  fieldset.disabled = true;
-  const emailInput: AppInput = document.querySelector("#email")!;
-  const passwordInput: AppPasswordInput = document.querySelector("#password")!;
+  const {fieldset, email, password, loginSubmit} = elements;
+
+  loginSubmit.disabled = true;
 
   const response = await apiClient.POST("/accounts/login", {
     body: {
-      email: emailInput.value,
-      password: passwordInput.value
+      email: email.value,
+      password: password.value
     }
   });
-  passwordInput.value = null;
-  //TODO
+
+  loginSubmit.disabled = false;
+
   if (response.error != undefined)
   {
-    fieldset.disabled = false;
-    return;
+    let errorMessage = response.error;
+    if (errorMessage == "" || isServerError(response.response))
+      errorMessage = response.error || "Fetch error"; //TODO translation/alternative message
+    password.setCustomValidity("customError", errorMessage);
   }
-  //TODO: mapSelectors
-  (<AppHeader>document.querySelector("app-header")).account = response.data!;
-  //TODO: replace with pre existing element that has [hidden] toggled
-  const successLoginDiv = document.createElement("div");
-  successLoginDiv.innerHTML = `<div class="pad">Successfully logged in! <a href="${document.referrer}">Return to previous page</a></div>`;
-  document.querySelector("form")!.append(successLoginDiv)
+
+  if (!elements.form.reportValidity())
+    return;
+
+  fieldset.disabled = true;
+  password.value = null;
+
+  elements.successfulLogin.hidden = false;
+
+  elements.header.account = response.data!;
 });
+
+function isServerError(response: { status: number }): boolean
+{
+  return response.status >= 500 && response.status < 600;
+}

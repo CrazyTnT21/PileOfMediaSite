@@ -2,7 +2,7 @@ import html from "./app-checkbox.html" with {type: "inline"};
 import css from "./app-checkbox.css" with {type: "inline"};
 import {StyleCSS} from "../style-css";
 import {ValueSetEvent} from "../inputs/app-input/value-set-event";
-import {AttributeValue, handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
+import {handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import {applyStyleSheet, attachDelegates} from "../defaults";
 import {labelAttribute, disabledAttribute} from "./attributes";
 import {mapSelectors} from "../../dom";
@@ -30,7 +30,7 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
 
   protected static readonly observedAttributesMap = {
     "label": labelAttribute,
-    "disabled": (element: AppCheckbox, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
+    "disabled": disabledAttribute,
   }
   public static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
 
@@ -52,7 +52,7 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
 
   public get disabled(): boolean
   {
-    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
+    return this.getAttribute("disabled") == "" || this.isDisabledByFieldSet;
   }
 
   public set disabled(value: boolean)
@@ -71,7 +71,17 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
-  private hasDisabledFieldset: boolean = false;
+  private parentFieldSet: HTMLFieldSetElement | null | undefined;
+
+  /**
+   * If a parent fieldset is disabled, descendant form controls are also disabled.
+   *
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled#overview)
+   */
+  public get isDisabledByFieldSet(): boolean
+  {
+    return Boolean(this.parentFieldSet?.disabled);
+  }
 
   protected async connectedCallback(): Promise<void>
   {
@@ -79,11 +89,11 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     this.disabled = this.getAttribute("disabled") == "";
     const {input} = this.elements;
     input.addEventListener("change", (e) => this.onCheckboxChange(e));
-    handleFieldset(this, (value: boolean) =>
-    {
-      this.hasDisabledFieldset = value;
-      disabledAttribute(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
-    });
+
+    handleFieldset(this,
+        (fieldSet) => this.parentFieldSet = fieldSet,
+        () => disabledAttribute(this, this.getAttribute("disabled"))
+    );
   }
 
   protected async onCheckboxChange(_event: Event): Promise<void>

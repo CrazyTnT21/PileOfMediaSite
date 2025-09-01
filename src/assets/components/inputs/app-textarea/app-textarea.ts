@@ -1,7 +1,6 @@
 import {applyStyleSheet, attachDelegates} from "../../defaults";
 import {StyleCSS} from "../../style-css";
 import {
-  AttributeValue,
   handleFieldset,
   setOrRemoveBooleanAttribute,
   templateString
@@ -30,7 +29,7 @@ export type AppTextAreaElements = {
 };
 export const appTextAreaTexts = {
   required: "Required",
-  valueMissing: "No value given",
+  pleaseFillOutThisInput: "Please fill out this input",
   textareaMinValidation: templateString<`${string}{min}${string}{currentLength}${string}`>
   ("Textarea requires at least {max} characters. Current length: {currentLength}"),
   textareaMaxValidation: templateString<`${string}{max}${string}{currentLength}${string}`>
@@ -42,7 +41,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   public static readonly formAssociated = true;
   protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();
 
-  //TODO private
+  //TODO: Private
   public readonly elements: AppTextAreaElements;
   protected static readonly elementSelectors: { [key in keyof AppTextArea["elements"]]: string } = {
     textarea: "textarea",
@@ -55,7 +54,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   protected static readonly observedAttributesMap = {
     "label": labelAttribute,
     "required": requiredAttribute,
-    "disabled": (element: AppTextArea, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
+    "disabled": disabledAttribute,
     "maxlength": maxLengthAttribute,
     "minlength": minlengthAttribute,
     "placeholder": placeholderAttribute,
@@ -85,7 +84,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
 
   public get disabled(): boolean
   {
-    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
+    return this.getAttribute("disabled") == "" || this.isDisabledByFieldSet;
   }
 
   public set disabled(value: boolean)
@@ -112,10 +111,9 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     textarea.addEventListener("change", (e) => this.onTextAreaChange(e));
     textarea.placeholder = this.placeholder ?? "";
 
-    handleFieldset(this, (value: boolean) =>
+    handleFieldset(this, (fieldSet) => this.parentFieldSet = fieldSet, () =>
     {
-      this.hasDisabledFieldset = value;
-      disabledAttribute(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
+      disabledAttribute(this, this.getAttribute("disabled"))
     });
 
     await this.setupValidation();
@@ -135,7 +133,17 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     this.dispatchEvent(new ValueSetEvent({detail: value}));
   }
 
-  private hasDisabledFieldset: boolean = false;
+  private parentFieldSet: HTMLFieldSetElement | undefined | null
+
+  /**
+   * If a parent fieldset is disabled, descendant form controls are also disabled.
+   *
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled#overview)
+   */
+  public get isDisabledByFieldSet(): boolean
+  {
+    return Boolean(this.parentFieldSet?.disabled);
+  }
 
   @mapStringAttribute("placeholder")
   public accessor placeholder: string | null | undefined;

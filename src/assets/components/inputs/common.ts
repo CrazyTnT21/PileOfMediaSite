@@ -1,4 +1,7 @@
+import {unsafeObjectKeys} from "../../unsafe-object-keys";
+
 export type AttributeValue = string | null;
+export type NonEmptyString = string;
 
 export function observeFieldset(fieldset: HTMLFieldSetElement, node: Node, callback: (disabled: boolean) => void): void
 {
@@ -27,45 +30,52 @@ export function findParentFieldset(node: Node): HTMLFieldSetElement | null
   return null;
 }
 
-export function handleFieldset(item: Node, setDisabledFieldsetStatus: (value: boolean) => void): void
+export function handleFieldset(item: Node, setParentFieldset: (fieldSet: HTMLFieldSetElement) => void, setDisabledFieldsetStatus: (value: boolean) => void): void
 {
-  const parentFieldset = findParentFieldset(item);
-  if (parentFieldset)
-  {
-    if (parentFieldset.disabled)
-      setDisabledFieldsetStatus(true);
+  const parentFieldSet = findParentFieldset(item);
+  if (!parentFieldSet)
+    return;
+  setParentFieldset(parentFieldSet);
 
-    observeFieldset(parentFieldset, item, disabled =>
-    {
-      setDisabledFieldsetStatus(disabled);
-    });
-  }
+  if (parentFieldSet.disabled)
+    setDisabledFieldsetStatus(true);
+
+  observeFieldset(parentFieldSet, item, disabled =>
+  {
+    setDisabledFieldsetStatus(disabled);
+  });
+
 }
 
-export function formData<T>(...values: ([(keyof T) & string, "serialize"] | [string & keyof T])[])
+export function formData<T>(...values: { [Key in keyof T]: "serialize" | "binary" }[])
 {
   return (body: T): FormData =>
   {
     const formData = new FormData();
+
     for (const value of values)
     {
-      if (body[value[0]] == null)
+      const key = unsafeObjectKeys(value)[0]!;
+      const type = value[key];
+
+      if (body[key] == null)
         continue;
-      if (value[1] == "serialize")
+
+      if (type == "serialize")
       {
-        formData.set(value[0], JSON.stringify(body[value[0]]));
+        formData.set(key, JSON.stringify(body[key]));
         continue;
       }
-      const blobData = body[value[0]] as Blob | Blob[];
+      const blobData = body[key] as Blob | Blob[];
       if (!Array.isArray(blobData))
       {
-        formData.set(value[0], blobData)
+        formData.set(key.toString(), blobData)
         continue;
       }
-      formData.delete(value[0]);
+      formData.delete(key.toString());
       for (const x of blobData)
       {
-        formData.append(value[0], x);
+        formData.append(key.toString(), x);
       }
     }
     return formData;
@@ -79,10 +89,10 @@ export function templateString<T extends string>(text: string): T
 
 type TemplateValue = string | number | bigint | boolean | null | undefined;
 export type IncludesString<T> = T extends TemplateValue[]
-  ? `${string}${TemplateValue}${string}`
-  : T extends TemplateValue
-    ? `${string}${T}${string}`
-    : never;
+    ? `${string}${TemplateValue}${string}`
+    : T extends TemplateValue
+        ? `${string}${T}${string}`
+        : never;
 
 export function setOrRemoveAttribute(element: HTMLElement, attribute: string, value: string | null | undefined): void
 {
@@ -109,4 +119,11 @@ export function queryParam<Page extends number, Count extends number>(page: Page
 }
 {
   return {query: {page, count}}
+}
+
+export function randomNumber(): number
+{
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0]!;
 }

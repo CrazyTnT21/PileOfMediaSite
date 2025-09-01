@@ -15,7 +15,6 @@ import {
   requiredAttribute
 } from "./attributes";
 import {
-  AttributeValue,
   handleFieldset,
   IncludesString,
   setOrRemoveAttribute,
@@ -41,7 +40,7 @@ export const appImageInputTexts = {
   ("Input requires files to be at least {min} kB. Current sizes: [{fileSizes}]"),
   inputMaxValidation: templateString<IncludesString<["{max}", "{fileSizes}"]>>
   ("Input requires files to be at most {max} kB. Current sizes: [{fileSizes}]"),
-  valueMissing: "No value given",
+  pleaseFillOutThisInput: "Please fill out this input",
   unsupportedImageType: "Unsupported image type",
   required: "Required",
 };
@@ -66,7 +65,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
   protected static readonly observedAttributesMap = {
     "label": labelAttribute,
     "required": requiredAttribute,
-    "disabled": (element: AppImageInput, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
+    "disabled": disabledAttribute,
     "max-filesize": maxFilesizeAttribute,
     "min-filesize": minFilesizeAttribute,
     "image-title": imageTitleAttribute,
@@ -106,11 +105,21 @@ export class AppImageInput extends HTMLElement implements StyleCSS
   @mapBooleanAttribute("multiple")
   public accessor multiple: boolean = null!;
 
-  private hasDisabledFieldset: boolean = false;
+  private parentFieldSet: HTMLFieldSetElement | null | undefined;
+
+  /**
+   * If a parent fieldset is disabled, descendant form controls are also disabled.
+   *
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled#overview)
+   */
+  public get isDisabledByFieldSet(): boolean
+  {
+    return Boolean(this.parentFieldSet?.disabled);
+  }
 
   public get disabled(): boolean
   {
-    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
+    return this.getAttribute("disabled") == "" || this.isDisabledByFieldSet;
   }
 
   public set disabled(value: boolean)
@@ -188,11 +197,10 @@ export class AppImageInput extends HTMLElement implements StyleCSS
       image.src = this.defaultSrc;
     });
 
-    handleFieldset(this, (value: boolean) =>
-    {
-      this.hasDisabledFieldset = value;
-      disabledAttribute(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
-    });
+    handleFieldset(this,
+        (fieldSet) => this.parentFieldSet = fieldSet,
+        () => disabledAttribute(this, this.getAttribute("disabled"))
+    );
 
     await this.setupValidation();
   }

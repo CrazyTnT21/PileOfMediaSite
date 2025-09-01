@@ -1,6 +1,6 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {Role} from "../../openapi/role";
-import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
+import {acceptLanguageHeader, getTranslatedField, logError} from "../../config";
 import {apiClient} from "../../openapi/client";
 import {Observer} from "../../observer";
 

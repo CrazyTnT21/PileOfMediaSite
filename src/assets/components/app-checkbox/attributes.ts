@@ -1,7 +1,8 @@
 import {logNoValueError} from "../inputs/validation/validation";
 import {AppCheckbox} from "./app-checkbox";
+import {AttributeValue} from "../inputs/common";
 
-export function labelAttribute(element: AppCheckbox, value: string | null | undefined): void
+export function labelAttribute(element: AppCheckbox, value: AttributeValue): void
 {
   if (value == null || value.trim() == "")
   {
@@ -11,10 +12,11 @@ export function labelAttribute(element: AppCheckbox, value: string | null | unde
   element.elements.label.innerText = value;
 }
 
-export function disabledAttribute(element: AppCheckbox, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
+export function disabledAttribute(element: AppCheckbox, value: AttributeValue): void
 {
+  const internals = element["internals"];
   const {input} = element.elements;
-  const disabled = hasDisabledFieldset || value == "";
+  const disabled = element.isDisabledByFieldSet || value == "";
   input.disabled = disabled;
 
   if (disabled)

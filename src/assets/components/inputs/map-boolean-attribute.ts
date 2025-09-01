@@ -9,7 +9,6 @@ type ValidAttributeName<T, Value> = T extends {
   attributeChangedCallback: any
 } ? Value extends Parameters<T["attributeChangedCallback"]>[0] ? Value : never : Value;
 
-
 export function mapBooleanAttribute<T extends HTMLElement, Value extends string>(attributeName: ValidAttributeName<T, Value>): (a: GetSet<T, boolean>, context: ClassAccessorDecoratorResult<T, boolean> & {
   name: string
 }) => GetSet<T, boolean>

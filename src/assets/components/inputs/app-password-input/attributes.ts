@@ -1,8 +1,10 @@
 import {AppPasswordInput} from "./app-password-input";
+import {AttributeValue} from "../common";
 
-export function disabledAttribute(element: AppPasswordInput, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
+export function disabledAttribute(element: AppPasswordInput, value: AttributeValue): void
 {
-  const disabled = hasDisabledFieldset || value == "";
+  const internals = element["internals"]
+  const disabled = element.isDisabledByFieldSet || value == "";
   const {input} = element.elements;
   input.disabled = disabled;
 

@@ -5,9 +5,8 @@ export function setValueMissing(element: AppTextArea, textarea: HTMLTextAreaElem
 {
   if (!isRequired(element) || !valueMissing(textarea))
     return;
-
   const errors = element["errors"];
-  errors.set("valueMissing", () => element.texts.get("valueMissing"));
+  errors.set("valueMissing", () => element.texts.get("pleaseFillOutThisInput"));
 }
 
 export function isRequired(element: AppTextArea): boolean

@@ -16,7 +16,7 @@
 <app-header></app-header>
 <main class="column center-align pad">
   <form class="pad login login-box">
-    <h1 class="col-12 center" data-translate="signUp">Sign up</h1>
+    <h1 class="col-12 center" data-translate="signup">Sign up</h1>
     <fieldset id="input-fieldset" class="login-border">
       <div class="col-12 center pad">
         <app-input required maxLength="50" id="username" label="Username"
@@ -32,10 +32,13 @@
                             label="Password"></app-password-input>
       </div>
       <div class="col-12 pad">
-        <app-button class="login-button col-12" data-translate="signUp">Sign up</app-button>
+        <app-button id="signup-submit" class="login-button col-12" data-translate="signup">Sign up</app-button>
       </div>
     </fieldset>
   </form>
+  <div id="successful-signup" hidden>
+    <div class="pad">Successfully signed up! <a id="return-link" href="/">Return to previous page</a></div>
+  </div>
 </main>
 <script src="/assets/scripts/modules.ts" type="module" async></script>
 <script src="/assets/scripts/translate.ts" type="module" async></script>

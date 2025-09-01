@@ -1,6 +1,6 @@
 import {applyStyleSheet, attachDelegates} from "../defaults";
 import {StyleCSS} from "../style-css";
-import {AttributeValue, handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
+import {handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import html from "./app-button.html" with {type: "inline"};
 import css from "./app-button.css" with {type: "inline"};
 import {mapSelectors} from "../../dom";
@@ -25,7 +25,7 @@ export class AppButton extends HTMLElement implements StyleCSS
   public override shadowRoot: ShadowRoot;
 
   protected static readonly observedAttributesMap = {
-    "disabled": (element: AppButton, value: AttributeValue): void => disabledAttribute(element, value, element.internals, element.hasDisabledFieldset),
+    "disabled": disabledAttribute,
     "type": typeAttribute,
   }
   public static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
@@ -38,7 +38,7 @@ export class AppButton extends HTMLElement implements StyleCSS
 
   public get disabled(): boolean
   {
-    return this.getAttribute("disabled") == "" || this.hasDisabledFieldset;
+    return this.getAttribute("disabled") == "" || this.isDisabledByFieldSet;
   }
 
   public set disabled(value: boolean)
@@ -46,7 +46,17 @@ export class AppButton extends HTMLElement implements StyleCSS
     setOrRemoveBooleanAttribute(this, "disabled", value);
   }
 
-  private hasDisabledFieldset: boolean = false;
+  private parentFieldSet: HTMLFieldSetElement | null | undefined;
+
+  /**
+   * If a parent fieldset is disabled, descendant form controls are also disabled.
+   *
+   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled#overview)
+   */
+  public get isDisabledByFieldSet(): boolean
+  {
+    return Boolean(this.parentFieldSet?.disabled);
+  }
 
   public get type(): "button" | "submit" | "reset"
   {
@@ -60,20 +70,19 @@ export class AppButton extends HTMLElement implements StyleCSS
 
   protected connectedCallback(): void
   {
-    this.addEventListener("click", e =>
+    this.addEventListener("click", () =>
     {
-      const button = <HTMLButtonElement>e.target;
-      if (button.type == "submit" && this.internals.form)
-      {
-        if (this.internals.form.reportValidity())
-          this.internals.form.requestSubmit();
-      }
+      const {button} = this.elements;
+      if (button.type != "submit" || !this.internals.form)
+        return;
+
+      this.internals.form.requestSubmit();
     });
-    handleFieldset(this, (value: boolean) =>
-    {
-      this.hasDisabledFieldset = value;
-      disabledAttribute(this, this.getAttribute("disabled"), this.internals, this.hasDisabledFieldset)
-    });
+
+    handleFieldset(this,
+        (fieldSet) => this.parentFieldSet = fieldSet,
+        () => disabledAttribute(this, this.getAttribute("disabled"))
+    );
   }
 
   public constructor()

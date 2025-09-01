@@ -83,7 +83,7 @@
   "preferences": "Präferenzen",
   "logout": "Logout",
   "login": "Anmelden",
-  "signUp": "Account erstellen",
+  "signup": "Account erstellen",
   "username": "Nutzername",
   "email": "Email",
   "password": "Passwort",
@@ -92,5 +92,6 @@
   "favorite": "Favorit",
   "favoritePlural": "Favoriten",
   "forgotPassword": "Passwort vergessen?",
-  "noAccount": "Noch kein Account?"
+  "noAccount": "Noch keinen Account?",
+  "pleaseFillOutThisInput": "Bitte diese Eingabe ausfüllen"
 }

@@ -1,4 +1,4 @@
-import {AppInput, AppInputElements, appInputTexts} from "../../inputs/app-input/app-input";
+import {AppInput, AppInputElements, appInputTexts, ErrorResult} from "../../inputs/app-input/app-input";
 import {ValueChangeEvent} from "./value-change-event";
 import {SelectedAddedEvent} from "./selected-added-event";
 import {SelectedRemovedEvent} from "./selected-removed-event";
@@ -11,6 +11,7 @@ import {templateString, IncludesString} from "../../inputs/common";
 import {applyStyleSheet} from "../../defaults";
 import {mapBooleanAttribute} from "../../inputs/map-boolean-attribute";
 import {multiple} from "./attributes";
+import {Err, Ok} from "../../../result/result";
 
 export type AppAutoCompleteElements = AppInputElements & { selected: HTMLUListElement, items: HTMLDataListElement };
 export const appAutocompleteTexts = {
@@ -243,7 +244,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
 
   protected async valueChange(input: HTMLInputElement): Promise<void>
   {
-    if (!await this.valid())
+    if (!this.internals.checkValidity())
       return;
 
     const value = input.value;
@@ -325,26 +326,37 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     }
   }
 
-  protected override async setValidity(input: HTMLInputElement): Promise<void>
+  protected override setupValidation(): void
   {
-    await super.setValidity(input);
-    if (!input.value)
-      return;
+    super.setupValidation();
+    this.addCustomError(() => this.validateAlreadySelected());
+    this.addCustomError(() => this.validateNotFound());
+  }
 
-    const value = input.value.toLowerCase().trim();
-
-    if (this.multiple)
-    {
-      const found = this.findSelectedValue(value);
-      if (found)
-      {
-        this.errors.set("customError", () => this.texts.get("itemAlreadySelected").replace("{value}", value));
-        return;
-      }
-    }
-
+  private validateNotFound(): ErrorResult
+  {
+    const value = this.elements.input.value.toLowerCase().trim();
     if (!this.findValue(value) && !this.findSearchValue(value))
-      this.errors.set("customError", () => this.texts.get("itemNotFound").replace("{value}", value));
+      return new Err({state: "customError", userMessage: this.texts.get("itemNotFound").replace("{value}", value)});
+
+    return new Ok(undefined);
+  }
+
+  private validateAlreadySelected(): ErrorResult
+  {
+    const value = this.elements.input.value.toLowerCase().trim();
+
+    if (!this.multiple)
+      return new Ok(undefined);
+
+    const found = this.findSelectedValue(value);
+    if (!found)
+      return new Ok(undefined);
+
+    return new Err({
+      state: "customError",
+      userMessage: this.texts.get("itemAlreadySelected").replace("{value}", value)
+    });
   }
 
   protected async firstOpen(): Promise<void>

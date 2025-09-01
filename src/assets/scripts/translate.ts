@@ -1,4 +1,4 @@
-import {Config} from "../classes/config";
+import {Config} from "../config";
 import {Translation} from "../translations/translation";
 import {AppInput} from "assets/components/inputs/app-input/app-input";
 import {Observer} from "../observer";
@@ -11,7 +11,7 @@ import {AppHeader} from "../components/app-header/app-header";
 import {AppSearchInput} from "../components/inputs/app-search-input/app-search-input";
 import {AppEmailInput} from "../components/inputs/app-email-input/app-email-input";
 import {AppPasswordInput} from "../components/inputs/app-password-input/app-password-input";
-import {LanguageCodes} from "../classes/language";
+import {LanguageCodes} from "../language";
 
 async function main(): Promise<void>
 {
@@ -92,7 +92,7 @@ function setImageInputTexts(element: AppImageInput, translation: Translation): v
   setIfExists(element, "required", translation.required);
   setIfExists(element, "inputMinValidation", translation.imageInputMinSizesValidation);
   setIfExists(element, "inputMaxValidation", translation.imageInputMaxSizesValidation);
-  setIfExists(element, "valueMissing", translation.valueMissing);
+  setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
   setIfExists(element, "unsupportedImageType", translation.unsupportedImageType);
   setIfExists(element, "clearImage", translation.clearImage);
   setIfExists(element, "clearImages", translation.clearImages);
@@ -121,7 +121,7 @@ function setSearchInputText(element: AppSearchInput, translation: Translation): 
 
 function setTextareaTexts(element: AppTextArea, translation: Translation): void
 {
-  setIfExists(element, "valueMissing", translation.valueMissing);
+  setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
   setIfExists(element, "required", translation.required);
   setIfExists(element, "textareaMinValidation", translation.inputMinTextLengthValidation);
   setIfExists(element, "textareaMaxValidation", translation.inputMaxTextLengthValidation);
@@ -129,7 +129,7 @@ function setTextareaTexts(element: AppTextArea, translation: Translation): void
 
 function setInputTexts(element: AppInput, translation: Translation): void
 {
-  setIfExists(element, "valueMissing", translation.valueMissing);
+  setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
   setIfExists(element, "required", translation.required);
   setIfExists(element, "inputMinValidation", translation.inputMinTextLengthValidation);
   setIfExists(element, "inputMaxValidation", translation.inputMaxTextLengthValidation);

@@ -1,7 +1,7 @@
 import {AppSearchInput} from "../../components/inputs/app-search-input/app-search-input";
 import {SearchEvent} from "../../components/inputs/app-search-input/search-event";
 import {Book} from "../../openapi/book";
-import {acceptLanguageHeader, getTranslatedField, logError} from "../../classes/config";
+import {acceptLanguageHeader, getTranslatedField, logError} from "../../config";
 import {apiClient} from "../../openapi/client";
 
 const params = new URLSearchParams((window.location.search))

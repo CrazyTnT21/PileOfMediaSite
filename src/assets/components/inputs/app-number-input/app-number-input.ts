@@ -1,6 +1,6 @@
 import {AppInput} from "../app-input/app-input";
 import css from "./app-number-input.css" with {type: "inline"};
-import {setOrRemoveAttribute} from "../common";
+import {AttributeValue, setOrRemoveAttribute} from "../common";
 
 export class AppNumberInput extends AppInput
 {
@@ -51,13 +51,13 @@ export class AppNumberInput extends AppInput
 AppNumberInput.define();
 
 
-function minAttribute(element: AppNumberInput, value: string | null | undefined): void
+function minAttribute(element: AppNumberInput, value: AttributeValue): void
 {
   const {input} = element.elements;
   setOrRemoveAttribute(input, "min", value);
 }
 
-function maxAttribute(element: AppNumberInput, value: string | null | undefined): void
+function maxAttribute(element: AppNumberInput, value: AttributeValue): void
 {
   const {input} = element.elements;
   setOrRemoveAttribute(input, "max", value);

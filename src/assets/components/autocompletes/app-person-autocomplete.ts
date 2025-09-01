@@ -1,6 +1,6 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {Person} from "../../openapi/person";
-import {acceptLanguageHeader, logError} from "../../classes/config";
+import {acceptLanguageHeader, logError} from "../../config";
 import {apiClient} from "../../openapi/client";
 import {Observer} from "../../observer";
 

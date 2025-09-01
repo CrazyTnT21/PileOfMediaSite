@@ -1,8 +1,8 @@
 import {logNoValueError} from "../validation/validation";
 import {AppTextArea} from "./app-textarea";
-import {setOrRemoveAttribute} from "../common";
+import {AttributeValue, setOrRemoveAttribute} from "../common";
 
-export function labelAttribute(element: AppTextArea, value: string | null | undefined): void
+export function labelAttribute(element: AppTextArea, value: AttributeValue): void
 {
   if (value == null || value.trim() == "")
   {
@@ -12,14 +12,15 @@ export function labelAttribute(element: AppTextArea, value: string | null | unde
   element.elements.label.innerText = value;
 }
 
-export function placeholderAttribute(element: AppTextArea, value: string | null | undefined): void
+export function placeholderAttribute(element: AppTextArea, value: AttributeValue): void
 {
   element.elements.textarea.placeholder = value ?? "";
 }
 
-export function disabledAttribute(element: AppTextArea, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
+export function disabledAttribute(element: AppTextArea, value: AttributeValue): void
 {
-  const disabled = hasDisabledFieldset || value == "";
+  const internals = element["internals"];
+  const disabled = element.isDisabledByFieldSet || value == "";
   const {textarea} = element.elements;
   textarea.disabled = disabled;
 
@@ -35,25 +36,25 @@ export function disabledAttribute(element: AppTextArea, value: string | null | u
   }
 }
 
-export function maxLengthAttribute(element: AppTextArea, value: string | null | undefined): void
+export function maxLengthAttribute(element: AppTextArea, value: AttributeValue): void
 {
   const {textarea} = element.elements;
   setOrRemoveAttribute(textarea, "maxlength", value);
 }
 
-export function minlengthAttribute(element: AppTextArea, value: string | null | undefined): void
+export function minlengthAttribute(element: AppTextArea, value: AttributeValue): void
 {
   const {textarea} = element.elements;
   setOrRemoveAttribute(textarea, "minlength", value);
 }
 
-export function requiredAttribute(element: AppTextArea, value: string | null | undefined): void
+export function requiredAttribute(element: AppTextArea, value: AttributeValue): void
 {
   element.elements.textarea.required = value == "";
   element.elements.label.setAttribute("data-text-required", element.texts.get("required"));
 }
 
-export function rowsAttribute(element: AppTextArea, value: string | null | undefined): void
+export function rowsAttribute(element: AppTextArea, value: AttributeValue): void
 {
   const {textarea} = element.elements;
   setOrRemoveAttribute(textarea, "rows", value);

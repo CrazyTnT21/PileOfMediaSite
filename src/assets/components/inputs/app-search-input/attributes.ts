@@ -1,6 +1,7 @@
 import {AppSearchInput} from "./app-search-input";
+import {AttributeValue} from "../common";
 
-export function labelAttribute(element: AppSearchInput, value: string | null | undefined): void
+export function labelAttribute(element: AppSearchInput, value: AttributeValue): void
 {
   if (value == null || value.trim() == "")
     value = element.texts.get("search");
@@ -8,9 +9,10 @@ export function labelAttribute(element: AppSearchInput, value: string | null | u
   element.elements.label.innerText = value;
 }
 
-export function disabledAttribute(element: AppSearchInput, value: string | null | undefined, internals: ElementInternals, hasDisabledFieldset: boolean): void
+export function disabledAttribute(element: AppSearchInput, value: AttributeValue): void
 {
-  const disabled = hasDisabledFieldset || value == "";
+  const internals = element["internals"];
+  const disabled = element.isDisabledByFieldSet || value == "";
   const {input} = element.elements;
   input.disabled = disabled;
 

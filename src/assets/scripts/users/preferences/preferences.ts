@@ -1,4 +1,4 @@
-import {ColorScheme, loadColorScheme, removeColorScheme, saveColorScheme} from "../../../classes/color-scheme";
+import {ColorScheme, loadColorScheme, removeColorScheme, saveColorScheme} from "../../../color-scheme";
 
 const currentColorScheme = localStorage.getItem("color-scheme");
 

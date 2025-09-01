@@ -1,5 +1,5 @@
-import {Translation} from "../translations/translation";
-import {get} from "../scripts/http";
+import {Translation} from "./translations/translation";
+import {get} from "./scripts/http";
 import {type LanguageCode, LanguageCodes} from "./language";
 
 export class Config
