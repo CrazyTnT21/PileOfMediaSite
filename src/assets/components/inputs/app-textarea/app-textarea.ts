@@ -1,7 +1,7 @@
 import {applyStyleSheet, attachDelegates} from "../../defaults";
 import {StyleCSS} from "../../style-css";
 import {
-  handleFieldset,
+  handleFieldset, randomNumber,
   setOrRemoveBooleanAttribute,
   templateString
 } from "../common";
@@ -21,6 +21,8 @@ import {setMaxLength, setMinLength, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
 import {ValueSetEvent} from "../app-input/value-set-event";
 import {mapBooleanAttribute, mapNumberAttribute, mapStringAttribute} from "../map-boolean-attribute";
+import {ErrorKey, ErrorResultCallback, setValidityMap} from "../../../validation";
+import {Err} from "../../../result/result";
 
 type AttributeKey = keyof typeof AppTextArea["observedAttributesMap"];
 export type AppTextAreaElements = {
@@ -39,7 +41,7 @@ export const appTextAreaTexts = {
 export class AppTextArea extends HTMLElement implements StyleCSS
 {
   public static readonly formAssociated = true;
-  protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+  protected errors: Map<number, ErrorResultCallback> = new Map();
 
   //TODO: Private
   public readonly elements: AppTextAreaElements;
@@ -130,7 +132,9 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   protected async onTextAreaChange(_event: Event): Promise<void>
   {
     this.interacted = true;
-    await this.validateAndReport();
+    this.internals.setFormValue(this.elements.textarea.value);
+    this.updateValidity();
+    this.internals.reportValidity()
   }
 
   public constructor()
@@ -177,65 +181,74 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   {
     const callback = AppTextArea.observedAttributesMap[name];
     callback(this, newValue);
-    await this.validate();
+    this.updateValidity();
   }
 
-  protected async setupValidation(): Promise<void>
+  protected setupValidation(): void
   {
     const {textarea} = this.elements;
-    textarea.addEventListener("change", () => this.validateAndReport());
-    await this.validate();
+    this.errors = new Map();
+    this.internals.setFormValue(textarea.value);
+    this.addCustomError(() => setValueMissing(this, textarea));
+    this.addCustomError(() => setMinLength(this, textarea));
+    this.addCustomError(() => setMaxLength(this, textarea));
   }
 
-  public async validate(): Promise<void>
+  public addCustomError(callback: ErrorResultCallback): ErrorKey
+  {
+    const errorKey = randomNumber();
+    this.errors.set(errorKey, callback);
+    return errorKey
+  }
+
+  public removeCustomError(key: ErrorKey): void
+  {
+    this.errors.delete(key);
+  }
+
+  public setCustomValidity(validity: keyof ValidityStateFlags, message: string): void
+  {
+    const errorKey = this.addCustomError(() => new Err({state: validity, userMessage: message}));
+    this.updateValidity();
+    this.removeCustomError(errorKey);
+  }
+
+  public updateValidity(): void
   {
     const {textarea} = this.elements;
-    await this.setValidity(textarea);
     this.internals.setValidity({});
     textarea.setCustomValidity("");
-    const error = this.errors.entries().next().value;
-    if (error)
+
+    if (!this.internals.willValidate)
     {
-      this.internals.setValidity({[error[0]]: true}, error[1](), textarea);
-      textarea.setCustomValidity(error[1]());
+      setOrRemoveBooleanAttribute(this, "data-invalid", false);
+      setOrRemoveBooleanAttribute(textarea, "data-invalid", false);
+      return;
     }
-    this.setCustomError = (): void =>
+
+    const validityMessages: Map<keyof ValidityStateFlags, string> = new Map();
+    for (const [_, errorEntry] of this.errors)
     {
-    };
+      const {error} = errorEntry();
+      if (error)
+      {
+        validityMessages.set(error.state, error.userMessage);
+      }
+    }
+    setValidityMap(textarea, validityMessages);
+    const validityStateFlags = Object.fromEntries([...validityMessages].map(([key, _]) => [key, true]))
+    const validityMessage = [...validityMessages.values()].join("\n");
+    this.internals.setValidity(validityStateFlags, validityMessage, textarea);
+
     if (!this.interacted)
       return;
 
-    const invalid = !textarea.checkValidity();
+    const invalid = validityMessages.size > 0;
     setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
     setOrRemoveBooleanAttribute(textarea, "data-invalid", invalid);
   }
 
   private interacted: boolean = false;
-
-  public setCustomError(_input: HTMLTextAreaElement): void
-  {
-  }
-
-  public async validateAndReport(): Promise<void>
-  {
-    await this.validate();
-    const {textarea} = this.elements;
-    const error = this.errors.entries().next().value;
-
-    if (error)
-      textarea.setCustomValidity(error[1]());
-    this.internals.reportValidity();
-  }
-
-  protected async setValidity(input: HTMLTextAreaElement): Promise<void>
-  {
-    this.internals.setFormValue(input.value);
-    this.errors = new Map();
-    setMinLength(this, input);
-    setMaxLength(this, input);
-    setValueMissing(this, input);
-    this.setCustomError(input);
-  }
 
   protected render(): void
   {

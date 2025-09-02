@@ -1,12 +1,14 @@
 import {tooLong, tooShort, valueMissing} from "../validation/validation";
 import {AppTextArea} from "./app-textarea";
+import {Err, Ok} from "../../../result/result";
+import {ErrorResult} from "../../../validation";
 
-export function setValueMissing(element: AppTextArea, textarea: HTMLTextAreaElement): void
+export function setValueMissing(element: AppTextArea, input: HTMLTextAreaElement): ErrorResult
 {
-  if (!isRequired(element) || !valueMissing(textarea))
-    return;
-  const errors = element["errors"];
-  errors.set("valueMissing", () => element.texts.get("pleaseFillOutThisInput"));
+  if (!isRequired(element) || !valueMissing(input))
+    return new Ok(undefined);
+
+  return new Err({state: "valueMissing", userMessage: element.texts.get("pleaseFillOutThisInput")});
 }
 
 export function isRequired(element: AppTextArea): boolean
@@ -14,29 +16,32 @@ export function isRequired(element: AppTextArea): boolean
   return element.getAttribute("required") === "";
 }
 
-export function setMinLength(element: AppTextArea, textarea: HTMLTextAreaElement): void
+export function setMinLength(element: AppTextArea, input: HTMLTextAreaElement): ErrorResult
 {
   const min = element.getAttribute("minlength");
 
-  if (!tooShort(textarea, min ? Number(min) : null))
-    return
-  const errors = element["errors"];
-  errors.set("tooShort", () => element.texts
+  if (!tooShort(input, min ? Number(min) : null))
+    return new Ok(undefined);
+
+  const userMessage = element.texts
       .get("textareaMinValidation")
       .replace("{min}", min!.toString())
-      .replace("{currentLength}", textarea.value.length.toString()));
+      .replace("{currentLength}", input.value.length.toString());
+
+  return new Err({state: "tooShort", userMessage})
 }
 
-export function setMaxLength(element: AppTextArea, textarea: HTMLTextAreaElement): void
+export function setMaxLength(element: AppTextArea, input: HTMLTextAreaElement): ErrorResult
 {
   const max = element.getAttribute("maxlength");
 
-  if (!tooLong(textarea, max ? Number(max) : null))
-    return;
+  if (!tooLong(input, max ? Number(max) : null))
+    return new Ok(undefined);
 
-  const errors = element["errors"];
-  errors.set("tooLong", () => element.texts
+  const userMessage = element.texts
       .get("textareaMaxValidation")
       .replace("{max}", max!.toString())
-      .replace("{currentLength}", textarea.value.length.toString()));
+      .replace("{currentLength}", input.value.length.toString());
+
+  return new Err({state: "tooLong", userMessage});
 }

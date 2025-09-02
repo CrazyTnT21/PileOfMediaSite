@@ -5,7 +5,7 @@ import {
   handleFieldset,
   setOrRemoveBooleanAttribute,
   IncludesString,
-  templateString, randomNumber, NonEmptyString
+  templateString, randomNumber
 } from "../common";
 import {ValueSetEvent} from "./value-set-event";
 import html from "./app-input.html" with {type: "inline"};
@@ -22,7 +22,8 @@ import {
 import {setMaxLength, setMinLength, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
 import {mapBooleanAttribute, mapNumberAttribute, mapStringAttribute} from "../map-boolean-attribute";
-import {Err, Result} from "../../../result/result";
+import {Err} from "../../../result/result";
+import {ErrorResultCallback, ErrorKey, setValidityMap} from "../../../validation";
 
 type AttributeKey = keyof typeof AppInput["observedAttributesMap"];
 
@@ -38,10 +39,6 @@ export const appInputTexts = {
   inputMaxValidation: templateString<IncludesString<["{max}", "{currentLength}"]>>
   ("Input only allows a maximum of '{max}' characters. Current length: {currentLength}"),
 };
-export type ErrorObject = { state: keyof ValidityStateFlags, userMessage: NonEmptyString };
-export type ErrorResult = Result<void, ErrorObject>;
-type ErrorCallback = () => ErrorResult;
-type ErrorKey = number;
 
 export class AppInput extends HTMLElement implements StyleCSS
 {
@@ -53,7 +50,7 @@ export class AppInput extends HTMLElement implements StyleCSS
   public readonly texts = new Observer(appInputTexts);
 
   public static readonly formAssociated = true;
-  protected errors: Map<number, ErrorCallback> = new Map();
+  protected errors: Map<number, ErrorResultCallback> = new Map();
 
   protected readonly internals: ElementInternals;
   public override shadowRoot: ShadowRoot;
@@ -250,8 +247,7 @@ export class AppInput extends HTMLElement implements StyleCSS
         validityMessages.set(error.state, error.userMessage);
       }
     }
-    this.validateInternalInput(validityMessages);
-
+    setValidityMap(input, validityMessages);
     const validityStateFlags = Object.fromEntries([...validityMessages].map(([key, _]) => [key, true]))
     const validityMessage = [...validityMessages.values()].join("\n");
     this.internals.setValidity(validityStateFlags, validityMessage, input);
@@ -264,22 +260,7 @@ export class AppInput extends HTMLElement implements StyleCSS
     setOrRemoveBooleanAttribute(input, "data-invalid", invalid);
   }
 
-  private validateInternalInput(validityMessages: Map<keyof ValidityStateFlags, string>): void
-  {
-    const {input} = this.elements;
-    for (const x in input.validity)
-    {
-      if (x == "valid")
-        return;
-
-      if (input.validity[x as keyof ValidityState])
-      {
-        validityMessages.set(x as keyof ValidityStateFlags, input.validationMessage);
-      }
-    }
-  }
-
-  public addCustomError(callback: ErrorCallback): ErrorKey
+  public addCustomError(callback: ErrorResultCallback): ErrorKey
   {
     const errorKey = randomNumber();
     this.errors.set(errorKey, callback);

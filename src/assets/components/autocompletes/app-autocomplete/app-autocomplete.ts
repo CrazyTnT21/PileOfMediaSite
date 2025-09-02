@@ -1,4 +1,4 @@
-import {AppInput, AppInputElements, appInputTexts, ErrorResult} from "../../inputs/app-input/app-input";
+import {AppInput, AppInputElements, appInputTexts} from "../../inputs/app-input/app-input";
 import {ValueChangeEvent} from "./value-change-event";
 import {SelectedAddedEvent} from "./selected-added-event";
 import {SelectedRemovedEvent} from "./selected-removed-event";
@@ -12,6 +12,7 @@ import {applyStyleSheet} from "../../defaults";
 import {mapBooleanAttribute} from "../../inputs/map-boolean-attribute";
 import {multiple} from "./attributes";
 import {Err, Ok} from "../../../result/result";
+import {ErrorResult} from "../../../validation";
 
 export type AppAutoCompleteElements = AppInputElements & { selected: HTMLUListElement, items: HTMLDataListElement };
 export const appAutocompleteTexts = {

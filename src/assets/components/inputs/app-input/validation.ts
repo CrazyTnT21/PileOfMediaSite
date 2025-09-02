@@ -1,6 +1,7 @@
 import {tooLong, tooShort, valueMissing} from "../validation/validation";
-import {AppInput, ErrorResult} from "./app-input";
+import {AppInput} from "./app-input";
 import {Err, Ok} from "../../../result/result";
+import {ErrorResult} from "../../../validation";
 
 export function setValueMissing(element: AppInput, input: HTMLInputElement): ErrorResult
 {
@@ -8,7 +9,6 @@ export function setValueMissing(element: AppInput, input: HTMLInputElement): Err
     return new Ok(undefined);
 
   return new Err({state: "valueMissing", userMessage: element.texts.get("pleaseFillOutThisInput")});
-
 }
 
 export function isRequired(element: AppInput): boolean
