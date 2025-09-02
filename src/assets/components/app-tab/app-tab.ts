@@ -2,13 +2,11 @@ import html from "./app-tab.html" with {type: "inline"};
 import css from "./app-tab.css" with {type: "inline"};
 import {StyleCSS} from "../style-css";
 import {applyStyleSheet, attach} from "../defaults";
-import {AppButton} from "../app-button/app-button";
 import {mapSelectors} from "../../dom";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 export type AppTabElements = {
-  headers: HTMLDivElement,
-  contents: HTMLDivElement,
+  container: HTMLDivElement,
 };
 
 export class AppTab extends HTMLElement implements StyleCSS
@@ -18,8 +16,7 @@ export class AppTab extends HTMLElement implements StyleCSS
 
   public readonly elements: AppTabElements;
   protected static readonly elementSelectors: { [key in keyof AppTab["elements"]]: string } = {
-    headers: "#headers",
-    contents: "#contents"
+    container: "#container",
   }
   protected static readonly observedAttributesMap = {}
 
@@ -44,33 +41,29 @@ export class AppTab extends HTMLElement implements StyleCSS
    */
   protected async connectedCallback(): Promise<void>
   {
-    const children = <HTMLElement[]><unknown>this.children;
-    const {headers, contents} = this.elements;
-    if (children.length == 0)
-      return;
-    for (const child of children)
+    for (const child of this.children)
     {
-      const button = new AppButton();
-      button.innerText = child.slot ?? "";
-      button.setAttribute("data-name", child.slot ?? "")
-      const slot = document.createElement("slot");
-      slot.name = child.slot ?? "";
-      slot.hidden = true;
-      button.addEventListener("click", () =>
-      {
-        const previousHeader: AppButton = this.shadowRoot.querySelector("[data-selected]")!;
-        const previousContent: HTMLElement = this.shadowRoot.querySelector(`slot[name="${previousHeader.getAttribute("data-name")}"]`)!
-        previousContent.hidden = true;
-        previousHeader.removeAttribute("data-selected");
-        slot.hidden = false;
-        button.setAttribute("data-selected", "")
-      });
-
-      headers.append(button);
-      contents.append(slot);
+      this.createChild(child);
     }
-    (<HTMLElement>headers.firstElementChild!).setAttribute("data-selected", "");
-    (<HTMLElement>contents.firstElementChild).hidden = false;
+  }
+
+  private createChild(slotContent: Element): void
+  {
+    const detailsElement = document.createElement("details");
+    const summary = document.createElement("summary");
+    const content = document.createElement("div");
+    const slot = document.createElement("slot");
+    detailsElement.name = "content"
+
+    //TODO: Display text attribute
+    summary.innerText = slotContent.slot ?? "";
+
+    slot.name = slotContent.slot ?? "";
+
+    detailsElement.appendChild(summary);
+    detailsElement.append(content);
+    content.appendChild(slot);
+    this.elements.container.append(detailsElement);
   }
 
   protected setupInternals(): ElementInternals

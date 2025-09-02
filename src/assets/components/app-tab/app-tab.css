@@ -21,46 +21,44 @@
 :host {
   display: flex;
   flex: 1;
-  flex-wrap: wrap;
-  overflow-x: scroll;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
 }
 
-#headers {
+#container {
   display: flex;
-  flex: 1 1 100%;
+  flex: 1;
+  gap: 3px;
+}
+
+details {
+  display: flex;
+  flex: 1;
   box-shadow: 0 3px solid var(--tab-border-color--);
   flex-wrap: nowrap;
   overflow-x: scroll;
   margin-bottom: 6px;
+  flex-direction: column;
 
-  app-button {
-    flex: 1;
-    --button-background-color: transparent;
+  > summary {
+    display: flex;
     box-shadow: 0 3px var(--tab-border-color--);
     margin-bottom: 3px;
-  }
-
-  ::part(button) {
+    border-radius: 0;
     padding: 9px;
-  }
-
-  ::part(button) {
     color: var(--tab-color--);
+    justify-content: center;
+
+    &:hover {
+      box-shadow: 0 3px var(--tab-border-color-hover--);
+      color: var(--tab-color-hover--);
+    }
   }
 
-  app-button:hover {
-    box-shadow: 0 3px var(--tab-border-color-hover--);
-  }
-
-  :hover::part(button) {
-    color: var(--tab-color-hover--);
-  }
-
-  app-button[data-selected] {
-    box-shadow: 0 3px var(--tab-outline-color--);
-  }
-
-  [data-selected]::part(button) {
-    color: var(--tab-color-hover--);
+  &[open] {
+    > summary {
+      box-shadow: 0 3px var(--tab-outline-color--);
+      color: var(--tab-color-hover--);
+    }
   }
 }
