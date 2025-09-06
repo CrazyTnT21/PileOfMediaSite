@@ -1,47 +1,55 @@
 import {Kilobyte} from "../../../units/kilobyte";
 import {AppImageInput} from "./app-image-input";
+import {Err, Ok} from "../../../result/result";
+import {ErrorResult} from "../../../validation";
 
-export function setUnsupportedType(element: AppImageInput): void
+export function setUnsupportedType(element: AppImageInput): ErrorResult
 {
   if (!unsupportedImageType(element.elements.input))
-    return;
+    return new Ok(undefined);
 
-  const errors = element["errors"];
-  errors.set("customError", () => element.texts.get("unsupportedImageType"));
+  return new Err({
+    state: "customError",
+    userMessage: element.texts.get("unsupportedImageType")
+  });
 }
 
-export function setMaxFileSize(element: AppImageInput): void
+export function setMaxFileSize(element: AppImageInput): ErrorResult
 {
   const {input} = element.elements;
   const max = element.maxFilesize;
   if (!fileTooBig(input, max))
-    return;
+    return new Ok(undefined);
   const fileSizes = [...input.files!].map(x => Kilobyte.fromByte(x.size).toString()).join(", ");
-  const errors = element["errors"];
-  errors.set("customError", () => element.texts.get("inputMaxValidation").replace("{max}", max!.toString()).replace("{fileSizes}", fileSizes));
+  return new Err({
+    state: "customError",
+    userMessage: element.texts.get("inputMaxValidation").replace("{max}", max!.toString()).replace("{fileSizes}", fileSizes)
+  });
 }
 
-export function setMinFileSize(element: AppImageInput): void
+export function setMinFileSize(element: AppImageInput): ErrorResult
 {
   const min = element.minFilesize;
 
   const {input} = element.elements;
   if (!fileTooSmall(input, min))
-    return;
+    return new Ok(undefined);
 
   const fileSizes = [...input.files!].map(x => Kilobyte.fromByte(x.size).toString()).join(", ");
-  const errors = element["errors"];
-  errors.set("customError", () => element.texts.get("inputMinValidation").replace("{min}", min!.toString()).replace("{fileSizes}", fileSizes));
+  return new Err({
+    state: "customError",
+    userMessage: element.texts.get("inputMinValidation").replace("{min}", min!.toString()).replace("{fileSizes}", fileSizes)
+  });
+
 }
 
-export function setValueMissing(element: AppImageInput): void
+export function setValueMissing(element: AppImageInput): ErrorResult
 {
   const {input} = element.elements;
   if (!isRequired(element) || !valueMissing(input))
-    return;
+    return new Ok(undefined);
 
-  const errors = element["errors"];
-  errors.set("valueMissing", () => element.texts.get("pleaseFillOutThisInput"));
+  return new Err({state: "valueMissing", userMessage: element.texts.get("pleaseFillOutThisInput")});
 }
 
 function isRequired(element: AppImageInput): boolean

@@ -56,7 +56,7 @@
   "foryouTitle": "For you - PileOfMedia",
   "foryou": "For you",
   "inputMinTextLengthValidation": "Input requires at least '{min}' characters. Current length: {currentLength}",
-  "inputMaxTextLengthValidation": "Input only allows a maximum of '{min}' characters. Current length: {currentLength}",
+  "inputMaxTextLengthValidation": "Input only allows a maximum of '{max}' characters. Current length: {currentLength}",
   "required": "Required",
   "inputMinValidation": "Input requires files to be at least {min} kB. Current sizes: [{fileSizes}]",
   "inputMaxValidation": "Input requires files to be at most {max} kB. Current sizes: [{fileSizes}]",

@@ -127,6 +127,16 @@ export class AppInput extends HTMLElement implements StyleCSS
     return Boolean(this.parentFieldSet?.disabled);
   }
 
+  public get validity(): ValidityState
+  {
+    return this.internals.validity;
+  }
+
+  public get validationMessage(): string
+  {
+    return this.internals.validationMessage;
+  }
+
   @mapStringAttribute("placeholder")
   public accessor placeholder: string | null | undefined;
 

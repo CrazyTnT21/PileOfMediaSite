@@ -16,7 +16,7 @@ import {
 } from "./attributes";
 import {
   handleFieldset,
-  IncludesString,
+  IncludesString, randomNumber,
   setOrRemoveAttribute,
   setOrRemoveBooleanAttribute,
   templateString
@@ -24,6 +24,8 @@ import {
 import {setMaxFileSize, setMinFileSize, setUnsupportedType, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
 import {mapBooleanAttribute, mapStringAttribute} from "../map-boolean-attribute";
+import {ErrorKey, ErrorResultCallback, setValidityMap} from "../../../validation";
+import {Err} from "../../../result/result";
 
 type AttributeKey = keyof typeof AppImageInput["observedAttributesMap"];
 
@@ -62,7 +64,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
   private readonly internals: ElementInternals;
   public override shadowRoot: ShadowRoot;
 
-  protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();
+  protected errors: Map<number, ErrorResultCallback> = new Map();
 
   protected static readonly observedAttributesMap = {
     "label": labelAttribute,
@@ -114,6 +116,16 @@ export class AppImageInput extends HTMLElement implements StyleCSS
   public get isDisabledByFieldSet(): boolean
   {
     return Boolean(this.parentFieldSet?.disabled);
+  }
+
+  public get validity(): ValidityState
+  {
+    return this.internals.validity;
+  }
+
+  public get validationMessage(): string
+  {
+    return this.internals.validationMessage;
   }
 
   public get disabled(): boolean
@@ -237,7 +249,8 @@ export class AppImageInput extends HTMLElement implements StyleCSS
         () => disabledAttribute(this, this.getAttribute("disabled"))
     );
 
-    await this.setupValidation();
+    this.setupValidation();
+    this.updateValidity();
   }
 
   /**
@@ -249,69 +262,65 @@ export class AppImageInput extends HTMLElement implements StyleCSS
   {
     const callback = AppImageInput.observedAttributesMap[name];
     callback(this, newValue);
-    await this.validate();
+    this.updateValidity();
   }
 
   protected async onInputChange(event: Event): Promise<void>
   {
+    this.internals.setFormValue(this.elements.input.value);
     await this.setImage(<InputEvent>event)
     this.interacted = true;
-    await this.validateAndReport();
+    this.updateValidity();
+    this.internals.reportValidity()
   }
 
-  protected async setupValidation(): Promise<void>
+  protected setupValidation(): void
   {
     const {input} = this.elements;
-    input.addEventListener("change", () => this.validateAndReport());
-    await this.validate();
+    this.errors = new Map();
+    this.internals.setFormValue(input.value);
+    this.addCustomError(() => setValueMissing(this));
+    this.addCustomError(() => setMaxFileSize(this));
+    this.addCustomError(() => setMinFileSize(this));
+    this.addCustomError(() => setUnsupportedType(this));
   }
 
-  public async validate(): Promise<void>
+  public updateValidity(): void
   {
-    const {input, image} = this.elements;
-    await this.setValidity(input);
+    const {input: fileInput} = this.elements;
     this.internals.setValidity({});
-    input.setCustomValidity("");
-    const error = this.errors.entries().next().value;
-    if (error)
+
+    fileInput.setCustomValidity("");
+
+    if (!this.internals.willValidate)
     {
-      this.internals.setValidity({[error[0]]: true}, error[1](), image);
-      input.setCustomValidity(error[1]())
+      setOrRemoveBooleanAttribute(this, "data-invalid", false);
+      setOrRemoveBooleanAttribute(fileInput, "data-invalid", false);
+      return;
     }
-    this.setCustomError = (): void =>
+
+    const validityMessages: Map<keyof ValidityStateFlags, string> = new Map();
+    for (const [_, errorEntry] of this.errors)
     {
-    };
+      const {error} = errorEntry();
+      if (error)
+      {
+        validityMessages.set(error.state, error.userMessage);
+      }
+    }
+
+    setValidityMap(fileInput, validityMessages);
+
+    const validityStateFlags = Object.fromEntries([...validityMessages].map(([key, _]) => [key, true]))
+    const validityMessage = [...validityMessages.values()].join("\n");
+    this.internals.setValidity(validityStateFlags, validityMessage, fileInput);
+
     if (!this.interacted)
       return;
 
-    const invalid = !input.checkValidity();
+    const invalid = validityMessages.size > 0;
     setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
-    setOrRemoveBooleanAttribute(input, "data-invalid", invalid);
-  }
-
-  public setCustomError(_input: HTMLInputElement): void
-  {
-  }
-
-  public async validateAndReport(): Promise<void>
-  {
-    await this.validate();
-    const {input} = this.elements;
-    const error = this.errors.entries().next().value;
-    if (error)
-      input.setCustomValidity(error[1]());
-    this.internals.reportValidity();
-  }
-
-  protected async setValidity(input: HTMLInputElement): Promise<void>
-  {
-    this.internals.setFormValue(input.value);
-    this.errors = new Map();
-    setMaxFileSize(this);
-    setMinFileSize(this);
-    setValueMissing(this);
-    setUnsupportedType(this);
-    this.setCustomError(input);
+    setOrRemoveBooleanAttribute(fileInput, "data-invalid", invalid);
   }
 
   protected render(): void
@@ -325,11 +334,23 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     return css;
   }
 
-  public async valid(): Promise<boolean>
+  public addCustomError(callback: ErrorResultCallback): ErrorKey
   {
-    const {input} = this.elements;
-    await this.setValidity(input);
-    return this.errors.size === 0;
+    const errorKey = randomNumber();
+    this.errors.set(errorKey, callback);
+    return errorKey
+  }
+
+  public removeCustomError(key: ErrorKey): void
+  {
+    this.errors.delete(key);
+  }
+
+  public setCustomValidity(validity: keyof ValidityStateFlags, message: string): void
+  {
+    const errorKey = this.addCustomError(() => new Err({state: validity, userMessage: message}));
+    this.updateValidity();
+    this.removeCustomError(errorKey);
   }
 
   protected async setImage(event: InputEvent): Promise<void>
@@ -345,7 +366,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
       image.src = file.file.type.includes("image") ? file.url : this.defaultSrc
       this.internalSrc = file.url;
     }
-    if (await this.valid())
+    if (this.internals.checkValidity())
     {
       this.shadowRoot.dispatchEvent(new UploadEvent({composed: true, detail: files}));
       this.files = files;

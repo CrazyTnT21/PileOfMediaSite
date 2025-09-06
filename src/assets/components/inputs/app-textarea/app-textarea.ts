@@ -33,7 +33,7 @@ export const appTextAreaTexts = {
   required: "Required",
   pleaseFillOutThisInput: "Please fill out this input",
   textareaMinValidation: templateString<`${string}{min}${string}{currentLength}${string}`>
-  ("Textarea requires at least {max} characters. Current length: {currentLength}"),
+  ("Textarea requires at least {min} characters. Current length: {currentLength}"),
   textareaMaxValidation: templateString<`${string}{max}${string}{currentLength}${string}`>
   ("Textarea only allows a maximum of '{max}' characters. Current length: {currentLength}")
 };
@@ -129,12 +129,14 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   @mapStringAttribute("placeholder")
   public accessor placeholder: string | null | undefined;
 
-  protected async onTextAreaChange(_event: Event): Promise<void>
+  public get validity(): ValidityState
   {
-    this.interacted = true;
-    this.internals.setFormValue(this.elements.textarea.value);
-    this.updateValidity();
-    this.internals.reportValidity()
+    return this.internals.validity;
+  }
+
+  public get validationMessage(): string
+  {
+    return this.internals.validationMessage;
   }
 
   public constructor()
@@ -148,6 +150,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     this.elements = mapSelectors<AppTextAreaElements>(this.shadowRoot, AppTextArea.elementSelectors);
 
     this.texts.addListener("required", (value) => this.elements.label.setAttribute("data-text-required", value));
+    this.addEventListener(ValueSetEvent.type, (e) => this.onValueSet(e));
   }
 
   /**
@@ -169,7 +172,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
       disabledAttribute(this, this.getAttribute("disabled"))
     });
 
-    await this.setupValidation();
+    this.setupValidation();
   }
 
   /**
@@ -181,6 +184,19 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   {
     const callback = AppTextArea.observedAttributesMap[name];
     callback(this, newValue);
+    this.updateValidity();
+  }
+
+  protected async onTextAreaChange(_event: Event): Promise<void>
+  {
+    this.interacted = true;
+    this.internals.setFormValue(this.elements.textarea.value);
+    this.updateValidity();
+    this.internals.reportValidity()
+  }
+
+  protected async onValueSet(_event: Event): Promise<void>
+  {
     this.updateValidity();
   }
 

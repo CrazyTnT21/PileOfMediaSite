@@ -19,7 +19,7 @@ export function setValidityMap(input: ValidationInput, validityMessages: Map<key
   for (const x in input.validity)
   {
     if (x == "valid")
-      return;
+      continue;
 
     if (input.validity[x as keyof ValidityState])
     {
