@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/colors.css">
   <link rel="stylesheet" href="/assets/css/columns.css">
   <link rel="stylesheet" href="/assets/css/login.css">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-  <link rel="author" href="/humans.txt"/>
-  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="author" href="/humans.txt">
+  <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
   <title>Sign up - PileOfMedia</title>
   <script src="/assets/scripts/load-color-scheme.ts"></script>
 </head>
@@ -19,17 +19,20 @@
     <h1 class="col-12 center" data-translate="signup">Sign up</h1>
     <fieldset id="input-fieldset" class="login-border">
       <div class="col-12 center pad">
-        <app-input required maxLength="50" id="username" label="Username"
-                   data-translate-attributes="label;username"></app-input>
+        <app-input id="username"
+                   label="Username"
+                   data-translate-attributes="label;username"
+                   maxlength="50"
+                   required></app-input>
       </div>
       <div class="col-12 center pad">
-        <app-email-input required maxLength="254" id="email" label="Email"
-                         data-translate-attributes="label;email"></app-email-input>
+        <app-email-input id="email" label="Email" data-translate-attributes="label;email" maxlength="254"
+                         required></app-email-input>
       </div>
       <div class="col-12 center pad">
-        <app-password-input required maxLength="255" id="password" class="col-12"
-                            data-translate-attributes="label;password"
-                            label="Password"></app-password-input>
+        <app-password-input id="password" class="col-12" label="Password" data-translate-attributes="label;password"
+                            maxlength="255"
+                            required></app-password-input>
       </div>
       <div class="col-12 pad">
         <app-button id="signup-submit" class="login-button col-12" data-translate="signup">Sign up</app-button>

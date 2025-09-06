@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/colors.css">
   <link rel="stylesheet" href="/assets/css/columns.css">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-  <link rel="author" href="/humans.txt"/>
-  <meta charset="UTF-8" content="width=device-width, initial-scale=1.0" name="viewport">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="author" href="/humans.txt">
+  <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
   <title data-translate="addBookTitle">Add Book - PileOfMedia</title>
   <script src="/assets/scripts/load-color-scheme.ts"></script>
 </head>
@@ -18,14 +18,15 @@
   <form>
     <div class="col-12">
       <div class="col-3">
-        <app-image-input required label="Cover"
+        <app-image-input label="Cover"
                          data-translate-attributes="image-title;uploadCover,label;cover"
-                         image-title="Upload Cover" label="Cover"></app-image-input>
+                         image-title="Upload Cover"
+                         required></app-image-input>
         <app-language-autocomplete class="col-12"></app-language-autocomplete>
       </div>
       <div class="col-4">
         <div class="col-12">
-          <app-input required label="Title" data-translate-attributes="label;title"></app-input>
+          <app-input label="Title" data-translate-attributes="label;title" required></app-input>
         </div>
         <div class="col-12">
           <app-textarea label="Description" data-translate-attributes="label;description"></app-textarea>

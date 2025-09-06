@@ -1,12 +1,17 @@
 import eslint from '@eslint/js';
 import tslint from 'typescript-eslint';
 import globals from "globals";
+import html from "@html-eslint/eslint-plugin";
 
 const ignores = ["./dist/", "./node_modules/"];
 const config = tslint.config(
-    eslint.configs.recommended,
-    ...tslint.configs.recommended,
+    {...eslint.configs.recommended, files: ['**/*.{ts,tsx}']},
+    ...tslint.configs.recommended.map(conf => ({
+      ...conf,
+      files: ['**/*.{ts,tsx}'],
+    })),
     {
+      files: ['**/*.{ts,tsx}'],
       languageOptions: {
         globals: globals.browser,
         parserOptions: {
@@ -31,9 +36,72 @@ const config = tslint.config(
         "@typescript-eslint/explicit-member-accessibility": "warn"
       }
     },
+    {
+      files: ["**/*.html"],
+      plugins: {
+        "@html-eslint": html
+      },
+      language: "@html-eslint/html",
+      rules: {
+        ...html.configs["flat/recommended"].rules,
+        "@html-eslint/indent": "off", // doesn't work well with attributes
+        "@html-eslint/attrs-newline": "off", // requires a newline before the first attribute
+        "@html-eslint/use-baseline": "off", // false positives, e.g datalist
+        "@html-eslint/no-duplicate-class": "error",
+        "@html-eslint/no-ineffective-attrs": "error",
+        "@html-eslint/no-invalid-entity": "error",
+        "@html-eslint/require-meta-charset": "error",
+        "@html-eslint/no-skip-heading-levels": "error",
+        "@html-eslint/lowercase": "error",
+        "@html-eslint/no-extra-spacing-text": "error",
+        "@html-eslint/no-multiple-empty-lines": "error",
+        "@html-eslint/no-trailing-spaces": "error",
+        "@html-eslint/no-positive-tabindex": "error",
+        "@html-eslint/no-empty-headings": "error",
+        "@html-eslint/require-img-alt": "error",
+        "@html-eslint/no-inline-styles": "warn",
+        "@html-eslint/sort-attrs": [
+          "warn",
+          {
+            "priority": ["id", "class", "style", "name", "label", "rel", "href", "src", "type"]
+          }
+        ],
+        "@html-eslint/id-naming-convention": [
+          "error",
+          "kebab-case"
+        ],
+        "@html-eslint/require-attrs": [
+          "error",
+          ...inputLabelRequireAttrs(),
+        ],
+        "@html-eslint/max-element-depth": [
+          "warn",
+          {
+            "max": 10
+          }
+        ],
+      }
+    }
 ).map(conf => ({
   ...conf,
-  files: ['**/*.{ts,tsx}'],
   ignores,
 }));
 export default config;
+
+function inputLabelRequireAttrs()
+{
+  const tags = ["app-input", "app-number-input", "app-autocomplete", "app-checkbox", "app-textarea", "app-image-input"];
+
+  return [...tags
+      .map(tag => ({
+        tag,
+        attr: "label",
+        message: "'label' attribute missing. Inputs must have a label for accessibility"
+      })),
+    ...tags.map(tag => ({
+      tag,
+      attr: "data-translate-attributes",
+      message: "'data-translate-attributes' attribute missing. Inputs must have a translation for the label"
+    }))
+  ];
+}
