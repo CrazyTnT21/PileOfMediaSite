@@ -5,7 +5,7 @@ import {ErrorResult} from "../../../validation";
 
 export function setUnsupportedType(element: AppImageInput): ErrorResult
 {
-  if (!unsupportedImageType(element.elements.input))
+  if (!unsupportedImageType(element["elements"].input))
     return new Ok(undefined);
 
   return new Err({
@@ -16,7 +16,7 @@ export function setUnsupportedType(element: AppImageInput): ErrorResult
 
 export function setMaxFileSize(element: AppImageInput): ErrorResult
 {
-  const {input} = element.elements;
+  const {input} = element["elements"];
   const max = element.maxFilesize;
   if (!fileTooBig(input, max))
     return new Ok(undefined);
@@ -31,7 +31,7 @@ export function setMinFileSize(element: AppImageInput): ErrorResult
 {
   const min = element.minFilesize;
 
-  const {input} = element.elements;
+  const {input} = element["elements"];
   if (!fileTooSmall(input, min))
     return new Ok(undefined);
 
@@ -45,7 +45,7 @@ export function setMinFileSize(element: AppImageInput): ErrorResult
 
 export function setValueMissing(element: AppImageInput): ErrorResult
 {
-  const {input} = element.elements;
+  const {input} = element["elements"];
   if (!isRequired(element) || !valueMissing(input))
     return new Ok(undefined);
 

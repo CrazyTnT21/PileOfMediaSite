@@ -9,19 +9,19 @@ export function labelAttribute(element: AppInput, value: AttributeValue): void
     logNoValueError("label", element.outerHTML);
     value = ""
   }
-  element.elements.label.innerText = value;
+  element["elements"].label.innerText = value;
 }
 
 export function placeholderAttribute(element: AppInput, value: AttributeValue): void
 {
-  element.elements.input.placeholder = value ?? "";
+  element["elements"].input.placeholder = value ?? "";
 }
 
 export function disabledAttribute(element: AppInput, value: AttributeValue): void
 {
   const internals = element["internals"];
   const disabled = element.isDisabledByFieldSet || value == "";
-  const {input} = element.elements;
+  const {input} = element["elements"];
   input.disabled = disabled;
 
   if (disabled)
@@ -38,18 +38,18 @@ export function disabledAttribute(element: AppInput, value: AttributeValue): voi
 
 export function maxLengthAttribute(element: AppInput, value: AttributeValue): void
 {
-  const {input} = element.elements;
+  const {input} = element["elements"];
   setOrRemoveAttribute(input, "maxlength", value);
 }
 
 export function minlengthAttribute(element: AppInput, value: AttributeValue): void
 {
-  const {input} = element.elements;
+  const {input} = element["elements"];
   setOrRemoveAttribute(input, "minlength", value);
 }
 
 export function requiredAttribute(element: AppInput, value: AttributeValue): void
 {
-  element.elements.label.setAttribute("data-text-required", element.texts.get("required"));
-  element.elements.input.required = value == "";
+  element["elements"].label.setAttribute("data-text-required", element.texts.get("required"));
+  element["elements"].input.required = value == "";
 }

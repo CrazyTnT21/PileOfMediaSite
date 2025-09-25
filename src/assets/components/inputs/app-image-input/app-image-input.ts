@@ -28,6 +28,8 @@ import {ErrorKey, ErrorResultCallback, setValidityMap} from "../../../validation
 import {Err} from "../../../result/result";
 
 type AttributeKey = keyof typeof AppImageInput["observedAttributesMap"];
+const imageInputTag = "app-image-input" as const;
+export type ImageInputTag = typeof imageInputTag;
 
 export type AppImageInputElements = {
   input: HTMLInputElement,
@@ -50,7 +52,7 @@ export const appImageInputTexts = {
 export class AppImageInput extends HTMLElement implements StyleCSS
 {
   public readonly texts = new Observer(appImageInputTexts);
-  public readonly elements: AppImageInputElements;
+  private readonly elements: AppImageInputElements;
   protected static readonly elementSelectors: { [key in keyof AppImageInput["elements"]]: string } = {
     input: "input",
     label: "label",
@@ -375,10 +377,10 @@ export class AppImageInput extends HTMLElement implements StyleCSS
 
   public static define(): void
   {
-    AppButton.define();
-    if (customElements.get("app-image-input"))
+    if (customElements.get(imageInputTag))
       return;
-    customElements.define("app-image-input", AppImageInput);
+    AppButton.define();
+    customElements.define(imageInputTag, AppImageInput);
   }
 }
 

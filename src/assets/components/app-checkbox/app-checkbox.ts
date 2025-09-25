@@ -6,6 +6,7 @@ import {handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import {applyStyleSheet, attachDelegates} from "../defaults";
 import {labelAttribute, disabledAttribute} from "./attributes";
 import {mapSelectors} from "../../dom";
+import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 type AttributeKey = keyof typeof AppCheckbox["observedAttributesMap"];
 export type AppCheckboxElements = {
@@ -15,7 +16,7 @@ export type AppCheckboxElements = {
 
 export class AppCheckbox extends HTMLElement implements StyleCSS
 {
-  public readonly elements: AppCheckboxElements;
+  private readonly elements: AppCheckboxElements;
   protected static readonly elementSelectors: { [key in keyof AppCheckbox["elements"]]: string } = {
     input: "input",
     label: "label",
@@ -38,7 +39,7 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
   /**
    * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
    */
-  public static readonly observedAttributes = Object.keys(AppCheckbox.observedAttributesMap);
+  public static readonly observedAttributes = unsafeObjectKeys(AppCheckbox.observedAttributesMap);
 
   public get label(): string
   {

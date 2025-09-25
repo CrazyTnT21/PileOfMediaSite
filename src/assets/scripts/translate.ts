@@ -1,16 +1,19 @@
 import {Config} from "../config";
 import {Translation} from "../translations/translation";
-import {AppInput} from "assets/components/inputs/app-input/app-input";
+import type {AppInput, InputTag} from "assets/components/inputs/app-input/app-input";
 import {Observer} from "../observer";
-import {AppNumberInput} from "../components/inputs/app-number-input/app-number-input";
-import {AppImageInput} from "../components/inputs/app-image-input/app-image-input";
-import {AppTextArea} from "../components/inputs/app-textarea/app-textarea";
-import {AppAutocomplete} from "../components/autocompletes/app-autocomplete/app-autocomplete";
-import {AppLanguageAutocomplete} from "../components/autocompletes/app-language-autocomplete";
-import {AppHeader} from "../components/app-header/app-header";
-import {AppSearchInput} from "../components/inputs/app-search-input/app-search-input";
-import {AppEmailInput} from "../components/inputs/app-email-input/app-email-input";
-import {AppPasswordInput} from "../components/inputs/app-password-input/app-password-input";
+import type {AppNumberInput, NumberInputTag} from "../components/inputs/app-number-input/app-number-input";
+import type {AppImageInput, ImageInputTag} from "../components/inputs/app-image-input/app-image-input";
+import type {AppTextArea, TextAreaTag} from "../components/inputs/app-textarea/app-textarea";
+import type {AppAutocomplete, AutocompleteTag} from "../components/autocompletes/app-autocomplete/app-autocomplete";
+import type {
+  AppLanguageAutocomplete,
+  LanguageAutocompleteTag
+} from "../components/autocompletes/app-language-autocomplete";
+import type {AppHeader, HeaderTag} from "../components/app-header/app-header";
+import type {AppSearchInput, SearchInputTag} from "../components/inputs/app-search-input/app-search-input";
+import type {AppEmailInput, EmailInputTag} from "../components/inputs/app-email-input/app-email-input";
+import type {AppPasswordInput, PasswordInputTag} from "../components/inputs/app-password-input/app-password-input";
 import {LanguageCodes} from "../language";
 
 async function main(): Promise<void>
@@ -28,16 +31,20 @@ async function main(): Promise<void>
       console.warn(`Translation for '${translated}' does not exist for language '${language}'`);
   }
   document.querySelectorAll<HTMLElement>("[data-translate-attributes]").forEach(x => setTranslationAttribute(x, translation, language));
-  document.querySelectorAll<AppInput>("app-input").forEach(x => setInputTexts(x, translation));
-  document.querySelectorAll<AppNumberInput>("app-number-input").forEach(x => setNumberInputTexts(x, translation));
-  document.querySelectorAll<AppEmailInput>("app-email-input").forEach(x => setEmailInputTexts(x, translation));
-  document.querySelectorAll<AppSearchInput>("app-search-input").forEach(x => setSearchInputText(x, translation));
-  document.querySelectorAll<AppPasswordInput>("app-password-input").forEach(x => setPasswordInputText(x, translation));
-  document.querySelectorAll<AppImageInput>("app-image-input").forEach(x => setImageInputTexts(x, translation));
-  document.querySelectorAll<AppTextArea>("app-textarea").forEach(x => setTextareaTexts(x, translation));
-  document.querySelectorAll<AppAutocomplete>("app-autocomplete").forEach(x => setAutocompleteTexts(x, translation));
-  document.querySelectorAll<AppLanguageAutocomplete>("app-language-autocomplete").forEach(x => setLanguageAutocompleteTexts(x, translation));
-  document.querySelectorAll<AppHeader>("app-header").forEach(x => setHeaderTexts(x, translation));
+  await Promise.all(
+      [
+        setInputTexts(document.querySelectorAll("app-input"), translation),
+        setNumberInputTexts(document.querySelectorAll("app-number-input"), translation),
+        setEmailInputTexts(document.querySelectorAll("app-email-input"), translation),
+        setSearchInputText(document.querySelectorAll("app-search-input"), translation),
+        setPasswordInputText(document.querySelectorAll("app-password-input"), translation),
+        setImageInputTexts(document.querySelectorAll("app-image-input"), translation),
+        setTextareaTexts(document.querySelectorAll("app-textarea"), translation),
+        setAutocompleteTexts(document.querySelectorAll("app-autocomplete"), translation),
+        setLanguageAutocompleteTexts(document.querySelectorAll("app-language-autocomplete"), translation),
+        setHeaderTexts(document.querySelectorAll("app-header"), translation)
+      ]
+  )
 }
 
 function setTranslationAttribute(element: HTMLElement, translation: Translation, language: string): void
@@ -54,85 +61,145 @@ function setTranslationAttribute(element: HTMLElement, translation: Translation,
 
 }
 
-function setHeaderTexts(element: AppHeader, translation: Translation): void
+async function setHeaderTexts(elements: NodeListOf<AppHeader> | AppHeader[], translation: Translation): Promise<void>
 {
-  setIfExists(element, "books", translation.books);
-  setIfExists(element, "graphicNovels", translation.graphicNovels);
-  setIfExists(element, "movies", translation.movies);
-  setIfExists(element, "shows", translation.shows);
-  setIfExists(element, "games", translation.games);
-  setIfExists(element, "profile", translation.profile);
-  setIfExists(element, "friends", translation.friends);
-  setIfExists(element, "comments", translation.comments);
-  setIfExists(element, "reviews", translation.reviews);
-  setIfExists(element, "settings", translation.settings);
-  setIfExists(element, "preferences", translation.preferences);
-  setIfExists(element, "logout", translation.logout);
-  setIfExists(element, "login", translation.login);
-  setIfExists(element, "showingResults", translation.headerShowingResults);
-  setSearchInputText(element.elements.searchInput, translation);
+  if (elements.length == 0)
+    return;
+  await customElements.whenDefined(definedTag<HeaderTag>("app-header"));
+  for (const element of elements)
+  {
+    setIfExists(element, "books", translation.books);
+    setIfExists(element, "graphicNovels", translation.graphicNovels);
+    setIfExists(element, "movies", translation.movies);
+    setIfExists(element, "shows", translation.shows);
+    setIfExists(element, "games", translation.games);
+    setIfExists(element, "profile", translation.profile);
+    setIfExists(element, "friends", translation.friends);
+    setIfExists(element, "comments", translation.comments);
+    setIfExists(element, "reviews", translation.reviews);
+    setIfExists(element, "settings", translation.settings);
+    setIfExists(element, "preferences", translation.preferences);
+    setIfExists(element, "logout", translation.logout);
+    setIfExists(element, "login", translation.login);
+    setIfExists(element, "showingResults", translation.headerShowingResults);
+    setIfExists(element, "search", translation.search);
+  }
 }
 
-function setLanguageAutocompleteTexts(element: AppLanguageAutocomplete, translation: Translation): void
+async function setLanguageAutocompleteTexts(elements: NodeListOf<AppLanguageAutocomplete> | AppLanguageAutocomplete[], translation: Translation): Promise<void>
 {
-  setIfExists(element, "language", translation.language);
-  setAutocompleteTexts(element, translation);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<LanguageAutocompleteTag>("app-language-autocomplete"));
+  for (const element of elements)
+  {
+    setIfExists(element, "language", translation.language);
+  }
+  await setAutocompleteTexts(elements, translation);
 }
 
-function setAutocompleteTexts(element: AppAutocomplete<any>, translation: Translation): void
+async function setAutocompleteTexts(elements: NodeListOf<AppAutocomplete<unknown>> | AppAutocomplete<unknown>[], translation: Translation): Promise<void>
 {
-  setIfExists(element, "itemAlreadySelected", translation.autocompleteItemAlreadySelected);
-  setIfExists(element, "itemNotFound", translation.autocompleteItemNotFound);
-  setIfExists(element, "required", translation.required);
-  setInputTexts(element, translation);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<AutocompleteTag>("app-autocomplete"));
+  for (const element of elements)
+  {
+    setIfExists(element, "itemAlreadySelected", translation.autocompleteItemAlreadySelected);
+    setIfExists(element, "itemNotFound", translation.autocompleteItemNotFound);
+    setIfExists(element, "required", translation.required);
+  }
+  await setInputTexts(elements, translation);
 }
 
-function setImageInputTexts(element: AppImageInput, translation: Translation): void
+async function setImageInputTexts(elements: NodeListOf<AppImageInput> | AppImageInput[], translation: Translation): Promise<void>
 {
-  setIfExists(element, "required", translation.required);
-  setIfExists(element, "inputMinValidation", translation.imageInputMinSizesValidation);
-  setIfExists(element, "inputMaxValidation", translation.imageInputMaxSizesValidation);
-  setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
-  setIfExists(element, "unsupportedImageType", translation.unsupportedImageType);
-  setIfExists(element, "clearImage", translation.clearImage);
-  setIfExists(element, "clearImages", translation.clearImages);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<ImageInputTag>("app-image-input"));
+  for (const element of elements)
+  {
+    setIfExists(element, "required", translation.required);
+    setIfExists(element, "inputMinValidation", translation.imageInputMinSizesValidation);
+    setIfExists(element, "inputMaxValidation", translation.imageInputMaxSizesValidation);
+    setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
+    setIfExists(element, "unsupportedImageType", translation.unsupportedImageType);
+    setIfExists(element, "clearImage", translation.clearImage);
+    setIfExists(element, "clearImages", translation.clearImages);
+  }
 }
 
-function setNumberInputTexts(element: AppNumberInput, translation: Translation): void
+async function setNumberInputTexts(elements: NodeListOf<AppNumberInput> | AppNumberInput[], translation: Translation): Promise<void>
 {
-  setInputTexts(element, translation);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<NumberInputTag>("app-number-input"));
+  await setInputTexts(elements, translation);
 }
 
-function setEmailInputTexts(element: AppEmailInput, translation: Translation): void
+async function setEmailInputTexts(elements: NodeListOf<AppEmailInput> | AppEmailInput[], translation: Translation): Promise<void>
 {
-  setInputTexts(element, translation);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<EmailInputTag>("app-email-input"));
+  await setInputTexts(elements, translation);
 }
 
-function setPasswordInputText(element: AppPasswordInput, translation: Translation): void
+async function setPasswordInputText(elements: NodeListOf<AppPasswordInput> | AppPasswordInput[], translation: Translation): Promise<void>
 {
-  setInputTexts(element, translation);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<PasswordInputTag>("app-password-input"));
+  await setInputTexts(elements, translation);
 }
 
-function setSearchInputText(element: AppSearchInput, translation: Translation): void
+async function setSearchInputText(elements: NodeListOf<AppSearchInput> | AppSearchInput[], translation: Translation): Promise<void>
 {
-  setIfExists(element, "search", translation.search);
-  setInputTexts(element, translation);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<SearchInputTag>("app-search-input"));
+  for (const element of elements)
+  {
+    setIfExists(element, "search", translation.search);
+  }
+  await setInputTexts(elements, translation);
 }
 
-function setTextareaTexts(element: AppTextArea, translation: Translation): void
+async function setTextareaTexts(elements: NodeListOf<AppTextArea> | AppTextArea[], translation: Translation): Promise<void>
 {
-  setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
-  setIfExists(element, "required", translation.required);
-  setIfExists(element, "textareaMinValidation", translation.inputMinTextLengthValidation);
-  setIfExists(element, "textareaMaxValidation", translation.inputMaxTextLengthValidation);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<TextAreaTag>("app-textarea"));
+  for (const element of elements)
+  {
+    setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
+    setIfExists(element, "required", translation.required);
+    setIfExists(element, "textareaMinValidation", translation.inputMinTextLengthValidation);
+    setIfExists(element, "textareaMaxValidation", translation.inputMaxTextLengthValidation);
+  }
 }
 
-function setInputTexts(element: AppInput, translation: Translation): void
+async function setInputTexts(elements: NodeListOf<AppInput> | AppInput[], translation: Translation): Promise<void>
 {
-  setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
-  setIfExists(element, "required", translation.required);
-  setIfExists(element, "inputMinValidation", translation.inputMinTextLengthValidation);
-  setIfExists(element, "inputMaxValidation", translation.inputMaxTextLengthValidation);
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(definedTag<InputTag>("app-input"));
+  for (const element of elements)
+  {
+    setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
+    setIfExists(element, "required", translation.required);
+    setIfExists(element, "inputMinValidation", translation.inputMinTextLengthValidation);
+    setIfExists(element, "inputMaxValidation", translation.inputMaxTextLengthValidation);
+  }
 }
 
 function setIfExists<T extends {
@@ -144,3 +211,8 @@ function setIfExists<T extends {
 }
 
 await main();
+
+function definedTag<T>(value: T): T
+{
+  return value;
+}

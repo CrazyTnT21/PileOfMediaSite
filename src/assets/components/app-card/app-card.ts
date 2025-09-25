@@ -5,6 +5,7 @@ import css from "./app-card.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
 import {coverAltAttribute, hrefAttribute, srcsetAttribute, itemTitleAttribute} from "./attributes";
 import {mapStringAttribute} from "../inputs/map-boolean-attribute";
+import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 type AttributeKey = keyof typeof AppCard["observedAttributesMap"];
 
@@ -17,7 +18,7 @@ export type AppCardElements = {
 export class AppCard extends HTMLElement implements StyleCSS
 {
   public override shadowRoot: ShadowRoot;
-  public readonly elements: AppCardElements;
+  private readonly elements: AppCardElements;
   protected static readonly elementSelectors: { [key in keyof AppCard["elements"]]: string } = {
     image: "img",
     anchor: "a",
@@ -34,7 +35,7 @@ export class AppCard extends HTMLElement implements StyleCSS
   /**
    * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
    */
-  public static readonly observedAttributes = Object.keys(AppCard.observedAttributesMap);
+  public static readonly observedAttributes = unsafeObjectKeys(AppCard.observedAttributesMap);
 
   @mapStringAttribute("srcset")
   public accessor srcset: string | null | undefined;

@@ -11,6 +11,9 @@ export const AppLanguageAutocompleteTexts = {
   language: "Language"
 }
 
+const languageAutocompleteTag = "app-language-autocomplete" as const;
+export type LanguageAutocompleteTag = typeof languageAutocompleteTag;
+
 export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
 {
   public override readonly texts = new Observer(AppLanguageAutocompleteTexts);
@@ -51,9 +54,9 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
 
   public static override define(): void
   {
-    if (customElements.get("app-language-autocomplete"))
+    if (customElements.get(languageAutocompleteTag))
       return;
-    customElements.define("app-language-autocomplete", AppLanguageAutocomplete);
+    customElements.define(languageAutocompleteTag, AppLanguageAutocomplete);
   }
 
 }

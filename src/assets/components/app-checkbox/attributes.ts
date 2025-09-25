@@ -9,13 +9,13 @@ export function labelAttribute(element: AppCheckbox, value: AttributeValue): voi
     logNoValueError("label", element.outerHTML);
     value = ""
   }
-  element.elements.label.innerText = value;
+  element["elements"].label.innerText = value;
 }
 
 export function disabledAttribute(element: AppCheckbox, value: AttributeValue): void
 {
   const internals = element["internals"];
-  const {input} = element.elements;
+  const {input} = element["elements"];
   const disabled = element.isDisabledByFieldSet || value == "";
   input.disabled = disabled;
 

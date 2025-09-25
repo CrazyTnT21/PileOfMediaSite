@@ -23,6 +23,7 @@ import {ValueSetEvent} from "../app-input/value-set-event";
 import {mapBooleanAttribute, mapNumberAttribute, mapStringAttribute} from "../map-boolean-attribute";
 import {ErrorKey, ErrorResultCallback, setValidityMap} from "../../../validation";
 import {Err} from "../../../result/result";
+import {unsafeObjectKeys} from "../../../unsafe-object-keys";
 
 type AttributeKey = keyof typeof AppTextArea["observedAttributesMap"];
 export type AppTextAreaElements = {
@@ -38,13 +39,15 @@ export const appTextAreaTexts = {
   ("Textarea only allows a maximum of '{max}' characters. Current length: {currentLength}")
 };
 
+const textAreaTag = "app-textarea" as const;
+export type TextAreaTag = typeof textAreaTag;
+
 export class AppTextArea extends HTMLElement implements StyleCSS
 {
   public static readonly formAssociated = true;
   protected errors: Map<number, ErrorResultCallback> = new Map();
 
-  //TODO: Private
-  public readonly elements: AppTextAreaElements;
+  private readonly elements: AppTextAreaElements;
   protected static readonly elementSelectors: { [key in keyof AppTextArea["elements"]]: string } = {
     textarea: "textarea",
     label: "label"
@@ -66,7 +69,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
   /**
    * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
    */
-  public static readonly observedAttributes = Object.keys(AppTextArea.observedAttributesMap);
+  public static readonly observedAttributes = unsafeObjectKeys(AppTextArea.observedAttributesMap);
 
   public get label(): string
   {
@@ -279,9 +282,9 @@ export class AppTextArea extends HTMLElement implements StyleCSS
 
   public static define(): void
   {
-    if (customElements.get("app-textarea"))
+    if (customElements.get(textAreaTag))
       return;
-    customElements.define("app-textarea", AppTextArea);
+    customElements.define(textAreaTag, AppTextArea);
   }
 }
 

@@ -16,6 +16,9 @@ export const appSearchInputTexts = {
   search: "Search"
 }
 
+const searchInputTag = "app-search-input" as const;
+export type SearchInputTag = typeof searchInputTag;
+
 export class AppSearchInput extends AppInput implements StyleCSS
 {
   public override readonly texts = new Observer(appSearchInputTexts);
@@ -82,9 +85,9 @@ export class AppSearchInput extends AppInput implements StyleCSS
 
   public static override define(): void
   {
-    if (customElements.get("app-search-input"))
+    if (customElements.get(searchInputTag))
       return;
-    customElements.define("app-search-input", AppSearchInput);
+    customElements.define(searchInputTag, AppSearchInput);
   }
 }
 

@@ -14,7 +14,7 @@ export class AppTab extends HTMLElement implements StyleCSS
   private readonly internals: ElementInternals;
   public override shadowRoot: ShadowRoot;
 
-  public readonly elements: AppTabElements;
+  private readonly elements: AppTabElements;
   protected static readonly elementSelectors: { [key in keyof AppTab["elements"]]: string } = {
     container: "#container",
   }

@@ -96,7 +96,7 @@ export class AppHeaderSearch
 
   private setItems(items: SearchItem[], total: number): void
   {
-    const {searchElements, searchDropdown, showingResults} = this.header.elements;
+    const {searchElements, searchDropdown, showingResults} = this.header["elements"];
     searchElements.innerHTML = "";
     searchDropdown.setAttribute("data-total", total.toString());
     showingResults.innerText = this.header.texts
@@ -138,7 +138,7 @@ export class AppHeaderSearch
 
   public setupSearch(shadowRoot: ShadowRoot): void
   {
-    const {searchInput, searchElements} = this.header.elements;
+    const {searchInput, searchElements} = this.header["elements"];
     searchInput.addEventListener(SearchEvent.type, (e: CustomEventInit<string>) =>
     {
       const emptySearch = e.detail!.trim().length == 0;
@@ -159,7 +159,7 @@ export class AppHeaderSearch
       return;
 
     event.preventDefault();
-    const {searchElements} = this.header.elements;
+    const {searchElements} = this.header["elements"];
 
     const currentFocus = shadowRoot.activeElement!;
     const currentFocusParent = currentFocus.parentElement!;

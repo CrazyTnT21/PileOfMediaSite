@@ -40,9 +40,12 @@ export const appInputTexts = {
   ("Input only allows a maximum of '{max}' characters. Current length: {currentLength}"),
 };
 
+const inputTag = "app-input" as const;
+export type InputTag = typeof inputTag;
+
 export class AppInput extends HTMLElement implements StyleCSS
 {
-  public readonly elements: AppInputElements;
+  protected readonly elements: AppInputElements;
   protected static readonly elementSelectors: { [key in keyof AppInput["elements"]]: string } = {
     input: "input",
     label: "label",
@@ -69,7 +72,7 @@ export class AppInput extends HTMLElement implements StyleCSS
   /**
    * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
    */
-  public static readonly observedAttributes = Object.keys(AppInput.observedAttributesMap);
+  public static readonly observedAttributes = Object.keys(AppInput.observedAttributesMap); //TODO: unsafeObjectKeys: inherited class incorrectly extends base class
 
   public get label(): string
   {
@@ -303,9 +306,9 @@ export class AppInput extends HTMLElement implements StyleCSS
   //TODO components not defined when loading async module scripts
   public static define(): void
   {
-    if (customElements.get("app-input"))
+    if (customElements.get(inputTag))
       return;
-    customElements.define("app-input", AppInput);
+    customElements.define(inputTag, AppInput);
   }
 }
 

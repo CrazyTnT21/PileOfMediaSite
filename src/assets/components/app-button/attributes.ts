@@ -5,7 +5,7 @@ export function disabledAttribute(element: AppButton, value: AttributeValue): vo
 {
   const internals = element["internals"];
   const disabled = element.isDisabledByFieldSet || value == "";
-  const {button} = element.elements;
+  const {button} = element["elements"];
   button.disabled = disabled;
 
   if (disabled)
@@ -22,7 +22,7 @@ export function disabledAttribute(element: AppButton, value: AttributeValue): vo
 
 export function typeAttribute(element: AppButton, value: AttributeValue): void
 {
-  const {button} = element.elements;
+  const {button} = element["elements"];
   const validType = value && ["submit", "button", "reset"].includes(value);
   if (validType)
     button.type = value as "button" | "submit" | "reset"

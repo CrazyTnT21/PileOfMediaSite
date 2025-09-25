@@ -5,6 +5,7 @@ import html from "./app-button.html" with {type: "inline"};
 import css from "./app-button.css" with {type: "inline"};
 import {mapSelectors} from "../../dom";
 import {disabledAttribute, typeAttribute} from "./attributes";
+import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 type AttributeKey = keyof typeof AppButton["observedAttributesMap"];
 
@@ -15,7 +16,7 @@ export type AppButtonElements = {
 
 export class AppButton extends HTMLElement implements StyleCSS
 {
-  public readonly elements: AppButtonElements;
+  private readonly elements: AppButtonElements;
   protected static readonly elementSelectors: { [key in keyof AppButton["elements"]]: string } = {
     button: "button",
     slot: "slot"
@@ -32,7 +33,7 @@ export class AppButton extends HTMLElement implements StyleCSS
   /**
    * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
    */
-  public static readonly observedAttributes = Object.keys(AppButton.observedAttributesMap);
+  public static readonly observedAttributes = unsafeObjectKeys(AppButton.observedAttributesMap);
 
   public get disabled(): boolean
   {

@@ -1,6 +1,10 @@
 import {AppInput} from "../app-input/app-input";
 import css from "./app-number-input.css" with {type: "inline"};
 import {AttributeValue, setOrRemoveAttribute} from "../common";
+import {unsafeObjectKeys} from "../../../unsafe-object-keys";
+
+const numberInputTag = "app-number-input" as const;
+export type NumberInputTag = typeof numberInputTag;
 
 export class AppNumberInput extends AppInput
 {
@@ -13,7 +17,7 @@ export class AppNumberInput extends AppInput
   /**
    * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements#responding_to_attribute_changes)
    */
-  public static override readonly observedAttributes = Object.keys(AppNumberInput.observedAttributesMap);
+  public static override readonly observedAttributes = unsafeObjectKeys(AppNumberInput.observedAttributesMap);
 
   public constructor()
   {
@@ -46,9 +50,9 @@ export class AppNumberInput extends AppInput
 
   public static override define(): void
   {
-    if (customElements.get("app-number-input"))
+    if (customElements.get(numberInputTag))
       return;
-    customElements.define("app-number-input", AppNumberInput);
+    customElements.define(numberInputTag, AppNumberInput);
   }
 }
 
@@ -56,12 +60,12 @@ AppNumberInput.define();
 
 function minAttribute(element: AppNumberInput, value: AttributeValue): void
 {
-  const {input} = element.elements;
+  const {input} = element["elements"];
   setOrRemoveAttribute(input, "min", value);
 }
 
 function maxAttribute(element: AppNumberInput, value: AttributeValue): void
 {
-  const {input} = element.elements;
+  const {input} = element["elements"];
   setOrRemoveAttribute(input, "max", value);
 }

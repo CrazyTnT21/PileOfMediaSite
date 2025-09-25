@@ -49,6 +49,8 @@ a {
 
 .logo {
   display: flex;
+  margin-left: 3px;
+  border-radius: 3px;
 
   img {
     height: 2.1rem;
@@ -209,6 +211,10 @@ summary {
 @media (max-width: 45rem) {
   nav {
     display: none;
+  }
+
+  .logo {
+      margin-left: 0;
   }
 }
 

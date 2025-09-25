@@ -10,6 +10,9 @@ import {applyStyleSheet} from "../../defaults";
 
 export type AppPasswordInputElements = AppInputElements & { passwordButton: AppButton, eyeIcon: HTMLSpanElement };
 
+const passwordInputTag = "app-password-input" as const;
+export type PasswordInputTag = typeof passwordInputTag;
+
 export class AppPasswordInput extends AppInput implements StyleCSS
 {
   public override readonly elements: AppPasswordInputElements;
@@ -71,9 +74,9 @@ export class AppPasswordInput extends AppInput implements StyleCSS
 
   public static override define(): void
   {
-    if (customElements.get("app-password-input"))
+    if (customElements.get(passwordInputTag))
       return;
-    customElements.define("app-password-input", AppPasswordInput);
+    customElements.define(passwordInputTag, AppPasswordInput);
   }
 }
 

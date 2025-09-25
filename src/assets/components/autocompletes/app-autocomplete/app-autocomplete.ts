@@ -22,6 +22,9 @@ export const appAutocompleteTexts = {
 }
 type AttributeKey = keyof typeof AppAutocomplete["observedAttributesMap"];
 
+const autocompleteTag = "app-autocomplete" as const;
+export type AutocompleteTag = typeof autocompleteTag;
+
 export class AppAutocomplete<T = { value: any, label?: string }> extends AppInput
 {
   private readonly itemsGenerator: AsyncGenerator<T[], T[], T[]>;
@@ -429,9 +432,9 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
 
   public static override define(): void
   {
-    if (customElements.get("app-autocomplete"))
+    if (customElements.get(autocompleteTag))
       return;
-    customElements.define("app-autocomplete", AppAutocomplete);
+    customElements.define(autocompleteTag, AppAutocomplete);
   }
 }
 

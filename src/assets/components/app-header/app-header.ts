@@ -3,13 +3,14 @@ import {StyleCSS} from "../style-css";
 import {LoginReturn} from "../../openapi/login-return";
 import {ImageData} from "../../openapi/image-data";
 import {AppButton} from "../app-button/app-button";
-import {AppSearchInput} from "../inputs/app-search-input/app-search-input";
+import {AppSearchInput, appSearchInputTexts} from "../inputs/app-search-input/app-search-input";
 import html from "./app-header.html" with {type: "inline"}
 import css from "./app-header.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
 import {AppHeaderSearch} from "./app-header-search/app-header-search";
 import {Observer} from "../../observer";
 import {IncludesString, templateString} from "../inputs/common";
+import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 export type AppHeaderElements = {
   burger: HTMLDetailsElement,
@@ -53,8 +54,12 @@ export const appHeaderTexts = {
   comments: "Comments",
   logout: "Logout",
   login: "Log in",
-  showingResults: templateString<IncludesString<["{count}", "{total}"]>>("Showing {count} of {total} results")
+  showingResults: templateString<IncludesString<["{count}", "{total}"]>>("Showing {count} of {total} results"),
+  ...appSearchInputTexts
 };
+
+const headerTag = "app-header" as const;
+export type HeaderTag = typeof headerTag;
 
 export class AppHeader extends HTMLElement implements StyleCSS
 {
@@ -65,7 +70,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
   public override shadowRoot: ShadowRoot;
   private readonly searchDropdown: AppHeaderSearch;
 
-  public readonly elements: AppHeaderElements;
+  private readonly elements: AppHeaderElements;
   protected static readonly elementSelectors: { [key in keyof AppHeader["elements"]]: string } = {
     burger: "#burger",
     user: "#user",
@@ -137,6 +142,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
       ["login", this.elements.loginText],
     ]);
     this.texts.addListener("settings", (value) => this.elements.settingsIcon.title = value);
+    this.matchNestedTexts(this.elements.searchInput.texts);
   }
 
   /**
@@ -245,14 +251,27 @@ export class AppHeader extends HTMLElement implements StyleCSS
     return css;
   }
 
+  private matchNestedTexts<T>(nestedTexts: Observer<ObserverValue<T> & SameKeys<T>>): void
+  {
+    const keys = unsafeObjectKeys(nestedTexts.object())
+    for (const key of keys)
+    {
+      this.texts.addListener(key as any, (value) => nestedTexts.set(key, value));
+    }
+  }
+
   public static define(): void
   {
+    if (customElements.get(headerTag))
+      return;
+
     AppSearchInput.define();
     AppButton.define();
-    if (customElements.get("app-header"))
-      return;
-    customElements.define("app-header", AppHeader);
+    customElements.define(headerTag, AppHeader);
   }
 }
 
 AppHeader.define()
+type ObserverValue<T> = Omit<typeof appHeaderTexts, keyof Omit<typeof appHeaderTexts, keyof T>>;
+type SameKeys<T> = keyof Omit<T, keyof typeof appHeaderTexts> extends never ? T : never;
+

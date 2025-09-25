@@ -1,5 +1,8 @@
 import {AppInput} from "../app-input/app-input";
 
+const emailInputTag = "app-email-input" as const;
+export type EmailInputTag = typeof emailInputTag;
+
 //TODO email max length 254 characters
 export class AppEmailInput extends AppInput
 {
@@ -11,9 +14,9 @@ export class AppEmailInput extends AppInput
 
   public static override define(): void
   {
-    if (customElements.get("app-email-input"))
+    if (customElements.get(emailInputTag))
       return;
-    customElements.define("app-email-input", AppEmailInput);
+    customElements.define(emailInputTag, AppEmailInput);
   }
 }
 

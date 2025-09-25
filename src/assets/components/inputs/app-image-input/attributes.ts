@@ -12,21 +12,21 @@ export function minFilesizeAttribute(_element: AppImageInput, _value: AttributeV
 
 export function imageTitleAttribute(element: AppImageInput, value: AttributeValue): void
 {
-  element.elements.image.title = value ?? "";
+  element["elements"].image.title = value ?? "";
 }
 
 export function requiredAttribute(element: AppImageInput, value: AttributeValue): void
 {
-  element.elements.label.setAttribute("data-text-required", element.texts.get("required"));
-  element.elements.input.required = value == "";
+  element["elements"].label.setAttribute("data-text-required", element.texts.get("required"));
+  element["elements"].input.required = value == "";
 }
 
 export function multipleAttribute(element: AppImageInput, value: AttributeValue): void
 {
   const multiple = value == "";
-  element.elements.input.multiple = multiple;
+  element["elements"].input.multiple = multiple;
 
-  const {clearImage} = element.elements;
+  const {clearImage} = element["elements"];
   clearImage.innerText = multiple
       ? element.texts.get("clearImage")
       : element.texts.get("clearImages");
@@ -36,7 +36,7 @@ export function disabledAttribute(element: AppImageInput, value: AttributeValue)
 {
   const internals = element["internals"];
   const disabled = element.isDisabledByFieldSet || value == "";
-  const input = element.elements.input;
+  const input = element["elements"].input;
   input.disabled = disabled;
 
   if (disabled)
@@ -58,6 +58,6 @@ export function labelAttribute(element: AppImageInput, value: AttributeValue): v
     logNoValueError("label", element.outerHTML);
     value = ""
   }
-  element.elements.label.innerText = value;
-  element.elements.image.alt = value;
+  element["elements"].label.innerText = value;
+  element["elements"].image.alt = value;
 }
