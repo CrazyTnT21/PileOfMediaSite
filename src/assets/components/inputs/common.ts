@@ -1,7 +1,9 @@
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
+import {Observer} from "../../observer";
 
 export type AttributeValue = string | null;
 export type NonEmptyString = string;
+export type NonEmptyArray<T> = [T, ...T[]];
 
 export function observeFieldset(fieldset: HTMLFieldSetElement, node: Node, callback: (disabled: boolean) => void): void
 {
@@ -127,3 +129,15 @@ export function randomNumber(): number
   crypto.getRandomValues(array);
   return array[0]!;
 }
+
+export function matchNestedTexts<InitialTexts extends object, NestedTexts>(initialTexts: Observer<InitialTexts>, nestedTexts: Observer<ObserverValue<InitialTexts, NestedTexts> & SameKeys<InitialTexts, NestedTexts>>): void
+{
+  const keys = unsafeObjectKeys(nestedTexts.object())
+  for (const key of keys)
+  {
+    initialTexts.addListener(key as any, (value) => nestedTexts.set(key, value));
+  }
+}
+
+type ObserverValue<InitialTexts, NestedTexts> = Omit<InitialTexts, keyof Omit<InitialTexts, keyof NestedTexts>>;
+type SameKeys<InitialTexts, NestedTexts> = keyof Omit<NestedTexts, keyof InitialTexts> extends never ? NestedTexts : never;

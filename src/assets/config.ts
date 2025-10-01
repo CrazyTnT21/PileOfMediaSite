@@ -1,6 +1,7 @@
 import {Translation} from "./translations/translation";
 import {get} from "./scripts/http";
 import {type LanguageCode, LanguageCodes} from "./language";
+import type {NonEmptyArray} from "./components/inputs/common";
 
 export class Config
 {
@@ -22,7 +23,7 @@ export class Config
     return new Config();
   })();
 
-  public static preferredLanguages: [LanguageCode, ...LanguageCode[]] = [LanguageCodes.EN];
+  public static preferredLanguages: NonEmptyArray<LanguageCode> = [LanguageCodes.EN];
 
   private static readonly translations = new Map();
 

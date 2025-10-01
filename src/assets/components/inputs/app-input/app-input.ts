@@ -156,6 +156,7 @@ export class AppInput extends HTMLElement implements StyleCSS
     {
       this.elements.label.setAttribute("data-text-required", value);
     });
+    //TODO inherited class doesn't update text on change
   }
 
   /**

@@ -9,8 +9,7 @@ import css from "./app-header.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
 import {AppHeaderSearch} from "./app-header-search/app-header-search";
 import {Observer} from "../../observer";
-import {IncludesString, templateString} from "../inputs/common";
-import {unsafeObjectKeys} from "../../unsafe-object-keys";
+import {IncludesString, matchNestedTexts, templateString} from "../inputs/common";
 
 export type AppHeaderElements = {
   burger: HTMLDetailsElement,
@@ -142,7 +141,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
       ["login", this.elements.loginText],
     ]);
     this.texts.addListener("settings", (value) => this.elements.settingsIcon.title = value);
-    this.matchNestedTexts(this.elements.searchInput.texts);
+    matchNestedTexts(this.texts, this.elements.searchInput.texts);
   }
 
   /**
@@ -251,14 +250,6 @@ export class AppHeader extends HTMLElement implements StyleCSS
     return css;
   }
 
-  private matchNestedTexts<T>(nestedTexts: Observer<ObserverValue<T> & SameKeys<T>>): void
-  {
-    const keys = unsafeObjectKeys(nestedTexts.object())
-    for (const key of keys)
-    {
-      this.texts.addListener(key as any, (value) => nestedTexts.set(key, value));
-    }
-  }
 
   public static define(): void
   {
@@ -272,6 +263,3 @@ export class AppHeader extends HTMLElement implements StyleCSS
 }
 
 AppHeader.define()
-type ObserverValue<T> = Omit<typeof appHeaderTexts, keyof Omit<typeof appHeaderTexts, keyof T>>;
-type SameKeys<T> = keyof Omit<T, keyof typeof appHeaderTexts> extends never ? T : never;
-

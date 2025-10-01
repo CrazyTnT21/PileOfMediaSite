@@ -61,158 +61,199 @@ function setTranslationAttribute(element: HTMLElement, translation: Translation,
 
 }
 
-async function setHeaderTexts(elements: NodeListOf<AppHeader> | AppHeader[], translation: Translation): Promise<void>
+export async function setHeaderTexts(elements: NodeListOf<AppHeader> | AppHeader[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
-  await customElements.whenDefined(definedTag<HeaderTag>("app-header"));
-  for (const element of elements)
-  {
-    setIfExists(element, "books", translation.books);
-    setIfExists(element, "graphicNovels", translation.graphicNovels);
-    setIfExists(element, "movies", translation.movies);
-    setIfExists(element, "shows", translation.shows);
-    setIfExists(element, "games", translation.games);
-    setIfExists(element, "profile", translation.profile);
-    setIfExists(element, "friends", translation.friends);
-    setIfExists(element, "comments", translation.comments);
-    setIfExists(element, "reviews", translation.reviews);
-    setIfExists(element, "settings", translation.settings);
-    setIfExists(element, "preferences", translation.preferences);
-    setIfExists(element, "logout", translation.logout);
-    setIfExists(element, "login", translation.login);
-    setIfExists(element, "showingResults", translation.headerShowingResults);
-    setIfExists(element, "search", translation.search);
-  }
+  await customElements.whenDefined(genericValue<HeaderTag>("app-header"));
+  setFromObject(elements, {
+    books: translation.books,
+    graphicNovels: translation.graphicNovels,
+    movies: translation.movies,
+    shows: translation.shows,
+    games: translation.games,
+    profile: translation.profile,
+    friends: translation.friends,
+    comments: translation.comments,
+    reviews: translation.reviews,
+    settings: translation.settings,
+    preferences: translation.preferences,
+    logout: translation.logout,
+    login: translation.login,
+    showingResults: translation.headerShowingResults,
+    search: translation.search,
+    required: translation.required,
+    pleaseFillOutThisInput: translation.pleaseFillOutThisInput,
+    inputMinValidation: translation.inputMinTextLengthValidation,
+    inputMaxValidation: translation.inputMaxTextLengthValidation
+  });
 }
 
-async function setLanguageAutocompleteTexts(elements: NodeListOf<AppLanguageAutocomplete> | AppLanguageAutocomplete[], translation: Translation): Promise<void>
+export async function setLanguageAutocompleteTexts(elements: NodeListOf<AppLanguageAutocomplete> | AppLanguageAutocomplete[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<LanguageAutocompleteTag>("app-language-autocomplete"));
-  for (const element of elements)
-  {
-    setIfExists(element, "language", translation.language);
-  }
+  await customElements.whenDefined(genericValue<LanguageAutocompleteTag>("app-language-autocomplete"));
+  setFromObject(elements, {
+    language: translation.language,
+    itemNotFound: null,
+    itemAlreadySelected: null,
+    required: null,
+    pleaseFillOutThisInput: null,
+    inputMinValidation: null,
+    inputMaxValidation: null
+  });
+
   await setAutocompleteTexts(elements, translation);
 }
 
-async function setAutocompleteTexts(elements: NodeListOf<AppAutocomplete<unknown>> | AppAutocomplete<unknown>[], translation: Translation): Promise<void>
+export async function setAutocompleteTexts(elements: NodeListOf<AppAutocomplete<unknown>> | AppAutocomplete<unknown>[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<AutocompleteTag>("app-autocomplete"));
-  for (const element of elements)
-  {
-    setIfExists(element, "itemAlreadySelected", translation.autocompleteItemAlreadySelected);
-    setIfExists(element, "itemNotFound", translation.autocompleteItemNotFound);
-    setIfExists(element, "required", translation.required);
-  }
+  await customElements.whenDefined(genericValue<AutocompleteTag>("app-autocomplete"));
+  setFromObject(elements, {
+    itemAlreadySelected: translation.autocompleteItemAlreadySelected,
+    itemNotFound: translation.autocompleteItemNotFound,
+    required: null,
+    pleaseFillOutThisInput: null,
+    inputMinValidation: null,
+    inputMaxValidation: null
+  });
+
   await setInputTexts(elements, translation);
 }
 
-async function setImageInputTexts(elements: NodeListOf<AppImageInput> | AppImageInput[], translation: Translation): Promise<void>
+export async function setImageInputTexts(elements: NodeListOf<AppImageInput> | AppImageInput[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<ImageInputTag>("app-image-input"));
-  for (const element of elements)
-  {
-    setIfExists(element, "required", translation.required);
-    setIfExists(element, "inputMinValidation", translation.imageInputMinSizesValidation);
-    setIfExists(element, "inputMaxValidation", translation.imageInputMaxSizesValidation);
-    setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
-    setIfExists(element, "unsupportedImageType", translation.unsupportedImageType);
-    setIfExists(element, "clearImage", translation.clearImage);
-    setIfExists(element, "clearImages", translation.clearImages);
-  }
+  await customElements.whenDefined(genericValue<ImageInputTag>("app-image-input"));
+  setFromObject(elements, {
+    required: translation.required,
+    inputMinValidation: translation.imageInputMinSizesValidation,
+    inputMaxValidation: translation.imageInputMaxSizesValidation,
+    pleaseFillOutThisInput: translation.pleaseFillOutThisInput,
+    unsupportedImageType: translation.unsupportedImageType,
+    clearImage: translation.clearImage,
+    clearImages: translation.clearImages,
+  });
 }
 
-async function setNumberInputTexts(elements: NodeListOf<AppNumberInput> | AppNumberInput[], translation: Translation): Promise<void>
+export async function setNumberInputTexts(elements: NodeListOf<AppNumberInput> | AppNumberInput[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<NumberInputTag>("app-number-input"));
+  await customElements.whenDefined(genericValue<NumberInputTag>("app-number-input"));
+  setFromObject(elements, {
+    required: null,
+    pleaseFillOutThisInput: null,
+    inputMinValidation: null,
+    inputMaxValidation: null
+  });
   await setInputTexts(elements, translation);
 }
 
-async function setEmailInputTexts(elements: NodeListOf<AppEmailInput> | AppEmailInput[], translation: Translation): Promise<void>
+export async function setEmailInputTexts(elements: NodeListOf<AppEmailInput> | AppEmailInput[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<EmailInputTag>("app-email-input"));
+  await customElements.whenDefined(genericValue<EmailInputTag>("app-email-input"));
+  setFromObject(elements, {
+    required: null,
+    pleaseFillOutThisInput: null,
+    inputMinValidation: null,
+    inputMaxValidation: null
+  });
   await setInputTexts(elements, translation);
 }
 
-async function setPasswordInputText(elements: NodeListOf<AppPasswordInput> | AppPasswordInput[], translation: Translation): Promise<void>
+export async function setPasswordInputText(elements: NodeListOf<AppPasswordInput> | AppPasswordInput[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<PasswordInputTag>("app-password-input"));
+  await customElements.whenDefined(genericValue<PasswordInputTag>("app-password-input"));
+  setFromObject(elements, {
+    required: null,
+    pleaseFillOutThisInput: null,
+    inputMinValidation: null,
+    inputMaxValidation: null
+  });
   await setInputTexts(elements, translation);
 }
 
-async function setSearchInputText(elements: NodeListOf<AppSearchInput> | AppSearchInput[], translation: Translation): Promise<void>
+export async function setSearchInputText(elements: NodeListOf<AppSearchInput> | AppSearchInput[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<SearchInputTag>("app-search-input"));
-  for (const element of elements)
-  {
-    setIfExists(element, "search", translation.search);
-  }
+  await customElements.whenDefined(genericValue<SearchInputTag>("app-search-input"));
+  setFromObject(elements, {
+    search: translation.search,
+    required: null,
+    pleaseFillOutThisInput: null,
+    inputMinValidation: null,
+    inputMaxValidation: null
+  });
   await setInputTexts(elements, translation);
 }
 
-async function setTextareaTexts(elements: NodeListOf<AppTextArea> | AppTextArea[], translation: Translation): Promise<void>
+export async function setTextareaTexts(elements: NodeListOf<AppTextArea> | AppTextArea[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<TextAreaTag>("app-textarea"));
-  for (const element of elements)
-  {
-    setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
-    setIfExists(element, "required", translation.required);
-    setIfExists(element, "textareaMinValidation", translation.inputMinTextLengthValidation);
-    setIfExists(element, "textareaMaxValidation", translation.inputMaxTextLengthValidation);
-  }
+  await customElements.whenDefined(genericValue<TextAreaTag>("app-textarea"));
+  setFromObject(elements, {
+    required: translation.required,
+    pleaseFillOutThisInput: translation.pleaseFillOutThisInput,
+    textareaMinValidation: translation.inputMinTextLengthValidation,
+    textareaMaxValidation: translation.inputMaxTextLengthValidation
+  });
 }
 
-async function setInputTexts(elements: NodeListOf<AppInput> | AppInput[], translation: Translation): Promise<void>
+export async function setInputTexts(elements: NodeListOf<AppInput> | AppInput[], translation: Translation): Promise<void>
 {
   if (elements.length == 0)
     return;
 
-  await customElements.whenDefined(definedTag<InputTag>("app-input"));
-  for (const element of elements)
-  {
-    setIfExists(element, "pleaseFillOutThisInput", translation.pleaseFillOutThisInput);
-    setIfExists(element, "required", translation.required);
-    setIfExists(element, "inputMinValidation", translation.inputMinTextLengthValidation);
-    setIfExists(element, "inputMaxValidation", translation.inputMaxTextLengthValidation);
-  }
+  await customElements.whenDefined(genericValue<InputTag>("app-input"));
+  setFromObject(elements, {
+    required: translation.required,
+    pleaseFillOutThisInput: translation.pleaseFillOutThisInput,
+    inputMinValidation: translation.inputMinTextLengthValidation,
+    inputMaxValidation: translation.inputMaxTextLengthValidation
+  });
 }
 
-function setIfExists<T extends {
-  texts: Observer<U>
-}, U extends object>(element: T, key: keyof U, translation: U[keyof U] | null): void
+function setFromObject<T extends { texts: Observer<any> }>(
+    elements: Iterable<T>,
+    object: { [key in keyof ReturnType<T["texts"]["object"]>]: string | null | undefined }
+): void
 {
-  if (translation)
-    element.texts.set(key, translation)
+  const keys = Object.keys(object);
+  for (const key of keys)
+  {
+    if (object[key] == null || object[key] == undefined)
+      continue;
+
+    for (const element of elements)
+    {
+      const value = object[key];
+      element.texts.set(key, value)
+    }
+  }
 }
 
 await main();
 
-function definedTag<T>(value: T): T
+function genericValue<T>(value: T): T
 {
   return value;
 }
