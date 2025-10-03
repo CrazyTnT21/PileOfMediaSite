@@ -136,7 +136,7 @@ summary {
     z-index: 1;
     position: absolute;
     background-color: var(--header-background-color--);
-    margin-top: 18px;
+    margin-top: 15px;
     border-radius: 6px;
   }
 }

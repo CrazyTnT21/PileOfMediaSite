@@ -5,6 +5,7 @@ type Identifier = `${string | number | bigint}.${number}`;
 /**
  * Observe changes to an object
  * @example
+ * ```ts
  * const item = new Observer({required: "Required"});
  * const element = document.createElement("div");
  * element.innerText = item.get("required");
@@ -19,6 +20,7 @@ type Identifier = `${string | number | bigint}.${number}`;
  *
  * item.set("required","Required");
  * console.info(element.innerText); // Still prints "Needed"
+ * ```
  */
 export class Observer<T extends object>
 {
@@ -68,12 +70,42 @@ export class Observer<T extends object>
   public removeListener(identifier: Identifier): void
   {
     const [key, number] = identifier.split(".");
-    this.listeners.get(<keyof T>key)!.delete(Number(number!))
+    this.listeners.get(key)!.delete(Number(number!))
   }
 
   public object(): T
   {
     return {...this.item};
+  }
+
+  /**
+   * Call all attached listeners with their current values.
+   *
+   * This may be useful to ensure that attached listeners get initialized.
+   * @example
+   * ```ts
+   * const label = document.createElement("label");
+   * const observer = new Observer({label: "Last name"});
+   *
+   * observer.addListener("label",(value) => label.innerText = value);
+   * observer.callAllListeners();
+   * console.log(label.innerText) // "Last name"
+   * ```
+   * Without `callAllListeners` the label would have no text until the value was changed and would instead be required to be set manually:
+   * `label.innerText = "Last name";`
+   *
+   * Doing so for every key is repetitive and may cause inconsistency issues if forgotten.
+   */
+  public callAllListeners(): void
+  {
+    const values = this.listeners.values();
+    for (const value of values)
+    {
+      for (const [_, callback] of value)
+      {
+        callback(value, value);
+      }
+    }
   }
 }
 

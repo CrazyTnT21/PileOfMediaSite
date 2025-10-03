@@ -2,7 +2,9 @@ import eslint from '@eslint/js';
 import tslint from 'typescript-eslint';
 import globals from "globals";
 import html from "@html-eslint/eslint-plugin";
+import translation_en from './src/assets/translations/translation_EN.json' with {type: "json"};
 
+const translationKeys = Object.keys(translation_en);
 const ignores = ["./dist/", "./node_modules/"];
 const config = tslint.config(
     {...eslint.configs.recommended, files: ['**/*.{ts,tsx}']},
@@ -78,6 +80,14 @@ const config = tslint.config(
           "warn",
           {
             "max": 10
+          }
+        ],
+        "@html-eslint/no-restricted-attr-values": [
+          "error",
+          {
+            attrPatterns: ["^data-translate$"],
+            attrValuePatterns: [`^(?!${translationKeys.join("|")})`],
+            message: "Translation key doesn't exist",
           }
         ],
       }

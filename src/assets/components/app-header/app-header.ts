@@ -231,10 +231,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
 
   private matchLabelText(key: keyof typeof appHeaderTexts, element: HTMLElement): void
   {
-    this.texts.addListener(key, (value) =>
-    {
-      element.innerText = value
-    });
+    this.texts.addListener(key, (value) => element.innerText = value);
   }
 
   protected render(): void

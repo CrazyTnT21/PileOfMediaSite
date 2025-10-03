@@ -1,13 +1,12 @@
 import {promises as fs} from "node:fs";
+import routes from './routes.json' with {type: "json"};
 
-const file = await fs.readFile("routes.json");
-const data = JSON.parse(file.toString());
-const keys = Object.keys(data);
+const keys = Object.keys(routes);
 let result = [];
 for (const key of keys)
 {
   result.push(`
-location ~ ${data[key]} {
+location ~ ${routes[key]} {
    try_files ${key} = /404.html;
 }`)
 }

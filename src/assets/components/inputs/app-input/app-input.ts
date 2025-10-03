@@ -151,12 +151,6 @@ export class AppInput extends HTMLElement implements StyleCSS
     this.render();
     this.addEventListener(ValueSetEvent.type, (e) => this.onValueSet(e));
     this.elements = mapSelectors<AppInputElements>(this.shadowRoot, AppInput.elementSelectors);
-
-    this.texts.addListener("required", (value) =>
-    {
-      this.elements.label.setAttribute("data-text-required", value);
-    });
-    //TODO inherited class doesn't update text on change
   }
 
   /**
@@ -166,6 +160,9 @@ export class AppInput extends HTMLElement implements StyleCSS
    */
   protected async connectedCallback(): Promise<void>
   {
+    //TODO: (Should be in constructor) When in constructor: inherited class doesn't update text on change
+    this.texts.addListener("required", (value) => this.elements.label.setAttribute("data-text-required", value));
+
     this.label = this.label || "";
     this.disabled = this.getAttribute("disabled") == "";
     const {input} = this.elements;

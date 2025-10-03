@@ -16,6 +16,7 @@ export class AppRoleAutocomplete extends AppAutocomplete<Role>
   public constructor()
   {
     super();
+    //TODO Check if label hasn't been set to a non "role" text
     this.texts.addListener("role", (value) => this.label = value);
   }
 
