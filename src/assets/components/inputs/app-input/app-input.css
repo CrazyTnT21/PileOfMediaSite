@@ -57,31 +57,27 @@
   transition: border-color ease 50ms;
 }
 
-.input[data-invalid] {
-  border-color: var(--input-invalid-color--);
+:host(:state(interacted-invalid)) {
+  .input {
+    border-color: var(--input-invalid-color--);
+  }
+
+  .input:hover,
+  .input:focus {
+    border-color: var(--input-invalid-color-hover--);
+  }
 }
 
-.input[data-invalid]:hover,
-.input[data-invalid]:focus {
-  border-color: var(--input-invalid-color-hover--);
-}
 
 label {
   position: absolute;
-  color: var(--input-label-color--);
   transition: transform ease 50ms;
-  margin: var(--input-padding--);
-  font-size: 1.10em;
-  cursor: text;
-}
-
-label {
-  cursor: default;
-  color: var(--input-color--);
-  font-size: 1em;
+  font-size: 1.1rem;
+  color: var(--input-label-color--);
   margin: 0 0 0 6px;
+  border-radius: 16px;
   transform: translateY(-55%);
-  background: linear-gradient(180deg, transparent 0 0.04rem, var(--input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
+  background: linear-gradient(180deg, transparent 0 0.04rem, var(--input-background-color--) 0.6rem 0.9rem, transparent 0.9rem 100%);
 }
 
 :host([required]) {

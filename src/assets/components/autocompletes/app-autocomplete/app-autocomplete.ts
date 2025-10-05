@@ -350,6 +350,9 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
   private validateNotFound(): ErrorResult
   {
     const value = this.elements.input.value.toLowerCase().trim();
+    if (value == "")
+      return new Ok(undefined);
+
     if (!this.findValue(value) && !this.findSearchValue(value))
       return new Err({state: "customError", userMessage: this.texts.get("itemNotFound").replace("{value}", value)});
 

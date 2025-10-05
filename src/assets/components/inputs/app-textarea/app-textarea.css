@@ -46,31 +46,25 @@
   transition: border-color ease 50ms;
 }
 
-.textarea[data-invalid] {
-  border-color: var(--textarea-invalid-color--);
-}
+:host(:state(interacted-invalid)) {
+  .textarea {
+    border-color: var(--textarea-invalid-color--);
+  }
 
-.textarea[data-invalid]:hover,
-.textarea[data-invalid]:focus {
-  border-color: var(--textarea-invalid-color-hover--);
+  .textarea:hover,
+  .textarea:focus {
+    border-color: var(--textarea-invalid-color-hover--);
+  }
 }
-
 label {
   position: absolute;
-  color: var(--textarea-label-color--);
   transition: transform ease 50ms;
-  margin: var(--textarea-padding--);
-  font-size: 1.10em;
-  cursor: text;
-}
-
-label {
-  cursor: default;
-  color: var(--textarea-color--);
-  font-size: 1em;
+  color: var(--textarea-label-color--);
+  font-size: 1.1em;
   margin: 0 0 0 6px;
+  border-radius: 16px;
   transform: translateY(-55%);
-  background: linear-gradient(180deg, transparent 0 0.04rem, var(--textarea-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
+  background: linear-gradient(180deg, transparent 0 0.04rem, var(--textarea-background-color--) 0.6rem 0.9rem, transparent 0.9rem 100%);
 }
 
 :host([required]) {

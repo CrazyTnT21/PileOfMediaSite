@@ -240,8 +240,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
 
     if (!this.internals.willValidate)
     {
-      setOrRemoveBooleanAttribute(this, "data-invalid", false);
-      setOrRemoveBooleanAttribute(textarea, "data-invalid", false);
+      this.internals.states.delete("interacted-invalid")
       return;
     }
 
@@ -263,8 +262,10 @@ export class AppTextArea extends HTMLElement implements StyleCSS
       return;
 
     const invalid = validityMessages.size > 0;
-    setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
-    setOrRemoveBooleanAttribute(textarea, "data-invalid", invalid);
+    if (invalid)
+      this.internals.states.add("interacted-invalid")
+    else
+      this.internals.states.delete("interacted-invalid")
   }
 
   private interacted: boolean = false;

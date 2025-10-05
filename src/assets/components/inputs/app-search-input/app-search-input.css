@@ -55,8 +55,10 @@ app-button {
   cursor: pointer;
 }
 
-#outline:has(input[data-invalid]) {
-  border-color: var(--input-invalid-color--);
+:host(:state(interacted-invalid)) {
+  #outline {
+    border-color: var(--input-invalid-color--);
+  }
 }
 
 :host(:state(disabled)) {

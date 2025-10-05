@@ -296,8 +296,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
 
     if (!this.internals.willValidate)
     {
-      setOrRemoveBooleanAttribute(this, "data-invalid", false);
-      setOrRemoveBooleanAttribute(fileInput, "data-invalid", false);
+      this.internals.states.delete("interacted-invalid")
       return;
     }
 
@@ -321,8 +320,10 @@ export class AppImageInput extends HTMLElement implements StyleCSS
       return;
 
     const invalid = validityMessages.size > 0;
-    setOrRemoveBooleanAttribute(this, "data-invalid", invalid);
-    setOrRemoveBooleanAttribute(fileInput, "data-invalid", invalid);
+    if (invalid)
+      this.internals.states.add("interacted-invalid")
+    else
+      this.internals.states.delete("interacted-invalid")
   }
 
   protected render(): void

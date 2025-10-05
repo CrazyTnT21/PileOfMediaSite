@@ -33,14 +33,17 @@ img {
   border: 1px solid var(--image-input-border-color--);
   background-color: var(--image-input-background-color--);
   flex: 1;
+  cursor: pointer;
 }
 
 label {
   position: absolute;
-  color: var(--image-input-color--);
+  color: var(--image-input-label-color--);
   margin: 0 0 0 6px;
   transform: translateY(-55%);
-  background: linear-gradient(180deg, transparent 0 0.04rem, var(--image-input-background-color--) 0.44rem 0.9rem, transparent 0.9rem 100%);
+  font-size: 1.1rem;
+  border-radius: 16px;
+  background: linear-gradient(180deg, transparent 0 0.04rem, var(--image-input-background-color--) 0.6rem 0.9rem, transparent 0.9rem 100%);
   transition: transform ease 50ms;
 }
 
@@ -70,12 +73,14 @@ img:hover, img:focus {
   border-color: var(--image-input-border-color-hover--);
 }
 
-input[data-invalid] + img {
-  border-color: var(--image-input-invalid-color--)
-}
+:host(:state(interacted-invalid)) {
+  img {
+    border-color: var(--image-input-invalid-color--)
+  }
 
-input[data-invalid] + img:hover {
-  border-color: var(--image-input-invalid-color-hover--);
+  img:hover {
+    border-color: var(--image-input-invalid-color-hover--);
+  }
 }
 
 img:focus-visible {
