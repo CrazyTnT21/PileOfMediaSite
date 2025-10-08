@@ -1,13 +1,7 @@
+@import "../../../css/icon.css";
+@import "../app-input/app-input.css";
+
 .icon::before {
-  font-family: "Material Symbols Outlined", serif;
-  line-height: 1;
-  text-transform: none;
-  white-space: nowrap;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: "liga";
   display: flex;
   content: "search";
   font-size: 1.5rem;
@@ -16,6 +10,7 @@
 
 .parent {
   min-width: 0;
+  margin: .6rem 3px .3rem;
 }
 
 input {

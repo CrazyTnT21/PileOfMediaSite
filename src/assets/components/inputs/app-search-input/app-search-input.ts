@@ -80,7 +80,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
   //TODO: Private
   public override styleCSS(): string
   {
-    return super.styleCSS() + css;
+    return css;
   }
 
   public static override define(): void

@@ -28,7 +28,7 @@
 .textarea {
   background-color: var(--textarea-background-color--);
   display: inline-flex;
-  border-radius: 6px;
+  border-radius: .3rem;
   border-width: 1px;
   border-style: solid;
   border-color: var(--textarea-border-color--);
@@ -81,10 +81,7 @@ textarea[disabled]::placeholder {
 }
 
 :host {
-  padding: 3px;
   display: inline-flex;
-  margin-top: .3rem;
-  margin-bottom: .3rem;
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;
@@ -95,6 +92,7 @@ textarea[disabled]::placeholder {
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;
+  margin: .6rem 3px .3rem;
 }
 
 .control {
@@ -105,7 +103,7 @@ textarea[disabled]::placeholder {
   min-height: 0;
   min-width: 0;
   flex-wrap: wrap;
-  border-radius: 6px;
+  border-radius: .3rem;
   font-size: 1.10em;
   resize: none;
 }

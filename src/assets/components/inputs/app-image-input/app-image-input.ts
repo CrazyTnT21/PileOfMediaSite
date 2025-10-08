@@ -19,7 +19,8 @@ import {
   IncludesString, randomNumber,
   setOrRemoveAttribute,
   setOrRemoveBooleanAttribute,
-  templateString
+  templateString,
+  setOrDeleteState
 } from "../common";
 import {setMaxFileSize, setMinFileSize, setUnsupportedType, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
@@ -320,10 +321,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
       return;
 
     const invalid = validityMessages.size > 0;
-    if (invalid)
-      this.internals.states.add("interacted-invalid")
-    else
-      this.internals.states.delete("interacted-invalid")
+    setOrDeleteState(this.internals.states, "interacted-invalid", invalid);
   }
 
   protected render(): void

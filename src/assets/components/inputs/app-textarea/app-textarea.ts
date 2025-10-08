@@ -1,7 +1,7 @@
 import {applyStyleSheet, attachDelegates} from "../../defaults";
 import {StyleCSS} from "../../style-css";
 import {
-  handleFieldset, randomNumber,
+  handleFieldset, randomNumber, setOrDeleteState,
   setOrRemoveBooleanAttribute,
   templateString
 } from "../common";
@@ -262,10 +262,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
       return;
 
     const invalid = validityMessages.size > 0;
-    if (invalid)
-      this.internals.states.add("interacted-invalid")
-    else
-      this.internals.states.delete("interacted-invalid")
+    setOrDeleteState(this.internals.states, "interacted-invalid", invalid);
   }
 
   private interacted: boolean = false;

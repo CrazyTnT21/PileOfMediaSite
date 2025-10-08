@@ -1,3 +1,5 @@
+@import "../app-input/app-input.css";
+
 input[type=number] {
   -moz-appearance: textfield;
 }

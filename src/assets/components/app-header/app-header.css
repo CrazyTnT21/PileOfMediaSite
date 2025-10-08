@@ -242,7 +242,7 @@ summary {
   font-size: .9rem;
   padding: 6px;
   border: 1px solid var(--header-border-color--);
-  border-radius: 18px;
+  border-radius: 1rem;
 }
 
 .background-hover:hover {

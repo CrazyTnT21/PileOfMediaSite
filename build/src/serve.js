@@ -110,6 +110,7 @@ function proxyRequest(request, response, proxy, proxyServer, matches)
     resultLocation = resultLocation.replaceAll("$" + index, matches[index]);
   }
   request.url = resultLocation;
+  //TODO DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead
   proxyServer.web(request, response, null, (error) =>
   {
     console.error(`Error while proxying request to ${resultLocation}:`, error["code"]);

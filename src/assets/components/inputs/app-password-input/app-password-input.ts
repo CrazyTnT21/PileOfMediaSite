@@ -69,7 +69,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
 
   public override styleCSS(): string
   {
-    return super.styleCSS() + css;
+    return css;
   }
 
   public static override define(): void

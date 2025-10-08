@@ -5,7 +5,9 @@ import {
   handleFieldset,
   setOrRemoveBooleanAttribute,
   IncludesString,
-  templateString, randomNumber
+  templateString,
+  randomNumber,
+  setOrDeleteState
 } from "../common";
 import {ValueSetEvent} from "./value-set-event";
 import html from "./app-input.html" with {type: "inline"};
@@ -266,10 +268,7 @@ export class AppInput extends HTMLElement implements StyleCSS
       return;
 
     const invalid = validityMessages.size > 0;
-    if (invalid)
-      this.internals.states.add("interacted-invalid")
-    else
-      this.internals.states.delete("interacted-invalid")
+    setOrDeleteState(this.internals.states, "interacted-invalid", invalid);
   }
 
   public addCustomError(callback: ErrorResultCallback): ErrorKey

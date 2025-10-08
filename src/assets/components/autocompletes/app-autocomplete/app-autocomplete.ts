@@ -420,7 +420,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
 
   public override styleCSS(): string
   {
-    return super.styleCSS() + css;
+    return css;
   }
 
   public itemLabel(item: T): string | null

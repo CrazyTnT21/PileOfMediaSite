@@ -27,7 +27,7 @@ export class AppNumberInput extends AppInput
 
   public override styleCSS(): string
   {
-    return super.styleCSS() + css;
+    return css;
   }
 
   public override get value(): number | null | undefined

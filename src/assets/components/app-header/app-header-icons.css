@@ -1,16 +1,4 @@
-.icon::before, [class$='-icon'] {
-  font-family: "Material Symbols Outlined", serif;
-  line-height: 1;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: "liga";
-  font-size: 1.5rem;
-}
+@import "../../css/icon.css";
 
 .movie-icon::before {
   content: "theaters";

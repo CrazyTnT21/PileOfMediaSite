@@ -1,5 +1,6 @@
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
 import {Observer} from "../../observer";
+import {Err, Ok, Result} from "../../result/result";
 
 export type AttributeValue = string | null;
 export type NonEmptyString = string;
@@ -141,3 +142,23 @@ export function matchNestedTexts<InitialTexts extends object, NestedTexts>(initi
 
 type ObserverValue<InitialTexts, NestedTexts> = Omit<InitialTexts, keyof Omit<InitialTexts, keyof NestedTexts>>;
 type SameKeys<InitialTexts, NestedTexts> = keyof Omit<NestedTexts, keyof InitialTexts> extends never ? NestedTexts : never;
+
+export function setOrDeleteState(states: CustomStateSet, key: string, value: boolean): void
+{
+  if (value)
+  {
+    states.add(key)
+    return;
+  }
+  states.delete(key)
+}
+
+export function indexArray<Index extends number, T>(array: ArrayLike<T>, index: Index): Result<T, {
+  outOfBounds: Index,
+  length: number
+}>
+{
+  if (index < 0 || index >= array.length)
+    return new Err({outOfBounds: index, length: array.length});
+  return new Ok(array[index]!);
+}
