@@ -1,6 +1,5 @@
 import html from "./app-checkbox.html" with {type: "inline"};
 import css from "./app-checkbox.css" with {type: "inline"};
-import {StyleCSS} from "../style-css";
 import {ValueSetEvent} from "../inputs/app-input/value-set-event";
 import {handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import {applyStyleSheet, attachDelegates} from "../defaults";
@@ -14,7 +13,7 @@ export type AppCheckboxElements = {
   label: HTMLLabelElement
 };
 
-export class AppCheckbox extends HTMLElement implements StyleCSS
+export class AppCheckbox extends HTMLElement
 {
   private readonly elements: AppCheckboxElements;
   protected static readonly elementSelectors: { [key in keyof AppCheckbox["elements"]]: string } = {
@@ -138,7 +137,7 @@ export class AppCheckbox extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public styleCSS(): string
+  private styleCSS(): string
   {
     return css;
   }

@@ -418,7 +418,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     yield this.items;
   }
 
-  public override styleCSS(): string
+  protected override styleCSS(): string
   {
     return css;
   }

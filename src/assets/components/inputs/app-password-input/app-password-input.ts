@@ -1,5 +1,4 @@
 import {AppInput, AppInputElements} from "../app-input/app-input";
-import {StyleCSS} from "../../style-css";
 import html from "./app-password-input.html" with {type: "inline"};
 import css from "./app-password-input.css" with {type: "inline"};
 import {AppButton} from "../../app-button/app-button";
@@ -13,7 +12,7 @@ export type AppPasswordInputElements = AppInputElements & { passwordButton: AppB
 const passwordInputTag = "app-password-input" as const;
 export type PasswordInputTag = typeof passwordInputTag;
 
-export class AppPasswordInput extends AppInput implements StyleCSS
+export class AppPasswordInput extends AppInput
 {
   public override readonly elements: AppPasswordInputElements;
   protected static override readonly elementSelectors = {
@@ -67,7 +66,7 @@ export class AppPasswordInput extends AppInput implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public override styleCSS(): string
+  protected override styleCSS(): string
   {
     return css;
   }

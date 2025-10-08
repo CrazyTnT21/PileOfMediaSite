@@ -1,5 +1,4 @@
 import {applyStyleSheet, attach} from "../defaults";
-import {StyleCSS} from "../style-css";
 import {LoginReturn} from "../../openapi/login-return";
 import {ImageData} from "../../openapi/image-data";
 import {AppButton} from "../app-button/app-button";
@@ -60,7 +59,7 @@ export const appHeaderTexts = {
 const headerTag = "app-header" as const;
 export type HeaderTag = typeof headerTag;
 
-export class AppHeader extends HTMLElement implements StyleCSS
+export class AppHeader extends HTMLElement
 {
   public readonly texts = new Observer(appHeaderTexts);
 
@@ -242,7 +241,7 @@ export class AppHeader extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public styleCSS(): string
+  private styleCSS(): string
   {
     return css;
   }

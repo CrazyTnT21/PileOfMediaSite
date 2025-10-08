@@ -1,5 +1,4 @@
 import {applyStyleSheet, attachDelegates} from "../../defaults";
-import {StyleCSS} from "../../style-css";
 import {
   handleFieldset, randomNumber, setOrDeleteState,
   setOrRemoveBooleanAttribute,
@@ -42,7 +41,7 @@ export const appTextAreaTexts = {
 const textAreaTag = "app-textarea" as const;
 export type TextAreaTag = typeof textAreaTag;
 
-export class AppTextArea extends HTMLElement implements StyleCSS
+export class AppTextArea extends HTMLElement
 {
   public static readonly formAssociated = true;
   protected errors: Map<number, ErrorResultCallback> = new Map();
@@ -273,7 +272,7 @@ export class AppTextArea extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public styleCSS(): string
+  private styleCSS(): string
   {
     return css;
   }

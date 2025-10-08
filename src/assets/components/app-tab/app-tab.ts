@@ -1,6 +1,5 @@
 import html from "./app-tab.html" with {type: "inline"};
 import css from "./app-tab.css" with {type: "inline"};
-import {StyleCSS} from "../style-css";
 import {applyStyleSheet, attach} from "../defaults";
 import {mapSelectors} from "../../dom";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
@@ -9,7 +8,7 @@ export type AppTabElements = {
   container: HTMLDivElement,
 };
 
-export class AppTab extends HTMLElement implements StyleCSS
+export class AppTab extends HTMLElement
 {
   private readonly internals: ElementInternals;
   public override shadowRoot: ShadowRoot;
@@ -77,7 +76,7 @@ export class AppTab extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public styleCSS(): string
+  private styleCSS(): string
   {
     return css;
   }

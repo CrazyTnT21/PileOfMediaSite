@@ -1,5 +1,4 @@
 import {applyStyleSheet, attachDelegates} from "../../defaults";
-import {StyleCSS} from "../../style-css";
 import {
   AttributeValue,
   handleFieldset,
@@ -45,7 +44,7 @@ export const appInputTexts = {
 const inputTag = "app-input" as const;
 export type InputTag = typeof inputTag;
 
-export class AppInput extends HTMLElement implements StyleCSS
+export class AppInput extends HTMLElement
 {
   protected readonly elements: AppInputElements;
   protected static readonly elementSelectors: { [key in keyof AppInput["elements"]]: string } = {
@@ -296,7 +295,7 @@ export class AppInput extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public styleCSS(): string
+  protected styleCSS(): string
   {
     return css;
   }

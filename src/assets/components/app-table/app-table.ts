@@ -1,9 +1,8 @@
 import {attach, applyStyleSheet} from "../defaults";
-import {StyleCSS} from "../style-css";
 import html from "./app-table.html" with {type: "inline"};
 import css from "./app-table.css" with {type: "inline"};
 
-export class AppTable<T> extends HTMLElement implements StyleCSS
+export class AppTable<T> extends HTMLElement
 {
   public override shadowRoot: ShadowRoot;
 
@@ -170,7 +169,7 @@ export class AppTable<T> extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public styleCSS(): string
+  private styleCSS(): string
   {
     return css;
   }

@@ -1,5 +1,4 @@
 import {applyStyleSheet, attachDelegates} from "../../defaults";
-import {StyleCSS} from "../../style-css";
 import {UploadEvent} from "./upload-event";
 import html from "./app-image-input.html" with {type: "inline"};
 import css from "./app-image-input.css" with {type: "inline"};
@@ -50,7 +49,7 @@ export const appImageInputTexts = {
   required: "Required",
 };
 
-export class AppImageInput extends HTMLElement implements StyleCSS
+export class AppImageInput extends HTMLElement
 {
   public readonly texts = new Observer(appImageInputTexts);
   private readonly elements: AppImageInputElements;
@@ -330,7 +329,7 @@ export class AppImageInput extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public styleCSS(): string
+  private styleCSS(): string
   {
     return css;
   }

@@ -25,7 +25,7 @@ export class AppNumberInput extends AppInput
     this.elements.input.type = "number";
   }
 
-  public override styleCSS(): string
+  protected override styleCSS(): string
   {
     return css;
   }

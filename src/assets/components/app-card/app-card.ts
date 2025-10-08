@@ -1,5 +1,4 @@
 import {applyStyleSheet, attach} from "../defaults";
-import {StyleCSS} from "../style-css";
 import html from "./app-card.html" with {type: "inline"}
 import css from "./app-card.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
@@ -15,7 +14,7 @@ export type AppCardElements = {
   titleSlot: HTMLSlotElement
 };
 
-export class AppCard extends HTMLElement implements StyleCSS
+export class AppCard extends HTMLElement
 {
   public override shadowRoot: ShadowRoot;
   private readonly elements: AppCardElements;
@@ -74,7 +73,7 @@ export class AppCard extends HTMLElement implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  public styleCSS(): string
+  private styleCSS(): string
   {
     return css;
   }

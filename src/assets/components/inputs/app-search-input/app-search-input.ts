@@ -1,5 +1,4 @@
 import {AppInput, AppInputElements, appInputTexts} from "../app-input/app-input";
-import {StyleCSS} from "../../style-css";
 import {SearchEvent} from "./search-event";
 import html from "./app-search-input.html" with {type: "inline"};
 import css from "./app-search-input.css" with {type: "inline"};
@@ -19,7 +18,7 @@ export const appSearchInputTexts = {
 const searchInputTag = "app-search-input" as const;
 export type SearchInputTag = typeof searchInputTag;
 
-export class AppSearchInput extends AppInput implements StyleCSS
+export class AppSearchInput extends AppInput
 {
   public override readonly texts = new Observer(appSearchInputTexts);
 
@@ -77,8 +76,7 @@ export class AppSearchInput extends AppInput implements StyleCSS
     applyStyleSheet(this.shadowRoot, this.styleCSS());
   }
 
-  //TODO: Private
-  public override styleCSS(): string
+  protected override styleCSS(): string
   {
     return css;
   }
