@@ -15,7 +15,7 @@ export function observeFieldset(fieldset: HTMLFieldSetElement, node: Node, callb
       observer.disconnect();
       return;
     }
-    callback(mutationList[0]!.oldValue != "")
+    callback(indexArray(mutationList, 0).unwrap().oldValue != "")
   });
   const config: MutationObserverInit = {attributes: true, attributeFilter: ["disabled"], attributeOldValue: true};
 
@@ -58,7 +58,7 @@ export function formData<T>(...values: { [Key in keyof T]: "serialize" | "binary
 
     for (const value of values)
     {
-      const key = unsafeObjectKeys(value)[0]!;
+      const key = indexArray(unsafeObjectKeys(value), 0).unwrap();
       const type = value[key];
 
       if (body[key] == null)
@@ -128,7 +128,7 @@ export function randomNumber(): number
 {
   const array = new Uint32Array(1);
   crypto.getRandomValues(array);
-  return array[0]!;
+  return indexArray(array, 0).unwrap();
 }
 
 export function matchNestedTexts<InitialTexts extends object, NestedTexts>(initialTexts: Observer<InitialTexts>, nestedTexts: Observer<ObserverValue<InitialTexts, NestedTexts> & SameKeys<InitialTexts, NestedTexts>>): void

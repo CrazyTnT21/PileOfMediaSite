@@ -6,7 +6,7 @@ import html from "./app-autocomplete.html" with {type: "inline"};
 import css from "./app-autocomplete.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
 import {Observer} from "../../../observer";
-import {AttributeValue} from "../../inputs/common";
+import {AttributeValue, indexArray} from "../../inputs/common";
 import {templateString, IncludesString} from "../../inputs/common";
 import {applyStyleSheet} from "../../defaults";
 import {mapBooleanAttribute} from "../../inputs/map-boolean-attribute";
@@ -167,7 +167,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     const children = selected.children;
     for (let i = children.length - 1; i >= 0; i--)
     {
-      const item = children[i]!;
+      const item = indexArray(children, i).unwrap();
       const child = <HTMLDataElement>item.firstElementChild;
       if (Number(child.value) != id)
       {
@@ -181,7 +181,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
       }
       else if (i > 0)
       {
-        const previousData = <HTMLDataElement>children[i - 1]!.firstElementChild;
+        const previousData = <HTMLDataElement>indexArray(children, i - 1).unwrap().firstElementChild;
         const button = <HTMLButtonElement>previousData.firstElementChild;
         button.focus();
       }

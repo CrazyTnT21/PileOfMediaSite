@@ -2,6 +2,7 @@ import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-auto
 import {UserStatus} from "../../openapi/user-status";
 import {Observer} from "../../observer";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
+import {indexArray} from "../inputs/common";
 
 export const appUserStatusAutocompleteTexts = {
   ...appAutocompleteTexts,
@@ -92,7 +93,7 @@ export class AppUserStatusAutocomplete extends AppAutocomplete<UserStatus>
     return [...this.elements.items.children]
         .map((x): HTMLDataElement | null =>
             {
-              const dataElement = (<HTMLDataElement>x.children[0]!);
+              const dataElement = (<HTMLDataElement>indexArray(x.children, 0).unwrap());
               if (dataElement.value == value)
                 return dataElement;
               return null

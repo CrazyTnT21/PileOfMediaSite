@@ -2,6 +2,7 @@ import {AppTable, Column, ColumnType} from "../../components/app-table/app-table
 import {Config, getTranslatedField, logError} from "../../config";
 import {Book} from "../../openapi/book";
 import {apiClient} from "../../openapi/client";
+import {indexArray} from "../../components/inputs/common";
 
 function columns(): Column<Book>[]
 {
@@ -69,7 +70,7 @@ else
       ...
           x,
       title: translation.title,
-      uri: translation.cover.versions[0]!.uri
+      uri: indexArray(translation.cover.versions, 0).unwrap().uri
     }
   });
   table.total = data.total;

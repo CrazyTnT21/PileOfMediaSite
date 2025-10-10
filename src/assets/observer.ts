@@ -1,4 +1,5 @@
 import {unsafeObjectKeys} from "./unsafe-object-keys";
+import {indexArray} from "./components/inputs/common";
 
 type Identifier = `${string | number | bigint}.${number}`;
 
@@ -60,7 +61,7 @@ export class Observer<T extends object>
   {
     const array = new Uint32Array(1);
     crypto.getRandomValues(array);
-    const randomNumber = array[0]!;
+    const randomNumber = indexArray(array, 0).unwrap();
     const identifier = `${key.toString()}.${randomNumber}` as const;
     const map = this.listeners.get(key)!;
     map.set(randomNumber, callback)

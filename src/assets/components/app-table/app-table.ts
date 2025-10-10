@@ -1,6 +1,7 @@
 import {attach, applyStyleSheet} from "../defaults";
 import html from "./app-table.html" with {type: "inline"};
 import css from "./app-table.css" with {type: "inline"};
+import {indexArray} from "../inputs/common";
 
 export class AppTable<T> extends HTMLElement
 {
@@ -35,7 +36,7 @@ export class AppTable<T> extends HTMLElement
     rows.innerHTML = ``;
     for (let i = 0; i < items.length; i++)
     {
-      const row = this.createRow(items[i]!);
+      const row = this.createRow(indexArray(items, i).unwrap());
       rows.append(row);
     }
   }

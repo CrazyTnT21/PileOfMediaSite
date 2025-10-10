@@ -1,7 +1,7 @@
 import {Translation} from "./translations/translation";
 import {get} from "./scripts/http";
 import {type LanguageCode, LanguageCodes} from "./language";
-import type {NonEmptyArray} from "./components/inputs/common";
+import {indexArray, NonEmptyArray} from "./components/inputs/common";
 
 export class Config
 {
@@ -88,7 +88,7 @@ export function getTranslatedField<T extends TranslationItem>(item: T): {
     if (translation)
       return {language, translation};
   }
-  const key = Object.keys(item.translations.translations)[0]!;
+  const key = indexArray(Object.keys(item.translations.translations), 0).unwrap();
 
   return {language: key as LanguageCode, translation: item.translations.translations[key]!};
 }

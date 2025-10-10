@@ -1,7 +1,7 @@
 import {Err, Ok, Result} from "../../../result/result";
 import {apiClient} from "../../../openapi/client";
 import {acceptLanguageHeader, getTranslatedField, logError} from "../../../config";
-import {queryParam} from "../../inputs/common";
+import {indexArray, queryParam} from "../../inputs/common";
 import {SearchEvent} from "../../inputs/app-search-input/search-event";
 import searchHTML from "../app-header-search/app-header-search-item.html" with {type: "inline"}
 import {AppHeader} from "../app-header";
@@ -165,7 +165,7 @@ export class AppHeaderSearch
     const currentFocusParent = currentFocus.parentElement!;
     if (currentFocus.isSameNode(searchElements))
     {
-      const anchor: HTMLAnchorElement = <HTMLAnchorElement>searchElements.children[0]!.children[0]!;
+      const anchor: HTMLAnchorElement = <HTMLAnchorElement>indexArray(indexArray(searchElements.children, 0).unwrap().children, 0).unwrap();
       anchor.focus();
     }
 

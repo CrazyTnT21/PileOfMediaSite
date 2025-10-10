@@ -8,7 +8,7 @@ import css from "./app-header.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
 import {AppHeaderSearch} from "./app-header-search/app-header-search";
 import {Observer} from "../../observer";
-import {IncludesString, matchNestedTexts, templateString} from "../inputs/common";
+import {IncludesString, indexArray, matchNestedTexts, templateString} from "../inputs/common";
 
 export type AppHeaderElements = {
   burger: HTMLDetailsElement,
@@ -192,7 +192,7 @@ export class AppHeader extends HTMLElement
       if (user.profile_picture)
       {
         user.profile_picture.versions.sort((x: ImageData, y: ImageData) => x.width * x.height - y.width * y.height);
-        profilePicture.src = user.profile_picture.versions[0]!.uri;
+        profilePicture.src = indexArray(user.profile_picture.versions, 0).unwrap().uri;
         return;
       }
     }
