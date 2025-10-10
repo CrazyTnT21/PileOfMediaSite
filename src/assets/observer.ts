@@ -89,7 +89,7 @@ export class Observer<T extends object>
    *
    * observer.addListener("label",(value) => label.innerText = value);
    * observer.callAllListeners();
-   * console.log(label.innerText) // "Last name"
+   * console.info(label.innerText) // "Last name"
    * ```
    * Without `callAllListeners` the label would have no text until the value was changed and would instead be required to be set manually:
    * `label.innerText = "Last name";`

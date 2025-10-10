@@ -116,7 +116,7 @@ export class Err<T, E>
 
   public unwrap(): never
   {
-    throw new Error("Called unwrap on an `Error` value", {cause: this.internalError})
+    throw new Error("Called unwrap on an `Error` value", {cause: this.internalError});
   }
 
   public unwrapErr(): E

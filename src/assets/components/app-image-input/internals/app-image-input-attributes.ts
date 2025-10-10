@@ -1,6 +1,17 @@
-import {AppImageInput} from "./app-image-input";
-import {logNoValueError} from "../validation/validation";
-import {AttributeValue} from "../common";
+import {AppImageInput} from "../app-image-input";
+import {AttributeValue} from "../../inputs/common";
+import {logNoValueError} from "../../inputs/validation/validation";
+
+export type AttributeKey = keyof typeof observedAttributesMap;
+export const observedAttributesMap = Object.freeze({
+  "label": labelAttribute,
+  "required": requiredAttribute,
+  "disabled": (element: AppImageInput, value: AttributeValue): void => disabledAttribute(element, value),
+  "max-filesize": maxFilesizeAttribute,
+  "min-filesize": minFilesizeAttribute,
+  "image-title": imageTitleAttribute,
+  "multiple": multipleAttribute
+});
 
 export function maxFilesizeAttribute(_element: AppImageInput, _value: AttributeValue): void
 {
@@ -12,7 +23,7 @@ export function minFilesizeAttribute(_element: AppImageInput, _value: AttributeV
 
 export function imageTitleAttribute(element: AppImageInput, value: AttributeValue): void
 {
-  element["elements"].image.title = value ?? "";
+  element["elements"].images.title = value ?? "";
 }
 
 export function requiredAttribute(element: AppImageInput, value: AttributeValue): void
@@ -23,13 +34,8 @@ export function requiredAttribute(element: AppImageInput, value: AttributeValue)
 
 export function multipleAttribute(element: AppImageInput, value: AttributeValue): void
 {
-  const multiple = value == "";
-  element["elements"].input.multiple = multiple;
-
-  const {clearImage} = element["elements"];
-  clearImage.innerText = multiple
-      ? element.texts.get("clearImage")
-      : element.texts.get("clearImages");
+  element["elements"].input.multiple = value == "";
+  element["elements"].carousel.hidden = value != "";
 }
 
 export function disabledAttribute(element: AppImageInput, value: AttributeValue): void
@@ -59,5 +65,4 @@ export function labelAttribute(element: AppImageInput, value: AttributeValue): v
     value = ""
   }
   element["elements"].label.innerText = value;
-  element["elements"].image.alt = value;
 }

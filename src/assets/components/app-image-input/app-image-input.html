@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="label-container">
+    <label for="input"></label>
+  </div>
+  <input id="input" type="file" accept=".jpg,.jpeg,.png" hidden part="input">
+  <div class="images-container">
+    <div class="file-name">
+      <span class="center-align image-icon"></span>
+      <span id="file-name" class="center-align">Filename</span>
+    </div>
+    <div id="images" tabindex="0" title="Upload images">
+    </div>
+    <!--TODO: Skip list anchor-->
+    <div class="row carousel-container">
+      <div class="row center">
+        <div id="uploaded-images-carousel" data-index="0" hidden></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <app-button id="remove-image" disabled>Remove image</app-button>
+  </div>
+</div>

@@ -3,7 +3,7 @@ import {Translation} from "../translations/translation";
 import type {AppInput, InputTag} from "assets/components/inputs/app-input/app-input";
 import {Observer} from "../observer";
 import type {AppNumberInput, NumberInputTag} from "../components/inputs/app-number-input/app-number-input";
-import type {AppImageInput, ImageInputTag} from "../components/inputs/app-image-input/app-image-input";
+import type {AppImageInput, ImageInputTag} from "../components/app-image-input/app-image-input";
 import type {AppTextArea, TextAreaTag} from "../components/inputs/app-textarea/app-textarea";
 import type {AppAutocomplete, AutocompleteTag} from "../components/autocompletes/app-autocomplete/app-autocomplete";
 import type {
@@ -138,8 +138,9 @@ export async function setImageInputTexts(elements: NodeListOf<AppImageInput> | A
     inputMaxValidation: translation.imageInputMaxSizesValidation,
     pleaseFillOutThisInput: translation.pleaseFillOutThisInput,
     unsupportedImageType: translation.unsupportedImageType,
-    clearImage: translation.clearImage,
-    clearImages: translation.clearImages,
+    removeImage: translation.removeImage,
+    uploadImages: translation.uploadImages,
+    filename: translation.filename
   });
 }
 

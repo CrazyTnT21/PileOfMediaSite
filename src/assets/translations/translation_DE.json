@@ -62,8 +62,7 @@
   "inputMaxValidation": "Eingabe erfordert Dateien, die höchstens nur {max} kB groß sind. Derzeitige größen: [{fileSizes}]",
   "valueMissing": "Kein Wert angegeben",
   "unsupportedImageType": "Nicht unterstützter Bildtyp",
-  "clearImage": "Bild entfernen",
-  "clearImages": "Bilder entfernen",
+  "removeImage": "Bild entfernen",
   "autocompleteItemNotFound": "Wert '{value}' wurde nicht gefunden",
   "autocompleteItemAlreadySelected": "'{value}' wurde bereits ausgewählt",
   "language": "Sprache",
@@ -93,5 +92,8 @@
   "favoritePlural": "Favoriten",
   "forgotPassword": "Passwort vergessen?",
   "noAccount": "Noch keinen Account?",
-  "pleaseFillOutThisInput": "Bitte diese Eingabe ausfüllen"
+  "pleaseFillOutThisInput": "Bitte diese Eingabe ausfüllen",
+  "uploadImage": "Bild hochladen",
+  "uploadImages": "Bilder hochladen",
+  "filename": "Dateiname"
 }

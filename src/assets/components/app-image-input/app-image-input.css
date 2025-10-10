@@ -1,0 +1,279 @@
+@import "../../css/icon.css";
+
+:host {
+  --brightness-change--: 20;
+  --image-input-background-color--: var(--image-input-background-color, white);
+  --image-input-background-color-disabled--: hsl(from var(--image-input-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) / 2));
+
+  --image-input-color--: var(--image-input-color, black);
+  --image-input-color-disabled--: hsl(from var(--image-input-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+
+  --image-input-border-color--: var(--image-input-border-color, #969696);
+
+  --image-input-border-color-hover--: hsl(from var(--image-input-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+  --image-input-border-color-disabled--: hsl(from var(--image-input-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+
+  --image-input-label-color--: var(--image-input-label-color, #737373);
+  --image-input-label-color-disabled--: hsl(from var(--image-input-label-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * -.5));
+
+  --image-input-invalid-color--: var(--image-input-invalid-color, #dc0000);
+  --image-input-invalid-color-hover--: hsl(from var(--image-input-invalid-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+
+  --image-input-outline-color--: var(--image-input-outline-color, Highlight);
+  --image-input-padding--: var(--image-input-padding, .3rem);
+
+  --image-input-background-color-hover--: hsl(from var(--image-input-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
+  --din-4--: 1 / 1.41421;
+  --image-aspect-ratio--: var(--image-aspect-ratio, var(--din-4--));
+  --image-border-radius--: var(--image-border-radius, .3rem);
+}
+
+:host {
+  display: flex;
+  flex: 1;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+:host([required]) {
+  label::after {
+    content: " (" attr(data-text-required) ")";
+    color: var(--image-input-invalid-color--);
+  }
+}
+
+:host(:state(interacted-invalid)) {
+  .container {
+    border-color: var(--image-input-invalid-color--)
+  }
+
+  .container:hover {
+    border-color: var(--image-input-invalid-color-hover--);
+  }
+}
+
+:host([disabled]) > img {
+  background-color: var(--image-input-background-color-disabled--)
+}
+
+:host([disabled]) {
+  label {
+    background: linear-gradient(180deg, transparent 0 0.04rem, var(--image-input-background-color-disabled--) 0.6rem 0.9rem, transparent 0.9rem 100%);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#images::before {
+  font-family: "Material Symbols Outlined", serif;
+  line-height: 1;
+  text-transform: none;
+  display: inline-flex;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
+  content: "add_a_photo";
+  font-size: 6rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+#images {
+  display: flex;
+  flex: 1 1 100%;
+
+  width: 100%;
+  max-height: 100%;
+
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  cursor: pointer;
+
+  border-radius: var(--image-border-radius--);
+  aspect-ratio: var(--image-aspect-ratio--);
+
+  outline: none;
+
+  img {
+    flex: 1;
+
+    scroll-snap-align: start;
+
+    max-width: 100%;
+
+    border-radius: var(--image-border-radius--);
+    aspect-ratio: var(--image-aspect-ratio--);
+
+    background-color: var(--image-input-background-color--);
+  }
+
+  &:has(img) {
+    &#images::before {
+      display: none;
+    }
+  }
+}
+
+img {
+  object-fit: contain;
+}
+
+#uploaded-images-carousel {
+  padding: 6px;
+
+  img {
+    display: inline-flex;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: var(--image-aspect-ratio--);
+    border: 1px solid var(--image-input-border-color--);
+  }
+}
+
+.label-container {
+  display: flex;
+  width: 100%;
+  position: absolute;
+}
+
+label {
+  color: var(--image-input-label-color--);
+  background: linear-gradient(180deg, transparent 0 0.04rem, var(--image-input-background-color--) 0.6rem 0.9rem, transparent 0.9rem 100%);
+  border-radius: 16px;
+  font-size: 1.1rem;
+  text-wrap: nowrap;
+  margin-top: -1.2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 6px;
+  margin: 3px;
+  flex: 1;
+  box-sizing: border-box;
+  max-width: 100%;
+  gap: 6px;
+  position: relative;
+  border: 1px solid var(--image-input-border-color--);
+  background-color: var(--image-input-background-color--);
+  border-radius: .3rem;
+
+  &:hover, &:focus {
+    border-color: var(--image-input-border-color-hover--);
+  }
+
+  &:has(#images:focus) {
+    outline: var(--image-input-outline-color--) 3px solid;
+  }
+}
+
+input:not(input:focus)::placeholder {
+  color: transparent;
+}
+
+img:focus-visible {
+  outline: var(--image-input-outline-color--) 3px solid;
+}
+
+#uploaded-images-carousel {
+  display: flex;
+  gap: 9px;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  max-width: 80%;
+
+  min-height: 3rem;
+
+  > app-button {
+    --button-background-color: transparent;
+
+    &::part(button) {
+      padding: 0;
+    }
+  }
+
+  > app-button > img {
+    border-radius: var(--image-border-radius--);
+    background-color: hsl(from var(--image-input-background-color--) h s l / 0.1);
+    height: 3rem;
+    max-width: 3rem;
+  }
+
+  [data-selected] img {
+    outline: hsl(from var(--image-input-outline-color--) h s l / 0.6) 3px solid;
+  }
+
+  img {
+    display: flex;
+  }
+}
+
+[hidden] {
+  display: none;
+  visibility: collapse;
+  width: 0;
+  height: 0;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.carousel-container {
+  display: flex;
+  position: absolute;
+  align-self: flex-end;
+  flex-wrap: wrap;
+
+  margin-bottom: 10px;
+}
+
+#remove-Image {
+  display: flex;
+  justify-self: end;
+}
+
+.center-align {
+  display: flex;
+  align-items: center;
+}
+
+.images-container {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  overflow: hidden;
+  position: relative;
+}
+
+.file-name {
+  display: flex;
+  flex-wrap: nowrap;
+  border-radius: 6px;
+  overflow: hidden;
+  position: absolute;
+  background-color: hsl(from var(--image-input-background-color--) h s l / 0.6);
+  text-wrap: nowrap;
+}
+
+.image-icon::before {
+  content: "image";
+}
