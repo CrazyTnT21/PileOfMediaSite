@@ -50,16 +50,16 @@ export function handleFieldset(item: Node, setParentFieldset: (fieldSet: HTMLFie
 
 }
 
-export function formData<T>(...values: { [Key in keyof T]: "serialize" | "binary" }[])
+export function formData<T>(values: { [Key in keyof T]: "serialize" | "binary" })
 {
   return (body: T): FormData =>
   {
     const formData = new FormData();
+    const keys = unsafeObjectKeys(values);
 
-    for (const value of values)
+    for (const key of keys)
     {
-      const key = indexArray(unsafeObjectKeys(value), 0).unwrap();
-      const type = value[key];
+      const type = values[key];
 
       if (body[key] == null)
         continue;

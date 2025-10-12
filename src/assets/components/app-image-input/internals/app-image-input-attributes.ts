@@ -42,8 +42,9 @@ export function disabledAttribute(element: AppImageInput, value: AttributeValue)
 {
   const internals = element["internals"];
   const disabled = element.isDisabledByFieldSet || value == "";
-  const input = element["elements"].input;
+  const {input, removeImage} = element["elements"];
   input.disabled = disabled;
+  removeImage.disabled = disabled;
 
   if (disabled)
   {

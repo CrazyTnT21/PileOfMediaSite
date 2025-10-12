@@ -19,6 +19,9 @@
     <h1 class="col-12 center" data-translate="signup">Sign up</h1>
     <fieldset id="input-fieldset" class="login-border">
       <div class="col-12 center pad">
+        <app-image-input id="profile" class="profile-upload col-6" label="Profile" data-translate-attributes="label;profile"></app-image-input>
+      </div>
+      <div class="col-12 center pad">
         <app-input id="username"
                    label="Username"
                    data-translate-attributes="label;username"
@@ -47,6 +50,7 @@
 <script src="/assets/scripts/translate.ts" type="module" async></script>
 <script src="/assets/scripts/signup/signup.ts" type="module" async></script>
 <script src="/assets/scripts/translate.ts" type="module" async></script>
+<script src="/assets/components/app-image-input/app-image-input.ts" type="module" async></script>
 <script src="/assets/components/app-header/app-header.ts" type="module" async></script>
 <script src="/assets/components/app-button/app-button.ts" type="module" async></script>
 <script src="/assets/components/app-footer.ts" type="module" async></script>

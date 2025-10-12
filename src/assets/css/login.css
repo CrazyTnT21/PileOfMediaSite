@@ -14,3 +14,13 @@
   margin: 0;
   padding: 6px;
 }
+
+.profile-upload {
+  --image-aspect-ratio--: 1;
+  --image-border-radius--: 100%;
+}
+
+.login-button {
+  --button-background-color: var(--app-positive);
+  --button-color: var(--app-positive-text);
+}

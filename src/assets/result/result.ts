@@ -60,7 +60,7 @@ export class Ok<T, E>
   /**
    * Returns the contained Ok value or computes it from the callback
    */
-  public unwrapOrElse<E>(_fn: (x: E) => T): T
+  public unwrapOrElse(_fn: (x: E) => T): T
   {
     return this.internalOk;
   }

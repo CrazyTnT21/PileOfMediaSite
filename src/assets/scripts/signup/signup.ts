@@ -1,11 +1,13 @@
 import {AppInput} from "../../components/inputs/app-input/app-input";
 import {AppPasswordInput} from "../../components/inputs/app-password-input/app-password-input";
 import {AppHeader} from "../../components/app-header/app-header";
-import {formData} from "../../components/inputs/common";
+import {formData, indexArray} from "../../components/inputs/common";
 import {apiClient} from "../../openapi/client";
 import {mapSelectors} from "../../dom";
 import {AppEmailInput} from "../../components/inputs/app-email-input/app-email-input";
 import {AppButton} from "../../components/app-button/app-button";
+import {AppImageInput} from "../../components/app-image-input/app-image-input";
+import {CreateAccount} from "../../openapi/create-account";
 
 type Elements = {
   username: AppInput
@@ -16,7 +18,8 @@ type Elements = {
   header: AppHeader,
   successfulSignup: HTMLDivElement,
   returnLink: HTMLAnchorElement,
-  signupSubmit: AppButton
+  signupSubmit: AppButton,
+  profile: AppImageInput
 }
 const elementSelectors = {
   username: "#username",
@@ -27,7 +30,8 @@ const elementSelectors = {
   header: "app-header",
   successfulSignup: "#successful-signup",
   returnLink: "#return-link",
-  signupSubmit: "#signup-submit"
+  signupSubmit: "#signup-submit",
+  profile: "#profile"
 }
 const elements = mapSelectors<Elements>(document, elementSelectors);
 
@@ -39,17 +43,24 @@ elements.form.addEventListener("submit", async e =>
   const {fieldset, username, email, password, signupSubmit} = elements;
 
   signupSubmit.disabled = true;
-  const response = await apiClient.POST("/accounts/register", {
-    body: {
-      account: {
-        email: email.value,
-        password: password.value,
-        user: {
-          name: username.value
-        }
+  const profile_file = indexArray(elements.profile.files, 0)
+      .map(x => x.file);
+
+  const requestBody: CreateAccount = {
+    account: {
+      email: email.value,
+      password: password.value,
+      user: {
+        name: username.value
       }
-    },
-    bodySerializer: formData({account: "serialize"})
+    }
+  };
+  if (profile_file.is_ok)
+    requestBody["profile_picture"] = profile_file.ok;
+
+  const response = await apiClient.POST("/accounts/register", {
+    body: requestBody,
+    bodySerializer: formData<CreateAccount>({account: "serialize", profile_picture: "binary"})
   });
 
   signupSubmit.disabled = false;
@@ -60,6 +71,11 @@ elements.form.addEventListener("submit", async e =>
     if (errorMessage == "" || isServerError(response.response))
       errorMessage = response.error || "Fetch error"; //TODO translation/alternative message
     email.setCustomValidity("customError", errorMessage);
+  }
+
+  if (response.error == undefined && response.response.status == 500)
+  {
+    email.setCustomValidity("customError", response.response.statusText);
   }
 
   //TODO username and email error
