@@ -3,7 +3,7 @@ import htmlPlugin from "./plugins/html-plugin.js";
 import {absolutePathPlugin} from "./plugins/absolute-path-plugin.js";
 import inlinePlugin from "./plugins/inline-plugin.js";
 import path from "node:path";
-import * as glob from "glob"
+import fs from "node:fs";
 
 export const SRC_DIR = path.join(path.resolve("."), "src");
 
@@ -11,7 +11,10 @@ export function createBuildSettings(options)
 {
   // noinspection SpellCheckingInspection
   return {
-    entryPoints: glob.sync("src/**/*", {nodir: true}),
+    entryPoints: fs.readdirSync("src", {
+      recursive: true,
+      withFileTypes: true
+    }).filter((x) => x.isFile()).map((x) => path.join(x.parentPath, x.name)),
     outdir: "dist",
     bundle: true,
     splitting: true,

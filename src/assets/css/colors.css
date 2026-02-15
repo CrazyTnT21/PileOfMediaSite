@@ -112,7 +112,7 @@
     --app-outline: highlight;
     --app-visited: #c76fff;
     --app-link: #4182e6;
-    --app-negative: #ff3434;
+    --app-negative: #c80f0f;
     --app-positive: #16aa15;
     --app-negative-text: hsl(0 0% 96%);
     --app-positive-text: hsl(0 0% 96%);
@@ -171,7 +171,7 @@
   --app-outline: highlight;
   --app-visited: #c76fff;
   --app-link: #4182e6;
-  --app-negative: #ff3434;
+  --app-negative: #c80f0f;
   --app-positive: #16aa15;
   --app-negative-text: hsl(0 0% 96%);
   --app-positive-text: hsl(0 0% 96%);

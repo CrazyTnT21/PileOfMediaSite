@@ -4,7 +4,6 @@ import * as fs from "node:fs";
 import * as http from "node:http";
 import * as path from "node:path";
 import httpProxy from "http-proxy";
-import * as glob from "glob";
 
 // noinspection SpellCheckingInspection
 const settings = createBuildSettings({
@@ -25,7 +24,10 @@ const result = fs.promises.watch(settings.outdir, {recursive: true});
     {
       if (!x.filename.endsWith("~"))
       {
-        settings.entryPoints = glob.sync("src/**/*", {nodir: true});
+        settings.entryPoints = (await fs.promises.readdir("src", {
+          recursive: true,
+          withFileTypes: true
+        })).filter(x => x.isFile()).map(x => path.join(x.parentPath, x.name));
         ctx = await esbuild.context(settings);
       }
       buildFiles = await ctx.rebuild().then(x => x.outputFiles);
@@ -135,9 +137,9 @@ function processRequest(request, src)
     return getFile(filePath) ?? {statusCode: 404, data: null, headers: {}};
   }
   return getFile(filePath.replace(/\/$/, "") + ".html") ??
-      getFile(path.join(filePath, "index.html")) ??
-      getFile(filePath) ??
-      getFile(path.join(src, "404.html"))
+    getFile(path.join(filePath, "index.html")) ??
+    getFile(filePath) ??
+    getFile(path.join(src, "404.html"))
 }
 
 function last(items)
