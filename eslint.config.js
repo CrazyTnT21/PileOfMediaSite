@@ -2,7 +2,7 @@ import eslint from '@eslint/js';
 import tslint from 'typescript-eslint';
 import globals from "globals";
 import html from "@html-eslint/eslint-plugin";
-import translation_en from './src/assets/translations/translation_EN.json' with {type: "json"};
+import translation_en from './src/assets/i18n/translations/en.json' with {type: "json"};
 
 const translationKeys = Object.keys(translation_en);
 const ignores = ["./dist/", "./node_modules/"];

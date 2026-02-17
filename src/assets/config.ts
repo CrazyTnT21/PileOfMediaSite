@@ -1,6 +1,4 @@
-import {Translation} from "./translations/translation";
-import {get} from "./scripts/http";
-import {type LanguageCode, LanguageCodes} from "./language";
+import {type LanguageCode, LanguageCodes} from "./i18n/language";
 import {indexArray, NonEmptyArray} from "./components/inputs/common";
 
 export class Config
@@ -23,43 +21,7 @@ export class Config
     return new Config();
   })();
 
-  public static preferredLanguages: NonEmptyArray<LanguageCode> = [LanguageCodes.EN];
-
-  private static readonly translations = new Map();
-
-  public static async translation(): Promise<Translation>
-  {
-    for (const x of Config.preferredLanguages)
-    {
-      const languageCode = x;
-      if (Config.translations.has(languageCode))
-        return Config.translations.get(languageCode);
-
-      try
-      {
-        const result: Translation | undefined = await get(getTranslationUri(languageCode));
-        if (result)
-        {
-          Config.translations.set(languageCode, result);
-          return result;
-        }
-      }
-      catch (e)
-      {
-        console.error(`Error while processing the translation for language '${languageCode}'`, e);
-      }
-    }
-
-    if (!Config.translations.has(LanguageCodes.EN))
-      Config.translations.set(LanguageCodes.EN, await get(getTranslationUri(LanguageCodes.EN)))
-
-    return Config.translations.get(LanguageCodes.EN);
-  }
-}
-
-function getTranslationUri(code: LanguageCode): `/assets/translations/translation_${LanguageCode}.json`
-{
-  return `/assets/translations/translation_${code}.json`;
+  public static preferredLanguages: NonEmptyArray<LanguageCode> = [navigator.language.split("-")[0]?.toUpperCase() as LanguageCode ?? LanguageCodes.EN];
 }
 
 export function logError(error: Error): void

@@ -1,5 +1,5 @@
 import {Config} from "../config";
-import {Translation} from "../translations/translation";
+import {Translation} from "../i18n/translation";
 import type {AppInput, InputTag} from "assets/components/inputs/app-input/app-input";
 import {Observer} from "../observer";
 import type {AppNumberInput, NumberInputTag} from "../components/inputs/app-number-input/app-number-input";
@@ -14,14 +14,14 @@ import type {AppHeader, HeaderTag} from "../components/app-header/app-header";
 import type {AppSearchInput, SearchInputTag} from "../components/inputs/app-search-input/app-search-input";
 import type {AppEmailInput, EmailInputTag} from "../components/inputs/app-email-input/app-email-input";
 import type {AppPasswordInput, PasswordInputTag} from "../components/inputs/app-password-input/app-password-input";
-import {LanguageCodes} from "../language";
+import {LanguageCodes} from "../i18n/language";
 
 async function main(): Promise<void>
 {
   const elements = <NodeListOf<HTMLElement>>document.querySelectorAll("[data-translate]");
   const language = Config.preferredLanguages[0];
   document.querySelector("html")!.lang = LanguageCodes[language].toLowerCase();
-  const translation = await Config.translation();
+  const translation: Translation = await getPreferredTranslation();
   for (const element of elements)
   {
     const translated = element.getAttribute("data-translate")!;
@@ -32,18 +32,18 @@ async function main(): Promise<void>
   }
   document.querySelectorAll<HTMLElement>("[data-translate-attributes]").forEach(x => setTranslationAttribute(x, translation, language));
   await Promise.all(
-      [
-        setInputTexts(document.querySelectorAll("app-input"), translation),
-        setNumberInputTexts(document.querySelectorAll("app-number-input"), translation),
-        setEmailInputTexts(document.querySelectorAll("app-email-input"), translation),
-        setSearchInputText(document.querySelectorAll("app-search-input"), translation),
-        setPasswordInputText(document.querySelectorAll("app-password-input"), translation),
-        setImageInputTexts(document.querySelectorAll("app-image-input"), translation),
-        setTextareaTexts(document.querySelectorAll("app-textarea"), translation),
-        setAutocompleteTexts(document.querySelectorAll("app-autocomplete"), translation),
-        setLanguageAutocompleteTexts(document.querySelectorAll("app-language-autocomplete"), translation),
-        setHeaderTexts(document.querySelectorAll("app-header"), translation)
-      ]
+    [
+      setInputTexts(document.querySelectorAll("app-input"), translation),
+      setNumberInputTexts(document.querySelectorAll("app-number-input"), translation),
+      setEmailInputTexts(document.querySelectorAll("app-email-input"), translation),
+      setSearchInputText(document.querySelectorAll("app-search-input"), translation),
+      setPasswordInputText(document.querySelectorAll("app-password-input"), translation),
+      setImageInputTexts(document.querySelectorAll("app-image-input"), translation),
+      setTextareaTexts(document.querySelectorAll("app-textarea"), translation),
+      setAutocompleteTexts(document.querySelectorAll("app-autocomplete"), translation),
+      setLanguageAutocompleteTexts(document.querySelectorAll("app-language-autocomplete"), translation),
+      setHeaderTexts(document.querySelectorAll("app-header"), translation)
+    ]
   )
 }
 
@@ -234,8 +234,8 @@ export async function setInputTexts(elements: NodeListOf<AppInput> | AppInput[],
 }
 
 function setFromObject<T extends { texts: Observer<any> }>(
-    elements: Iterable<T>,
-    object: { [key in keyof ReturnType<T["texts"]["object"]>]: string | null | undefined }
+  elements: Iterable<T>,
+  object: { [key in keyof ReturnType<T["texts"]["object"]>]: string | null | undefined }
 ): void
 {
   const keys = Object.keys(object);
@@ -250,6 +250,24 @@ function setFromObject<T extends { texts: Observer<any> }>(
       element.texts.set(key, value)
     }
   }
+}
+
+async function getPreferredTranslation(): Promise<Translation>
+{
+  for (const languageCode of Config.preferredLanguages)
+  {
+    const localeId = LanguageCodes[languageCode].toLowerCase();
+    const response = await fetch(`/assets/i18n/translations/${localeId}.json`);
+
+    if (response.status >= 500 && response.status < 600)
+      throw new Error(response.statusText, {cause: response});
+
+    if (response.status == 404)
+      continue;
+
+    return await response.json();
+  }
+  return await (await fetch(`/assets/i18n/translations/en.json`)).json();
 }
 
 await main();

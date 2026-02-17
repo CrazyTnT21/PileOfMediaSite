@@ -1,5 +1,5 @@
 import {IncludesString} from "../components/inputs/common";
-import type * as translation from "../translations/translation_EN.json"
+import type * as translation from "./translations/en.json"
 
 export type Translation = Partial<typeof translation & {
   bookTitleTemplate: IncludesString<"{title}">;

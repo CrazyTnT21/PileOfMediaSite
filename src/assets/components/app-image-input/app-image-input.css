@@ -160,7 +160,7 @@ label {
   display: flex;
   flex-wrap: wrap;
   padding: 6px;
-  margin: 3px;
+  margin: .6rem 3px .3rem;
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;
@@ -271,7 +271,6 @@ img:focus-visible {
   overflow: hidden;
   position: absolute;
   background-color: hsl(from var(--image-input-background-color--) h s l / 0.6);
-  text-wrap: nowrap;
 }
 
 .image-icon::before {
