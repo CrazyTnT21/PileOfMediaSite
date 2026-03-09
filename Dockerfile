@@ -11,14 +11,13 @@ COPY build/package*.json ./build/
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN node locations.js
 RUN npm run build
 
 FROM nginx:alpine
-RUN mkdir -p /usr/share/nginx/pileofmedia/html && mkdir /usr/share/nginx/pileofmedia/content
-COPY --from=0 /app/dist /usr/share/nginx/pileofmedia/html
+RUN mkdir -p /usr/share/nginx/html && mkdir /usr/share/nginx/content
+COPY --from=0 /app/dist /usr/share/nginx/html
 COPY --from=0 /app/nginx.key /app/password.txt /app/nginx.pem /etc/nginx/
-COPY --from=0 /app/locations.nginx.conf /etc/nginx/
+RUN mv /usr/share/nginx/html/locations.nginx.conf /etc/nginx/
 COPY nginx.conf /etc/nginx/
 
 EXPOSE 80

@@ -5,7 +5,7 @@
   "scripts": {
     "test": "npx jest --passWithNoTests",
     "start": "node build/src/serve",
-    "build": "node build/src/build",
+    "build": "node build/src/build && node locations.js",
     "lint": "npx eslint"
   },
   "repository": {

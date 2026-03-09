@@ -10,4 +10,4 @@ location ~ ${routes[key]} {
    try_files ${key} = /404.html;
 }`)
 }
-await fs.writeFile("locations.nginx.conf", result.join(""))
+await fs.writeFile("dist/locations.nginx.conf", result.join(""))

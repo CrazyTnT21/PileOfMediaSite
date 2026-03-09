@@ -11,10 +11,9 @@
   --button-background-color-disabled--: hsl(from var(--button-background-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * 2));
   --button-color-disabled--: hsl(from var(--button-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--) * 2));
 }
-
 :host {
   display: inline-flex;
-  border-radius: .3rem;
+  margin: 3px;
 }
 
 * {
