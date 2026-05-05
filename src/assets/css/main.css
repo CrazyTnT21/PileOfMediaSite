@@ -153,3 +153,7 @@ p {
 .round {
   border-radius: 6px;
 }
+main {
+  margin-left: 3%;
+  margin-right: 3%;
+}

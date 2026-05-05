@@ -31,7 +31,7 @@ export function logError(error: Error): void
 
 export function acceptLanguageHeader(): { "Accept-Language": string }
 {
-  return {"Accept-Language": Config.preferredLanguages.join(",")}
+  return {"Accept-Language": Config.preferredLanguages.map(x => x.toLowerCase()).join(",")}
 }
 
 export type TranslationItem = {

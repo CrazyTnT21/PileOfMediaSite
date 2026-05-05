@@ -252,7 +252,7 @@ function setFromObject<T extends { texts: Observer<any> }>(
   }
 }
 
-async function getPreferredTranslation(): Promise<Translation>
+export async function getPreferredTranslation(): Promise<Translation>
 {
   for (const languageCode of Config.preferredLanguages)
   {

@@ -8,6 +8,18 @@
   content: "book_2";
 }
 
+*:hover, *:focus {
+  > .book-icon,
+  > .graphic-novel-icon,
+  > .show-icon,
+  > .game-icon,
+  > .movie-icon {
+    &::before {
+      font-variation-settings: 'FILL' 1;
+    }
+  }
+}
+
 .graphic-novel-icon::before {
   content: "menu_book";
 }

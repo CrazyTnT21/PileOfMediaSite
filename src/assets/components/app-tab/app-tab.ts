@@ -3,11 +3,23 @@ import css from "./app-tab.css" with {type: "inline"};
 import {applyStyleSheet, attach} from "../defaults";
 import {mapSelectors} from "../../dom";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
+import {indexArray} from "../inputs/common";
 
 export type AppTabElements = {
   container: HTMLDivElement,
 };
 
+/**
+ * @example
+ * <app-tab>
+ *   <div slot="Slotname A">
+ *     First tab
+ *   </div>
+ *   <div slot="Slotname B">
+ *     Second tab
+ *   </div>
+ * </app-tab>
+ */
 export class AppTab extends HTMLElement
 {
   private readonly internals: ElementInternals;
@@ -44,6 +56,7 @@ export class AppTab extends HTMLElement
     {
       this.createChild(child);
     }
+    indexArray(this.elements.container.children, 0).map(x => x.setAttribute("open", ""));
   }
 
   private createChild(slotContent: Element): void

@@ -49,7 +49,7 @@ export class Ok<T, E>
   }
 
   /**
-   * Computes a new ok value from the callback if this is an {@link Ok} variant and returns it.
+   * Computes a new result value from the callback on an {@link Ok} variant and returns it.
    * Otherwise, returns the {@link Err} variant.
    */
   public andThen<T1>(fn: (x: T) => Result<T1, E>): Result<T1, E>
@@ -66,7 +66,7 @@ export class Ok<T, E>
   }
 
   /**
-   * Computes a new ok value from the callback if this is an {@link Ok} variant and returns it as a new result.
+   * Computes a new ok value from the callback on an {@link Ok} variant and returns it as a new result.
    * Otherwise, returns the {@link Err} variant.
    */
   public map<T1>(fn: (x: T) => T1): Result<T1, E>
@@ -75,7 +75,7 @@ export class Ok<T, E>
   }
 
   /**
-   * Computes a new err value from the callback if this is an {@link Err} variant and returns it as a new result.
+   * Computes a new err value from the callback on an {@link Err} variant and returns it as a new result.
    * Otherwise, returns the {@link Ok} variant.
    */
   public map_err<E1>(_fn: (x: E) => E1): Result<T, E1>
