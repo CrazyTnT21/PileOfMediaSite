@@ -130,7 +130,8 @@ function writeResponse(response, file)
 
 function processRequest(request, src)
 {
-  const filePath = path.join(src, request.url).split("?")[0];
+  let filePath = path.join(src, request.url).split("?")[0];
+  filePath = decodeURI(filePath);
 
   if (!request.headers.accept?.includes("text/html"))
   {

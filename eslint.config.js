@@ -5,6 +5,7 @@ import html from "@html-eslint/eslint-plugin";
 import translation_en from './src/assets/i18n/translations/en.json' with {type: "json"};
 
 const translationKeys = Object.keys(translation_en);
+
 const ignores = ["./dist/", "./node_modules/"];
 const config = tslint.config(
     {...eslint.configs.recommended, files: ['**/*.{ts,tsx}']},
@@ -86,7 +87,7 @@ const config = tslint.config(
           "error",
           {
             attrPatterns: ["^data-translate$"],
-            attrValuePatterns: [`^(?!${translationKeys.join("|")})`],
+            attrValuePatterns: [`^(?!${translationKeys.map(x => `^${x}$`).join("|")})`],
             message: "Translation key doesn't exist",
           }
         ],
