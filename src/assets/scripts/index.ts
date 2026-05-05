@@ -3,7 +3,7 @@ import {Config, getTranslatedField, logError} from "../config";
 import {AppCard} from "../components/app-card/app-card";
 import {collect_ok, Err, Ok, Result} from "../result/result";
 import {apiClient} from "../openapi/client";
-import {queryParam} from "../components/inputs/common";
+import {last, queryParam} from "../components/inputs/common";
 
 function createBookCard(x: components["schemas"]["Book"]): AppCard
 {
@@ -11,7 +11,25 @@ function createBookCard(x: components["schemas"]["Book"]): AppCard
   const {translation} = getTranslatedField(x);
 
   const card = new AppCard();
-  card.srcset = translation.cover.versions.map(x => `${x.uri} ${x.width}w`).join(",");
+  const images = translation.cover.versions.toSorted((x, y) => x.width + x.height - (y.width + y.height))
+
+  card.srcset = images.map(image =>
+  {
+    return {
+      imageUri: image.uri,
+      descriptor: {width: image.width}
+    }
+  });
+  card.sizes = [...images.slice(0, -1).map(image =>
+  {
+    return {
+      mediaCondition: `width >= ${image.width}px`,
+      sourceSizeValue: `${image.width}px`
+    }
+  }),
+    {
+      sourceSizeValue: `${last(images).unwrap().width}px`
+    }]
   card.itemTitle = translation.title;
   card.coverAlt = `${translation.title}`
   card.href = `/books/${x.slug}`;

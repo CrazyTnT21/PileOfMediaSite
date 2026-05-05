@@ -92,10 +92,10 @@ export function templateString<T extends string>(text: string): T
 
 type TemplateValue = string | number | bigint | boolean | null | undefined;
 export type IncludesString<T> = T extends TemplateValue[]
-    ? `${string}${TemplateValue}${string}`
-    : T extends TemplateValue
-        ? `${string}${T}${string}`
-        : never;
+  ? `${string}${TemplateValue}${string}`
+  : T extends TemplateValue
+    ? `${string}${T}${string}`
+    : never;
 
 export function setOrRemoveAttribute(element: HTMLElement, attribute: string, value: string | null | undefined): void
 {
@@ -153,12 +153,22 @@ export function setOrDeleteState(states: CustomStateSet, key: string, value: boo
   states.delete(key)
 }
 
-export function indexArray<Index extends number, T>(array: ArrayLike<T>, index: Index): Result<T, {
+export type OutOfBoundsIndexError<T, Index> = {
   outOfBounds: Index,
-  length: number
-}>
+  length: number,
+  sourceArray: ArrayLike<T>
+};
+
+export function indexArray<Index extends number, T>(array: ArrayLike<T>, index: Index): Result<T, OutOfBoundsIndexError<T, Index>>
 {
   if (index < 0 || index >= array.length)
-    return new Err({outOfBounds: index, length: array.length});
+    return new Err({outOfBounds: index, length: array.length, sourceArray: array});
   return new Ok(array[index]!);
+}
+
+export function last<T>(array: ArrayLike<T>): Result<T, "EmptyArray">
+{
+  if (array.length == 0)
+    return new Err("EmptyArray");
+  return new Ok(array[array.length - 1]!);
 }

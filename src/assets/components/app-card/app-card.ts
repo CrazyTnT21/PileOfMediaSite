@@ -2,9 +2,10 @@ import {applyStyleSheet, attach} from "../defaults";
 import html from "./app-card.html" with {type: "inline"}
 import css from "./app-card.css" with {type: "inline"}
 import {mapSelectors} from "../../dom";
-import {coverAltAttribute, hrefAttribute, srcsetAttribute, itemTitleAttribute} from "./attributes";
+import {coverAltAttribute, hrefAttribute, srcsetAttribute, itemTitleAttribute, sizesAttribute} from "./attributes";
 import {mapStringAttribute} from "../inputs/map-boolean-attribute";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
+import {last} from "../inputs/common";
 
 type AttributeKey = keyof typeof AppCard["observedAttributesMap"];
 
@@ -26,6 +27,7 @@ export class AppCard extends HTMLElement
 
   protected static readonly observedAttributesMap = {
     "srcset": srcsetAttribute,
+    "sizes": sizesAttribute,
     "cover-alt": coverAltAttribute,
     "item-title": itemTitleAttribute,
     "href": hrefAttribute
@@ -37,7 +39,56 @@ export class AppCard extends HTMLElement
   public static readonly observedAttributes = unsafeObjectKeys(AppCard.observedAttributesMap);
 
   @mapStringAttribute("srcset")
-  public accessor srcset: string | null | undefined;
+  private accessor srcsetAttribute: string | null | undefined;
+
+  public set srcset(value: { imageUri: string, descriptor: { width: number } | { pixelDensity: number } }[])
+  {
+    if (value.length == 0)
+    {
+      this.sizesAttribute = null;
+      return;
+    }
+    this.srcsetAttribute = value.map(x =>
+    {
+      let descriptor;
+      if ("width" in x.descriptor)
+        descriptor = x.descriptor.width.toFixed(0) + "w";
+      else
+        descriptor = x.descriptor.pixelDensity.toPrecision(2) + "x"
+
+      return `${x.imageUri} ${descriptor}`
+    }).join(",");
+  }
+
+  @mapStringAttribute("sizes")
+  private accessor sizesAttribute: string | null | undefined;
+
+  public set sizes(sizes: [...({ mediaCondition: string, sourceSizeValue: string } | "auto")[], ({
+    sourceSizeValue: string
+  } | "auto")] | [])
+  {
+    if (sizes.length == 0)
+    {
+      this.sizesAttribute = null;
+      return;
+    }
+
+    function mapSizes(value: ({ mediaCondition?: string, sourceSizeValue: string } | "auto")): string
+    {
+      if (value == "auto")
+        return "auto"
+
+      if (value.mediaCondition == null)
+        return value.sourceSizeValue;
+
+      return `(${value.mediaCondition}): ${value.sourceSizeValue}`
+    }
+
+    this.sizesAttribute = [
+      ...sizes.slice(0, -1).map(mapSizes),
+      last(sizes).map(mapSizes).unwrap()
+    ].join(",")
+  }
 
   @mapStringAttribute("cover-alt")
   public accessor coverAlt: string | null | undefined;

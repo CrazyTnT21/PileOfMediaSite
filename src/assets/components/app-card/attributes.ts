@@ -6,6 +6,12 @@ export function srcsetAttribute(element: AppCard, value: AttributeValue): void
   const {image} = element["elements"];
   setOrRemoveAttribute(image, "srcset", value);
 }
+export function sizesAttribute(element: AppCard, value: AttributeValue): void
+{
+  const {image} = element["elements"];
+  setOrRemoveAttribute(image, "sizes", value);
+}
+
 
 export function coverAltAttribute(element: AppCard, value: AttributeValue): void
 {
