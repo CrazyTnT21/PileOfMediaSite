@@ -7,16 +7,13 @@
   --tab-border-color-hover--: hsl(from var(--tab-border-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 
   --tab-outline-color--: var(--tab-outline-color, Highlight);
+  --tab-outline-color-focus--: hsl(from var(--tab-outline-color--) h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * var(--brightness-change--)));
 }
 
 * {
   font: 1rem "Roboto", serif;
-}
-
-* {
   box-sizing: border-box;
 }
-
 
 :host {
   display: flex;
@@ -29,36 +26,54 @@
   display: flex;
   flex: 1;
   gap: 3px;
+  overflow-x: scroll;
+  flex-direction: column;
 }
 
-details {
+#header {
   display: flex;
-  flex: 1;
-  box-shadow: 0 3px solid var(--tab-border-color--);
-  flex-wrap: nowrap;
-  overflow-x: scroll;
-  margin-bottom: 6px;
-  flex-direction: column;
+  width: 100%;
 
-  > summary {
+  > label {
     display: flex;
+    flex: 1;
+    padding: 9px;
     box-shadow: 0 3px var(--tab-border-color--);
     margin-bottom: 3px;
     border-radius: 0;
-    padding: 9px;
     color: var(--tab-color--);
     justify-content: center;
+
+    > input {
+      outline: none;
+      appearance: none;
+    }
 
     &:hover {
       box-shadow: 0 3px var(--tab-border-color-hover--);
       color: var(--tab-color-hover--);
     }
+
+    &:has(:checked) {
+      box-shadow: 0 3px var(--tab-outline-color--);
+
+      &:hover {
+        box-shadow: 0 3px var(--tab-outline-color-focus--);
+      }
+    }
+
+    &:focus-within {
+      box-shadow: 0 3px var(--tab-outline-color-focus--);
+    }
+  }
+}
+
+#content {
+  > * {
+    display: none;
   }
 
-  &[open] {
-    > summary {
-      box-shadow: 0 3px var(--tab-outline-color--);
-      color: var(--tab-color-hover--);
-    }
+  [selected] {
+    display: initial;
   }
 }

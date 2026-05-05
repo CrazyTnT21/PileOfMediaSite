@@ -7,10 +7,13 @@ import {indexArray} from "../inputs/common";
 
 export type AppTabElements = {
   container: HTMLDivElement,
+  header: HTMLDivElement,
+  content: HTMLDivElement
 };
 
 /**
  * @example
+ * ```html
  * <app-tab>
  *   <div slot="Slotname A">
  *     First tab
@@ -19,6 +22,7 @@ export type AppTabElements = {
  *     Second tab
  *   </div>
  * </app-tab>
+ * ```
  */
 export class AppTab extends HTMLElement
 {
@@ -28,6 +32,8 @@ export class AppTab extends HTMLElement
   private readonly elements: AppTabElements;
   protected static readonly elementSelectors: { [key in keyof AppTab["elements"]]: string } = {
     container: "#container",
+    header: "#header",
+    content: "#content"
   }
   protected static readonly observedAttributesMap = {}
 
@@ -56,26 +62,36 @@ export class AppTab extends HTMLElement
     {
       this.createChild(child);
     }
-    indexArray(this.elements.container.children, 0).map(x => x.setAttribute("open", ""));
+    indexArray(this.elements.content.children, 0).map(x => x.setAttribute("selected", ""));
+    indexArray(this.elements.header.children, 0).map(x => indexArray(x.children,0).unwrap().setAttribute("checked", ""));
   }
 
   private createChild(slotContent: Element): void
   {
-    const detailsElement = document.createElement("details");
-    const summary = document.createElement("summary");
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+
+    input.type = "radio"
+    input.name = "input"
+
     const content = document.createElement("div");
-    const slot = document.createElement("slot");
-    detailsElement.name = "content"
+    input.addEventListener("input", () =>
+    {
+      this.elements.content.querySelector("[selected]")!.removeAttribute("selected")
+      content.setAttribute("selected", "")
+    })
 
     //TODO: Display text attribute
-    summary.innerText = slotContent.slot ?? "";
+    label.innerText = slotContent.slot ?? "";
 
+    const slot = document.createElement("slot");
     slot.name = slotContent.slot ?? "";
 
-    detailsElement.appendChild(summary);
-    detailsElement.append(content);
     content.appendChild(slot);
-    this.elements.container.append(detailsElement);
+    this.elements.content.appendChild(content);
+
+    label.appendChild(input);
+    this.elements.header.appendChild(label);
   }
 
   protected setupInternals(): ElementInternals
