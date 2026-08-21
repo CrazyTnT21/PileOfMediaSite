@@ -5,6 +5,7 @@ import {indexArray, queryParam} from "../../inputs/common";
 import {SearchEvent} from "../../inputs/app-search-input/search-event";
 import searchHTML from "../app-header-search/app-header-search-item.html" with {type: "inline"}
 import {AppHeader} from "../app-header";
+import {Temporal} from "temporal-polyfill";
 
 type SearchItem = {
   title: string,
@@ -20,7 +21,7 @@ export class AppHeaderSearch
   private readonly header: AppHeader;
   private readonly cachedSearch: Map<string, { items: SearchItem[], total: number }> = new Map();
   private currentSearch: string | undefined;
-  private previousRequestTime: Date = new Date();
+  private previousRequestTime: Temporal.Instant = Temporal.Now.instant();
 
   public constructor(header: AppHeader)
   {
@@ -44,14 +45,12 @@ export class AppHeaderSearch
     }
 
     const cooldownTimeMs = 1000;
-    const oneSecondAgo = new Date();
-    oneSecondAgo.setMilliseconds(oneSecondAgo.getMilliseconds() - cooldownTimeMs);
-    if (this.previousRequestTime.getTime() > oneSecondAgo.getTime())
+    if (Temporal.Now.instant().since(this.previousRequestTime).total({unit: "millisecond"}) < cooldownTimeMs)
     {
       setTimeout(() => this.search(this.currentSearch!), cooldownTimeMs / 4);
       return new Ok(undefined);
     }
-    this.previousRequestTime = new Date();
+    this.previousRequestTime = Temporal.Now.instant();
 
     const {ok: books, error: booksError} = await this.searchBooks(value);
     if (booksError != null)
@@ -100,9 +99,9 @@ export class AppHeaderSearch
     searchElements.innerHTML = "";
     searchDropdown.setAttribute("data-total", total.toString());
     showingResults.innerText = this.header.texts
-        .get("showingResults")
-        .replace("{count}", items.length.toString())
-        .replace("{total}", total.toString())
+      .get("showingResults")
+      .replace("{count}", items.length.toString())
+      .replace("{total}", total.toString())
     for (const item of items)
     {
       const liElement = this.addItem(item);

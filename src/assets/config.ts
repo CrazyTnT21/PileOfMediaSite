@@ -3,15 +3,17 @@ import {indexArray, NonEmptyArray} from "./components/inputs/common";
 
 export class Config
 {
-  public static dateFormatter: Intl.DateTimeFormat = ((): Intl.DateTimeFormat =>
+  public locale: Intl.Locale = ((): Intl.Locale =>
   {
-    const dateFormat = localStorage.getItem("date-format");
-    if (dateFormat)
+
+    const locale = localStorage.getItem("locale");
+    if (locale)
     {
-      return Intl.DateTimeFormat(JSON.parse(dateFormat));
+      const parsed: { tag: Intl.UnicodeBCP47LocaleIdentifier, options: Intl.LocaleOptions } = JSON.parse(locale);
+      return new Intl.Locale(parsed.tag, parsed.options);
     }
-    return new Intl.DateTimeFormat();
-  })()
+    return new Intl.Locale(navigator.language);
+  })();
 
   public static readonly config: Config = ((): Config =>
   {

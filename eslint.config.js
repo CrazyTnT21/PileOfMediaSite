@@ -36,7 +36,18 @@ const config = tslint.config(
         "@typescript-eslint/adjacent-overload-signatures": "warn",
         "@typescript-eslint/prefer-readonly": "warn",
         "@typescript-eslint/switch-exhaustiveness-check": "error",
-        "@typescript-eslint/explicit-member-accessibility": "warn"
+        "@typescript-eslint/explicit-member-accessibility": "warn",
+        "@typescript-eslint/no-restricted-types": [
+          "error",
+          {
+            "types": {
+              "Date": {
+                "message": "Use Temporal instead",
+                "suggest": ["Temporal.PlainDateTime", "Temporal.PlainDate","Temporal.Instant"],
+              },
+            },
+          },
+        ],
       }
     },
     {

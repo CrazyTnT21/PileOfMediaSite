@@ -3,6 +3,7 @@ import {Config, getTranslatedField, logError} from "../../config";
 import {Book} from "../../openapi/book";
 import {apiClient} from "../../openapi/client";
 import {indexArray} from "../../components/inputs/common";
+import {Temporal} from "temporal-polyfill";
 
 function columns(): Column<Book>[]
 {
@@ -34,7 +35,7 @@ function columns(): Column<Book>[]
       {
         if (!item.published)
           return "";
-        return Config.dateFormatter.format(new Date(item.published));
+        return Temporal.PlainDate.from(item.published).toLocaleString(Config.config.locale);
       },
     },
     {
@@ -68,7 +69,7 @@ else
     const {translation} = getTranslatedField(x);
     return {
       ...
-          x,
+        x,
       title: translation.title,
       uri: indexArray(translation.cover.versions, 0).unwrap().uri
     }

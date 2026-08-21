@@ -1,3 +1,4 @@
+import {Temporal} from "temporal-polyfill";
 import {AppInput} from "../app-input/app-input";
 
 export class AppDateInput extends AppInput
@@ -8,21 +9,20 @@ export class AppDateInput extends AppInput
     this.elements.input.type = "date";
   }
 
-  public override get value(): Date | null | undefined
+  public override get value(): Temporal.PlainDate | null | undefined
   {
     const value = this.elements.input.value;
-    let dateValue: Date | null = null;
 
     if (value)
-      dateValue = new Date(value);
+      return Temporal.PlainDate.from(value);
 
-    return dateValue;
+    return null;
   }
 
-  public override set value(value: Date | null | undefined)
+  public override set value(value: Temporal.PlainDate | null | undefined)
   {
     const {input} = this.elements;
-    input.value = value?.toISOString() ?? "";
+    input.value = value?.toString() ?? "";
   }
 
   public static override define(): void

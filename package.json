@@ -36,6 +36,7 @@
     "build": "file:./build"
   },
   "dependencies": {
+    "temporal-polyfill": "^1.0.4",
     "@material-symbols/font-300": "^0.40.2",
     "openapi-fetch": "^0.17.0",
     "pileofmedia-openapi": "^0.3.0"
