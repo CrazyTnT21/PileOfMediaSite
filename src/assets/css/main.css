@@ -103,8 +103,24 @@ app-header:not(:defined) {
   align-items: center;
 }
 
-a, ::part(a) {
+a:hover, a:focus {
+  text-decoration: underline var(--app-link) .12rem;
+}
+
+.underscore {
+  text-decoration: underline currentColor .12rem;
+
+  &:hover, &:focus {
+    text-decoration: underline var(--app-link) .12rem;
+  }
+}
+
+.no-underscore {
   text-decoration: none;
+
+  &:hover, &:focus {
+    text-decoration: none;
+  }
 }
 
 [hidden] {

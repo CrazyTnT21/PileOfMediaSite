@@ -3,7 +3,7 @@ import {handleFieldset, setOrRemoveBooleanAttribute} from "../inputs/common";
 import html from "./app-button.html" with {type: "inline"};
 import css from "./app-button.css" with {type: "inline"};
 import {mapSelectors} from "../../dom";
-import {disabledAttribute, typeAttribute} from "./attributes";
+import {disabledAttribute, popovertargetAttribute, typeAttribute} from "./attributes";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
 
 type AttributeKey = keyof typeof AppButton["observedAttributesMap"];
@@ -27,6 +27,7 @@ export class AppButton extends HTMLElement
   protected static readonly observedAttributesMap = {
     "disabled": disabledAttribute,
     "type": typeAttribute,
+    "popovertarget": popovertargetAttribute
   }
 
   /**

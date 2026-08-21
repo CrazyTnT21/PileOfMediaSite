@@ -182,22 +182,8 @@ html {
   color: var(--app-text-1);
 }
 
-a:link, a:visited {
-  color: color-mix(in srgb, var(--app-text-1), var(--app-link) 50%);
-}
-
-a:hover, a:focus {
-  > .underscore {
-    text-decoration: underline var(--app-link) .12rem;
-  }
-
-  .underscore-any {
-    text-decoration: underline var(--app-link) .12rem;
-  }
-}
-
-.underscore-text:hover, .underscore-text:focus {
-  text-decoration: underline var(--app-link) .12rem;
+a[href] {
+  color: var(--app-text-1);
 }
 
 .foreground-1 {

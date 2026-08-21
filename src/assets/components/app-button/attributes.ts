@@ -29,3 +29,16 @@ export function typeAttribute(element: AppButton, value: AttributeValue): void
   else
     button.type = "submit";
 }
+
+export function popovertargetAttribute(element: AppButton, value: AttributeValue): void
+{
+  const {button} = element["elements"];
+  if (value == null)
+  {
+    button.popoverTargetElement = null;
+    return;
+  }
+  const root = element.getRootNode() as HTMLDocument | ShadowRoot;
+  button.popoverTargetElement = root.querySelector(`#${value}`);
+}
+

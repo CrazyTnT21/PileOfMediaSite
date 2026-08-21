@@ -67,10 +67,10 @@ function loadBooks(items: Book[]): void
     const li = document.createElement("li");
     //language=HTML
     li.innerHTML = `
-      <a class="col-12 pad border bigger">
+      <a class="no-underscore col-12 pad border bigger">
         <img class="small-din-4" alt="" src="">
         <div class="col column pad-left">
-          <div class="underscore-any" data-id="title"></div>
+          <div class="underscore" data-id="title"></div>
           <div class="col-12">
             <span data-id="type">Book</span>
             <span class="rating" data-id="rating"></span>
