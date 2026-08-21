@@ -95,5 +95,6 @@
   "pleaseFillOutThisInput": "Please fill out this field",
   "uploadImage": "Upload image",
   "uploadImages": "Upload images",
-  "filename": "Filename"
+  "filename": "Filename",
+  "accessibility": "Accessibility"
 }

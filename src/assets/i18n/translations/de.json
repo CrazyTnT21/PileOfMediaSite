@@ -95,5 +95,6 @@
   "pleaseFillOutThisInput": "Bitte diese Eingabe ausfüllen",
   "uploadImage": "Bild hochladen",
   "uploadImages": "Bilder hochladen",
-  "filename": "Dateiname"
+  "filename": "Dateiname",
+  "accessibility": "Barrierefreiheit"
 }

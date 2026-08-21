@@ -5,19 +5,42 @@
   <link rel="stylesheet" href="/assets/css/colors.css">
   <link rel="stylesheet" href="/assets/css/columns.css">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="author" href="/humans.txt">
   <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
-  <title>Settings - PileOfMedia</title>
+  <title>Accessibility - User - PileOfMedia</title>
   <script src="/assets/scripts/load-color-scheme.ts"></script>
 </head>
 <body>
 <noscript>This Website <strong>requires</strong> javascript to function.</noscript>
 <app-header></app-header>
+<h1>Accessibility</h1>
+<div class="pad">
+  <h2>Color scheme</h2>
+  <ul>
+    <li>
+      <label for="default-color">
+        Default
+      </label>
+      <input id="default-color" name="color" type="radio" checked>
+    </li>
+
+    <li>
+      <label for="light-color">
+        Light
+      </label>
+      <input id="light-color" name="color" type="radio" data-color="light">
+    </li>
+    <li>
+      <label for="dark-color">
+        Dark
+      </label>
+      <input id="dark-color" name="color" type="radio" data-color="dark">
+    </li>
+  </ul>
+</div>
+<script src="/assets/scripts/users/accessibility/accessibility.ts" type="module" async></script>
+<script src="/assets/scripts/translate.ts" type="module" async></script>
 <script src="/assets/scripts/modules.ts" type="module" async></script>
 <script src="/assets/scripts/main.ts" type="module" async></script>
-<script src="/assets/scripts/translate.ts" type="module" async></script>
 <script src="/assets/components/app-header/app-header.ts" type="module" async></script>
-<script src="/assets/components/autocompletes/app-autocomplete/app-autocomplete.ts" type="module" async></script>
-<script src="/assets/components/autocompletes/app-genre-autocomplete.ts" type="module" async></script>
 </body>
 </html>

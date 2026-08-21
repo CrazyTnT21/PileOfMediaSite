@@ -28,12 +28,11 @@ export type AppHeaderElements = {
   profileText: HTMLSpanElement,
   friendsText: HTMLSpanElement,
   reviewsText: HTMLSpanElement,
-  settingsText: HTMLSpanElement,
+  accessibilityText: HTMLSpanElement,
   preferencesText: HTMLSpanElement,
   commentsText: HTMLSpanElement,
   logoutText: HTMLSpanElement,
   loginText: HTMLSpanElement,
-  settingsIcon: HTMLSpanElement,
   showingResults: HTMLDivElement,
   loginLink: HTMLAnchorElement
   settings: HTMLDetailsElement,
@@ -48,6 +47,7 @@ export const appHeaderTexts = {
   friends: "Friends",
   reviews: "Reviews",
   settings: "Settings",
+  accessibility: "Accessibility",
   preferences: "Preferences",
   comments: "Comments",
   logout: "Logout",
@@ -88,14 +88,13 @@ export class AppHeader extends HTMLElement
     profileText: "#profile-text",
     friendsText: "#friends-text",
     reviewsText: "#reviews-text",
-    settingsText: "#settings-text",
+    accessibilityText: "#accessibility-text",
     preferencesText: "#preferences-text",
     commentsText: "#comments-text",
     logoutText: "#logout-text",
     loginText: "#login-text",
     loginLink: "#login",
     settings: "#settings",
-    settingsIcon: "#settings-icon",
   }
 
   public get account(): LoginReturn | null
@@ -133,13 +132,13 @@ export class AppHeader extends HTMLElement
       ["profile", this.elements.profileText],
       ["friends", this.elements.friendsText],
       ["reviews", this.elements.reviewsText],
-      ["settings", this.elements.settingsText],
+      ["accessibility", this.elements.accessibilityText],
       ["preferences", this.elements.preferencesText],
       ["comments", this.elements.commentsText],
       ["logout", this.elements.logoutText],
       ["login", this.elements.loginText],
     ]);
-    this.texts.addListener("settings", (value) => this.elements.settingsIcon.title = value);
+    this.texts.addListener("settings", (value) => this.elements.settings.title = value);
     matchNestedTexts(this.texts, this.elements.searchInput.texts);
   }
 

@@ -77,6 +77,7 @@ export async function setHeaderTexts(elements: NodeListOf<AppHeader> | AppHeader
     comments: translation.comments,
     reviews: translation.reviews,
     settings: translation.settings,
+    accessibility: translation.accessibility,
     preferences: translation.preferences,
     logout: translation.logout,
     login: translation.login,
