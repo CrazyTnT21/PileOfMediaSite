@@ -60,12 +60,12 @@
 /*noinspection DuplicatedCode*/
 @media (prefers-color-scheme: light) {
   :root {
-    --app-background-1: hsl(0 0% 93%);
-    --app-background-2: hsl(0 0% 90%);
-    --app-background-3: hsl(0 0% 87%);
-    --app-background-4: hsl(0 0% 84%);
+    --app-background-1: hsl(0 0% 95%);
+    --app-background-2: hsl(0 0% 92%);
+    --app-background-3: hsl(0 0% 90%);
+    --app-background-4: hsl(0 0% 87%);
 
-    --app-foreground-1: hsl(0 0% 96%);
+    --app-foreground-1: hsl(0 0% 98%);
     --app-foreground-2: hsl(0 0% 99%);
 
     --app-color-1: hsl(0 0% 30%);
@@ -121,12 +121,12 @@
 
 /*noinspection DuplicatedCode*/
 :root[data-color-scheme="light"] {
-  --app-background-1: hsl(0 0% 93%);
-  --app-background-2: hsl(0 0% 90%);
-  --app-background-3: hsl(0 0% 87%);
-  --app-background-4: hsl(0 0% 84%);
+  --app-background-1: hsl(0 0% 95%);
+  --app-background-2: hsl(0 0% 92%);
+  --app-background-3: hsl(0 0% 90%);
+  --app-background-4: hsl(0 0% 87%);
 
-  --app-foreground-1: hsl(0 0% 96%);
+  --app-foreground-1: hsl(0 0% 98%);
   --app-foreground-2: hsl(0 0% 99%);
 
   --app-color-1: hsl(0 0% 30%);
@@ -181,6 +181,11 @@ html {
   background-color: var(--app-background-1);
   color: var(--app-text-1);
 }
+
+dialog {
+   background-color: var(--app-foreground-1);
+   color: var(--app-text-1);
+ }
 
 a[href] {
   color: var(--app-text-1);

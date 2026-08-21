@@ -26,13 +26,14 @@
   display: flex;
   flex: 1;
   gap: 3px;
-  overflow-x: scroll;
+  overflow: hidden;
   flex-direction: column;
 }
 
 #header {
   display: flex;
   width: 100%;
+  overflow-x: scroll;
 
   > label {
     display: flex;
@@ -43,6 +44,7 @@
     border-radius: 0;
     color: var(--tab-color--);
     justify-content: center;
+    text-wrap: nowrap;
 
     > input {
       outline: none;
@@ -72,6 +74,7 @@
   > * {
     display: none;
   }
+  overflow-x: scroll;
 
   [selected] {
     display: initial;
