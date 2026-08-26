@@ -22,6 +22,11 @@ export class AppLanguageAutocomplete extends AppAutocomplete<LanguageCode>
     "label": (element: AppInput, v: AttributeValue): void => labelAttribute(element as AppLanguageAutocomplete, v),
   };
 
+  public override get items(): LanguageCode[]
+  {
+    return items();
+  }
+
   public constructor()
   {
     super();

@@ -87,15 +87,20 @@ export class AppButton extends HTMLElement
     this.addEventListener("click", () =>
     {
       const {button} = this.elements;
-      if (button.type != "submit" || !this.internals.form)
+      if (this.internals.form && button.type == "reset")
+      {
+        this.internals.form.reset();
+        return;
+      }
+      if ((button.type != "submit") || !this.internals.form)
         return;
 
       this.internals.form.requestSubmit();
     });
 
     handleFieldset(this,
-        (fieldSet) => this.parentFieldSet = fieldSet,
-        () => disabledAttribute(this, this.getAttribute("disabled"))
+      (fieldSet) => this.parentFieldSet = fieldSet,
+      () => disabledAttribute(this, this.getAttribute("disabled"))
     );
   }
 

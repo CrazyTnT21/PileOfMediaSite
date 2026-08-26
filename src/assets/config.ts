@@ -1,29 +1,49 @@
-import {type LanguageCode, LanguageCodes} from "./i18n/language";
+import {type LanguageCode} from "./i18n/language";
 import {indexArray, NonEmptyArray} from "./components/inputs/common";
+
+type SerializedConfig = { locales: Intl.UnicodeBCP47LocaleIdentifier[] };
 
 export class Config
 {
-  public locale: Intl.Locale = ((): Intl.Locale =>
+  private constructor(locales: NonEmptyArray<Intl.Locale>)
   {
+    this.locales = locales;
+  }
 
-    const locale = localStorage.getItem("locale");
-    if (locale)
-    {
-      const parsed: { tag: Intl.UnicodeBCP47LocaleIdentifier, options: Intl.LocaleOptions } = JSON.parse(locale);
-      return new Intl.Locale(parsed.tag, parsed.options);
-    }
-    return new Intl.Locale(navigator.language);
-  })();
+  public locales: NonEmptyArray<Intl.Locale>;
 
-  public static readonly config: Config = ((): Config =>
+  public static config: Config = ((): Config =>
   {
     const config = localStorage.getItem("config");
     if (config)
-      return <Config>JSON.parse(config);
-    return new Config();
+    {
+      const parsed: SerializedConfig = JSON.parse(config);
+      return new Config(parsed.locales.map(x => new Intl.Locale(x)) as NonEmptyArray<Intl.Locale>)
+    }
+    return Config.default();
   })();
 
-  public static preferredLanguages: NonEmptyArray<LanguageCode> = [navigator.language.split("-")[0]?.toUpperCase() as LanguageCode ?? LanguageCodes.EN];
+  public static default(): Config
+  {
+    let locales: NonEmptyArray<Intl.Locale>;
+    if (navigator.language.length == 0)
+      locales = [new Intl.Locale("en")]
+    else
+      locales = navigator.languages.map(x => new Intl.Locale(x)) as NonEmptyArray<Intl.Locale>;
+    return new Config(locales);
+  }
+
+  public static saveConfiguration(): void
+  {
+    const serialized: SerializedConfig = {locales: Config.config.locales.map(x => x.toString())};
+    localStorage.setItem("config", JSON.stringify(serialized));
+  }
+
+  public get languages(): NonEmptyArray<LanguageCode>
+  {
+    const result = Config.config.locales.map(x => x.language.toUpperCase() as LanguageCode);
+    return result as NonEmptyArray<LanguageCode>;
+  }
 }
 
 export function logError(error: Error): void
@@ -33,7 +53,7 @@ export function logError(error: Error): void
 
 export function acceptLanguageHeader(): { "Accept-Language": string }
 {
-  return {"Accept-Language": Config.preferredLanguages.map(x => x.toLowerCase()).join(",")}
+  return {"Accept-Language": Config.config.locales.map(x => x.baseName).join(",")}
 }
 
 export type TranslationItem = {
@@ -46,7 +66,7 @@ export function getTranslatedField<T extends TranslationItem>(item: T): {
   translation: TranslatedField<T>
 }
 {
-  for (const language of Config.preferredLanguages)
+  for (const language of Config.config.languages)
   {
     const translation = item.translations.translations[language];
     if (translation)

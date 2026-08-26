@@ -10,6 +10,7 @@
   --input-outline-color: var(--app-outline);
   --input-label-color: var(--app-text-2);
   --input-invalid-color: var(--app-negative);
+  --autocomplete-selected-background-color: var(--app-foreground-2);
 
   --textarea-background-color: var(--app-foreground-2);
 

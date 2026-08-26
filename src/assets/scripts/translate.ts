@@ -14,13 +14,12 @@ import type {AppHeader, HeaderTag} from "../components/app-header/app-header";
 import type {AppSearchInput, SearchInputTag} from "../components/inputs/app-search-input/app-search-input";
 import type {AppEmailInput, EmailInputTag} from "../components/inputs/app-email-input/app-email-input";
 import type {AppPasswordInput, PasswordInputTag} from "../components/inputs/app-password-input/app-password-input";
-import {LanguageCodes} from "../i18n/language";
 
 async function main(): Promise<void>
 {
   const elements = <NodeListOf<HTMLElement>>document.querySelectorAll("[data-translate]");
-  const language = Config.preferredLanguages[0];
-  document.querySelector("html")!.lang = LanguageCodes[language].toLowerCase();
+  const locale = Config.config.locales[0];
+  document.querySelector("html")!.lang = locale.language;
   const translation: Translation = await getPreferredTranslation();
   for (const element of elements)
   {
@@ -28,9 +27,9 @@ async function main(): Promise<void>
     if (translated in translation)
       element.innerText = translation[<keyof Translation>translated]!;
     else
-      console.warn(`Translation for '${translated}' does not exist for language '${language}'`);
+      console.warn(`Translation for '${translated}' does not exist for language '${locale}'`);
   }
-  document.querySelectorAll<HTMLElement>("[data-translate-attributes]").forEach(x => setTranslationAttribute(x, translation, language));
+  document.querySelectorAll<HTMLElement>("[data-translate-attributes]").forEach(x => setTranslationAttribute(x, translation, locale.language));
   await Promise.all(
     [
       setInputTexts(document.querySelectorAll("app-input"), translation),
@@ -58,7 +57,6 @@ function setTranslationAttribute(element: HTMLElement, translation: Translation,
     else
       console.warn(`Translation for '${key}' does not exist for language '${language}'`);
   }
-
 }
 
 export async function setHeaderTexts(elements: NodeListOf<AppHeader> | AppHeader[], translation: Translation): Promise<void>
@@ -255,10 +253,9 @@ function setFromObject<T extends { texts: Observer<any> }>(
 
 export async function getPreferredTranslation(): Promise<Translation>
 {
-  for (const languageCode of Config.preferredLanguages)
+  for (const locale of Config.config.locales)
   {
-    const localeId = LanguageCodes[languageCode].toLowerCase();
-    const response = await fetch(`/assets/i18n/translations/${localeId}.json`);
+    const response = await fetch(`/assets/i18n/translations/${locale.language}.json`);
 
     if (response.status >= 500 && response.status < 600)
       throw new Error(response.statusText, {cause: response});

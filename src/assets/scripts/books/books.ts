@@ -35,7 +35,7 @@ function columns(): Column<Book>[]
       {
         if (!item.published)
           return "";
-        return Temporal.PlainDate.from(item.published).toLocaleString(Config.config.locale);
+        return Temporal.PlainDate.from(item.published).toLocaleString(Config.config.locales);
       },
     },
     {

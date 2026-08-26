@@ -96,5 +96,7 @@
   "uploadImage": "Bild hochladen",
   "uploadImages": "Bilder hochladen",
   "filename": "Dateiname",
-  "accessibility": "Barrierefreiheit"
+  "accessibility": "Barrierefreiheit",
+  "reset": "Zurücksetzen",
+  "refreshToSeeChanges": "Neuladen um Änderungen zu sehen"
 }

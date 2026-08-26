@@ -169,10 +169,9 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
     {
       const item = indexArray(children, i).unwrap();
       const child = <HTMLDataElement>item.firstElementChild;
-      if (Number(child.value) != id)
-      {
+      if (child.value != id)
         continue;
-      }
+
       selected.removeChild(item);
       if (i < selected.children.length)
       {
@@ -187,7 +186,7 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
       }
       return;
     }
-    console.error(`Item with the id '${id}' could not be removed. Item not found`);
+    console.error(`Item with the id '${id}' could not be removed, Item not found. Possible values to remove:`, this.items);
   }
 
   private pushSelected(selected: HTMLUListElement, items: T[]): void
@@ -378,7 +377,10 @@ export class AppAutocomplete<T = { value: any, label?: string }> extends AppInpu
 
   protected async firstOpen(): Promise<void>
   {
-    this.items.push(...(await this.itemsGenerator.next()).value);
+    const iterResult = await this.itemsGenerator.next();
+    if (iterResult.done)
+      return;
+    this.items.push(...iterResult.value);
     this.createOptions(this.items.filter((x) => !this.findSelected(x)));
   }
 

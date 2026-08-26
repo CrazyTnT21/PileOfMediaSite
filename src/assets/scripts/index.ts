@@ -1,5 +1,5 @@
 import {components} from "pileofmedia-openapi";
-import {getTranslatedField, logError} from "../config";
+import {Config, getTranslatedField, logError} from "../config";
 import {AppCard} from "../components/app-card/app-card";
 import {collect_ok, Err, Ok, Result} from "../result/result";
 import {apiClient} from "../openapi/client";
@@ -34,7 +34,21 @@ function createBookCard(x: components["schemas"]["Book"]): AppCard
   card.itemTitle = translation.title;
   card.coverAlt = `${translation.title}`
   card.href = `/books/${x.slug}`;
-  const publishedText = x.published ? `(${Temporal.PlainDate.from(x.published).year}})` : ""
+  let publishedText;
+  if (x.published)
+  {
+    const formattedYear = Temporal.PlainDate.from(x.published)
+      .withCalendar("gregory")
+      .toPlainYearMonth()
+      .toLocaleString(Config.config.locales, {
+        year: "numeric"
+      });
+    publishedText = `(${formattedYear})`;
+  }
+  else
+  {
+    publishedText = "";
+  }
   const scoreText = statistic.rating.score ? `<span class="icon" style="font-size: 1rem">star</span> ` + statistic.rating.score.toString() : "";
   const connect = publishedText && scoreText ? " • " : ""
   card.innerHTML = `<div class="extra" slot="extra" class="center-align">${publishedText} ${connect} ${scoreText} </div>`

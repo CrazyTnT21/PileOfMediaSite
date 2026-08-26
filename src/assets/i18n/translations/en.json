@@ -96,5 +96,7 @@
   "uploadImage": "Upload image",
   "uploadImages": "Upload images",
   "filename": "Filename",
-  "accessibility": "Accessibility"
+  "accessibility": "Accessibility",
+  "reset": "Reset",
+  "refreshToSeeChanges": "Refresh to see changes"
 }

@@ -12,10 +12,19 @@
 <body>
 <noscript>This Website <strong>requires</strong> javascript to function.</noscript>
 <app-header></app-header>
+<main>
+  <form>
+    <app-language-autocomplete multiple></app-language-autocomplete>
+    <app-button id="reset-button" type="reset" data-translate="reset">Reset</app-button>
+  </form>
+  (<span data-translate="refreshToSeeChanges">Refresh to see changes</span>)
+</main>
 <script src="/assets/scripts/modules.ts" type="module" async></script>
 <script src="/assets/scripts/main.ts" type="module" async></script>
 <script src="/assets/scripts/translate.ts" type="module" async></script>
+<script src="/assets/scripts/users/preferences/preferences.ts" type="module" async></script>
 <script src="/assets/components/app-header/app-header.ts" type="module" async></script>
+<script src="/assets/components/autocompletes/app-language-autocomplete.ts" type="module" async></script>
 <script src="/assets/components/autocompletes/app-autocomplete/app-autocomplete.ts" type="module" async></script>
 <script src="/assets/components/autocompletes/app-genre-autocomplete.ts" type="module" async></script>
 </body>
