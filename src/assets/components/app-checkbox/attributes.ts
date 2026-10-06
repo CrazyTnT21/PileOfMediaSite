@@ -9,7 +9,7 @@ export function labelAttribute(element: AppCheckbox, value: AttributeValue): voi
     logNoValueError("label", element.outerHTML);
     value = ""
   }
-  element["elements"].label.innerText = value;
+  element["elements"].labelSlot.innerText = value;
 }
 
 export function disabledAttribute(element: AppCheckbox, value: AttributeValue): void

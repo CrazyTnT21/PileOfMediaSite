@@ -10,7 +10,8 @@ import {unsafeObjectKeys} from "../../unsafe-object-keys";
 type AttributeKey = keyof typeof AppCheckbox["observedAttributesMap"];
 export type AppCheckboxElements = {
   input: HTMLInputElement,
-  label: HTMLLabelElement
+  label: HTMLLabelElement,
+  labelSlot: HTMLSlotElement
 };
 
 export class AppCheckbox extends HTMLElement
@@ -19,6 +20,7 @@ export class AppCheckbox extends HTMLElement
   protected static readonly elementSelectors: { [key in keyof AppCheckbox["elements"]]: string } = {
     input: "input",
     label: "label",
+    labelSlot: "#label-slot"
   }
   public static readonly formAssociated = true;
   protected errors: Map<keyof ValidityStateFlags, () => string> = new Map();

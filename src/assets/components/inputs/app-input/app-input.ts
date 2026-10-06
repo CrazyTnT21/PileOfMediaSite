@@ -31,6 +31,7 @@ type AttributeKey = keyof typeof AppInput["observedAttributesMap"];
 export type AppInputElements = {
   input: HTMLInputElement,
   label: HTMLLabelElement,
+  labelSlot: HTMLSlotElement
 };
 export const appInputTexts = {
   required: "Required",
@@ -50,6 +51,7 @@ export class AppInput extends HTMLElement
   protected static readonly elementSelectors: { [key in keyof AppInput["elements"]]: string } = {
     input: "input",
     label: "label",
+    labelSlot: "#label-slot"
   }
   public readonly texts = new Observer(appInputTexts);
 

@@ -28,6 +28,7 @@ type AttributeKey = keyof typeof AppTextArea["observedAttributesMap"];
 export type AppTextAreaElements = {
   textarea: HTMLTextAreaElement,
   label: HTMLLabelElement,
+  labelSlot: HTMLSlotElement
 };
 export const appTextAreaTexts = {
   required: "Required",
@@ -49,7 +50,8 @@ export class AppTextArea extends HTMLElement
   private readonly elements: AppTextAreaElements;
   protected static readonly elementSelectors: { [key in keyof AppTextArea["elements"]]: string } = {
     textarea: "textarea",
-    label: "label"
+    label: "label",
+    labelSlot: "#label-slot"
   }
   public readonly texts = new Observer(appTextAreaTexts);
   private readonly internals: ElementInternals;
@@ -163,8 +165,8 @@ export class AppTextArea extends HTMLElement
   protected async connectedCallback(): Promise<void>
   {
     this.label = this.label || "";
-    const {label} = this.elements;
-    label.innerText = this.label;
+    const {labelSlot} = this.elements;
+    labelSlot.innerText = this.label;
     const {textarea} = this.elements;
     textarea.addEventListener("change", (e) => this.onTextAreaChange(e));
     textarea.placeholder = this.placeholder ?? "";

@@ -65,5 +65,5 @@ export function labelAttribute(element: AppImageInput, value: AttributeValue): v
     logNoValueError("label", element.outerHTML);
     value = ""
   }
-  element["elements"].label.innerText = value;
+  element["elements"].labelSlot.innerText = value;
 }

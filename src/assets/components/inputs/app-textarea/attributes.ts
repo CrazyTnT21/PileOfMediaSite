@@ -9,7 +9,7 @@ export function labelAttribute(element: AppTextArea, value: AttributeValue): voi
     logNoValueError("label", element.outerHTML);
     value = ""
   }
-  element["elements"].label.innerText = value;
+  element["elements"].labelSlot.innerText = value;
 }
 
 export function placeholderAttribute(element: AppTextArea, value: AttributeValue): void

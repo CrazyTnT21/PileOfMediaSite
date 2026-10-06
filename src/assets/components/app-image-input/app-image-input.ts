@@ -175,7 +175,7 @@ export class AppImageInput extends HTMLElement
     input.addEventListener("change", (e) => this.onInputChange(e));
     this.label = this.label || "";
 
-    this.elements.label.innerText = this.label;
+    this.elements.labelSlot.innerText = this.label;
 
     images.addEventListener("click", () => input.click());
     images.addEventListener("keyup", (e) =>

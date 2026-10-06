@@ -11,17 +11,19 @@
 </head>
 <body>
 <app-header></app-header>
-<h1>404 Page not found</h1>
-<div class="col-12">
-  Sorry, the requested page could not be found.
-</div>
-<div class="col-12">
-  <a id="referer">Return</a>&nbsp;or go to the&nbsp;<a href="/">home page</a>.
-</div>
-<div class="col-12 mar-top">
-  If you believe this to be a mistake&nbsp;<a href="https://github.com/CrazyTnT21/pileofmediasite/issues">open an
-  issue</a>.
-</div>
+<main>
+  <h1>404 Page not found</h1>
+  <div class="col-12">
+    Sorry, the requested page could not be found.
+  </div>
+  <div class="col-12">
+    <a id="referer">Return</a>&nbsp;or go to the&nbsp;<a href="/">home page</a>.
+  </div>
+  <div class="col-12 mar-top">
+    If you believe this to be a mistake&nbsp;<a href="https://github.com/CrazyTnT21/pileofmediasite/issues">open an
+    issue</a>.
+  </div>
+</main>
 <script>
   document.querySelector("#referer").href = document.referrer;
 </script>

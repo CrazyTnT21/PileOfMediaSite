@@ -1,5 +1,7 @@
 <div class="parent container">
-  <label for="input" part="label"></label>
+  <label for="input" part="label">
+    <slot id="label-slot"></slot>
+  </label>
   <input id="input" class="input control" list="items" part="input">
   <datalist id="items" part="datalist"></datalist>
   <ul id="selected" part="selected"></ul>

@@ -1,6 +1,8 @@
 <div class="container">
   <div class="label-container">
-    <label for="input"></label>
+    <label for="input">
+      <slot id="label-slot"></slot>
+    </label>
   </div>
   <input id="input" type="file" accept=".jpg,.jpeg,.png" hidden part="input">
   <div class="images-container">

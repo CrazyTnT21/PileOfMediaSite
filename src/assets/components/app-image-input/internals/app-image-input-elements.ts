@@ -11,6 +11,7 @@ export const elementSelectors: { [key in keyof AppImageInputElements]: string } 
   nextImage: "#next",
   images: "#images",
   filename: "#file-name",
+  labelSlot: "#label-slot"
 });
 
 export type AppImageInputElements = {
@@ -20,4 +21,5 @@ export type AppImageInputElements = {
   carousel: HTMLDivElement,
   images: HTMLDivElement
   filename: HTMLSpanElement,
+  labelSlot: HTMLSlotElement
 };
