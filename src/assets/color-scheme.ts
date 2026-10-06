@@ -30,7 +30,6 @@ export class ColorStyle
   public app_background_4: string | undefined;
 
   public app_foreground_1: string | undefined;
-  public app_foreground_2: string | undefined;
 
   public app_color_1: string | undefined;
   public app_color_2: string | undefined;

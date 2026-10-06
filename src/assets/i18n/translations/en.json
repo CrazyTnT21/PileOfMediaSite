@@ -98,5 +98,6 @@
   "filename": "Filename",
   "accessibility": "Accessibility",
   "reset": "Reset",
-  "refreshToSeeChanges": "Refresh to see changes"
+  "refreshToSeeChanges": "Refresh to see changes",
+  "results": "Results"
 }

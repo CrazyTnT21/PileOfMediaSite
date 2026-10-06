@@ -98,5 +98,6 @@
   "filename": "Dateiname",
   "accessibility": "Barrierefreiheit",
   "reset": "Zurücksetzen",
-  "refreshToSeeChanges": "Neuladen um Änderungen zu sehen"
+  "refreshToSeeChanges": "Neuladen um Änderungen zu sehen",
+  "results": "Ergebnisse"
 }
