@@ -1,8 +1,9 @@
 import {AppAutocomplete, appAutocompleteTexts} from "./app-autocomplete/app-autocomplete";
 import {Person} from "../../openapi/person";
-import {acceptLanguageHeader, logError} from "../../config";
+import {logError} from "../../config";
 import {apiClient} from "../../openapi/client";
 import {Observer} from "../../observer";
+import {acceptLanguageHeader} from "../inputs/common";
 
 export const AppPersonAutocompleteTexts = {
   ...appAutocompleteTexts,

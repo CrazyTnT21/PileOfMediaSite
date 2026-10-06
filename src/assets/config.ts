@@ -51,10 +51,6 @@ export function logError(error: Error): void
   console.error(error);
 }
 
-export function acceptLanguageHeader(): { "Accept-Language": string }
-{
-  return {"Accept-Language": Config.config.locales.map(x => x.baseName).join(",")}
-}
 
 export type TranslationItem = {
   translations: { translations: { [p: string]: any } }

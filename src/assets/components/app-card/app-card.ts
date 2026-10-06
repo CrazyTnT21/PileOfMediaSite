@@ -5,7 +5,7 @@ import {mapSelectors} from "../../dom";
 import {coverAltAttribute, hrefAttribute, srcsetAttribute, itemTitleAttribute, sizesAttribute} from "./attributes";
 import {mapStringAttribute} from "../inputs/map-boolean-attribute";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
-import {last} from "../inputs/common";
+import {last, parseImageElementSizes} from "../inputs/common";
 
 type AttributeKey = keyof typeof AppCard["observedAttributesMap"];
 
@@ -73,20 +73,9 @@ export class AppCard extends HTMLElement
       return;
     }
 
-    function mapSizes(value: ({ mediaCondition?: string, sourceSizeValue: string } | "auto")): string
-    {
-      if (value == "auto")
-        return "auto"
-
-      if (value.mediaCondition == null)
-        return value.sourceSizeValue;
-
-      return `(${value.mediaCondition}): ${value.sourceSizeValue}`
-    }
-
     this.sizesAttribute = [
-      ...sizes.slice(0, -1).map(mapSizes),
-      last(sizes).map(mapSizes).unwrap()
+      ...sizes.slice(0, -1).map(parseImageElementSizes),
+      last(sizes).map(parseImageElementSizes).unwrap()
     ].join(",")
   }
 

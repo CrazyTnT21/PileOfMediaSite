@@ -1,6 +1,7 @@
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
 import {Observer} from "../../observer";
 import {Err, Ok, Result} from "../../result/result";
+import {Config} from "../../config";
 
 export type AttributeValue = string | null;
 export type NonEmptyString = string;
@@ -117,11 +118,31 @@ export function setOrRemoveBooleanAttribute(element: HTMLElement, attribute: str
   element.removeAttribute(attribute);
 }
 
-export function queryParam<Page extends number, Count extends number>(page: Page, count: Count): {
-  query: { page: Page, count: Count }
-}
+export function queryParam<Page extends number, Count extends number>(page: Page, count: Count):
+  { page: Page, count: Count }
 {
-  return {query: {page, count}}
+  return {page, count}
+}
+
+export function acceptLanguageHeader(): { "Accept-Language": string }
+{
+  return {"Accept-Language": Config.config.locales.map(x => x.baseName).join(",")}
+}
+
+export function bearerAuthHeader<Token extends string>(token: Token): { "Authorization": `Bearer ${Token}` }
+{
+  return {"Authorization": `Bearer ${token}`}
+}
+
+export function parseImageElementSizes(value: ({ mediaCondition?: string, sourceSizeValue: string } | "auto")): string
+{
+  if (value == "auto")
+    return "auto"
+
+  if (value.mediaCondition == null)
+    return value.sourceSizeValue;
+
+  return `(${value.mediaCondition}) ${value.sourceSizeValue}`
 }
 
 export function randomNumber(): number

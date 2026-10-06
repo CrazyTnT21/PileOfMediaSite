@@ -1,7 +1,7 @@
 import {Err, Ok, Result} from "../../../result/result";
 import {apiClient} from "../../../openapi/client";
-import {acceptLanguageHeader, getTranslatedField, logError} from "../../../config";
-import {indexArray, queryParam} from "../../inputs/common";
+import {getTranslatedField, logError} from "../../../config";
+import {acceptLanguageHeader, indexArray, queryParam} from "../../inputs/common";
 import {SearchEvent} from "../../inputs/app-search-input/search-event";
 import searchHTML from "../app-header-search/app-header-search-item.html" with {type: "inline"}
 import {AppHeader} from "../app-header";

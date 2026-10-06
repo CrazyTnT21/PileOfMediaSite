@@ -3,7 +3,7 @@ import {Config, getTranslatedField, logError} from "../config";
 import {AppCard} from "../components/app-card/app-card";
 import {collect_ok, Err, Ok, Result} from "../result/result";
 import {apiClient} from "../openapi/client";
-import {last, queryParam} from "../components/inputs/common";
+import {acceptLanguageHeader, last, queryParam} from "../components/inputs/common";
 import {Temporal} from "temporal-polyfill";
 
 function createBookCard(x: components["schemas"]["Book"]): AppCard
@@ -65,7 +65,12 @@ if (error)
 //TODO All Media & Sort
 async function append(id: string, page: number): Promise<Result<void, Error>>
 {
-  const {data, error} = await apiClient.GET("/books", {params: {...queryParam(page, 12)}});
+  const {data, error} = await apiClient.GET("/books", {
+    params: {
+      header: {...acceptLanguageHeader()},
+      query: {...queryParam(page, 12)}
+    }
+  });
 
   if (!data)
     return new Err(new Error(error));
