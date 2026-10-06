@@ -134,7 +134,7 @@ export class AppImageInput extends HTMLElement
 
   public set maxFilesize(value: Kilobyte | null)
   {
-    setOrRemoveAttribute(this, "max-file-size", value?.toNumber().toString());
+    setOrRemoveAttribute(this, "max-filesize", value?.toNumber().toString());
   }
 
   public get minFilesize(): Kilobyte | null

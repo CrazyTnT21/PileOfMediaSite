@@ -5,7 +5,7 @@
 #top, #popular {
   min-height: 16rem;
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
   flex-shrink: 0;
 
   > li {

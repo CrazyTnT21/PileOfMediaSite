@@ -43,7 +43,7 @@ a[href]:hover, a:focus {
   }
 
   #title {
-    text-decoration: underline var(--card-underline-color--) .12rem;
+    text-decoration: underline var(--card-underline-color--) .06rem;
   }
 }
 

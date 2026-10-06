@@ -192,6 +192,10 @@ a[href] {
   color: var(--app-text-1);
 }
 
+a[href]:hover, a:focus {
+  color: hsl(from currentColor h s calc(l - (clamp(-1, calc((l - 50) * 100), 1)) * 20));
+}
+
 .foreground-1 {
   background-color: var(--app-foreground-1);
 }

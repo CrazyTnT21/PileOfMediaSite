@@ -33,7 +33,7 @@
 #header {
   display: flex;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   > label {
     display: flex;
@@ -74,7 +74,7 @@
   > * {
     display: none;
   }
-  overflow-x: scroll;
+  overflow-x: auto;
 
   [selected] {
     display: initial;

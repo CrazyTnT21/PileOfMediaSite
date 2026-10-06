@@ -104,14 +104,14 @@ app-header:not(:defined) {
 }
 
 a:hover, a:focus {
-  text-decoration: underline var(--app-link) .12rem;
+  text-decoration: underline var(--app-link) .06rem;
 }
 
 .underscore {
-  text-decoration: underline currentColor .12rem;
+  text-decoration: underline currentColor .06rem;
 
   &:hover, &:focus {
-    text-decoration: underline var(--app-link) .12rem;
+    text-decoration: underline var(--app-link) .06rem;
   }
 }
 

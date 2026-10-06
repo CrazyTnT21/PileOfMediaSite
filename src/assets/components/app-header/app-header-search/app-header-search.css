@@ -65,7 +65,7 @@ app-search-input {
 
 #search-elements {
   max-height: 20rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   gap: 6px;
 
   li {
@@ -83,7 +83,7 @@ app-search-input {
 
   &:hover, &:focus {
     .title {
-      text-decoration: underline var(--header-link-color--) .12rem;
+      text-decoration: underline var(--header-link-color--) .06rem;
     }
 
     * {

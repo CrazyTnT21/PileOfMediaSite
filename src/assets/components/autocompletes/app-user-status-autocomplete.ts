@@ -6,7 +6,7 @@ import {indexArray} from "../inputs/common";
 
 export const appUserStatusAutocompleteTexts = {
   ...appAutocompleteTexts,
-  userStatus: "User status",
+  userStatus: "Status",
   notStarted: "Not started",
   ongoing: "Ongoing",
   paused: "Paused",
