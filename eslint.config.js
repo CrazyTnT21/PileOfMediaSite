@@ -91,7 +91,7 @@ const config = tslint.config(
         "@html-eslint/max-element-depth": [
           "warn",
           {
-            "max": 10
+            "max": 14
           }
         ],
         "@html-eslint/no-restricted-attr-values": [

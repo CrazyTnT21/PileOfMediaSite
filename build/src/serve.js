@@ -9,12 +9,11 @@ import httpProxy from "http-proxy";
 const settings = createBuildSettings({
   sourcemap: true,
   write: false,
-  outdir: "src"
+  outdir: "src",
 });
+let context = await esbuild.context(settings);
+let buildFiles = await context.rebuild().then(x => x.outputFiles);
 
-let ctx = await esbuild.context(settings);
-let buildFiles = await ctx.rebuild().then(x => x.outputFiles);
-let lastError;
 const result = fs.promises.watch(settings.outdir, {recursive: true});
 (async () =>
 {
@@ -22,24 +21,22 @@ const result = fs.promises.watch(settings.outdir, {recursive: true});
   {
     try
     {
-      if (!x.filename.endsWith("~"))
+      if (x.eventType === "change")
+        continue;
+
+      if (x.filename.endsWith("~"))
+        x.filename = x.filename.slice(0, x.filename.length - 1);
+
+      if (!settings.entryPoints.includes(x.filename))
       {
-        settings.entryPoints = (await fs.promises.readdir("src", {
-          recursive: true,
-          withFileTypes: true
-        })).filter(x => x.isFile()).map(x => path.join(x.parentPath, x.name));
-        ctx = await esbuild.context(settings);
+        settings.entryPoints.push(path.join(settings.outdir, x.filename));
+        context = await esbuild.context(settings);
       }
-      buildFiles = await ctx.rebuild().then(x => x.outputFiles);
-      if (lastError)
-      {
-        lastError = null;
-      }
+      buildFiles = await context.rebuild().then(x => x.outputFiles);
       console.info("Rebuilt successfully!", new Date().toLocaleTimeString());
     }
     catch (e)
     {
-      lastError = e.message;
       console.error(e.message);
     }
   }
@@ -132,7 +129,6 @@ function processRequest(request, src)
 {
   let filePath = path.join(src, request.url).split("?")[0];
   filePath = decodeURI(filePath);
-
   if (!request.headers.accept?.includes("text/html"))
   {
     return getFile(filePath) ?? {statusCode: 404, data: null, headers: {}};
@@ -150,13 +146,13 @@ function last(items)
 
 export function getFile(filePath)
 {
-  const find = buildFiles.find(x => x.path === filePath);
-  if (!find)
+  const foundItem = buildFiles.find(x => x.path === filePath);
+  if (!foundItem)
     return null;
   const extension = last(filePath.split("."));
   const headers = {};
   if (extension && contentTypeExtensions[extension])
     headers["Content-Type"] = contentTypeExtensions[extension];
 
-  return {statusCode: 200, data: find.contents, headers};
+  return {statusCode: 200, data: foundItem.contents, headers};
 }

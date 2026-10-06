@@ -99,6 +99,7 @@ export class AppHeader extends HTMLElement
 
   public get account(): LoginReturn | null
   {
+    //TODO: http only header
     const data = localStorage.getItem("account");
     if (!data)
       return null;
