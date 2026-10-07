@@ -4,6 +4,7 @@ import {applyStyleSheet, attach} from "../defaults";
 import {mapSelectors} from "../../dom";
 import {unsafeObjectKeys} from "../../unsafe-object-keys";
 import {indexArray} from "../inputs/common";
+import {logError} from "../../config";
 
 export type AppTabElements = {
   container: HTMLDivElement,
@@ -15,7 +16,8 @@ export type AppTabElements = {
  * @example
  * ```html
  * <app-tab>
- *   <div slot="Slotname A">
+ *   <span slot="slot-a-header">First tab header</span>
+ *   <div slot="slot-a">
  *     First tab
  *   </div>
  *   <div slot="Slotname B">
@@ -58,18 +60,46 @@ export class AppTab extends HTMLElement
    */
   protected async connectedCallback(): Promise<void>
   {
+    //TODO: support for removal and later addition
+    const childMutationObserver = new MutationObserver(x =>
+    {
+      for (const xy of x)
+      {
+        if (xy.type != "attributes")
+          continue
+
+        const matchingHeader: HTMLSlotElement | null = this.elements.header.querySelector(`slot[name="${xy.oldValue}-header"]`);
+        const matchingContentHeader: HTMLSlotElement | null = this.elements.content.querySelector(`slot[name="${xy.oldValue}"]`);
+        if (!matchingHeader)
+        {
+          logError(new Error("No matching header found when replacing slot name"));
+          continue;
+        }
+        const slotName = (xy.target as HTMLElement).getAttribute("slot") ?? "";
+        matchingContentHeader!.name = slotName
+        matchingHeader.name = slotName + "-header";
+        matchingHeader.innerText = slotName;
+      }
+    });
     for (const child of this.children)
     {
       this.createChild(child);
+      childMutationObserver.observe(child, {attributes: true, attributeOldValue: true, attributeFilter: ["slot"]});
     }
     indexArray(this.elements.content.children, 0).map(x => x.setAttribute("selected", ""));
-    indexArray(this.elements.header.children, 0).map(x => indexArray(x.children,0).unwrap().setAttribute("checked", ""));
+    indexArray(this.elements.header.children, 0).map(x => indexArray(x.children, 1).unwrap().setAttribute("checked", ""));
   }
 
   private createChild(slotContent: Element): void
   {
+    if (slotContent.slot.endsWith("-header"))
+      return;
+
     const label = document.createElement("label");
+    const HeaderSlot = document.createElement("slot");
     const input = document.createElement("input");
+
+    HeaderSlot.name = `${slotContent.slot ?? ""}-header`;
 
     input.type = "radio"
     input.name = "input"
@@ -81,13 +111,14 @@ export class AppTab extends HTMLElement
       content.setAttribute("selected", "")
     })
 
-    //TODO: Display text attribute
-    label.innerText = slotContent.slot ?? "";
+    HeaderSlot.innerText = slotContent.slot;
+    label.appendChild(HeaderSlot);
 
-    const slot = document.createElement("slot");
-    slot.name = slotContent.slot ?? "";
+    const contentSlot = document.createElement("slot");
+    contentSlot.name = slotContent.slot;
 
-    content.appendChild(slot);
+    content.appendChild(contentSlot);
+
     this.elements.content.appendChild(content);
 
     label.appendChild(input);
