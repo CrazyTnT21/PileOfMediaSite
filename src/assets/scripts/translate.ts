@@ -14,6 +14,7 @@ import type {AppHeader, HeaderTag} from "../components/app-header/app-header";
 import type {AppSearchInput, SearchInputTag} from "../components/inputs/app-search-input/app-search-input";
 import type {AppEmailInput, EmailInputTag} from "../components/inputs/app-email-input/app-email-input";
 import type {AppPasswordInput, PasswordInputTag} from "../components/inputs/app-password-input/app-password-input";
+import {AppUserStatusAutocomplete} from "../components/autocompletes/app-user-status-autocomplete";
 
 async function main(): Promise<void>
 {
@@ -27,7 +28,7 @@ async function main(): Promise<void>
     if (translated in translation)
       element.innerText = translation[<keyof Translation>translated]!;
     else
-      console.warn(`Translation for '${translated}' does not exist for language '${locale}'`);
+      console.warn(`Translation for '${translated}' does not exist for language '${locale}'`, element);
   }
   document.querySelectorAll<HTMLElement>("[data-translate-attributes]").forEach(x => setTranslationAttribute(x, translation, locale.language));
   await Promise.all(
@@ -41,7 +42,8 @@ async function main(): Promise<void>
       setTextareaTexts(document.querySelectorAll("app-textarea"), translation),
       setAutocompleteTexts(document.querySelectorAll("app-autocomplete"), translation),
       setLanguageAutocompleteTexts(document.querySelectorAll("app-language-autocomplete"), translation),
-      setHeaderTexts(document.querySelectorAll("app-header"), translation)
+      setHeaderTexts(document.querySelectorAll("app-header"), translation),
+      setUserStatusAutocompleteTexts(document.querySelectorAll("app-user-status-autocomplete"), translation),
     ]
   )
 }
@@ -65,6 +67,7 @@ export async function setHeaderTexts(elements: NodeListOf<AppHeader> | AppHeader
     return;
   await customElements.whenDefined(genericValue<HeaderTag>("app-header"));
   setFromObject(elements, {
+    book: translation.book,
     books: translation.books,
     graphicNovels: translation.graphicNovels,
     movies: translation.movies,
@@ -86,6 +89,29 @@ export async function setHeaderTexts(elements: NodeListOf<AppHeader> | AppHeader
     inputMinValidation: translation.inputMinTextLengthValidation,
     inputMaxValidation: translation.inputMaxTextLengthValidation
   });
+}
+
+export async function setUserStatusAutocompleteTexts(elements: NodeListOf<AppUserStatusAutocomplete> | AppUserStatusAutocomplete[], translation: Translation): Promise<void>
+{
+  if (elements.length == 0)
+    return;
+
+  await customElements.whenDefined(genericValue<LanguageAutocompleteTag>("app-language-autocomplete"));
+  setFromObject(elements, {
+    itemNotFound: null,
+    itemAlreadySelected: null,
+    required: null,
+    pleaseFillOutThisInput: null,
+    inputMinValidation: null,
+    inputMaxValidation: null,
+    userStatus: translation.status,
+    notStarted: translation.notStarted,
+    ongoing: translation.ongoing,
+    paused: translation.paused,
+    finished: translation.finished
+  });
+
+  await setAutocompleteTexts(elements, translation);
 }
 
 export async function setLanguageAutocompleteTexts(elements: NodeListOf<AppLanguageAutocomplete> | AppLanguageAutocomplete[], translation: Translation): Promise<void>

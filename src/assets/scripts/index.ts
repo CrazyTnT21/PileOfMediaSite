@@ -24,7 +24,7 @@ function createBookCard(x: components["schemas"]["Book"]): AppCard
   card.sizes = [...images.slice(0, -1).map(image =>
   {
     return {
-      mediaCondition: `width >= ${image.width}px`,
+      mediaCondition: `width <= ${image.width}px`,
       sourceSizeValue: `${image.width}px`
     }
   }),

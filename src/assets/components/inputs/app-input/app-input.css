@@ -95,7 +95,7 @@ input[disabled]::placeholder {
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;
-  margin: .6rem 3px .3rem;
+  margin: 0.3rem 3px;
 }
 
 .control {

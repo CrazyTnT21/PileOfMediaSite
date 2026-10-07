@@ -63,6 +63,7 @@ export class AppHeaderSearch
 
   private async searchBooks(value: string): Promise<Result<{ items: SearchItem[], total: number }, Error>>
   {
+    //TODO fix api total wrong amount
     const {data, error} = await apiClient.GET("/books/title/{title}", {
       params: {
         header: {...acceptLanguageHeader()},
@@ -86,7 +87,7 @@ export class AppHeaderSearch
         srcset,
         href: `/books/${item.slug}`,
         lang: language,
-        type: "Book",
+        type: this.header.texts.get("book"),
         rating
       }
     })

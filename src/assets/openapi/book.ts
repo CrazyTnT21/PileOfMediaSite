@@ -1,3 +1,3 @@
-import type {components} from "pileofmedia-openapi"
+import {Schemas} from "./schemas";
 
-export type Book = components["schemas"]["Book"]
+export type Book = Schemas["Book"];

@@ -6,5 +6,5 @@ export function labelAttribute(element: AppLanguageAutocomplete, value: Attribut
   if (value == null || value.trim() == "")
     value = element.texts.get("language");
 
-  element.elements.label.innerText = value;
+  element.elements.labelSlot.innerText = value;
 }

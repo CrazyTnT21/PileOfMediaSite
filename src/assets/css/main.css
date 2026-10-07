@@ -169,9 +169,11 @@ p {
 .round {
   border-radius: 6px;
 }
+
 main {
   margin-left: 3%;
   margin-right: 3%;
+  margin-top: 12px;
 }
 
 dialog {

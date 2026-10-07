@@ -202,9 +202,9 @@ html {
 }
 
 dialog {
-   background-color: var(--app-foreground-1);
-   color: var(--app-text-1);
- }
+  background-color: var(--app-foreground-1);
+  color: var(--app-text-1);
+}
 
 a[href] {
   color: var(--app-text-1);
@@ -218,6 +218,26 @@ a[href]:hover, a:focus {
   background-color: var(--app-foreground-1);
 }
 
+.background-1 {
+  background-color: var(--app-background-1);
+}
+
+.background-2 {
+  background-color: var(--app-background-2);
+}
+
 *:focus-visible {
   outline: var(--app-outline) 3px solid;
+}
+
+.text-1 {
+  color: var(--app-text-1);
+}
+
+.text-2 {
+  color: var(--app-text-2);
+}
+
+.text-3 {
+  color: var(--app-text-3);
 }

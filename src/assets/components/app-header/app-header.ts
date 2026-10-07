@@ -39,6 +39,7 @@ export type AppHeaderElements = {
 };
 export const appHeaderTexts = {
   graphicNovels: "Graphic novels",
+  book: "Book",
   books: "Books",
   movies: "Movies",
   shows: "Shows",

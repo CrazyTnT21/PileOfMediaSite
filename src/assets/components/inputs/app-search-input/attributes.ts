@@ -6,7 +6,7 @@ export function labelAttribute(element: AppSearchInput, value: AttributeValue): 
   if (value == null || value.trim() == "")
     value = element.texts.get("search");
 
-  element.elements.label.innerText = value;
+  element.elements.labelSlot.innerText = value;
 }
 
 export function disabledAttribute(element: AppSearchInput, value: AttributeValue): void

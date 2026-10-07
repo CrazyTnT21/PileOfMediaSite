@@ -29,7 +29,6 @@ li {
   }
 }
 
-
 button {
   font-size: .75em;
   border-radius: 9px;
@@ -44,4 +43,7 @@ button:hover {
 
 button::after {
   content: " x"
+}
+.input {
+  width: 100%;
 }

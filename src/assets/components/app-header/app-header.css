@@ -35,12 +35,11 @@ a {
 }
 
 #header {
-  padding-left: 6px;
-  padding-right: 6px;
+  padding: 3px;
   display: flex;
   margin: 6px;
   border-radius: 6px;
-  gap: 3px;
+  gap: 6px;
   align-items: center;
   align-content: center;
   justify-content: center;

@@ -160,7 +160,7 @@ label {
   display: flex;
   flex-wrap: wrap;
   padding: 6px;
-  margin: .6rem 3px .3rem;
+  margin: 0.3rem 3px;
   flex: 1;
   box-sizing: border-box;
   max-width: 100%;

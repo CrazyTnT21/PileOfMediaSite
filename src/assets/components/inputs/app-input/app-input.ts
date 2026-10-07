@@ -2,19 +2,19 @@ import {applyStyleSheet, attachDelegates} from "../../defaults";
 import {
   AttributeValue,
   handleFieldset,
-  setOrRemoveBooleanAttribute,
   IncludesString,
-  templateString,
   randomNumber,
-  setOrDeleteState
+  setOrDeleteState,
+  setOrRemoveBooleanAttribute,
+  templateString
 } from "../common";
 import {ValueSetEvent} from "./value-set-event";
 import html from "./app-input.html" with {type: "inline"};
 import css from "./app-input.css" with {type: "inline"};
 import {mapSelectors} from "../../../dom";
 import {
-  labelAttribute,
   disabledAttribute,
+  labelAttribute,
   maxLengthAttribute,
   minlengthAttribute,
   placeholderAttribute,
@@ -24,7 +24,7 @@ import {setMaxLength, setMinLength, setValueMissing} from "./validation";
 import {Observer} from "../../../observer";
 import {mapBooleanAttribute, mapNumberAttribute, mapStringAttribute} from "../map-boolean-attribute";
 import {Err} from "../../../result/result";
-import {ErrorResultCallback, ErrorKey, setValidityMap} from "../../../validation";
+import {ErrorKey, ErrorResultCallback, setValidityMap} from "../../../validation";
 
 type AttributeKey = keyof typeof AppInput["observedAttributesMap"];
 
@@ -174,12 +174,12 @@ export class AppInput extends HTMLElement
     this.handleInitialValueAttribute();
 
     handleFieldset(this,
-        (fieldSet) => this.parentFieldSet = fieldSet,
-        () =>
-        {
-          //TODO: as conversion
-          (this.constructor as typeof AppInput)["observedAttributesMap"]["disabled"](this, this.getAttribute("disabled"))
-        });
+      (fieldSet) => this.parentFieldSet = fieldSet,
+      () =>
+      {
+        //TODO: as conversion
+        (this.constructor as typeof AppInput)["observedAttributesMap"]["disabled"](this, this.getAttribute("disabled"))
+      });
 
     this.setupValidation();
     this.updateValidity();

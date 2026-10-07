@@ -4,32 +4,36 @@ import {Book} from "../../openapi/book";
 import {getTranslatedField, logError} from "../../config";
 import {apiClient} from "../../openapi/client";
 import {acceptLanguageHeader} from "../../components/inputs/common";
+import {Translation} from "../../i18n/translation";
+import {getPreferredTranslation} from "../translate";
 
 const params = new URLSearchParams((window.location.search))
 AppSearchInput.define()
 
 const input: AppSearchInput = document.querySelector("#search")!;
+const preferredTranslation: Promise<Translation> = getPreferredTranslation();
 input.addEventListener(SearchEvent.type, async (e: CustomEventInit<string>) =>
 {
   const searchValue = e.detail;
   if (!searchValue)
     return;
   clearList();
-  await search(searchValue)
+  await search(searchValue, preferredTranslation)
 
 })
 const query = params.get("q");
 if (query)
 {
   input.value = query;
-  await search(query)
+  await search(query, preferredTranslation)
 }
 
-async function search(value: string): Promise<void>
+async function search(value: string, translation: Promise<Translation>): Promise<void>
 {
   window.history.replaceState(null, "", `/search?q=${value}`);
   const generator = searchBooks(value);
-  loadBooks((await generator.next()).value)
+  const [generatorValue, preferredTranslation] = await Promise.all([(generator.next()).then(x => x.value), translation])
+  loadBooks(generatorValue, preferredTranslation)
 }
 
 async function* searchBooks(value: string): AsyncGenerator<Book[]>
@@ -59,13 +63,14 @@ async function* searchBooks(value: string): AsyncGenerator<Book[]>
   }
 }
 
-function loadBooks(items: Book[]): void
+function loadBooks(items: Book[], preferredTranslation: Translation): void
 {
   const booksUl: HTMLUListElement = document.querySelector("#items")!;
   for (const book of items)
   {
     const {translation, language} = getTranslatedField(book);
     const li = document.createElement("li");
+
     //language=HTML
     li.innerHTML = `
       <a class="no-underscore col-12 pad border bigger">
@@ -73,7 +78,7 @@ function loadBooks(items: Book[]): void
         <div class="col column pad-left">
           <div class="underscore" data-id="title"></div>
           <div class="col-12">
-            <span data-id="type">Book</span>
+            <span data-id="type">${preferredTranslation.book ?? "Book"}</span>
             <span class="rating" data-id="rating"></span>
           </div>
         </div>
